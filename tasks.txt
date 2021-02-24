@@ -1,0 +1,22 @@
+Users->roles['admin','supervisor','Corporation']
+Settings->Add Category
+Category->Add Suppliers
+Suppliers->Add Products
+
+Products['code','points of travel','End Date']
+
+Create Code+code details
+
+Add Booking->Enter Code-> Hit API -> fetch details
+
+Realtime currency conversion.
+
+Set default Booking season
+
+Add Dates in session
+
+Upload Invoice to Sage in the end 
+
+Unclear Points:
+->Templates and Plus action
+->Recognizing session using date
