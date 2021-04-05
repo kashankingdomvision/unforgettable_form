@@ -1,0 +1,1480 @@
+@extends('content_layout.default')
+
+@section('content')
+<style type="text/css">
+    .row.box-cus {
+        width: 83%;
+        border: solid 1px #000;
+        padding: 20px;
+        margin: 0 auto 15px;
+        float: none;
+        border-radius: 10px;
+    }
+
+    .row.box-cus .col-sm-offset-1 {
+        margin: 0;
+    }
+
+    .finance-holiday-amount label {
+        font-size: 18px;
+        width: 100%;
+    }
+
+    .finance-holiday-amount input {
+        width: 40%;
+        height: 35px;
+        text-align: center;
+    }
+
+    .deposit-remaining input {
+        float: left;
+    }
+
+    .qoute{
+        width: 83%;
+        border: solid 1px #000;
+        padding: 20px;
+        margin: 0 auto 15px;
+        float: none;
+        border-radius: 10px;
+    }
+
+    .hide-arrows::-webkit-inner-spin-button, .hide-arrows::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+    }
+
+    .hide-arrows {
+        -moz-appearance:textfield !important;
+    }
+</style>
+
+<div class="content-wrapper">
+
+    <div class="" id="qoute" hidden>
+
+        <div class="qoute">
+
+            <div class="row">
+                <div class="col-sm-12" >
+                    <button type="button" class="btn  pull-right close"> x </button>
+                </div>
+            </div><br>
+
+            <div class="row">
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Date of Service</label> 
+                    <div class="input-group">
+                        <input type="text" name="date_of_service[]"  class="form-control datepicker" placeholder="Date of Service"  >
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('date_of_service') }} </div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom: 35px;">
+                    <label for="inputEmail3" class="">Service Details</label> 
+                    <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
+                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                </div>
+
+                <div class="col-sm-2 " style="margin-bottom:15px;">
+                    <label class="">Select Category</label> 
+                    <select class="form-control category-select2" name="category[]" >
+                        <option value="">Select Category</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category') == $category->id  ? "selected" : "" }}> {{ $category->name }} </option>
+                        @endforeach
+                    </select>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom:15px">
+                    <label class="">Select Supplier</label> 
+                    <select class="form-control supplier-select2" name="supplier[]" >
+                        <option value="">Select Supplier</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                        @endforeach
+                    </select>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                </div>
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Date</label>
+                    <div class="input-group">
+                        <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" value="{{old('booking_date')}}" >
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
+                    <div class="input-group">
+                        <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" placeholder="Booking Due Date" required>
+                    </div>
+                    <div class="alert-danger booking_due_date" style="text-align:center"></div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Method</label> 
+                    <div class="input-group">
+                        <select class="form-control booking-method-select2"  name="booking_method[]" >
+                            <option value="">Select Booking Method</option>
+                            @foreach ($booking_methods as $booking_method)
+                                <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                </div>
+
+                <div class="col-sm-2 " style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booked By </label> 
+                    <div class="input-group">
+                        <select class="form-control booked-by-select2" name="booked_by[]" >
+                            <option value="">Select Person</option>
+                            @foreach ($users as $user)
+                                <option value="{{$user->id}}" {{ !empty(Auth::user()->id) && Auth::user()->id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Refrence</label>
+                    <div class="input-group">
+                        <input type="text" name="booking_refrence[]" value="" class="form-control"  placeholder="Booking Refrence" value="{{old('booking_refrence')}}" >
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_refrence') }} </div>
+                </div>
+
+
+                <div class="col-sm-2" style="margin-bottom: 35px;">
+                    <label for="inputEmail3" class="">Comments</label> 
+                    <textarea name="comments[]" id="" class="form-control" cols="30" rows="1"></textarea>
+                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom:15px;">
+                    <label class="">Select Supplier Currency</label> 
+                    <select class="form-control supplier-currency"  name="supplier_currency[]" required>
+                        <option value="">Select Currency</option>
+                        @foreach ($currencies as $currency)
+                            <option value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                        @endforeach
+                    </select>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Cost <span style="color:red">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-addon symbol"></span>
+                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" min="0" value="0" required >
+                    </div>
+                    <div class="alert-danger error-cost" style="text-align:center"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <section class="content-header">
+        <h1> Add Qoute</h1>
+    </section>
+
+    <section class="content">
+        <div id="divLoading"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create Qoute</h3>
+                    </div>
+                    <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
+                        @if (Session::has('success_message'))
+                        <div class="alert alert-success">
+                            {{ Session::get('success_message') }}</div>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('creat-quote') }}" method="POST" class="form-horizontal" id="user_form">
+                        @csrf
+
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1">
+                                <label for="inputEmail3" class="">Enter Reference Number</label> <span style="color:red">*</span>
+                                <div class="input-group">
+                                    <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' required>
+                                    <span class="input-group-addon" id="link"><i class="fa fa-plane"></i></span>
+                                </div>
+                                <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
+                            </div>
+
+                            <div class="col-sm-5" style="margin-bottom:15px">
+                                <label class="">Brand Name</label> <span style="color:red">*</span>
+                                <select class="form-control select2" name="brand_name" required >
+                                    <option value="">Select Brand</option>
+                                    @foreach ($get_user_branches->branches as $branche)
+                                    <option value="{{ $branche->name }}" >{{ $branche->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="">Type Of Holidays</label> <span style="color:red">*</span>
+                                <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" required>
+                                    <option value="">Select Holiday</option>
+                                    @foreach ($get_holiday_type->holiday_type as $holiday)
+                                    <option value="{{ $holiday->name }}">{{ $holiday->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
+                            </div>
+    
+                            <div class="col-sm-5" style="margin-bottom:15px;">
+                                <label class="">Sales Person</label> <span style="color:red">*</span>
+                                <select class="form-control select2" id="sales_person" name="sale_person" required >
+                                    <option value="">Select Person</option>
+                                    @foreach ($get_user_branches->users as $user)
+                                    <option value="{{ $user->email }}" > {{ $user->email }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="">Booking Season</label> 
+                                <span style="color:red">*</span>
+                                {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
+                                <select class="form-control dropdown_value" name="season_id"  required>
+                                    <option value="">Select Season</option>
+                                    @foreach ($seasons as $sess)
+                                    <option value="{{ $sess->id }}"  
+                                        @if(old('season_id') == $sess->id)
+                                        selected
+                                        @elseif($sess->default_season == 1 )
+                                        selected
+                                        @endif
+                                        >{{ $sess->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
+                            </div>
+
+                            <div class="col-sm-1" style="margin-bottom: 35px; width:145px;">
+                                <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red"> *</span><br>
+                                <input type="radio" name="agency_booking" value="2" id="ab_yes"> <label for="ab_yes"> Yes</label>
+                                <input type="radio" name="agency_booking" value="1"  id="ab_no" > <label for="ab_no"> No</label>
+                          
+                                {{-- {!! Form::radio('agency_booking', 2, null, ['id' => 'ab_yes', 'required' => 'true']) !!}&nbsp<label for="ab_yes">Yes</label>
+                                {!! Form::radio('agency_booking', 1, null, ['id' => 'ab_no', 'required' => 'true']) !!}&nbsp<label for="ab_no">No</label> --}}
+                                <div class="alert-danger" style="text-align:center" > </div>
+                            </div>
+                            <div class="row" style="display:none;" id="agency-detail">
+                                <div class="col-sm-2" style="width:175px;">
+                                    <label for="inputEmail3" class="">Agency Name</label> <span style="color:red"> *</span>
+                                    <input type="text" name="agency_name" class="form-control">
+                                    <div class="alert-danger" style="text-align:center" id="error_agency_name"> </div>
+                                    
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label for="inputEmail3" class="">Agency Contact No.</label> <span style="color:red"> *</span>
+                                    <input type="text" name="agency_contact_no" class="form-control">
+                                    <div class="alert-danger" style="text-align:center" id="error_agency_contact_no"> </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label> Booking Currency</label> <span style="color:red">*</span>
+                                <select name="currency" class="form-control select2" required>
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
+                                    {{-- {{ $currency->code == 'GBP' ? 'selected' : '' }}/ --}}
+                                        <option value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_currency"></div>
+                            </div>
+
+                            <div class="col-sm-5" style="margin-bottom:15px">
+                                <label class="">Pax No.</label> <span style="color:red">*</span>
+                                  <select class="form-control dropdown_value select2" name="group_no" required>
+                                    {{-- <option value="">Select Pax No.</option> --}}
+                                    @for($i=1;$i<=30;$i++)
+                                    <option value={{$i}} >{{$i}}</option>
+                                    @endfor
+                                  </select>
+                                <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
+                              </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <button type="button" id="new" class="btn btn-info pull-right">+ </button>
+                            </div>
+                        </div>
+                        
+                        <br><br>
+
+                        <div class="parent" id="parent">
+                            <div class="qoute">
+                                <div class="row">
+
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Date of Service</label> 
+                                        <div class="input-group">
+                                            <input type="text" name="date_of_service[]"  class="form-control datepicker" placeholder="Date of Service"  >
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('date_of_service') }} </div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                        <label for="inputEmail3" class="">Service Details</label> 
+                                        <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
+                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                        <label class="">Select Category</label> 
+                                        <select class="form-control category-select2" id="category-select2"  name="category[]" >
+                                            <option value="">Select Category</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}" {{ old('category') == $category->id  ? "selected" : "" }}> {{ $category->name }} </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
+                                    </div>
+        
+                                    <div class="col-sm-2" style="margin-bottom:15px">
+                                        <label class="test">Select Supplier</label> 
+                                        <select class="form-control supplier-select2"  id="supplier-select2" name="supplier[]" >
+                                            <option value="">Select Supplier</option>
+                                            @foreach ($suppliers as $supplier)
+                                                <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                                    </div>
+        
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Date</label>
+                                        <div class="input-group">
+                                            <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" value="{{old('booking_date')}}" >
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
+                                    </div>
+        
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
+                                        <div class="input-group">
+                                            <input type="text" name="booking_due_date[]"  class="form-control datepicker" placeholder="Booking Due Date" required>
+                                        </div>
+                                        <div class="alert-danger booking_due_date" style="text-align:center"></div>
+                                    </div>
+        
+                    
+                                </div>
+        
+                                <div class="row">
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Method</label>
+                                        <div class="input-group">
+                                            <select class="form-control"  name="booking_method[]" id="booking-method-select2" class="form-control" >
+                                                <option value="">Select Booking Method</option>
+                                                @foreach ($booking_methods as $booking_method)
+                                                    <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booked By </label>
+                                        <div class="input-group">
+                                            <select class="form-control"  name="booked_by[]" id="booked-by-select2" class="form-control" >
+                                                <option value="">Select Person</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{$user->id}}" {{ !empty(Auth::user()->id) && Auth::user()->id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                    </div>
+        
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Refrence</label>
+                                        <div class="input-group">
+                                            <input type="text" name="booking_refrence[]" value="" class="form-control" placeholder="Booking Refrence" value="{{old('booking_refrence')}}" >
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> </div>
+                                    </div>
+        
+                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                        <label for="inputEmail3" class="">Comments</label> 
+                                        <textarea name="comments[]"   class="form-control" cols="30" rows="1"></textarea>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                        <label class="">Select Supplier Currency</label> 
+                                        <select class="form-control supplier-currency" id="supplier-currency" name="supplier_currency[]" required>
+                                            <option value="">Select Currency</option>
+                                            @foreach ($currencies as $currency)
+                                                <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+                                    
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon symbol" ></span>
+                                            <input type="number" data-code="" name="cost[]" class="form-control cost" min="0" value="0" placeholder="Cost" required>
+                                        </div>
+                                        <div class="alert-danger error-cost" style="text-align:center" ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-1">
+                                <div class="row">
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Net Price</label>
+                                </div>
+                       
+                                <div class="row"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Markup</label>
+                                    
+                                </div>
+                                <div class="row"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling</label>
+                                </div>
+
+
+                                <br><br>
+                            </div>
+
+       
+                       
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    <label class="">
+                                        <label class="currency" ></label>
+                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="0">
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="">
+                                        <label class="currency" ></label>
+                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="0">
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="">
+                                        <label class="currency" ></label>
+                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling hide-arrows" value="0">
+                                    </label>
+                                </div>
+                    
+                            </div>
+
+                            
+                            <div class="col-sm-2">
+                                <br>
+                                <div class="row">
+                                    <label class="">
+                                        <input type="number" class="markup-percent" min="0" name="markup_percent" value="0" style="width:70px;">
+                                        <span>%</span> 
+                                    </label>
+                                </div>
+                            </div>
+            
+                        </div>
+
+
+                        <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <button type="button" id="convert-currency">Convert to USD</button>
+                                </label> 
+                                {{-- <select class="form-control convert-currency"  id="convert-currency" name="convert_currency" >
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
+                                        <option value="{{ $currency->code }}" > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div> --}}
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="">USD</label>
+                                    <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Price Per Person</label>
+                                </label> 
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="">USD</label>
+                                <input type="number" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Include Port Charges</label>
+                                </label> 
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="">USD</label>
+                                <input type="number" class="port-tax" step="any" min="0" name="port_tax" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Total Per Person</label>
+                                </label> 
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="">USD</label>
+                                <input type="number" class="total hide-arrows" min="0" step="any" name="total_per_person" value="0">
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-info pull-right">Submit</button>
+                        </div>
+
+                    </form>
+
+                </div> 
+            </div>  
+        </div>
+    </section>
+</div>
+
+<!-- /.content-wrapper -->
+<footer class="main-footer"></footer>
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+        <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+        <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane" id="control-sidebar-home-tab">
+            <h3 class="control-sidebar-heading">Recent Activity</h3>
+            <ul class="control-sidebar-menu">
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                            <p>Will be 23 on April 24th</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-user bg-yellow"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">Frodo Updated His Profile
+                            </h4>
+
+                            <p>New phone +1(800)555-1234</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">Nora Joined Mailing List
+                            </h4>
+
+                            <p>nora@example.com</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-file-code-o bg-green"></i>
+
+                        <div class="menu-info">
+                            <h4 class="control-sidebar-subheading">Cron Job 254 Executed
+                            </h4>
+
+                            <p>Execution time 5 seconds</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.control-sidebar-menu -->
+
+            <h3 class="control-sidebar-heading">Tasks Progress</h3>
+            <ul class="control-sidebar-menu">
+                <li>
+                    <a href="javascript:void(0)">
+                        <h4 class="control-sidebar-subheading">
+                            Custom Template Design
+                            <span class="label label-danger pull-right">70%</span>
+                        </h4>
+
+                        <div class="progress progress-xxs">
+                            <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <h4 class="control-sidebar-subheading">
+                            Update Resume
+                            <span class="label label-success pull-right">95%</span>
+                        </h4>
+
+                        <div class="progress progress-xxs">
+                            <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <h4 class="control-sidebar-subheading">
+                            Laravel Integration
+                            <span class="label label-warning pull-right">50%</span>
+                        </h4>
+
+                        <div class="progress progress-xxs">
+                            <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <h4 class="control-sidebar-subheading">
+                            Back End Framework
+                            <span class="label label-primary pull-right">68%</span>
+                        </h4>
+
+                        <div class="progress progress-xxs">
+                            <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.control-sidebar-menu -->
+
+        </div>
+        <!-- /.tab-pane -->
+        <!-- Stats tab content -->
+        <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+        <!-- /.tab-pane -->
+        <!-- Settings tab content -->
+        <div class="tab-pane" id="control-sidebar-settings-tab">
+            <form method="post">
+                <h3 class="control-sidebar-heading">General Settings</h3>
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Report panel usage
+                        <input type="checkbox" class="pull-right" checked>
+                    </label>
+
+                    <p>
+                        Some information about this general settings option
+                    </p>
+                </div>
+                <!-- /.form-group -->
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Allow mail redirect
+                        <input type="checkbox" class="pull-right" checked>
+                    </label>
+
+                    <p>
+                        Other sets of options are available
+                    </p>
+                </div>
+                <!-- /.form-group -->
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Expose author name in posts
+                        <input type="checkbox" class="pull-right" checked>
+                    </label>
+
+                    <p>
+                        Allow the user to show his name in blog posts
+                    </p>
+                </div>
+                <!-- /.form-group -->
+
+                <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Show me as online
+                        <input type="checkbox" class="pull-right" checked>
+                    </label>
+                </div>
+                <!-- /.form-group -->
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Turn off notifications
+                        <input type="checkbox" class="pull-right">
+                    </label>
+                </div>
+                <!-- /.form-group -->
+
+                <div class="form-group">
+                    <label class="control-sidebar-subheading">
+                        Delete chat history
+                        <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                    </label>
+                </div>
+                <!-- /.form-group -->
+            </form>
+        </div>
+        <!-- /.tab-pane -->
+    </div>
+</aside>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+                       immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+{!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
+
+<!-- jQuery 2.2.3 -->
+{!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
+<!-- Bootstrap 3.3.6 -->
+{!! HTML::script('bootstrap/js/bootstrap.min.js') !!}
+
+{!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
+
+{!! HTML::script('plugins/datatables/jquery.dataTables.min.js') !!}
+{!! HTML::script('plugins/datatables/dataTables.bootstrap.min.js') !!}
+
+{!! HTML::script('plugins/select2/select2.full.min.js') !!}
+
+<!-- FastClick -->
+{!! HTML::script('plugins/fastclick/fastclick.js') !!}
+<!-- AdminLTE App -->
+{!! HTML::script('dist/js/app.min.js') !!}
+<!-- AdminLTE for demo purposes -->
+{!! HTML::script('dist/js/demo.js') !!}
+
+
+<script type="text/javascript">
+
+    $(function(){
+        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+    });
+
+    $(document).ready(function() {
+
+
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 2000;  //time in ms, 5 second for example
+        var $input = $('input[name="ref_no"]');
+
+        //on keyup, start the countdown
+        $input.on('keyup', function () {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown 
+        $input.on('keydown', function () {
+          clearTimeout(typingTimer);
+        });
+
+        //user is "finished typing," do something
+        function doneTyping () {
+        //   console.log('done-typing');
+
+            // $('#link').html('');
+            // $('#form_received').html('');
+            // $('#app_login_date').val('0000-00-00');
+            // $('#form_received_on').val('0000-00-00');
+            // $('select[name="sale_person"]').val('').trigger('change');
+            // $('select[name="brand_name"]').val('');
+            // $('input:radio[name=agency_booking]').prop('checked', false); 
+            // $('input[name="date_of_travel"]').datepicker("setDate" ,'');
+            // $('input[name="form_sent_on"]').datepicker("setDate" ,'');
+            // $('input:radio[name=electronic_copy_sent]').filter('[value=no]').prop('checked', true);
+            // $('#app_login_detail').html('');
+       
+            // $('input:radio[name=asked_for_transfer_details]').filter('[value=no]').prop('checked', true);
+            // $('.transfer_details').hide(200);
+            // $('textarea[name=transfer_details]').prop('required',false);
+      
+            book_id = $('input[name="ref_no"]').val();
+            if(book_id) {
+              token = $('input[name=_token]').val();
+              data  = {id: book_id};
+              url   = '{{route('get-ref-detail')}}';
+     
+                $.ajax({
+                    url: url,
+                    headers: {'X-CSRF-TOKEN': token},
+                    data : data,
+                    beforeSend: function() {
+                        $("#divLoading").addClass('show');
+                    },
+                    type: 'POST',
+                    dataType: "json",
+                    success:function(data) {
+
+                        // console.log(data);
+                        if(data.item_rec != null){
+                          $('select[name="brand_name"]').val(data.item_rec.branch_name);
+                          $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
+                        }
+
+                        if(data.item_rec2 != null){
+                            if("id" in data.item_rec2){
+                                var id = data.item_rec2.id;
+                                $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
+                            }
+                        }
+
+                        if(data.item_rec4 != null){
+                            $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
+                            $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
+                            $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
+                            $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
+                            if(data.item_rec4.record[0].client_type == 2){
+                                $('#ab_yes').trigger('click');
+                            }
+                        }
+
+
+                        // if(data.item_rec != null){
+                        //   $('select[name="brand_name"]').val(data.item_rec.branch_name);
+                        //   $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
+                        //   // $('select[name="brand_name"]').empty();
+                        //   // $('select[name="brand_name"]').append('<option value="'+ data.item_rec.branch_name +'">'+ data.item_rec.branch_name +'</option>');
+                        //    $('input:radio[name=agency_booking]').filter('[value='+data.item_rec.client_type+']').prop('checked', true);
+                        //    //
+                        //    if(data.item_rec.payment_for == 3){
+                        //       if("departure_date" in data.item_rec){
+                        //         var year  = data.item_rec.departure_date.substr(0, 4);
+                        //         var month = data.item_rec.departure_date.substr(5, 2);
+                        //         var day   = data.item_rec.departure_date.substr(8, 2);
+                        //         var convert_date = month+'/'+day+'/'+year;
+                        //         $('input[name="date_of_travel"]').datepicker("setDate" , convert_date);
+                        //       }
+                        //     }
+                        //    //
+                        //     //
+                        //     $("#example2").on("draw.dt", function () {
+                        //       $(this).find(".dataTables_empty").parents('tbody').empty();
+                        //     }).DataTable();
+                        //     var table = $('#example2').DataTable();
+                        //     table.clear().draw();
+                        //     var $sum=0;
+                        //     $.each(data.item_rec4.record, function(key, value) {
+                        //       if (value.status=="COMPLETED") {
+                        //         $sum+=parseFloat(value.amount_payable);
+                        //       }
+                        //      //
+                        //       if(value.agency_name == ''){
+                        //         var agency_name =  value.agency_name;
+                        //       }else{
+                        //         var agency_name =  '-';
+                        //       }
+                        //       var employee_data = '';
+                        //       employee_data += '<tr>';
+                        //       employee_data += '<td>'+agency_name+'</td>';
+                        //       employee_data += '<td>'+value.agency_contact_num+'</td>';
+                        //       employee_data += '<td>'+value.passenger_first_name+" " +value.passenger_last_name+'</td>';
+                        //       employee_data += '<td>'+value.type+'</td>';
+                        //       employee_data += '<td>'+value.status+'</td>';
+                        //       employee_data += '<td>'+value.curruncy+'</td>';
+                        //       employee_data += '<td>'+value.amount_payable+'</td>';
+                        //       employee_data += '<td>'+value.created_at+'</td>';
+                        //       employee_data += '<tr>';
+                        //       $('#example2 tbody').append(employee_data);
+                        //       $('#finance_detail').val(employee_data);
+                        //     });
+                        //     $("#holiday").val(data.item_rec4.holiday_amount).trigger('change');
+                        //     // $("#total").val($sum).trigger('change');
+                        //     if($sum==data.item_rec4.holiday_amount){
+                        //       // $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
+                        //       $('#deposit').attr('checked', 'checked').trigger('change');
+                        //       $('#remain').attr('checked', 'checked').trigger('change');
+                        //     }
+                        // }
+                        
+                          
+                        // if(data.item_rec2 != null){
+                        //   if("id" in data.item_rec2){
+                        //     var id = data.item_rec2.id;
+                        //     $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
+                        //     $('input:radio[name=asked_for_transfer_details]').filter('[value=yes]').prop('checked', true);
+                        //     $('.transfer_details').show(200);
+                        //     $('textarea[name=transfer_details]').prop('required',true);
+                        //     //
+                        //     var detail_rec_date = data.item_rec2.detail_rec_date;
+                        //     if(detail_rec_date == '0000-00-00'){
+                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Form Status (Pending)</a> </strong>');
+                        //       $('#form_received_on').val('0000-00-00');
+                        //       $('.set_reminder').show(200);
+                        //       // $('select[name="fso_person"]').prop('required',true);
+                        //       $('input[name="fso_last_date"]').prop('required',true);
+                        //     }else{
+                        //       var a = detail_rec_date;
+                        //           a = a.split('-');
+                        //           a = a[2]+'/'+a[1]+'/'+a[0];
+                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Received On-' + a + '</a></strong>');
+                        //       $('#form_received_on').val(detail_rec_date);
+                        //       $('.set_reminder').hide(200);
+                        //       // $('select[name="fso_person"]').prop('required',false);
+                        //       $('input[name="fso_last_date"]').prop('required',false);
+                        //       //
+                        //       // $('input:radio[name=transfer_info_received]').filter('[value=yes]').prop('checked', true);
+                        //       // $('.transfer_info_details').show(200);
+                        //       // $('textarea[name=transfer_info_details]').prop('required',true);
+                        //       //
+                        //     }
+                        //   }
+                        //   if("date" in data.item_rec2){
+                        //     var year  = data.item_rec2.date.substr(0, 4);
+                        //     var month = data.item_rec2.date.substr(5, 2);
+                        //     var day   = data.item_rec2.date.substr(8, 2);
+                        //     var convert_date = day+'/'+month+'/'+year;
+                        //     // $('input[name="form_sent_on"]').val(convert_date);
+                        //     $('input[name="form_sent_on"]').datepicker("setDate" , convert_date);
+                        //   }
+                        // }
+                        // if(data.item_rec3 != null){
+                        //   if(data.item_rec3.lognum == null){
+                        //     $('#app_login_detail').html('<strong>Status - App login not created </strong>');
+                        //     $('#app_login_date').val('0000-00-00');
+                        //   }else{
+                        //     $('input:radio[name=electronic_copy_sent]').filter('[value=yes]').prop('checked', true);
+                        //     $('textarea[name=electronic_copy_details]').prop('required',true);
+                        //     $('.electronic_copy_details').show(200);
+                        //     //
+                        //     $('.set_reminder_app').show(200);
+                        //     $('select[name=aps_person]').prop('required',true);
+                        //     $('input[name=aps_last_date]').prop('required',true);
+                        //     //
+                        //     $('#app_login_detail').html('<strong>App login created on '+ data.item_rec3.created_at.substr(0, 10) + ' - User loggedin atleast once : yes</strong>')
+                        //     $('#app_login_date').val(data.item_rec3.created_at.substr(0, 10));
+                        //   }
+                        // }
+                        /*$.each(data.item_rec, function(key, value) {
+                            $('select[name="brand_name"]').append('<option value="'+ value.id +'">'+ value.title +'</option>');
+                        });*/
+                        $("#divLoading").removeClass('show');
+                    }
+                });
+            }else{
+                // $('select[name="brand_name"]').empty();
+            }
+        }
+
+        $('.select2').select2();
+        $('#category-select2').select2();
+        $('#supplier-select2').select2();
+        $('#booking-method-select2').select2();
+        $('#booked-by-select2').select2();
+        $('#supplier-currency').select2();
+        // $('#convert-currency').select2();
+ 
+        $('body').on('click', '#new', function (e) {
+            var qoute = $('#qoute').html();
+            $("#parent").append(qoute);
+            reinitializedDynamicFeilds();
+        });
+
+        function reinitializedDynamicFeilds(){
+            $(".category-select2:last").select2();
+            $(".supplier-select2:last").select2();
+            $(".booking-method-select2:last").select2();
+            $(".booked-by-select2:last").select2();
+            $('.supplier-currency:last').select2();
+            $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
+        }
+
+        $(document).on('change', 'select[name="category[]"]',function(){
+            
+            var $selector = $(this);
+            var category_id = $(this).val();
+            
+            var options = '';
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'category_id': category_id
+                },
+                success: function(response) {
+
+                    // console.log(response);
+
+                    options += '<option value="">Select Supplier</option>';
+
+                    $.each(response,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+
+                    $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                }
+            })
+        });
+
+        $(document).on('change', 'select[name="supplier_currency[]"]',function(){
+            
+
+            var $selector = $(this);
+            var selected_currency_code = $(this).val();
+
+            $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",selected_currency_code);
+            $selector.closest(".qoute").find('[class*="symbol"]').html(selected_currency_code);
+     
+            var costArray = [];
+            var currencyArray = [];
+            var final = 0;
+      
+            $('.cost').each(function(){
+
+                cost = $(this).val();
+                currency = $(this).attr("data-code");
+
+                if(cost !== ""){
+                    costArray.push(parseFloat(cost));
+                }
+
+                if(currency !== ""){
+                    currencyArray.push(currency);
+                }
+
+            });
+
+            // console.log(costArray);
+            // console.log(currencyArray);
+            // var currency = $(this).attr("data-code");
+
+// console.log(cost);
+// console.log(currency);
+
+            var selectedMainCurrency = $("select[name='currency']").val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'to': selectedMainCurrency,
+                    'from': selected_currency_code
+                },
+                success: function(response) {
+           
+                    for(i=0 ; i < currencyArray.length; i++){
+                        final += (costArray[i] * response[currencyArray[i]]);
+                    }
+
+                    $('.net_price').val(final);
+
+                    var net_price = parseFloat($('.net_price').val());
+                    var markup_percent = parseFloat($('.markup-percent').val());
+                    var markup_amount = parseFloat($('.markup-amount').val());
+                    markupAmount = (net_price / 100) * markup_percent;
+                    $('.markup-amount').val(markupAmount);
+
+                    var sellingPrice = (markupAmount + net_price);
+                    $('.selling').val(sellingPrice);
+
+                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                    // $('.per-person').val(perPersonAmount);
+
+                }
+            });
+
+
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '{{ route('get-supplier-currency') }}',
+            //     data: {
+            //         "_token": "{{ csrf_token() }}",
+            //         'supplier_id': supplier_id
+            //     },
+            //     success: function(response) {
+
+            //         // $selector.closest(".qoute").find('[class*="cost"]').val(response.code);
+            //         $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",response.code);
+            //         $selector.closest(".qoute").find('[class*="symbol"]').html(response.symbol);
+            //     }
+            // })
+
+        });
+
+        var final = 0;
+        $(document).on('change', '.cost',function(){
+
+            var cost = $(this).val();
+            var currency = $(this).attr("data-code");
+            var selectedMainCurrency = $("select[name='currency']").val();
+            var final = 0;
+
+            var costArray = [];
+            var currencyArray = [];
+      
+            $('.cost').each(function(){
+
+                cost = $(this).val();
+                currency = $(this).attr("data-code");
+
+                if(cost !== ""){
+                    costArray.push(parseFloat(cost));
+                }
+
+                if(currency !== ""){
+                    currencyArray.push(currency);
+                }
+
+            });
+
+            console.log(costArray);
+            console.log(currencyArray);
+            
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'to': selectedMainCurrency,
+                    'from': currency
+                },
+                success: function(response) {
+           
+                    for(i=0 ; i < currencyArray.length; i++){
+                        final += (costArray[i] * response[currencyArray[i]]);
+                    }
+
+                    $('.net_price').val(final);
+
+
+                    var net_price = parseFloat($('.net_price').val());
+                    var markup_percent = parseFloat($('.markup-percent').val());
+                    var markup_amount = parseFloat($('.markup-amount').val());
+                    markupAmount = (net_price / 100) * markup_percent;
+                    $('.markup-amount').val(markupAmount);
+
+                    var sellingPrice = (markupAmount + net_price);
+                    $('.selling').val(sellingPrice);
+
+
+                    // console.log(last_convert_currency);
+                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                    // $('.per-person').val(perPersonAmount);
+
+                }
+            });
+      
+        });
+
+
+        $(document).on('change', '.markup-percent',function(){
+
+            var net_price = parseFloat($('.net_price').val());
+            var markup_percent = parseFloat($('.markup-percent').val());
+            var markup_amount = parseFloat($('.markup-amount').val());
+ 
+            markupAmount = (net_price / 100) * markup_percent;
+
+            $('.markup-amount').val(markupAmount);
+
+            var sellingPrice = (markupAmount + net_price);
+            $('.selling').val(sellingPrice);
+
+            // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+            // $('.per-person').val(perPersonAmount);
+        });
+
+        $(document).on('change', '.markup-amount',function(){
+
+            var net_price = parseFloat($('.net_price').val());
+            var markup_percent = parseFloat($('.markup-percent').val());
+            var markup_amount = parseFloat($('.markup-amount').val());
+
+            markupPercentage = markup_amount / (net_price / 100);
+            $('.markup-percent').val(markupPercentage);
+
+            var sellingPrice = markup_amount + net_price;
+            $('.selling').val(sellingPrice);
+
+            // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+            // $('.per-person').val(perPersonAmount);
+    
+        });
+
+        $(document).on('change', 'select[name="currency"]',function(){
+            var selected_currency_code = $(this).val();
+
+            var costArray = [];
+            var currencyArray = [];
+            var selectedMainCurrency = $("select[name='currency']").val();
+            var final = 0;
+      
+            $('.cost').each(function(){
+
+                cost = $(this).val();
+                currency = $(this).attr("data-code");
+
+                if(cost !== ""){
+                    costArray.push(parseFloat(cost));
+                }
+
+                if(currency !== ""){
+                    currencyArray.push(currency);
+                }
+
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'to': selectedMainCurrency,
+                    'from': currency
+                },
+                success: function(response) {
+           
+                    for(i=0 ; i < currencyArray.length; i++){
+                        final += (costArray[i] * response[currencyArray[i]]);
+                    }
+
+                    $('.net_price').val(final);
+
+                    var net_price = parseFloat($('.net_price').val());
+                    var markup_percent = parseFloat($('.markup-percent').val());
+                    var markup_amount = parseFloat($('.markup-amount').val());
+                    markupAmount = (net_price / 100) * markup_percent;
+                    $('.markup-amount').val(markupAmount);
+
+                    var sellingPrice = (markupAmount + net_price);
+                    $('.selling').val(sellingPrice);
+
+                    // console.log(last_convert_currency);
+                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                    // $('.per-person').val(perPersonAmount);
+
+                }
+            });
+
+            $('.currency').html(selected_currency_code);
+        });
+
+        $(document).on('click', '#ab_no',function(){
+            $('#agency-detail').css("display", "none");
+            $("input[name='agency_name']").prop('required',false);
+            $("input[name='agency_contact_no']").prop('required',false);
+        });
+
+        $(document).on('click', '#ab_yes',function(){
+            $('#agency-detail').css("display", "block");
+            $("input[name='agency_name']").prop('required',true);
+            $("input[name='agency_contact_no']").prop('required',true);
+        });
+
+        // $(document).on('change', 'select[name="convert_currency"]',function(){
+        $(document).on('click', '#convert-currency',function(){
+
+
+            var selected_currency = 'USD';
+            var selectedMainCurrency = $("select[name='currency']").val();
+            var sellingPrice =  $('.selling').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'to': selected_currency,
+                    'from': selectedMainCurrency
+                },
+                success: function(response) {
+
+                    // console.log(response[selectedMainCurrency]);
+             
+                    final = sellingPrice * response[selectedMainCurrency];
+                    $('.show-convert-currency').val(final);
+
+                    var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
+
+                    console.log($('.show-convert-currency').val());
+                    console.log($('select[name="group_no"]').val());
+
+
+                    console.log(perPersonAmount);
+                    $('.per-person').val(perPersonAmount);
+
+                    total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
+                    $('.total').val(total_per_person);
+                }
+            });
+        });
+
+        $(document).on('change', 'select[name="group_no"]',function(){
+
+            var group_no = $(this).val();
+            var show_convert_currency =  $('.show-convert-currency').val();
+
+            var perPersonAmount = show_convert_currency / group_no;
+            $('.per-person').val(perPersonAmount);
+
+            var port_tax = parseFloat($('.port-tax').val());
+            total_per_person = port_tax + perPersonAmount;
+            $('.total').val(total_per_person);
+        });
+
+        $(document).on('change', '.port-tax',function(){
+
+            var port_tax = parseFloat($(this).val());
+            var perPersonAmount = parseFloat($('.per-person').val());
+
+            total_per_person = port_tax + perPersonAmount;
+            $('.total').val(total_per_person);
+        });
+
+        $(document).on('submit','#user_form',function(){
+
+            event.preventDefault();
+            var formdata = $(this).serialize();
+            
+            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost').html('');
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('creat-quote') }}',
+                data: formdata, 
+                beforeSend: function() {
+                    $("#divLoading").addClass('show');
+                },
+                success: function (data) {
+
+                    $("#divLoading").removeClass('show');
+                    alert(data.success_message);
+                },
+                error: function (reject) {
+                if( reject.status === 422 ) {
+
+                    var errors = $.parseJSON(reject.responseText);
+
+                    jQuery.each(errors.errors, function( index, value ) {
+                        $('#error_'+ index).html(value);
+                        if($('#error_'+ index).length){
+                            $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
+                        }
+                    });
+
+                    var rows = jQuery('.parent .qoute');
+                    jQuery.each(rows, function( index, value ) {
+                        var error_row = errors.errors['cost.' + index] || null;
+                        if(error_row) {
+                            jQuery(rows[index]).find('.input-group input.cost').parent().next('.alert-danger').html(error_row);
+                            $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }
+                    });
+                 
+                    jQuery.each(rows, function( index, value ) {
+                        var error_row = errors.errors['booking_due_date.' + index] || null;
+                        if(error_row) {
+                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
+                            $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }
+                    });
+
+                    $("#divLoading").removeClass('show');
+                }
+            }
+            });
+
+        });
+
+        $(document).on('click', '.close',function(){
+            $(this).closest(".qoute").remove();
+        });
+        
+
+        // var xc = mainCurrencyConverter('EUR',10,'USD');
+
+        // console.log(xc);
+
+        // function mainCurrencyConverter(mainCurrencyValue, currencyValue, currencyCode) {
+
+        //     if(mainCurrencyValue == 'GBP'){
+        //         mainCurrencyValue = 1.39480;
+        //     }
+
+        //     if(mainCurrencyValue == 'EUR'){
+        //         mainCurrencyValue = 0.856068;
+        //     }
+
+        //     if(currencyCode == 'USD' && mainCurrencyValue == 'GBP'){
+        //         var ans = (currencyValue / mainCurrencyValue);
+        //     }
+
+        //     if(currencyCode == 'USD' && mainCurrencyValue == 'EUR'){
+        //         var ans = (currencyValue / mainCurrencyValue);
+        //     }
+
+        //     return ans;
+        // }
+      
+    });
+</script>
+
+
+
+
+</body>
+
+</html>
+@endsection

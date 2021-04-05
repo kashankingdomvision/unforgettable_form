@@ -37,16 +37,53 @@
             </div>  
             <!-- <form class="form-horizontal"> -->
               <div class="box-body">
+ 
+ 
+
+                <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
+                    <div class="input-group">
+                        <span class="input-group-addon"></span>
+                        {!! Form::text('start_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
+                </div>
+
+                <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">End Date</label><span style="color:red"> * </span>
+                    <div class="input-group">
+                        <span class="input-group-addon"></span>
+                        {!! Form::text('end_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
+                </div>
 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
+                  <div class="col-sm-4 col-sm-offset-3">
+                  
                   <label for="inputEmail3" class="">Enter Season Name</label>
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
                        {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'2019-2020','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
                   </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <label for="inputEmail3" class="">Set Default Season </label>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="radio" id="yes" name="set_default_season" value="1">
+                                <label for="yes"> Yes</label><br>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="radio" id="no" name="set_default_season" value="0" checked>
+                                <label for="no"> No</label><br>   
+                            </div>
+                        </div>
+                        <div class="alert-danger" style="text-align:center">{{$errors->first('set_default_season')}}</div>
+                    </div>
                 </div>
               </div>
               <div class="box-footer">
@@ -282,6 +319,8 @@
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
 
+{!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
+
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
@@ -289,6 +328,18 @@
       // submit the form    
       btn.form.submit();
   }
+
+    $('#datepicker').datepicker({
+		autoclose: true,
+		// format: 'yyyy-mm-dd'
+        format: 'dd/mm/yyyy'
+    });
+
+    $('#datepicker2').datepicker({
+		autoclose: true,
+		// format: 'yyyy-mm-dd'
+        format: 'dd/mm/yyyy'
+    });
 </script>
 
 </body>

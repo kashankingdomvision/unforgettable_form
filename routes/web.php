@@ -39,7 +39,46 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
 	Route::get('update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
 	Route::get('del-category/{id}',array('as'=>'del-category','uses'=>'AdminController@delete_category'));
+	Route::match(['get', 'post'],'add-supplier',array('as'=>'add-supplier','uses'=>'AdminController@add_supplier'));
+	Route::match(['get', 'post'],'view-supplier',array('as'=>'view-supplier','uses'=>'AdminController@view_supplier'));
+	Route::match(['get', 'post'],'update-supplier/{id}',array('as'=>'update-supplier','uses'=>'AdminController@update_supplier'));
+	Route::match(['get', 'post'],'delete-supplier/{id}',array('as'=>'delete-supplier','uses'=>'AdminController@delete_supplier'));
+	Route::match(['get', 'post'],'add-category',array('as'=>'add-category','uses'=>'AdminController@add_category'));
+	Route::match(['get', 'post'],'view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
+	Route::match(['get', 'post'],'update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
+	Route::match(['get', 'post'],'delete-category/{id}',array('as'=>'delete-category','uses'=>'AdminController@delete_category'));
+	Route::match(['get', 'post'],'add-product',array('as'=>'add-product','uses'=>'AdminController@add_product'));
+	Route::match(['get', 'post'],'view-product',array('as'=>'view-product','uses'=>'AdminController@view_product'));
+	Route::match(['get', 'post'],'update-product/{id}',array('as'=>'update-product','uses'=>'AdminController@update_product'));
+	Route::match(['get', 'post'],'delete-product/{id}',array('as'=>'delete-product','uses'=>'AdminController@delete_product'));
+	Route::match(['get', 'post'],'add-role',array('as'=>'add-role','uses'=>'AdminController@add_role'));
+	Route::match(['get', 'post'],'view-role',array('as'=>'view-role','uses'=>'AdminController@view_roles'));
+	Route::match(['get', 'post'],'del-role/{id}',array('as'=>'del-role','uses'=>'AdminController@del_role'));
+	Route::match(['get', 'post'],'update-role/{id}',array('as'=>'update-role','uses'=>'AdminController@update_role'));
+	Route::match(['get', 'post'],'creat-code',array('as'=>'creat-code','uses'=>'AdminController@create_code'));
+	Route::match(['get', 'post'],'view-code',array('as'=>'view-code','uses'=>'AdminController@view_code'));
+	
+    Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
+    Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
+
+	Route::get('edit-code/{id}',array('as'=>'edit-code','uses'=>'AdminController@edit_code'));
+	Route::put('update-code/{id}',array('as'=>'update-code','uses'=>'AdminController@update_code'));
+	
+	Route::match(['get','post'],'delete-code/{id}',array('as'=>'delete-code','uses'=>'AdminController@delete_code'));
+	Route::post('get-supplier',array('as'=>'get-supplier','uses'=>'AdminController@get_supplier'));
+	Route::post('get-supplier-currency',array('as'=>'get-supplier-currency','uses'=>'AdminController@get_supplier_currency'));
+	Route::post('get-currency',array('as'=>'get-currency','uses'=>'AdminController@get_currency'));
 	//end category
+
+
+    Route::match(['get', 'post'],'creat-quote',array('as'=>'creat-quote','uses'=>'AdminController@create_quote'));
+    Route::match(['get', 'post'],'view-quote',array('as'=>'view-quote','uses'=>'AdminController@view_quote'));
+    Route::match(['get', 'post'],'edit-quote/{id}',array('as'=>'edit-quote','uses'=>'AdminController@edit_quote'));
+
+    Route::match(['get', 'post'],'creat-booking-method',array('as'=>'creat-booking-method','uses'=>'AdminController@booking_method'));
+    Route::get('view-booking-method',array('as'=>'view-booking-method','uses'=>'AdminController@view_booking_method'));
+    Route::match(['get', 'post'],'edit-booking-method/{id}',array('as'=>'edit-booking-method','uses'=>'AdminController@edit_booking_method'));
+    Route::get('del-booking-method/{id}',array('as'=>'del-booking-method','uses'=>'AdminController@del_booking_method'));
 
 	// replier 
 	Route::get('creat-replier',array('as'=>'creat-replier','uses'=>'AdminController@create_replier'));

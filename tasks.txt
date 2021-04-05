@@ -20,3 +20,9 @@ Upload Invoice to Sage in the end
 Unclear Points:
 ->Templates and Plus action
 ->Recognizing session using date
+
+Products
+Code
+Name
+Description
+

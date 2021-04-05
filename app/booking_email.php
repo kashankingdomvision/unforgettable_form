@@ -8,7 +8,8 @@ class booking_email extends Model
 {
     protected $guarded = [];
 
-    public function booking(){
-    	return $this->belongsTo('App\booking');
+    public function booking()
+    {
+        return $this->belongsTo('App\booking');
     }
 }

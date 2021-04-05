@@ -1,3 +1,4 @@
+
 @extends('content_layout.default')
 
 @section('content')
@@ -1108,7 +1109,24 @@
             confirm('Full Payment may not have been received--Please confirm you like to Send Documnet to client');
           }
         },false);
-        $('input[name="ref_no"]').on('change', function() {
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 2000;  //time in ms, 5 second for example
+        var $input = $('input[name="ref_no"]');
+
+        //on keyup, start the countdown
+        $input.on('keyup', function () {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown 
+        $input.on('keydown', function () {
+          clearTimeout(typingTimer);
+        });
+
+        //user is "finished typing," do something
+        function doneTyping () {
+          console.log('done-typing');
             //
             $('#link').html('');
             $('#form_received').html('');
@@ -1126,11 +1144,12 @@
             $('.transfer_details').hide(200);
             $('textarea[name=transfer_details]').prop('required',false);
             //
-            book_id = $(this).val();
+            book_id = $('input[name="ref_no"]').val();
             if(book_id) {
               token = $('input[name=_token]').val();
               data  = {id: book_id};
               url   = '{{route('get-ref-detail')}}';
+              console.log('{{route('get-ref-detail')}}');
                 $.ajax({
                     url: url,
                     headers: {'X-CSRF-TOKEN': token},
@@ -1189,13 +1208,15 @@
                               $('#example2 tbody').append(employee_data);
                               $('#finance_detail').val(employee_data);
                             });
+                            
                             $("#holiday").val(data.item_rec4.holiday_amount).trigger('change');
                             // $("#total").val($sum).trigger('change');
                             if($sum==data.item_rec4.holiday_amount){
                               // $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
                               $('#deposit').attr('checked', 'checked').trigger('change');
                               $('#remain').attr('checked', 'checked').trigger('change');
-                            }}
+                            }
+                        }
                         
                           
                         if(data.item_rec2 != null){
@@ -1264,7 +1285,7 @@
             }else{
                 // $('select[name="brand_name"]').empty();
             }
-        });
+        }
     });
     $('input:radio[name=flight_booked]').click(function(){
        if($('input:radio[name=flight_booked]:checked').val() == 'yes'){

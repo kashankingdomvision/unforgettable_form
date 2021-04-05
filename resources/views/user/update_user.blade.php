@@ -65,6 +65,22 @@
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <div class="col-sm-6 col-sm-offset-3">
+                  <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
+                  <label for="inputEmail3" class="">User Type</label>
+                    <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
+                    <div class="input-group">
+                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                       <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
+                       <select class="form-control" name="role">
+                        @foreach($roles as $role)
+                            <option {{ ($data->role == $role->id) ? 'selected' : ''}} value="{{$role->id}}">{{$role->name}}</option>
+                        @endforeach
+                       </select>
+                    </div>
+                  </div>
+                </div>
                 <!-- <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
                     <label class="">Sueprvisor</label>

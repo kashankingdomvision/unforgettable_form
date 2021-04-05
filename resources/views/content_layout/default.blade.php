@@ -107,6 +107,10 @@ thead.border_thead {
   </style>
 </head>
 
+@php
+  $route = \Route::currentRouteName()
+@endphp
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -469,7 +473,7 @@ thead.border_thead {
         $book_id = @$book_id;
         $id      = @$id;
         ?>
-        <li class="treeview @if (Request::is('create-booking') || Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif">
+        <li class="treeview @if ( Request::is('create-booking') || Request::is('creat-booking-method') ||  Request::is('view-booking-method')   ||  Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif  ">
           <a href="#">
             <i class="fa fa-user"></i> <span>Booking</span>
             <span class="pull-right-container">
@@ -479,14 +483,31 @@ thead.border_thead {
           <ul class="treeview-menu">
             <li class="{{Request::is('create-booking') ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking</a></li>
             <li class="{{Request::is('view-booking-season') ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
+            <li class="{{$route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
+            <li class="{{$route == 'view-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
           </ul>
         </li>
 
         <?php
         $id = @$id;
         ?>
+        <li class="treeview {{ $route == 'creat-quote' || $route =='view-quote'  || $route =='edit-quote' ? 'active' : ''}}" >
+          <a href="#">
+            <i class="fa fa-cloud"></i> <span>Quote Management</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            {{-- <li class="{{ $route == 'creat-code' ? 'active' : ''}}"><a href="{{ URL::to('creat-code')}}"><i class="fa fa-plus"></i>Add Code</a></li>
+            <li class="{{ $route =='view-code'  || $route =='edit-code' ? 'active' : ''}}"><a href="{{ URL::to('view-code')}}"><i class="fa fa-eye"></i>View Codes</a></li> --}}
 
-        <li class="treeview @if (Request::is('creat-season') || Request::is('view-season') || Request::is('update-season/'.$id)) active @endif">
+            <li class="{{ $route == 'creat-quote' ? 'active' : ''}}"><a href="{{ URL::to('creat-quote')}}"><i class="fa fa-plus"></i>Add Quotes</a></li>
+            <li class="{{ $route == 'view-quote' || $route == 'edit-quote'  ? 'active' : ''}}"><a href="{{ URL::to('view-quote')}}"><i class="fa fa-eye"></i>View Quotes</a></li>
+          </ul>
+
+        </li>
+        <li class="treeview  @if (Request::is('creat-season') || Request::is('view-season') || Request::is('update-season/'.$id)) active @endif">
           <a href="#">
             <i class="fa fa-cloud"></i> <span>Season Management</span>
             <span class="pull-right-container">
@@ -499,7 +520,7 @@ thead.border_thead {
           </ul>
         </li>
         
-        <li class="treeview @if (Request::is('creat-user') || Request::is('view-user') || Request::is('update-user/'.$id)) active @endif">
+        <li class="treeview @if (Request::is('creat-user') || Request::is('add-role') || Request::is('view-role') || Request::is('view-user') || Request::is('update-user/'.$id)) active @endif">
           <a href="#">
             <i class="fa fa-user"></i> <span>User Management</span>
             <span class="pull-right-container">
@@ -509,6 +530,26 @@ thead.border_thead {
           <ul class="treeview-menu">
             <li class="{{Request::is('creat-user') ? 'active' : ''}}"><a href="{{ URL::to('creat-user')}}"><i class="fa fa-plus"></i>Create User</a></li>
             <li class="{{Request::is('view-user') ? 'active' : ''}}"><a href="{{ URL::to('view-user')}}"><i class="fa fa-eye"></i>View User</a></li>
+            <li class="{{Request::is('add-role') ? 'active' : ''}}"><a href="{{ route('add-role')}}"><i class="fa fa-plus"></i>Add Role</a></li>
+            <li class="{{Request::is('view-role') ? 'active' : ''}}"><a href="{{ route('view-role')}}"><i class="fa fa-eye"></i>View Roles</a></li>
+          </ul>
+        </li>
+        <li class="treeview {{ $route == 'add-category' || $route == 'view-category' || $route == 'update-category' ||  $route == 'add-product' ||  $route == 'update-product' || $route == 'view-product' ||  $route == 'add-supplier' || $route == 'view-supplier' || $route ==  'update-supplier' ||  $route == 'view-supplier-products' || $route ==  'view-supplier-categories' ? 'active' : ''  }}">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>Suppliers</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          <li class="{{ $route == 'add-category' ? 'active' : ''}}"><a href="{{ route('add-category')}}"><i class="fa fa-plus"></i>Add Category</a></li>
+          <li class="{{ $route == 'view-category' || $route == 'update-category' ? 'active' : ''}}"><a href="{{ route('view-category')}}"><i class="fa fa-eye"></i>View Categories</a></li>
+          <li class="{{ $route == 'add-product' ? 'active' : ''}}"><a href="{{ route('add-product')}}"><i class="fa fa-plus"></i>Add Product</a></li>
+          <li class="{{ $route == 'view-product' || $route == 'update-product'  ? 'active' : ''}}"><a href="{{ route('view-product')}}"><i class="fa fa-eye"></i>View Products</a></li>
+          <li class="{{ $route == 'add-supplier' ? 'active' : ''}}"><a href="{{ route('add-supplier')}}"><i class="fa fa-plus"></i>Add Supplier</a></li>
+          <li class="{{ $route == 'view-supplier' || $route ==  'update-supplier' ? 'active' : ''}}"><a href="{{ route('view-supplier')}}"><i class="fa fa-eye"></i>View Suppliers</a></li>
+          <li class="{{ $route == 'view-supplier-products' ? 'active' : ''}}"><a href="{{ route('view-supplier-products')}}"><i class="fa fa-eye"></i> Suppliers Products</a></li>
+          <li class="{{ $route == 'view-supplier-categories' ? 'active' : ''}}"><a href="{{ route('view-supplier-categories')}}"><i class="fa fa-eye"></i> Suppliers Categories</a></li>
           </ul>
         </li> 
 
@@ -526,6 +567,7 @@ thead.border_thead {
             <li class="{{Request::is('view-payment') ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
           </ul>
         </li>
+
 
         <!-- <li class="treeview @if (Request::is('create-supervisor') || Request::is('view-supervisor') || Request::is('update-supervisor/'.$id)) active @endif">
           <a href="#">

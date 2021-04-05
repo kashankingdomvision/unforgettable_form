@@ -8,7 +8,8 @@ class season extends Model
 {
     protected $guarded = [];
 
-    public function booking(){
+    public function booking()
+    {
         return $this->hasMany('App\booking');
     }
 }

@@ -38,9 +38,8 @@
                 <tr>
                   <th>Id</th>
                   <th>name</th>
+                  <th>User Role</th>
                   <th>email</th>
-                  {{-- <th>Supervisor Name</th> --}}
-                  {{-- <th>Supervisor Email</th> --}}
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -50,6 +49,7 @@
                 <tr>
                   <td>{{ $value->id }}</td>
                   <td>{{ $value->name }}</td>
+                  <td style="text-transform: capitalize;">{{ $value->role }}</td>
                   <td>{{ $value->email }}</td>
                   {{-- <td>{{ $value->supervisor_name }}</td> --}}
                   {{-- <td>{{ $value->supervisor_email }}</td> --}}

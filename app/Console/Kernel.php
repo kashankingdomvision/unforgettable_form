@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\ReminderEmail::class,
+        // Commands\ReminderEmail::class,
+        Commands\UpdateCurrencies::class,
     ];
 
     /**
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('reminder:email')->everyMinute();
+        // $schedule->command('reminder:email')->everyMinute();
+        $schedule->command('update:currencies')->everyMinute();
     }
 
     /**

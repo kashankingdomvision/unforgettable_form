@@ -77,4 +77,9 @@
         </main>
     </div>
 </body>
+<style>
+    li{
+        list-style: none;
+    }
+</style>
 </html>

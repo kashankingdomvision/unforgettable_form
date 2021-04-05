@@ -39,6 +39,24 @@
             <!-- <form class="form-horizontal"> -->
               <div class="box-body">
 
+                <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
+                    <div class="input-group">
+                        <span class="input-group-addon"></span>
+                        {!! Form::text('start_date', $data->start_date, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
+                </div>
+
+                <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">End Date</label><span style="color:red"> * </span>
+                    <div class="input-group">
+                        <span class="input-group-addon"></span>
+                        {!! Form::text('end_date', $data->end_date, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
+                </div>
+
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
                   <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
@@ -49,6 +67,25 @@
                     </div>
                   </div>
                 </div>
+
+                <br><br> <br>
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <label for="inputEmail3" class="">Set Default Season </label>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="radio" id="yes" name="set_default_season" value="1" {{ $data->default_season == "1" ? "checked" : null  }}>
+                                <label for="yes"> Yes</label><br>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="radio" id="no" name="set_default_season" value="0" {{ $data->default_season == "0" ? "checked" : null  }}>
+                                <label for="no"> No</label><br>   
+                            </div>
+                        </div>
+                    </div>
+                  <div class="alert-danger" style="text-align:center">{{$errors->first('set_default_season')}}</div>
+                </div>
+
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
@@ -285,6 +322,8 @@
 {!! HTML::script('dist/js/app.min.js') !!}
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
+web
+{!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
 
 <script type="text/javascript">
   function submitForm(btn) {
@@ -293,6 +332,16 @@
       // submit the form    
       btn.form.submit();
   }
+
+  $('#datepicker').datepicker({
+		autoclose: true,
+		format: 'yyyy-mm-dd'
+    });
+
+    $('#datepicker2').datepicker({
+		autoclose: true,
+		format: 'yyyy-mm-dd'
+    });
 </script>
 
 </body>
