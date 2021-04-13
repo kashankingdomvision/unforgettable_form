@@ -26,8 +26,8 @@
             <!-- /.box-header -->
             <!-- form start -->
             
-            {!! Form::open(array('route' => array('update-season',$data->id),'method'=>'POST')) !!}
-            <input type="hidden" name="id" value="<?=$data->id;?>">
+            {!! Form::open(array('route'=>array('update-season',$data->id),'class'=>'form-horizontal','id'=>'season_form')) !!}
+            @csrf
             
             <div class="col-sm-6 col-sm-offset-3">
               @if(Session::has('success_message'))
@@ -38,12 +38,25 @@
             </div>  
             <!-- <form class="form-horizontal"> -->
               <div class="box-body">
+ 
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                    <label for="inputEmail3" class="">Enter Season Name</label>
+                      <div class="input-group">
+                         <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
+
+                         <input type="text" name="name" id="" class="form-control" value="{{ $data->name }}" >
+                         {{-- {!! Form::text('name',,['class'=>'form-control','placeholder'=>'YYYY-YYYY','required'=>'true']) !!} --}}
+                      </div>
+                      <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
+                    </div>
+                </div>
 
                 <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        {!! Form::text('start_date', $data->start_date, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                        <input type="text" name="start_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->start_date))->format('d/m/Y')}}" >
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
                 </div>
@@ -52,47 +65,32 @@
                     <label for="inputEmail3" class="">End Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        {!! Form::text('end_date', $data->end_date, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                        <input type="text" name="end_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->end_date))->format('d/m/Y')}}" >
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
                 </div>
 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
-                  <label for="inputEmail3" class="">Name</label>
-                    <div class="input-group">
-                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                       {!! Form::text('name',$data->name,['class'=>'form-control','placeholder'=>'name','required'=>'true']) !!}
-                    </div>
-                  </div>
-                </div>
-
-                <br><br> <br>
-                <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Set Default Season </label>
                         <div class="row">
                             <div class="col-md-2">
-                                <input type="radio" id="yes" name="set_default_season" value="1" {{ $data->default_season == "1" ? "checked" : null  }}>
+                                <input type="radio" id="yes" name="set_default_season" value="1"  {{ $data->default_season == "1" ? "checked" : "" }} >
                                 <label for="yes"> Yes</label><br>
                             </div>
                             <div class="col-md-2">
-                                <input type="radio" id="no" name="set_default_season" value="0" {{ $data->default_season == "0" ? "checked" : null  }}>
+                                <input type="radio" id="no" name="set_default_season" value="0" {{ $data->default_season == "0" ? "checked" : "" }}>
                                 <label for="no"> No</label><br>   
                             </div>
                         </div>
+                        <div class="alert-danger" style="text-align:center">{{$errors->first('set_default_season')}}</div>
                     </div>
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('set_default_season')}}</div>
                 </div>
 
               </div>
-              <!-- /.box-body -->
               <div class="box-footer">
-                <!-- <button type="submit" class="btn btn-info pull-right">Sign in</button> -->
-                {!! Form::submit('Update',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
+                {!! Form::submit('Submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
               </div>
-              <!-- /.box-footer -->
             </form>
           </div>
           <!-- /.box -->
@@ -322,7 +320,7 @@
 {!! HTML::script('dist/js/app.min.js') !!}
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
-web
+
 {!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
 
 <script type="text/javascript">
@@ -333,14 +331,10 @@ web
       btn.form.submit();
   }
 
-  $('#datepicker').datepicker({
-		autoclose: true,
-		format: 'yyyy-mm-dd'
-    });
-
-    $('#datepicker2').datepicker({
-		autoclose: true,
-		format: 'yyyy-mm-dd'
+    $(document).ready(function() {
+        $(function(){
+            $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        });
     });
 </script>
 

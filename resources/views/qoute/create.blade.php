@@ -65,9 +65,9 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Date of Service</label> 
                     <div class="input-group">
-                        <input type="text" name="date_of_service[]"  class="form-control datepicker" placeholder="Date of Service"  >
+                        <input type="text" name="date_of_service[]"  class="form-control datepicker" placeholder="Date of Service" autocomplete="off" >
                     </div>
-                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('date_of_service') }} </div>
+                    <div class="alert-danger date_of_service" style="text-align:center">  </div>
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom: 35px;">
@@ -100,15 +100,15 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Date</label>
                     <div class="input-group">
-                        <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" value="{{old('booking_date')}}" >
+                        <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
                     </div>
-                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
+                    <div class="alert-danger booking_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                     <div class="input-group">
-                        <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" placeholder="Booking Due Date" required>
+                        <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" autocomplete="off" placeholder="Booking Due Date" >
                     </div>
                     <div class="alert-danger booking_due_date" style="text-align:center"></div>
                 </div>
@@ -144,9 +144,9 @@
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
-                    <label for="inputEmail3" class="">Booking Refrence</label>
+                    <label for="inputEmail3" class="">Booking Reference</label>
                     <div class="input-group">
-                        <input type="text" name="booking_refrence[]" value="" class="form-control"  placeholder="Booking Refrence" value="{{old('booking_refrence')}}" >
+                        <input type="text" name="booking_refrence[]" value="" class="form-control"  placeholder="Booking Reference" value="{{old('booking_refrence')}}" >
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_refrence') }} </div>
                 </div>
@@ -173,9 +173,24 @@
                     <label for="inputEmail3" class="">Cost <span style="color:red">*</span></label>
                     <div class="input-group">
                         <span class="input-group-addon symbol"></span>
-                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" min="0" value="0" required >
+                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" min="0" value="0"  >
                     </div>
                     <div class="alert-danger error-cost" style="text-align:center"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Supervisor</label>
+                    <div class="input-group">
+                        <select  name="supervisor[]" class="form-control supervisor-select2" >
+                            <option value="">Select Supervisor</option>
+                            @foreach ($supervisors as $supervisor)
+                                <option value="{{$supervisor->id}}">{{$supervisor->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> </div>
                 </div>
             </div>
 
@@ -211,7 +226,7 @@
                                 <label for="inputEmail3" class="">Enter Reference Number</label> <span style="color:red">*</span>
                                 <div class="input-group">
                                     <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' required>
-                                    <span class="input-group-addon" id="link"><i class="fa fa-plane"></i></span>
+                                    <span class="input-group-addon" id="link"></span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
                             </div>
@@ -339,9 +354,9 @@
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Date of Service</label> 
                                         <div class="input-group">
-                                            <input type="text" name="date_of_service[]"  class="form-control datepicker" placeholder="Date of Service"  >
+                                            <input type="text" name="date_of_service[]"  class="form-control datepicker" autocomplete="off" placeholder="Date of Service"  >
                                         </div>
-                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('date_of_service') }} </div>
+                                        <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 35px;">
@@ -375,15 +390,15 @@
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Date</label>
                                         <div class="input-group">
-                                            <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" value="{{old('booking_date')}}" >
+                                            <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
                                         </div>
-                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
+                                        <div class="alert-danger booking_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                                     </div>
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                                         <div class="input-group">
-                                            <input type="text" name="booking_due_date[]"  class="form-control datepicker" placeholder="Booking Due Date" required>
+                                            <input type="text" name="booking_due_date[]"  class="form-control datepicker" autocomplete="off" placeholder="Booking Due Date" >
                                         </div>
                                         <div class="alert-danger booking_due_date" style="text-align:center"></div>
                                     </div>
@@ -419,9 +434,9 @@
                                     </div>
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
-                                        <label for="inputEmail3" class="">Booking Refrence</label>
+                                        <label for="inputEmail3" class="">Booking Reference</label>
                                         <div class="input-group">
-                                            <input type="text" name="booking_refrence[]" value="" class="form-control" placeholder="Booking Refrence" value="{{old('booking_refrence')}}" >
+                                            <input type="text" name="booking_refrence[]" value="" class="form-control" placeholder="Booking Reference" value="{{old('booking_refrence')}}" >
                                         </div>
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
@@ -447,9 +462,25 @@
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon symbol" ></span>
-                                            <input type="number" data-code="" name="cost[]" class="form-control cost" min="0" value="0" placeholder="Cost" required>
+                                            <input type="number" data-code="" name="cost[]" class="form-control cost" min="0" value="0" placeholder="Cost" >
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Supervisor</label>
+                                        <div class="input-group">
+                                            <select class="form-control"  name="supervisor[]" id="supervisor-select2" class="form-control" >
+                                                <option value="">Select Supervisor</option>
+                                                @foreach ($supervisors as $supervisor)
+                                                    <option value="{{$supervisor->id}}">{{$supervisor->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
                                 </div>
                             </div>
@@ -493,7 +524,7 @@
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling hide-arrows" value="0">
+                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling" value="0">
                                     </label>
                                 </div>
                     
@@ -516,7 +547,14 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <button type="button" id="convert-currency">Convert to USD</button>
+                                    {{-- <button type="button" >Convert to USD</button> --}}
+
+                                    <select class="form-control select2" id="convert-currency" name="convert_currency">
+                                        <option value="">Select Currency</option>
+                                        @foreach ($currencies as $currency)
+                                            <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        @endforeach
+                                    </select>
                                 </label> 
                                 {{-- <select class="form-control convert-currency"  id="convert-currency" name="convert_currency" >
                                     <option value="">Select Currency</option>
@@ -528,7 +566,7 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="">USD</label>
+                                <label class="convert-currency"></label>
                                     <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0">
                                 </label>
                             </div>
@@ -542,7 +580,7 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="">USD</label>
+                                <label class="convert-currency"></label>
                                 <input type="number" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0">
                             </div>
                         </div>
@@ -555,7 +593,7 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="">USD</label>
+                                <label class="convert-currency"></label>
                                 <input type="number" class="port-tax" step="any" min="0" name="port_tax" value="0">
                             </div>
                         </div>
@@ -568,7 +606,7 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="">USD</label>
+                                <label class="convert-currency"></label>
                                 <input type="number" class="total hide-arrows" min="0" step="any" name="total_per_person" value="0">
                             </div>
                         </div>
@@ -832,23 +870,7 @@
 
         //user is "finished typing," do something
         function doneTyping () {
-        //   console.log('done-typing');
-
-            // $('#link').html('');
-            // $('#form_received').html('');
-            // $('#app_login_date').val('0000-00-00');
-            // $('#form_received_on').val('0000-00-00');
-            // $('select[name="sale_person"]').val('').trigger('change');
-            // $('select[name="brand_name"]').val('');
-            // $('input:radio[name=agency_booking]').prop('checked', false); 
-            // $('input[name="date_of_travel"]').datepicker("setDate" ,'');
-            // $('input[name="form_sent_on"]').datepicker("setDate" ,'');
-            // $('input:radio[name=electronic_copy_sent]').filter('[value=no]').prop('checked', true);
-            // $('#app_login_detail').html('');
-       
-            // $('input:radio[name=asked_for_transfer_details]').filter('[value=no]').prop('checked', true);
-            // $('.transfer_details').hide(200);
-            // $('textarea[name=transfer_details]').prop('required',false);
+     
       
             book_id = $('input[name="ref_no"]').val();
             if(book_id) {
@@ -867,7 +889,7 @@
                     dataType: "json",
                     success:function(data) {
 
-                        // console.log(data);
+             
                         if(data.item_rec != null){
                           $('select[name="brand_name"]').val(data.item_rec.branch_name);
                           $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
@@ -881,134 +903,19 @@
                         }
 
                         if(data.item_rec4 != null){
-                            $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
-                            $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
-                            $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
-                            $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
-                            if(data.item_rec4.record[0].client_type == 2){
-                                $('#ab_yes').trigger('click');
+
+                            if(data.item_rec4.record[0] != null){
+
+                                $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
+                                $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
+                                $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
+                                $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
+                                if(data.item_rec4.record[0].client_type == 2){
+                                    $('#ab_yes').trigger('click');
+                                }
                             }
                         }
-
-
-                        // if(data.item_rec != null){
-                        //   $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                        //   $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        //   // $('select[name="brand_name"]').empty();
-                        //   // $('select[name="brand_name"]').append('<option value="'+ data.item_rec.branch_name +'">'+ data.item_rec.branch_name +'</option>');
-                        //    $('input:radio[name=agency_booking]').filter('[value='+data.item_rec.client_type+']').prop('checked', true);
-                        //    //
-                        //    if(data.item_rec.payment_for == 3){
-                        //       if("departure_date" in data.item_rec){
-                        //         var year  = data.item_rec.departure_date.substr(0, 4);
-                        //         var month = data.item_rec.departure_date.substr(5, 2);
-                        //         var day   = data.item_rec.departure_date.substr(8, 2);
-                        //         var convert_date = month+'/'+day+'/'+year;
-                        //         $('input[name="date_of_travel"]').datepicker("setDate" , convert_date);
-                        //       }
-                        //     }
-                        //    //
-                        //     //
-                        //     $("#example2").on("draw.dt", function () {
-                        //       $(this).find(".dataTables_empty").parents('tbody').empty();
-                        //     }).DataTable();
-                        //     var table = $('#example2').DataTable();
-                        //     table.clear().draw();
-                        //     var $sum=0;
-                        //     $.each(data.item_rec4.record, function(key, value) {
-                        //       if (value.status=="COMPLETED") {
-                        //         $sum+=parseFloat(value.amount_payable);
-                        //       }
-                        //      //
-                        //       if(value.agency_name == ''){
-                        //         var agency_name =  value.agency_name;
-                        //       }else{
-                        //         var agency_name =  '-';
-                        //       }
-                        //       var employee_data = '';
-                        //       employee_data += '<tr>';
-                        //       employee_data += '<td>'+agency_name+'</td>';
-                        //       employee_data += '<td>'+value.agency_contact_num+'</td>';
-                        //       employee_data += '<td>'+value.passenger_first_name+" " +value.passenger_last_name+'</td>';
-                        //       employee_data += '<td>'+value.type+'</td>';
-                        //       employee_data += '<td>'+value.status+'</td>';
-                        //       employee_data += '<td>'+value.curruncy+'</td>';
-                        //       employee_data += '<td>'+value.amount_payable+'</td>';
-                        //       employee_data += '<td>'+value.created_at+'</td>';
-                        //       employee_data += '<tr>';
-                        //       $('#example2 tbody').append(employee_data);
-                        //       $('#finance_detail').val(employee_data);
-                        //     });
-                        //     $("#holiday").val(data.item_rec4.holiday_amount).trigger('change');
-                        //     // $("#total").val($sum).trigger('change');
-                        //     if($sum==data.item_rec4.holiday_amount){
-                        //       // $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        //       $('#deposit').attr('checked', 'checked').trigger('change');
-                        //       $('#remain').attr('checked', 'checked').trigger('change');
-                        //     }
-                        // }
                         
-                          
-                        // if(data.item_rec2 != null){
-                        //   if("id" in data.item_rec2){
-                        //     var id = data.item_rec2.id;
-                        //     $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
-                        //     $('input:radio[name=asked_for_transfer_details]').filter('[value=yes]').prop('checked', true);
-                        //     $('.transfer_details').show(200);
-                        //     $('textarea[name=transfer_details]').prop('required',true);
-                        //     //
-                        //     var detail_rec_date = data.item_rec2.detail_rec_date;
-                        //     if(detail_rec_date == '0000-00-00'){
-                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Form Status (Pending)</a> </strong>');
-                        //       $('#form_received_on').val('0000-00-00');
-                        //       $('.set_reminder').show(200);
-                        //       // $('select[name="fso_person"]').prop('required',true);
-                        //       $('input[name="fso_last_date"]').prop('required',true);
-                        //     }else{
-                        //       var a = detail_rec_date;
-                        //           a = a.split('-');
-                        //           a = a[2]+'/'+a[1]+'/'+a[0];
-                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Received On-' + a + '</a></strong>');
-                        //       $('#form_received_on').val(detail_rec_date);
-                        //       $('.set_reminder').hide(200);
-                        //       // $('select[name="fso_person"]').prop('required',false);
-                        //       $('input[name="fso_last_date"]').prop('required',false);
-                        //       //
-                        //       // $('input:radio[name=transfer_info_received]').filter('[value=yes]').prop('checked', true);
-                        //       // $('.transfer_info_details').show(200);
-                        //       // $('textarea[name=transfer_info_details]').prop('required',true);
-                        //       //
-                        //     }
-                        //   }
-                        //   if("date" in data.item_rec2){
-                        //     var year  = data.item_rec2.date.substr(0, 4);
-                        //     var month = data.item_rec2.date.substr(5, 2);
-                        //     var day   = data.item_rec2.date.substr(8, 2);
-                        //     var convert_date = day+'/'+month+'/'+year;
-                        //     // $('input[name="form_sent_on"]').val(convert_date);
-                        //     $('input[name="form_sent_on"]').datepicker("setDate" , convert_date);
-                        //   }
-                        // }
-                        // if(data.item_rec3 != null){
-                        //   if(data.item_rec3.lognum == null){
-                        //     $('#app_login_detail').html('<strong>Status - App login not created </strong>');
-                        //     $('#app_login_date').val('0000-00-00');
-                        //   }else{
-                        //     $('input:radio[name=electronic_copy_sent]').filter('[value=yes]').prop('checked', true);
-                        //     $('textarea[name=electronic_copy_details]').prop('required',true);
-                        //     $('.electronic_copy_details').show(200);
-                        //     //
-                        //     $('.set_reminder_app').show(200);
-                        //     $('select[name=aps_person]').prop('required',true);
-                        //     $('input[name=aps_last_date]').prop('required',true);
-                        //     //
-                        //     $('#app_login_detail').html('<strong>App login created on '+ data.item_rec3.created_at.substr(0, 10) + ' - User loggedin atleast once : yes</strong>')
-                        //     $('#app_login_date').val(data.item_rec3.created_at.substr(0, 10));
-                        //   }
-                        // }
-                        /*$.each(data.item_rec, function(key, value) {
-                            $('select[name="brand_name"]').append('<option value="'+ value.id +'">'+ value.title +'</option>');
-                        });*/
                         $("#divLoading").removeClass('show');
                     }
                 });
@@ -1023,6 +930,7 @@
         $('#booking-method-select2').select2();
         $('#booked-by-select2').select2();
         $('#supplier-currency').select2();
+        $('#supervisor-select2').select2();
         // $('#convert-currency').select2();
  
         $('body').on('click', '#new', function (e) {
@@ -1037,6 +945,7 @@
             $(".booking-method-select2:last").select2();
             $(".booked-by-select2:last").select2();
             $('.supplier-currency:last').select2();
+            $('.supervisor-select2:last').select2();
             $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
         }
 
@@ -1086,11 +995,11 @@
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
 
-                if(cost !== ""){
+                if(cost !== "" && cost !== '0'){
                     costArray.push(parseFloat(cost));
                 }
 
-                if(currency !== ""){
+                if(currency !== "" && cost !== '0'){
                     currencyArray.push(currency);
                 }
 
@@ -1100,8 +1009,8 @@
             // console.log(currencyArray);
             // var currency = $(this).attr("data-code");
 
-// console.log(cost);
-// console.log(currency);
+            // console.log(cost);
+            // console.log(currency);
 
             var selectedMainCurrency = $("select[name='currency']").val();
             $.ajax({
@@ -1118,16 +1027,16 @@
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final);
+                    $('.net_price').val(final.toFixed(2));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount);
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice);
+                    $('.selling').val(sellingPrice.toFixed(2));
 
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
                     // $('.per-person').val(perPersonAmount);
@@ -1169,11 +1078,11 @@
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
 
-                if(cost !== ""){
+                if(cost !== "" && cost !== '0'){
                     costArray.push(parseFloat(cost));
                 }
 
-                if(currency !== ""){
+                if(currency !== "" && cost !== '0'){
                     currencyArray.push(currency);
                 }
 
@@ -1196,17 +1105,17 @@
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final);
+                    $('.net_price').val(final.toFixed(2));
 
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount);
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice);
+                    $('.selling').val(sellingPrice.toFixed(2));
 
 
                     // console.log(last_convert_currency);
@@ -1227,10 +1136,10 @@
  
             markupAmount = (net_price / 100) * markup_percent;
 
-            $('.markup-amount').val(markupAmount);
+            $('.markup-amount').val(markupAmount.toFixed(2));
 
             var sellingPrice = (markupAmount + net_price);
-            $('.selling').val(sellingPrice);
+            $('.selling').val(sellingPrice.toFixed(2));
 
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
@@ -1243,10 +1152,10 @@
             var markup_amount = parseFloat($('.markup-amount').val());
 
             markupPercentage = markup_amount / (net_price / 100);
-            $('.markup-percent').val(markupPercentage);
+            $('.markup-percent').val(parseInt(markupPercentage));
 
             var sellingPrice = markup_amount + net_price;
-            $('.selling').val(sellingPrice);
+            $('.selling').val(sellingPrice.toFixed(2));
 
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
@@ -1255,7 +1164,6 @@
 
         $(document).on('change', 'select[name="currency"]',function(){
             var selected_currency_code = $(this).val();
-
             var costArray = [];
             var currencyArray = [];
             var selectedMainCurrency = $("select[name='currency']").val();
@@ -1266,11 +1174,11 @@
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
 
-                if(cost !== ""){
+                if(cost !== "" && cost !== '0'){
                     costArray.push(parseFloat(cost));
                 }
 
-                if(currency !== ""){
+                if(currency !== "" && cost !== '0'){
                     currencyArray.push(currency);
                 }
 
@@ -1290,16 +1198,18 @@
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final);
+                    $('.net_price').val(final.toFixed(2));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount);
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice);
+                    $('.selling').val(sellingPrice.toFixed(2));
+
+                    $('.currency').text(selected_currency_code);
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1308,7 +1218,7 @@
                 }
             });
 
-            $('.currency').html(selected_currency_code);
+            // $('.currency').html(selected_currency_code);
         });
 
         $(document).on('click', '#ab_no',function(){
@@ -1324,10 +1234,10 @@
         });
 
         // $(document).on('change', 'select[name="convert_currency"]',function(){
-        $(document).on('click', '#convert-currency',function(){
+        $(document).on('change', '#convert-currency',function(){
 
-
-            var selected_currency = 'USD';
+            // var selected_currency = 'USD';
+            var selected_currency =  $(this).val();
             var selectedMainCurrency = $("select[name='currency']").val();
             var sellingPrice =  $('.selling').val();
 
@@ -1344,19 +1254,17 @@
                     // console.log(response[selectedMainCurrency]);
              
                     final = sellingPrice * response[selectedMainCurrency];
-                    $('.show-convert-currency').val(final);
+                    
+                    $('.show-convert-currency').val(final.toFixed(2));
 
                     var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
 
-                    console.log($('.show-convert-currency').val());
-                    console.log($('select[name="group_no"]').val());
-
-
-                    console.log(perPersonAmount);
-                    $('.per-person').val(perPersonAmount);
+                    $('.per-person').val(perPersonAmount.toFixed(2));
 
                     total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
-                    $('.total').val(total_per_person);
+                    $('.total').val(total_per_person.toFixed(2));
+
+                    $('.convert-currency').text(selected_currency);
                 }
             });
         });
@@ -1388,7 +1296,7 @@
             event.preventDefault();
             var formdata = $(this).serialize();
             
-            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost').html('');
+            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
             $.ajax({
                 type: 'POST',
@@ -1399,20 +1307,32 @@
                 },
                 success: function (data) {
 
+                    // console.log(data);
+
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
                 },
                 error: function (reject) {
+
                 if( reject.status === 422 ) {
 
                     var errors = $.parseJSON(reject.responseText);
 
-                    jQuery.each(errors.errors, function( index, value ) {
-                        $('#error_'+ index).html(value);
-                        if($('#error_'+ index).length){
-                            $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
-                        }
+                    jQuery.each(errors.errors['date_of_service'], function( index, value ) {
+                        jQuery.each(value, function( key, value ) {
+                            jQuery(".date_of_service").eq(key).html(value);
+                        });
                     });
+
+                    jQuery.each(errors.errors['booking_date'], function( index, value ) {
+                        jQuery.each(value, function( key, value ) {
+                            jQuery(".booking_date").eq(key).html(value);
+                        });
+                    });
+
+                    // jQuery.each(errors.errors['booking_due_date'], function( index, value ) {
+                    //     jQuery(".booking_due_date").eq(value+1).html(value);
+                    // });
 
                     var rows = jQuery('.parent .qoute');
                     jQuery.each(rows, function( index, value ) {

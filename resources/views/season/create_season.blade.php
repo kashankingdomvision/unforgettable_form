@@ -38,13 +38,24 @@
             <!-- <form class="form-horizontal"> -->
               <div class="box-body">
  
- 
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                    <label for="inputEmail3" class="">Enter Season Name</label>
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
+                        <input type="text" name="name" id="" class="form-control" autocomplete="off" placeholder="YYYY-YYYY" value="{{ old('name') }}" required>
+                        {{-- {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'YYYY-YYYY','required'=>'true']) !!} --}}
+                      </div>
+                      <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
+                    </div>
+                </div>
 
                 <div class="col-sm-4 col-sm-offset-3" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        {!! Form::text('start_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                        <input type="text" name="start_date" autocomplete="off" class="form-control datepicker" value="{{ old('start_date') }}" >
+                        {{-- {!! Form::text('start_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!} --}}
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
                 </div>
@@ -53,22 +64,13 @@
                     <label for="inputEmail3" class="">End Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        {!! Form::text('end_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!}
+                        {{-- <input type="text" name="end_date" value="{{ !empty($data->end_date) ? date("d/m/y", strtotime($data->end_date)) : "" }}" class="form-control" id="datepicker2" > --}}
+                        <input type="text" name="end_date"  autocomplete="off" value="{{ old('end_date') }}" class="form-control datepicker"  >
+                        {{-- {!! Form::text('end_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!} --}}
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
                 </div>
 
-                <div class="form-group">
-                  <div class="col-sm-4 col-sm-offset-3">
-                  
-                  <label for="inputEmail3" class="">Enter Season Name</label>
-                    <div class="input-group">
-                       <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
-                       {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'2019-2020','required'=>'true']) !!}
-                    </div>
-                    <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
-                  </div>
-                </div>
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Set Default Season </label>
@@ -85,9 +87,10 @@
                         <div class="alert-danger" style="text-align:center">{{$errors->first('set_default_season')}}</div>
                     </div>
                 </div>
+
               </div>
               <div class="box-footer">
-                {!! Form::submit('submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
+                {!! Form::submit('Submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
               </div>
             </form>
           </div>
@@ -329,17 +332,28 @@
       btn.form.submit();
   }
 
-    $('#datepicker').datepicker({
-		autoclose: true,
-		// format: 'yyyy-mm-dd'
-        format: 'dd/mm/yyyy'
+  
+
+    $(document).ready(function() {
+        $(function(){
+            $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        });
     });
 
-    $('#datepicker2').datepicker({
-		autoclose: true,
-		// format: 'yyyy-mm-dd'
-        format: 'dd/mm/yyyy'
-    });
+
+    // $('.datepicker').datepicker({
+	// 	autoclose: true,
+	// 	// format: 'yyyy-mm-dd'
+    //     format: 'dd/mm/yyyy'
+    // });
+
+
+    // $('#datepicker2').datepicker({
+	// 	autoclose: true,
+	// 	// format: 'yyyy-mm-dd'
+    //     format: 'dd/mm/yyyy'
+    // });
+
 </script>
 
 </body>
