@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class QouteDetailLog extends Model
 {
-    protected $guarded = ['id'];
+    //
 }

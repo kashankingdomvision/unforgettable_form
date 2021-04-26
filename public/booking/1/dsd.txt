@@ -1,0 +1,11 @@
+sum(case when status = 1 then 1 else 0 end) as published, 
+   sum(case when status = 0 then 1 else 0 end) as unpublished,
+
+
+
+
+
+
+
+
+https://dba.stackexchange.com/questions/102338/grouping-based-on-the-status-then-count-its-product-and-the-total-based-on-its/102345

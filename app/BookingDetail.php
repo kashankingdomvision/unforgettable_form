@@ -4,7 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class BookingDetail extends Model
 {
+    protected $table = 'booking_details';
+
     protected $guarded = ['id'];
 }

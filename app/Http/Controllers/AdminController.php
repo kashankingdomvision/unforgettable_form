@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Requests;
 use App\User;
 use App\season;
-use App\booking;
+use App\Booking;
+use App\BookingDetail;
+use App\FinanceBookingDetail;
 use App\airline;
 use App\payment;
 use App\supervisor;
@@ -27,6 +29,12 @@ use App\CurrencyConversions;
 use App\Qoute;
 use App\QouteDetail;
 use App\QouteEmail;
+use App\QouteLog;
+use App\QouteDetailLog;
+use File;
+use Image;
+
+
 use App\Mail\DueDateMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -39,6 +47,11 @@ use Hash;
 use Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect as FacadesRedirect;
+
+use Spatie\GoogleCalendar\Event;
+
+ 
+
 
 class AdminController extends Controller
 {
@@ -1512,6 +1525,8 @@ class AdminController extends Controller
 
         if($request->isMethod('post')){
 
+            // dd($request->all());
+
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
@@ -1598,40 +1613,9 @@ class AdminController extends Controller
                 ]);
             }
 
-            // dd($booking_error);
-
-            // $booking_due_error = [];
-            // foreach($request->booking_due_date as $key => $date){
-
-            //     if(!is_null($date)){
-            //         $date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
-            //     }else{
-            //         $date  = null;
-            //     }
-
-            //     if(!is_null($request->booking_date[$key])){
-            //         $booking_date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d')));
-            //     }else{
-            //         $booking_date  = null;
-            //     }
-
-            //     if(!is_null($booking_date) && !is_null($date) ){
-
-
-            //         if( ($date < $booking_date) ){
-            //             $booking_due_error[$key] = "Booking Due Date should be greater than due date";
-            //         }
-            //     }
-            // }
-
-            // if(!empty($booking_error)){
-            //     throw \Illuminate\Validation\ValidationException::withMessages([
-            //         'booking_due_date' => $booking_due_error
-            //     ]);
-            // }
-
             $qoute = new Qoute;
             $qoute->ref_no           =  $request->ref_no;
+            $qoute->quotation_no     =  $request->quotation_no;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
             $qoute->sale_person      =  $request->sale_person;
@@ -1648,8 +1632,6 @@ class AdminController extends Controller
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;
-            $qoute->port_tax         =  $request->port_tax;
-            $qoute->total_per_person =  $request->total_per_person;
             $qoute->save();
 
             if(!empty($request->cost)){
@@ -1670,6 +1652,8 @@ class AdminController extends Controller
                     $qouteDetail->supplier_currency = $request->supplier_currency[$key];
                     $qouteDetail->cost              = $request->cost[$key];
                     $qouteDetail->supervisor_id     = $request->supervisor[$key];
+                    $qouteDetail->added_in_sage     = $request->added_in_sage[$key];
+                    $qouteDetail->qoute_base_currency     = $request->qoute_base_currency[$key];
                     $qouteDetail->save();
                 }
             }
@@ -1697,7 +1681,6 @@ class AdminController extends Controller
             'get_user_branches' => $get_user_branches,
             'get_holiday_type' => $get_holiday_type,
             'categories' => Category::all()->sortBy('name'),
-            // 'seasons' => season::where('default_season',1)->first(),
             'seasons' => season::all(),
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
@@ -1711,6 +1694,401 @@ class AdminController extends Controller
     public function view_quote(){
 
         return view('qoute.view')->with(['quotes' => Qoute::all()]);
+    }
+
+    
+    public function booking(Request $request,$id){
+
+        if($request->isMethod('post')){
+
+            $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
+            $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
+            $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
+            $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
+            $this->validate($request, ['season_id'        => 'required|numeric'], ['required' => 'Please select Booking Season']);
+            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency name']);
+            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency No.']);
+            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Please select Agency']);
+            $this->validate($request, ['currency'                 => 'required'], ['required' => 'Please select Supplier']);
+            $this->validate($request, ['group_no'            => 'required'], ['required' => 'Please select PAX No']);
+            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
+            $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+
+            $season = season::find($request->season_id);
+            
+            if(!empty($request->date_of_service)){
+                $error_array = [];
+                foreach($request->date_of_service as $key => $date){
+        
+                    $start = date('Y-m-d', strtotime($season->start_date));
+                    $end   = date('Y-m-d', strtotime($season->end_date));
+
+                    if(!is_null($date)){
+                        $date  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
+                    }else{
+                        $date  = null;
+                    }
+
+                    if(!is_null($date) && !is_null($start)  && !is_null($end)){
+                        if( !(($date >= $start) && ($date <= $end)) ){
+                            $error_array[$key+1] = "Date of service should be season date range.";
+                        }
+                    }
+         
+                }
+            }
+
+            if(!empty($error_array)){
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'date_of_service' =>  (object) $error_array
+                ]);
+            }
+
+            $booking_error = [];
+            if(!empty($request->booking_date)){
+                foreach($request->booking_date as $key => $date){
+
+                    if(!is_null($date)){
+                        $date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
+                    }else{
+                        $date  = null;
+                    }
+
+                    if(!is_null($request->booking_due_date[$key])){
+                        $booking_due_date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d')));
+                    }else{
+                        $booking_due_date  = null;
+                    }
+
+                    if(!is_null($request->date_of_service[$key])){
+                        $date_of_service  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d')));
+                    }else{
+                        $date_of_service  = null;
+                    }
+
+                    if(is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+                        if( ($date > $booking_due_date ) ){
+                            $booking_error[$key+1] = "Booking Date should be smaller than due date";
+                        }
+                    }
+
+                    if(!is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+                        if( !(($date >= $date_of_service) && ($date <= $booking_due_date)) ){
+                            $booking_error[$key+1] = "Booking Date should be greater Date of service and smaller than Booking Due Date";
+                        }
+                    }
+
+                }
+            }
+
+            if(!empty($booking_error)){
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'booking_date' => (object) $booking_error
+                ]);
+            }
+
+
+            $booking = Booking::updateOrCreate(
+                [ 'quotation_no' => $request->quotation_no ],
+
+                [
+                    'ref_no'           =>  $request->ref_no,
+                    'quotation_no'     =>  $request->quotation_no,
+                    'brand_name'       =>  $request->brand_name,
+                    'type_of_holidays' =>  $request->type_of_holidays,
+                    'sale_person'      =>  $request->sale_person,
+                    'season_id'        =>  $request->season_id,
+                    'agency_booking'   =>  $request->agency_booking,
+                    'agency_name'       =>  $request->agency_name,
+                    'agency_contact_no' =>  $request->agency_contact_no,
+                    'currency'          =>  $request->currency,
+                    'convert_currency'  =>  $request->convert_currency,
+                    'group_no'          =>  $request->group_no,
+                    'net_price'         =>  $request->net_price,
+                    'markup_amount'     =>  $request->markup_amount,
+                    'selling'           =>  $request->selling,
+                    'markup_percent'    =>  $request->markup_percent,
+                    'show_convert_currency' =>  $request->show_convert_currency,
+                    'per_person'       =>  $request->per_person,
+
+                ]
+            );
+            
+            if(!empty($request->actual_cost)){
+                foreach($request->actual_cost as $key => $cost){
+
+                    if(!is_null($request->qoute_invoice)){
+
+                        if(array_key_exists($key,$request->qoute_invoice))
+                        {
+
+                            $oldFileName = $request->qoute_invoice_record[$key];
+
+
+                            $newFile = $request->qoute_invoice[$key];
+                            $filename = $newFile->getClientOriginalName();
+
+                            $folder = public_path('booking/' . $request->qoute_id );
+
+                            if (!File::exists($folder)) {
+                                File::makeDirectory($folder, 0775, true, true);
+                            }
+
+                            $destinationPath = public_path('booking/'. $request->qoute_id .'/'.  $oldFileName);
+                            File::delete($destinationPath);
+    
+                            $newFile->move(public_path('booking/' . $request->qoute_id ), $filename);
+        
+                        }
+                        else{
+                            $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                        }
+                    }
+                    else{
+
+                        $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                    }
+
+                    $bookingDetail = BookingDetail::updateOrCreate(
+                        [ 
+                            'quotation_no' => $request->quotation_no,
+                            'row' => $key+1,
+                        ],
+
+                        [
+                            'qoute_id'          => $request->qoute_id,
+                            'booking_id'        => $booking->id,
+                            'quotation_no'      => $request->quotation_no,
+                            'row'               => $key+1,
+                            'date_of_service'   => $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null,
+                            'service_details'   => $request->service_details[$key],
+                            'category_id'       => $request->category[$key],
+                            'supplier'          => $request->supplier[$key],
+                            'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
+                            'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
+                            // 'booking_method'    => $request->booking_method[$key],
+                            'booked_by'         => $request->booked_by[$key],
+                            'booking_refrence'  => $request->booking_refrence[$key],
+                            'comments'          => $request->comments[$key],
+                            'supplier_currency' => $request->supplier_currency[$key],
+                            'cost'              => $request->cost[$key],
+                            'actual_cost'       => $request->actual_cost[$key],
+                            'supervisor_id'     => $request->supervisor[$key],
+                            'added_in_sage'     => $request->added_in_sage[$key],
+                            'qoute_base_currency' => $request->qoute_base_currency[$key],
+                            'qoute_invoice'     => $filename,
+                        ]
+                    );
+
+                    foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
+
+                        FinanceBookingDetail::updateOrCreate(
+                            [ 
+                                'booking_detail_id' => $bookingDetail->id,
+                                'row' => $ikey+1,
+                            ],
+    
+                            [
+                                'deposit_amount'   =>  !empty($request->deposit_amount[$key][$ikey]) ? $request->deposit_amount[$key][$ikey] : null,
+                                'deposit_due_date' =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
+                                'paid_date'        =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
+                                'booking_method'   =>  $request->booking_method[$key][$ikey] ? $request->booking_method[$key][$ikey] : null,
+                            ]
+    
+                        );
+
+                    }
+
+                }
+            }
+
+            return response()->json(['success_message'=>' Changes Save Successfully ']);
+        }
+
+        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $booking = Booking::where('qoute_id',$id)->first();
+
+        if($booking->count()){
+            $quote = $booking;
+        }else{
+            $quote = Qoute::find($id);
+        }
+
+        $bookingDetail = BookingDetail::where('qoute_id',$id)->get();
+
+        if($bookingDetail->count()){
+            $quote_details = $bookingDetail;
+        }else{
+            $quote_details = QouteDetail::where('qoute_id',$id)->get();
+        }
+
+        return view('qoute.booking.edit')->with([
+            'quote' => $quote,
+            'quote_details' => $quote_details,
+            'get_user_branches' => $get_user_branches,
+            'get_holiday_type' => $get_holiday_type,
+            'categories' => Category::all()->sortBy('name'),
+            // 'seasons' => season::where('default_season',1)->first(),
+            'seasons' => season::all(),
+            'users' => User::all()->sortBy('name'),
+            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'suppliers' => Supplier::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'currencies' => Currency::all()->sortBy('name'),
+            'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
+        ]);
+
+            // $booking->ref_no           =  $request->ref_no;
+            // $booking->quotation_no     =  $request->quotation_no;
+            // $booking->brand_name       =  $request->brand_name;
+            // $booking->type_of_holidays =  $request->type_of_holidays;
+            // $booking->sale_person      =  $request->sale_person;
+            // $booking->season_id        =  $request->season_id;
+            // $booking->agency_booking   =  $request->agency_booking;
+            // $booking->agency_name       =  $request->agency_name;
+            // $booking->agency_contact_no =  $request->agency_contact_no;
+            // $booking->currency          =  $request->currency;
+            // $booking->convert_currency  =  $request->convert_currency;
+            // $booking->group_no          =  $request->group_no;
+            // $booking->net_price         =  $request->net_price;
+            // $booking->markup_amount     =  $request->markup_amount;
+            // $booking->selling           =  $request->selling;
+            // $booking->markup_percent    =  $request->markup_percent;
+            // $booking->show_convert_currency =  $request->show_convert_currency;
+            // $booking->per_person       =  $request->per_person;
+            // $booking->save();
+           
+            // $bookingDetail = BookingDetail::where('qoute_id', $id)->get();
+
+            // $qouteDetailLog = new QouteDetailLog;
+
+            // foreach($qouteDetails as $key => $qouteDetail){
+
+            //     $QouteDetailLog = new QouteDetailLog;
+            //     $QouteDetailLog->qoute_id          = $qouteDetail->qoute_id;
+            //     $QouteDetailLog->date_of_service   = $qouteDetail->date_of_service;
+            //     $QouteDetailLog->service_details   =  $qouteDetail->service_details;
+            //     $QouteDetailLog->category_id       =  $qouteDetail->category_id;
+            //     $QouteDetailLog->supplier          =  $qouteDetail->supplier;
+            //     $QouteDetailLog->booking_date      =  $qouteDetail->booking_date;
+            //     $QouteDetailLog->booking_due_date  =  $qouteDetail->booking_due_date;
+            //     $QouteDetailLog->booking_method    =  $qouteDetail->booking_method;
+            //     $QouteDetailLog->booked_by         =  $qouteDetail->booked_by;
+            //     $QouteDetailLog->booking_refrence  =  $qouteDetail->booking_refrence;
+            //     $QouteDetailLog->comments          =  $qouteDetail->comments;
+            //     $QouteDetailLog->supplier_currency =  $qouteDetail->supplier_currency;
+            //     $QouteDetailLog->cost              =  $qouteDetail->cost;
+            //     $QouteDetailLog->supervisor_id     =  $qouteDetail->supervisor_id;
+            //     $QouteDetailLog->added_in_sage     =  $qouteDetail->added_in_sage;
+            //     $QouteDetailLog->qoute_base_currency =  $qouteDetail->qoute_base_currency;
+            //     $QouteDetailLog->log_no = $qouteDetailLogNumber;
+            //     $QouteDetailLog->save();
+            // }
+        
+            // Delete old qoute
+            // QouteDetail::where('qoute_id',$id)->delete();
+
+            // if(!empty($request->cost)){
+            //     foreach($request->cost as $key => $cost){
+
+            //         $qouteDetail = new QouteDetail;
+            //         $qouteDetail->qoute_id = $qoute->id;
+            //         $qouteDetail->date_of_service   = $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null;
+            //         $qouteDetail->service_details   = $request->service_details[$key];
+            //         $qouteDetail->category_id       = $request->category[$key];
+            //         $qouteDetail->supplier          = $request->supplier[$key];
+            //         $qouteDetail->booking_date      = $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null;
+            //         $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null;
+            //         $qouteDetail->booking_method    = $request->booking_method[$key];
+            //         $qouteDetail->booked_by         = $request->booked_by[$key];
+            //         $qouteDetail->booking_refrence  = $request->booking_refrence[$key];
+            //         $qouteDetail->comments          = $request->comments[$key];
+            //         $qouteDetail->supplier_currency = $request->supplier_currency[$key];
+            //         $qouteDetail->cost              = $request->cost[$key];
+            //         $qouteDetail->supervisor_id     = $request->supervisor[$key];
+            //         $qouteDetail->added_in_sage     = $request->added_in_sage[$key];
+            //         $qouteDetail->qoute_base_currency     = $request->qoute_base_currency[$key];
+
+            //         // if(!is_null($request->qoute_invoice)){
+
+            //         //     if(array_key_exists($key,$request->qoute_invoice))
+            //         //     {
+
+            //         //         $file = $request->qoute_invoice[$key];
+
+
+            //         //         $folder = public_path('quote/' . $qoute->id );
+            //         //         $filename = $file->getClientOriginalName();
+
+
+            //         //         if (!File::exists($folder)) {
+            //         //             File::makeDirectory($folder, 0775, true, true);
+            //         //         }
+
+            //         //         $destinationPath = public_path('quote/'. $id .'/'.  $filename  );
+            //         //         File::delete($destinationPath);
+    
+            //         //         $file->move(public_path('quote/' . $qoute->id ), $filename);
+        
+            //         //         $qouteDetail->qoute_invoice  = $filename ? $filename : null; 
+    
+            //         //     }
+            //         //     else{
+            //         //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+            //         //     }
+            //         // }else{
+
+            //         //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+            //         // }
+                 
+            //         $qouteDetail->save();
+                
+            //     }
+            // }
+
+
+        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        return view('qoute.view')->with(['quotes' => Qoute::all()]);
+    }
+
+    public function upload_to_calendar(Request $request){
+
+        if($request->isMethod('post')){
+            
+            $event = new Event;
+            $event->name        = "To Pay $request->actualCost $request->supplier_currency to Supplier";
+            $event->description = 'Event description';
+            $event->startDate   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+            $event->endDate     = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+            $event->save();
+        }
+
     }
 
 
@@ -1806,7 +2184,37 @@ class AdminController extends Controller
 
         
             $qoute = Qoute::find($id);
+
+            $qoute_log = new QouteLog;
+
+            $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog',$id));
+            $qoute_log->qoute_id          =  $id;
+            $qoute_log->ref_no            =  $qoute->ref_no;
+            $qoute_log->quotation_no      =  $request->quotation_no;
+            $qoute_log->brand_name        =  $qoute->brand_name;
+            $qoute_log->type_of_holidays  =  $qoute->type_of_holidays;
+            $qoute_log->sale_person       =  $qoute->sale_person;
+            $qoute_log->season_id         =  $qoute->season_id;
+            $qoute_log->agency_booking    =  $qoute->agency_booking;
+            $qoute_log->agency_name       =  $qoute->agency_name;
+            $qoute_log->agency_contact_no =  $qoute->agency_contact_no;
+            $qoute_log->currency          =  $qoute->currency;
+            $qoute_log->convert_currency  =  $qoute->convert_currency;
+            $qoute_log->group_no          =  $qoute->group_no;
+            $qoute_log->net_price         =  $qoute->net_price;
+            $qoute_log->markup_amount     =  $qoute->markup_amount;
+            $qoute_log->selling           =  $qoute->selling;
+            $qoute_log->markup_percent    =  $qoute->markup_percent;
+            $qoute_log->show_convert_currency =  $qoute->show_convert_currency;
+            $qoute_log->per_person        =  $qoute->per_person;
+            $qoute_log->created_date      =  date("Y-m-d");
+            $qoute_log->log_no            =  $qouteDetailLogNumber;
+            $qoute_log->user_id           =  Auth::user()->id;
+            $qoute_log->save();
+
+  
             $qoute->ref_no           =  $request->ref_no;
+            $qoute->quotation_no     =  $request->quotation_no;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
             $qoute->sale_person      =  $request->sale_person;
@@ -1823,10 +2231,36 @@ class AdminController extends Controller
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;
-            $qoute->port_tax         =  $request->port_tax;
-            $qoute->total_per_person =  $request->total_per_person;
             $qoute->save();
 
+           
+            $qouteDetails = QouteDetail::where('qoute_id', $id)->get();
+
+            $qouteDetailLog = new QouteDetailLog;
+
+            foreach($qouteDetails as $key => $qouteDetail){
+
+                $QouteDetailLog = new QouteDetailLog;
+                $QouteDetailLog->qoute_id          = $qouteDetail->qoute_id;
+                $QouteDetailLog->date_of_service   = $qouteDetail->date_of_service;
+                $QouteDetailLog->service_details   =  $qouteDetail->service_details;
+                $QouteDetailLog->category_id       =  $qouteDetail->category_id;
+                $QouteDetailLog->supplier          =  $qouteDetail->supplier;
+                $QouteDetailLog->booking_date      =  $qouteDetail->booking_date;
+                $QouteDetailLog->booking_due_date  =  $qouteDetail->booking_due_date;
+                $QouteDetailLog->booking_method    =  $qouteDetail->booking_method;
+                $QouteDetailLog->booked_by         =  $qouteDetail->booked_by;
+                $QouteDetailLog->booking_refrence  =  $qouteDetail->booking_refrence;
+                $QouteDetailLog->comments          =  $qouteDetail->comments;
+                $QouteDetailLog->supplier_currency =  $qouteDetail->supplier_currency;
+                $QouteDetailLog->cost              =  $qouteDetail->cost;
+                $QouteDetailLog->supervisor_id     =  $qouteDetail->supervisor_id;
+                $QouteDetailLog->added_in_sage     =  $qouteDetail->added_in_sage;
+                $QouteDetailLog->qoute_base_currency =  $qouteDetail->qoute_base_currency;
+                $QouteDetailLog->log_no = $qouteDetailLogNumber;
+                $QouteDetailLog->save();
+            }
+        
             // Delete old qoute
             QouteDetail::where('qoute_id',$id)->delete();
 
@@ -1848,7 +2282,43 @@ class AdminController extends Controller
                     $qouteDetail->supplier_currency = $request->supplier_currency[$key];
                     $qouteDetail->cost              = $request->cost[$key];
                     $qouteDetail->supervisor_id     = $request->supervisor[$key];
+                    $qouteDetail->added_in_sage     = $request->added_in_sage[$key];
+                    $qouteDetail->qoute_base_currency     = $request->qoute_base_currency[$key];
+
+                    // if(!is_null($request->qoute_invoice)){
+
+                    //     if(array_key_exists($key,$request->qoute_invoice))
+                    //     {
+
+                    //         $file = $request->qoute_invoice[$key];
+
+
+                    //         $folder = public_path('quote/' . $qoute->id );
+                    //         $filename = $file->getClientOriginalName();
+
+
+                    //         if (!File::exists($folder)) {
+                    //             File::makeDirectory($folder, 0775, true, true);
+                    //         }
+
+                    //         $destinationPath = public_path('quote/'. $id .'/'.  $filename  );
+                    //         File::delete($destinationPath);
+    
+                    //         $file->move(public_path('quote/' . $qoute->id ), $filename);
+        
+                    //         $qouteDetail->qoute_invoice  = $filename ? $filename : null; 
+    
+                    //     }
+                    //     else{
+                    //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                    //     }
+                    // }else{
+
+                    //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                    // }
+                 
                     $qouteDetail->save();
+                
                 }
             }
 
@@ -1869,6 +2339,10 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
+
+
+    
+
         return view('qoute.edit')->with([
             'quote' => Qoute::find($id),
             'quote_details' => QouteDetail::where('qoute_id',$id)->get(),
@@ -1881,8 +2355,121 @@ class AdminController extends Controller
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('name'),
-            'currencies' => Currency::all()->sortBy('name')
+            'currencies' => Currency::all()->sortBy('name'),
+            'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
         ]);
+    }
+    
+
+    public function view_version($quote_id, $log_no){
+        // $qoute_log = QouteLog::where('qoute_id',$quote_id)->where('log_no',$log_no)->get();
+        // return $qoute_log;
+
+        $qoute_log = QouteLog::where('qoute_id',$quote_id)
+        ->where('log_no',$log_no)
+        ->first();
+
+
+
+        $qoute_detail_logs = QouteDetailLog::where('qoute_id',$quote_id)
+        ->where('log_no',$log_no)
+        ->get();
+
+
+        
+        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        return view('qoute.view-version')->with([
+            'qoute_log' => $qoute_log,
+            'qoute_detail_logs' => $qoute_detail_logs,
+            'seasons' =>  season::all(), 
+            'currencies' => Currency::all()->sortBy('name'),
+
+            'categories' => Category::all()->sortBy('name'),
+            'suppliers' => Supplier::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'users' => User::all()->sortBy('name'),
+
+            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+
+            'get_user_branches' => $get_user_branches,
+            'get_holiday_type' => $get_holiday_type
+        ]);
+
+    }
+
+    public function recall_version($quote_id, $log_no){
+
+        $qoute_log = QouteLog::where('qoute_id',$quote_id)
+        ->where('log_no',$log_no)
+        ->first();
+
+
+
+        $qoute_detail_logs = QouteDetailLog::where('qoute_id',$quote_id)
+        ->where('log_no',$log_no)
+        ->get();
+
+        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        return view('qoute.edit')->with([
+            'quote' => $qoute_log,
+            'quote_details' => $qoute_detail_logs,
+            'get_user_branches' => $get_user_branches,
+            'get_holiday_type' => $get_holiday_type,
+            'categories' => Category::all()->sortBy('name'),
+            // 'seasons' => season::where('default_season',1)->first(),
+            'seasons' => season::all(),
+            'users' => User::all()->sortBy('name'),
+            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'suppliers' => Supplier::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'currencies' => Currency::all()->sortBy('name'),
+            'qoute_logs' => QouteLog::where('qoute_id',$quote_id)->get(),
+        ]);
+
+    }
+
+
+    public function get_log_no($table,$qoute_id)  {
+
+        $modelName = "App\\$table"; 
+        $qoute_log =  $modelName::where('qoute_id',$qoute_id)->orderBy('created_at','DESC')->first();
+
+        if(is_null($qoute_log)){
+            return 0;
+        }else{
+            return $qoute_log->log_no;
+        }
+
+    }
+
+    public function increment_log_no($number)  {
+        return  $number =  $number + 1;
     }
     
     // public function view_code()

@@ -4,6 +4,31 @@ header('Access-Control-Allow-Origin: *');
 header( 'Access-Control-Allow-Headers: Authorization, Content-Type');
 header( 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 
+
+use Spatie\GoogleCalendar\Event;
+
+Route::get('/test', function () {
+    // return view('welcome');
+
+
+    // $events = Event::get();
+
+    //create a new event
+$event = new Event;
+
+$event->name = 'A nedfsdfsdfw event';
+$event->description = 'Event description';
+$event->startDateTime = Carbon\Carbon::now();
+$event->endDateTime = Carbon\Carbon::now()->addHour();
+ 
+// $event->addAttendee(['email' => 'kashan.mehmood13@gmail.com']);
+
+$event->save();
+
+    // dd($events);
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,6 +99,14 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get', 'post'],'creat-quote',array('as'=>'creat-quote','uses'=>'AdminController@create_quote'));
     Route::match(['get', 'post'],'view-quote',array('as'=>'view-quote','uses'=>'AdminController@view_quote'));
     Route::match(['get', 'post'],'edit-quote/{id}',array('as'=>'edit-quote','uses'=>'AdminController@edit_quote'));
+    
+	Route::match(['get', 'post'],'confirm-booking/{id}',array('as'=>'confirm-booking','uses'=>'AdminController@booking'));
+
+	Route::match(['get', 'post'],'upload-to-calendar',array('as'=>'upload-to-calendar','uses'=>'AdminController@upload_to_calendar'));
+
+    Route::get('view-version/{quote_id}/{log_no}',array('as'=>'view-version','uses'=>'AdminController@view_version'));
+
+    Route::get('recall-version/{quote_id}/{log_no}',array('as'=>'recall-version','uses'=>'AdminController@recall_version'));
 
     Route::match(['get', 'post'],'creat-booking-method',array('as'=>'creat-booking-method','uses'=>'AdminController@booking_method'));
     Route::get('view-booking-method',array('as'=>'view-booking-method','uses'=>'AdminController@view_booking_method'));

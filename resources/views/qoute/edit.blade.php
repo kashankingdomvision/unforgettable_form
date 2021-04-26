@@ -183,6 +183,20 @@
             </div>
 
             <div class="row">
+
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Currency Conversion</label>
+                    <label class="currency"></label>  
+                    <input type="text" class="base-currency" name="qoute_base_currency[]" readonly><br>
+                </div>
+
+                <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Added in Sage</label>
+                    <div class="input-group">
+                        <input type="hidden" name="added_in_sage[]" value="0"><input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value">
+                    </div>
+                </div>
+
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Supervisor</label>
                     <div class="input-group">
@@ -195,6 +209,17 @@
                     </div>
                     <div class="alert-danger" style="text-align:center"> </div>
                 </div>
+
+                {{-- <div class="col-sm-2" style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Upload Invoice</label>
+                    <div class="input-group">
+                        
+                        <input type="file" name="qoute_invoice[]" value="" class="form-control">
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> </div>
+                </div> --}}
+
+            
             </div>
 
 
@@ -203,7 +228,23 @@
 
 
     <section class="content-header">
-        <h1> Edit Qoute</h1>
+        <h1> Edit Quote</h1>
+        <div class="row">
+            <div class="col-md-12 pull-right">
+                @if(!empty($qoute_logs))
+                    <div id="version">
+                        @foreach ($qoute_logs as $key => $qoute_log)
+                            <p> 
+                                <a href="{{ route('view-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
+                                    Quotation Version {{ $qoute_log->log_no }}: {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}} By {{\App\User::findOrFail($qoute_log->user_id)->name}}
+                                </a>
+                            </p>
+                        @endforeach
+                    </div>
+                @endif
+
+            </div>
+        </div>
     </section>
 
     <section class="content">
@@ -212,7 +253,7 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Edit Qoute</h3>
+                        <h3 class="box-title">Edit Quote</h3>
                     </div>
                     <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
                         @if (Session::has('success_message'))
@@ -222,12 +263,13 @@
                         @endif
                     </div>
 
-                    <form action="{{ route('creat-quote') }}" method="POST" class="form-horizontal" id="user_form">
+
+                    <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1">
-                                <label for="inputEmail3" class="">Enter Reference Number</label> <span style="color:red">*</span>
+                                <label for="inputEmail3" class="">Zoho Reference</label> <span style="color:red">*</span>
                                 <div class="input-group">
                                     <input type="text" name="ref_no" value="{{ $quote->ref_no }}" class="form-control" placeholder='Enter Reference Number' >
                                     <span class="input-group-addon" id="link"></span>
@@ -235,7 +277,18 @@
                                 <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
                             </div>
 
-                            <div class="col-sm-5" style="margin-bottom:15px">
+                            <div class="col-sm-5">
+                                <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
+                                <div class="input-group">
+                                    <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}" required>
+                                    <span class="input-group-addon"></span>
+                                </div>
+                                <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1"  style="margin-bottom:15px">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name" >
                                     <option value="">Select Brand</option>
@@ -474,8 +527,20 @@
                                 </div>
 
                                 <div class="row">
-                              
+                                    
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Currency Conversion</label>
+                                        <label class="currency"></label>  
+                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly><br>
+                                    </div>
 
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Added in Sage</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="added_in_sage[]" value="0">
+                                            <input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value"  {{ $quote_detail->added_in_sage == '1' ? 'checked' : '' }}  >
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Supervisor</label>
@@ -489,6 +554,21 @@
                                         </div>
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
+
+                                    {{-- <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Upload Invoice</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="qoute_invoice_record[]" value="{{$quote_detail->qoute_invoice}}" >
+                                            <input type="file" name="qoute_invoice[]" value="" class="form-control">
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> </div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
+                                        <a  target="_blank" href="{{ asset("quote/".$quote->id."/".$quote_detail->qoute_invoice) }}" style="">  {{ $quote_detail->qoute_invoice }}</a>
+                                    </div> --}}
+
+
                                 </div>
                             </div>
                             @endforeach
@@ -554,24 +634,14 @@
 
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                {{-- <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <button type="button" >Convert to USD</button>
-                                </label>  --}}
-                                
                                 <select class="form-control select2" id="convert-currency" name="convert_currency">
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
                                         <option value="{{ $currency->code }}" {{ $quote->convert_currency == $currency->code ? 'selected' : ''}}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
                                     @endforeach
                                 </select>
-                                {{-- <select class="form-control convert-currency"  id="convert-currency" name="convert_currency" >
-                                    <option value="">Select Currency</option>
-                                    @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" > {{ $currency->name }} ({{ $currency->symbol }}) </option>
-                                    @endforeach
-                                </select>
-                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div> --}}
                             </div>
+                         
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency"></label>
@@ -583,7 +653,7 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Price Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
                                 </label> 
                             </div>
 
@@ -593,7 +663,7 @@
                             </div>
                         </div>
 
-                        <div class="row"> 
+                        {{-- <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
                                     <label style="margin-right: 10px; margin-bottom: 10px;">Include Port Charges</label>
@@ -617,7 +687,7 @@
                                 <label class="convert-currency"></label>
                                 <input type="number" class="total hide-arrows" step="any" min="0" value="{{$quote->total_per_person}}" name="total_per_person" value="0">
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-info pull-right">Submit</button>
@@ -1139,18 +1209,21 @@
         });
 
         $(document).on('change', 'select[name="supplier_currency[]"]',function(){
-            
 
-            var $selector = $(this);
-            var selected_currency_code = $(this).val();
+            let $selector = $(this);
+            let selected_currency_code = $(this).val();
+            let currentCost = $selector.closest(".qoute").find('[class*="cost"]').val();
+
+            let final = 0;
+            let selectedMainCurrency = $("select[name='currency']").val();
+
+            let costArray = [];
+            let currencyArray = [];
 
             $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",selected_currency_code);
             $selector.closest(".qoute").find('[class*="symbol"]').html(selected_currency_code);
-     
-            var costArray = [];
-            var currencyArray = [];
-            var final = 0;
-      
+
+
             $('.cost').each(function(){
 
                 cost = $(this).val();
@@ -1166,14 +1239,7 @@
 
             });
 
-            // console.log(costArray);
-            // console.log(currencyArray);
-            // var currency = $(this).attr("data-code");
 
-                // console.log(cost);
-                // console.log(currency);
-
-            var selectedMainCurrency = $("select[name='currency']").val();
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
@@ -1184,17 +1250,14 @@
                 },
                 success: function(response) {
 
+                    qoute_currency = currentCost * response[selected_currency_code];
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
 
-                    // console.log(response);
-           
                     for(i=0 ; i < currencyArray.length; i++){
-
-                        // console.log(costArray[i]);
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
-                    // console.log(final);
-                    $('.net_price').val(final.toFixed(2));
 
+                    $('.net_price').val(final.toFixed(2));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
@@ -1205,43 +1268,23 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
-                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-                    // $('.per-person').val(perPersonAmount);
-
                 }
             });
 
-
-            // $.ajax({
-            //     type: 'POST',
-            //     url: '{{ route('get-supplier-currency') }}',
-            //     data: {
-            //         "_token": "{{ csrf_token() }}",
-            //         'supplier_id': supplier_id
-            //     },
-            //     success: function(response) {
-
-            //         // $selector.closest(".qoute").find('[class*="cost"]').val(response.code);
-            //         $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",response.code);
-            //         $selector.closest(".qoute").find('[class*="symbol"]').html(response.symbol);
-            //     }
-            // })
-
         });
 
-        var final = 0;
         $(document).on('change', '.cost',function(){
 
             var cost = $(this).val();
             var currency = $(this).attr("data-code");
-
             var selectedMainCurrency = $("select[name='currency']").val();
-  
             var final = 0;
+
+            var $selector = $(this);
 
             var costArray = [];
             var currencyArray = [];
-      
+
             $('.cost').each(function(){
 
                 cost = $(this).val();
@@ -1257,24 +1300,23 @@
 
             });
 
-            // console.log(costArray);
-            // console.log(currencyArray);
-            
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': currency
+                    'from': $selector.attr("data-code")
                 },
                 success: function(response) {
-           
+
+                    qoute_currency = $selector.val() * response[$selector.attr("data-code")];
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
+
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
-
-
 
                     $('.net_price').val(final.toFixed(2));
 
@@ -1289,14 +1331,12 @@
                     $('.selling').val(sellingPrice.toFixed(2));
 
 
-                    // console.log(last_convert_currency);
-                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-                    // $('.per-person').val(perPersonAmount);
 
                 }
             });
-      
+
         });
+
 
         $(document).on('change', '.markup-percent',function(){
 
@@ -1311,8 +1351,6 @@
             var sellingPrice = (markupAmount + net_price);
             $('.selling').val(sellingPrice.toFixed(2));
 
-            // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-            // $('.per-person').val(perPersonAmount);
         });
 
         $(document).on('change', '.markup-amount',function(){
@@ -1326,16 +1364,9 @@
 
             var sellingPrice = markup_amount + net_price;
             $('.selling').val(sellingPrice.toFixed(2));
-
-            // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-            // $('.per-person').val(perPersonAmount);
     
         });
 
-        // $(document).on('change', 'select[name="currency"]',function(){
-        //     var selected_currency_code = $(this).val();
-        //     $('.currency').html(selected_currency_code);
-        // });
 
         $(document).on('change', 'select[name="currency"]',function(){
 
@@ -1372,6 +1403,7 @@
                 success: function(response) {
            
                     for(i=0 ; i < currencyArray.length; i++){
+                        $(".base-currency").eq(i+1).val((costArray[i] * response[currencyArray[i]]).toFixed(2));
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
@@ -1476,13 +1508,19 @@
             $.ajax({
                 type: 'POST',
                 url: '{{ route('edit-quote' , $quote->id  ) }}',
-                data: formdata, 
+                data:  new FormData(this),
+                contentType: false,
+                cache: false,
+                processData:false, 
                 beforeSend: function() {
                     $("#divLoading").addClass('show');
                 },
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
+                    // $("#version").load();
+
+                    $("#version").load(location.href + " #version");
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {
@@ -1530,7 +1568,7 @@
 
                     $("#divLoading").removeClass('show');
                 }
-            }
+                }
             });
 
         });
@@ -1538,6 +1576,33 @@
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
         });
+
+        // $(document).on('click', '.version',function(e){
+        //     e.preventDefault();
+
+        //     var href = $(this).attr('href');
+
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: href,
+    
+        //         beforeSend: function() {
+        //             $("#divLoading").addClass('show');
+        //         },
+        //         success: function (data) {
+        //             $("#divLoading").removeClass('show');
+        //             // alert(data.success_message);
+
+        //             console.log(data);
+        //         },
+        //         error: function (reject) {}
+               
+        //     });
+ 
+
+  
+    
+        // });
         
     });
 </script>
