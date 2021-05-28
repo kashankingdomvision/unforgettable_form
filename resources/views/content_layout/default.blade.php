@@ -564,7 +564,7 @@ thead.border_thead {
           <ul class="treeview-menu">
             <li class="{{Request::is('creat-airline') ? 'active' : ''}}"><a href="{{ route('creat-airline')}}"><i class="fa fa-plus"></i>Create Airline</a></li>
             <li class="{{Request::is('view-airline') ? 'active' : ''}}"><a href="{{ route('view-airline')}}"><i class="fa fa-eye"></i>View Airline</a></li>
-             <li class="{{Request::is('creat-payment') ? 'active' : ''}}"><a href="{{ route('creat-payment')}}"><i class="fa fa-plus"></i>Create Payment Method</a></li>
+            <li class="{{Request::is('creat-payment') ? 'active' : ''}}"><a href="{{ route('creat-payment')}}"><i class="fa fa-plus"></i>Create Payment Method</a></li>
             <li class="{{Request::is('view-payment') ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
           </ul>
         </li>

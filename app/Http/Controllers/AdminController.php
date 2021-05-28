@@ -33,7 +33,7 @@ use App\QouteLog;
 use App\QouteDetailLog;
 use File;
 use Image;
-
+use Response;
 
 use App\Mail\DueDateMail;
 use Illuminate\Support\Facades\Mail;
@@ -1528,6 +1528,7 @@ class AdminController extends Controller
             // dd($request->all());
 
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
+            $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
@@ -1616,6 +1617,7 @@ class AdminController extends Controller
             $qoute = new Qoute;
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
             $qoute->sale_person      =  $request->sale_person;
@@ -1658,7 +1660,7 @@ class AdminController extends Controller
                 }
             }
 
-            return response()->json(['success_message'=>'Qoute Successfully Created!!']);
+            return response()->json(['success_message'=>'Quote Successfully Created!!']);
   
         }
 
@@ -1793,6 +1795,7 @@ class AdminController extends Controller
 
                 [
                     'ref_no'           =>  $request->ref_no,
+                    'qoute_id'          => $request->qoute_id,
                     'quotation_no'     =>  $request->quotation_no,
                     'brand_name'       =>  $request->brand_name,
                     'type_of_holidays' =>  $request->type_of_holidays,
@@ -1921,7 +1924,7 @@ class AdminController extends Controller
 
         $booking = Booking::where('qoute_id',$id)->first();
 
-        if($booking->count()){
+        if(!is_null($booking)){
             $quote = $booking;
         }else{
             $quote = Qoute::find($id);
@@ -2059,7 +2062,6 @@ class AdminController extends Controller
             //     }
             // }
 
-
         $get_user_branches = Cache::remember('get_user_branches', 60, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
@@ -2080,13 +2082,27 @@ class AdminController extends Controller
     public function upload_to_calendar(Request $request){
 
         if($request->isMethod('post')){
-            
-            $event = new Event;
-            $event->name        = "To Pay $request->actualCost $request->supplier_currency to Supplier";
-            $event->description = 'Event description';
-            $event->startDate   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
-            $event->endDate     = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
-            $event->save();
+
+            $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
+
+            $dynamic_text_area = "$request->details";
+
+            $calendar_start_date =  Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+		    $calendar_end_date   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+
+            $location = "";
+            $description = "test";
+            // $guests = "kashan.mehmood13@gmail.com";
+            $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
+            return $message_url;
+
+            // $event = new Event;
+            // $event->name        = "To Pay $request->actualCost $request->supplier_currency to Supplier";
+            // $event->description = 'Event description';
+            // $event->startDate   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+            // $event->endDate     = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
+            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+            // $event->save();
         }
 
     }
@@ -2097,6 +2113,7 @@ class AdminController extends Controller
         if($request->isMethod('post')){
 
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
+            $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
@@ -2191,6 +2208,7 @@ class AdminController extends Controller
             $qoute_log->qoute_id          =  $id;
             $qoute_log->ref_no            =  $qoute->ref_no;
             $qoute_log->quotation_no      =  $request->quotation_no;
+            $qoute_log->lead_passenger_name =  $qoute->lead_passenger_name;
             $qoute_log->brand_name        =  $qoute->brand_name;
             $qoute_log->type_of_holidays  =  $qoute->type_of_holidays;
             $qoute_log->sale_person       =  $qoute->sale_person;
@@ -2215,6 +2233,7 @@ class AdminController extends Controller
   
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
             $qoute->sale_person      =  $request->sale_person;
@@ -2322,7 +2341,7 @@ class AdminController extends Controller
                 }
             }
 
-            return response()->json(['success_message'=>'Qoute Successfully Updated!!']);
+            return response()->json(['success_message'=>'Quote Successfully Updated!!']);
         }
 
         $get_user_branches = Cache::remember('get_user_branches', 60, function () {
@@ -2338,10 +2357,6 @@ class AdminController extends Controller
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
-
-
-
-    
 
         return view('qoute.edit')->with([
             'quote' => Qoute::find($id),
@@ -2416,8 +2431,6 @@ class AdminController extends Controller
         ->where('log_no',$log_no)
         ->first();
 
-
-
         $qoute_detail_logs = QouteDetailLog::where('qoute_id',$quote_id)
         ->where('log_no',$log_no)
         ->get();
@@ -2436,7 +2449,7 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
-        return view('qoute.edit')->with([
+        return view('qoute.recall-version')->with([
             'quote' => $qoute_log,
             'quote_details' => $qoute_detail_logs,
             'get_user_branches' => $get_user_branches,

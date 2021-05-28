@@ -26,7 +26,7 @@
             <!-- /.box-header -->
             <!-- form start -->
             
-            {!! Form::open(array('route' => array('edit-booking-method',$booking_method->id),'method'=>'POST')) !!}
+            {!! Form::open(array('route' => array('edit-booking-method',$booking_method->id) ,'class'=>'form-horizontal','method'=>'POST')) !!}
             <input type="hidden" name="id" value="<?=$booking_method->id;?>">
             
             <div class="col-sm-6 col-sm-offset-3">

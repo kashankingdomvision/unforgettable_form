@@ -124,7 +124,9 @@ CREATE TABLE `booking_details` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- Add lead passenger name feild in qoutes,qoute_logs
+ALTER TABLE `qoutes` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `quotation_no`;
+ALTER TABLE `qoute_logs` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 
 
 

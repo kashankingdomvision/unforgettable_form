@@ -39,22 +39,6 @@
         border-radius: 10px;
     }
 
-    .mb-2{
-        margin-bottom: 1.5rem;
-    }
-
-    .mb-3{
-        margin-bottom: 3rem;
-    }
-
-    .mt-3{
-        margin-top: 3rem;
-    }
-
-    .mt-2{
-        margin-top: 2rem;
-    }
-
     .hide-arrows::-webkit-inner-spin-button, .hide-arrows::-webkit-outer-spin-button {
         -webkit-appearance: none !important;
         margin: 0 !important;
@@ -67,15 +51,12 @@
 </style>
 
 <div class="content-wrapper">
-
-
     <div class="" id="qoute" hidden>
-
         <div class="qoute">
 
             <div class="row">
                 <div class="col-sm-12" >
-                    <button type="button" class="btn pull-right close"> x </button>
+                    <button type="button" class="btn  pull-right close"> x </button>
                 </div>
             </div>
             <br>
@@ -211,7 +192,6 @@
                     <div class="input-group">
                         <input type="hidden" name="added_in_sage[]" value="0"><input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value">
                     </div>
-                    
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -227,14 +207,14 @@
                     <div class="alert-danger" style="text-align:center"> </div>
                 </div>
 
-                <div class="col-sm-2" style="margin-bottom: 15px;">
+                {{-- <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Upload Invoice</label>
                     <div class="input-group">
-                        {{-- <input type="hidden" name="qoute_invoice_record[]" value="" > --}}
+                        
                         <input type="file" name="qoute_invoice[]" value="" class="form-control">
                     </div>
                     <div class="alert-danger" style="text-align:center"> </div>
-                </div>
+                </div> --}}
 
             
             </div>
@@ -243,9 +223,24 @@
         </div>
     </div>
 
-
     <section class="content-header">
-        <h1> Booking </h1>
+        <h1> Edit Quote</h1>
+        <div class="row">
+            <div class="col-md-12 pull-right">
+                @if(!empty($qoute_logs))
+                    <div id="version">
+                        @foreach ($qoute_logs as $key => $qoute_log)
+                            <p> 
+                                <a href="{{ route('view-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
+                                    Quotation Version {{ $qoute_log->log_no }}: {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}} By {{\App\User::findOrFail($qoute_log->user_id)->name}}
+                                </a>
+                            </p>
+                        @endforeach
+                    </div>
+                @endif
+
+            </div>
+        </div>
     </section>
 
     <section class="content">
@@ -254,9 +249,7 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Booking</h3>
-                        <span class="pull-right">
-                            <button type="button" target="_blank" id="export-to-csv"> Export CSV</button></span>
+                        <h3 class="box-title">Edit Quote</h3>
                     </div>
                     <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
                         @if (Session::has('success_message'))
@@ -266,13 +259,9 @@
                         @endif
                     </div>
 
-                    {{-- <form action="{{ route('creat-quote') }}" method="POST" class="form-horizontal" id="user_form"> --}}
 
-
-                        <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
+                    <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
                         @csrf
-
-                        <input type="hidden" value="{{$quote->id}}" name="qoute_id">
 
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1">
@@ -306,8 +295,6 @@
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
                             </div>
                         </div>
-
-
 
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
@@ -397,13 +384,15 @@
                               </div>
                         </div>
 
-
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
+                            </div>
+                        </div>
                         
                         <br><br>
 
                         <div class="parent" id="parent">
-
-                            {{-- {{ dd($quote_details) }} --}}
                             @foreach ($quote_details as $key => $quote_detail)
                                 
                             <div class="qoute">
@@ -417,7 +406,7 @@
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Date of Service</label> 
                                         <div class="input-group">
-                                            <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($quote_detail->date_of_service) ? date('d/m/Y', strtotime($quote_detail->date_of_service)) : "" }}"  class="form-control datepicker date_of_service" placeholder="Date of Service"  >
+                                            <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($quote_detail->date_of_service) ? date('d/m/Y', strtotime($quote_detail->date_of_service)) : "" }}"  class="form-control datepicker" placeholder="Date of Service"  >
                                         </div>
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
@@ -465,11 +454,21 @@
                                         </div>
                                         <div class="alert-danger booking_due_date" style="text-align:center"></div>
                                     </div>
-        
-                    
                                 </div>
         
                                 <div class="row">
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Method</label>
+                                        <div class="input-group">
+                                            <select class="form-control booking-method-select2"  name="booking_method[]"   class="form-control" >
+                                                <option value="">Select Booking Method</option>
+                                                @foreach ($booking_methods as $booking_method)
+                                                    <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                    </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booked By </label>
@@ -510,22 +509,13 @@
                                     </div>
                                     
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
-                                        <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" >{{ $quote_detail->supplier_currency }}</span>
-                                            <input type="number" name="cost[]" class="form-control" value="{{ $quote_detail->cost }}"  placeholder="Cost" min="0" required readonly>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
-                                        <label for="inputEmail3" class="">Actual Cost</label> <span style="color:red">*</span>
+                                        <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon symbol" >{{ $quote_detail->supplier_currency }}</span>
-                                            <input type="number" data-code="{{$quote_detail->supplier_currency}}" name="actual_cost[]" class="form-control cost" value="{{ $quote_detail->actual_cost }}"  placeholder="Cost" min="0" required>
+                                            <input type="number" data-code="{{$quote_detail->supplier_currency}}" name="cost[]" class="form-control cost" value="{{ $quote_detail->cost }}"  placeholder="Cost" min="0" required>
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
-  
                                 </div>
 
                                 <div class="row">
@@ -533,15 +523,15 @@
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
-                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->actual_cost != 0 ? $quote_detail->qoute_base_currency : '' }}" readonly><br>
+                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly><br>
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
-                                        <label for="inputEmail3" class="">Added in Sage </label>
+                                        <label for="inputEmail3" class="">Added in Sage</label>
                                         <div class="input-group">
-                                            <input type="hidden" name="added_in_sage[]" value="{{ $quote_detail->added_in_sage == 1 ? 1 : 0 }}"  ><input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value" {{ $quote_detail->added_in_sage == 1 ? 'checked' : '' }}>
+                                            <input type="hidden" name="added_in_sage[]" value="0">
+                                            <input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value"  {{ $quote_detail->added_in_sage == '1' ? 'checked' : '' }}  >
                                         </div>
-                                        
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -557,7 +547,7 @@
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    {{-- <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Upload Invoice</label>
                                         <div class="input-group">
                                             <input type="hidden" name="qoute_invoice_record[]" value="{{$quote_detail->qoute_invoice}}" >
@@ -567,189 +557,15 @@
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
-                                        <a  target="_blank" href="{{ asset("booking/".$quote->id."/".$quote_detail->qoute_invoice) }}" style="">  {{ $quote_detail->qoute_invoice }}</a>
-                                    </div>
+                                        <a  target="_blank" href="{{ asset("quote/".$quote->id."/".$quote_detail->qoute_invoice) }}" style="">  {{ $quote_detail->qoute_invoice }}</a>
+                                    </div> --}}
 
 
                                 </div>
-
-                                <div class="row finance-row" hidden>
-                                    <div class="row">
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Deposit Amount</label>
-                                            <div class="input-group">
-                                                <input type="number" name="deposit_amount[{{$key}}][]"  class="form-control disable-feild deposit_amount" placeholder="Deposit Amount" min="0"  >
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-    
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Deposit Due Date</label>
-                                            <div class="input-group">
-                                                <input type="text" name="deposit_due_date[{{$key}}][]" class="form-control datepicker disable-feild deposit_due_date" placeholder="Deposit Due Date"  autocomplete="off">
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-    
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Paid Date</label>
-                                            <div class="input-group">
-                                                <input type="text" name="paid_date[{{$key}}][]" class="form-control datepicker disable-feild" placeholder="Paid Date"  autocomplete="off">
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-    
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
-                                            <div class="input-group">
-                                                <select class="form-control booking-method-select2 disable-feild" name="booking_method[{{$key}}][]"  >
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                            <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                        </div>
-                                        
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                            <button type="button" class="remove_finance">-</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                @php
-                                    $finance_booking_details = \App\FinanceBookingDetail::where('booking_detail_id' , $quote_detail->id)->get()
-                                @endphp
-
-                                @if($finance_booking_details->count())
-
-                                    @foreach ($finance_booking_details as $fkey => $finance_booking_detail)
-                                        
-                                    <div class="row">
-                                
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Deposit Amount</label>
-                                            <div class="input-group">
-                                                <input type="number" name="deposit_amount[{{$key}}][]"  value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}" class="form-control deposit_amount" placeholder="Deposit Amount" min="0" >
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Deposit Due Date</label>
-                                            <div class="input-group">
-                                                <input type="text"  name="deposit_due_date[{{$key}}][]" value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}"  class="form-control deposit_due_date datepicker" placeholder="Deposit Due Date" autocomplete="off">
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Paid Date</label>
-                                            <div class="input-group">
-                                                <input type="text" name="paid_date[{{$key}}][]" value="{{ !empty($finance_booking_detail->paid_date) ? date('d/m/Y', strtotime($finance_booking_detail->paid_date)) : '' }}"  class="form-control datepicker" placeholder="Paid Date" autocomplete="off">
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> </div>
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
-                                            <div class="input-group">
-                                                <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $finance_booking_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                            <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                        </div>
-
-                                    
-                                        @if($fkey == 0)
-                                            <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                <button type="button" class="add_finance">+</button>
-                                            </div>
-                                        @endif
-
-
-                                    </div>
-                                    @endforeach
-                                    
-                                @else
-
-                                    <div class="row">
-                                        <div class="append">
-                                            <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Deposit Amount</label>
-                                                <div class="input-group">
-                                                    <input type="number" name="deposit_amount[{{$key}}][]"  value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}" class="form-control deposit_amount" placeholder="Deposit Amount" min="0" >
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center"> </div>
-                                            </div>
-
-                                            <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Deposit Due Date</label>
-                                                <div class="input-group">
-                                                    <input type="text"  name="deposit_due_date[{{$key}}][]" value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}"  class="form-control deposit_due_date datepicker" placeholder="Deposit Due Date" autocomplete="off">
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center"> </div>
-                                            </div>
-
-                                            <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Paid Date</label>
-                                                <div class="input-group">
-                                                    <input type="text" name="paid_date[{{$key}}][]" class="form-control datepicker" placeholder="Paid Date" autocomplete="off">
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center"> </div>
-                                            </div>
-
-                                            <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Payment Method</label>
-                                                <div class="input-group">
-                                                    <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
-                                                        <option value="">Select Payment Method</option>
-                                                        @foreach ($booking_methods as $booking_method)
-                                                            <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
-                                            </div>
-
-                                            <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                            <button type="button" class="add_finance">+</button>
-                                        </div>
-                                    </div>
-                                @endif
-
-                         
-                                
                             </div>
                             @endforeach
                         </div>
-
-                        {{-- <div class="row mt-2">
-                            <div class="col-sm-10 col-sm-offset-1">
-                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
-                            </div>
-                        </div> --}}
-                        <br><br>
+                        <br>
                         
                         
                         <div class="row">
@@ -817,6 +633,7 @@
                                     @endforeach
                                 </select>
                             </div>
+                         
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency"></label>
@@ -837,6 +654,32 @@
                                 <input type="number" class="per-person hide-arrows" min="0" value="{{$quote->per_person}}" step="any" name="per_person" value="0">
                             </div>
                         </div>
+
+                        {{-- <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Include Port Charges</label>
+                                </label> 
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="convert-currency"></label>
+                                <input type="number" class="port-tax" step="any" min="0" name="port_tax" value="{{$quote->port_tax}}">
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                                <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Total Per Person</label>
+                                </label> 
+                            </div>
+
+                            <div class="col-sm-2" style="margin-bottom:15px;">
+                                <label class="convert-currency"></label>
+                                <input type="number" class="total hide-arrows" step="any" min="0" value="{{$quote->total_per_person}}" name="total_per_person" value="0">
+                            </div>
+                        </div> --}}
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-info pull-right">Submit</button>
@@ -1399,8 +1242,6 @@
                 },
                 success: function(response) {
 
-                 
-
                     qoute_currency = currentCost * response[selected_currency_code];
                     $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
 
@@ -1424,7 +1265,6 @@
 
         });
 
-        var final = 0;
         $(document).on('change', '.cost',function(){
 
             var cost = $(this).val();
@@ -1433,12 +1273,10 @@
             var final = 0;
 
             var $selector = $(this);
-            // var selected_currency_code = $(this).val();
-            // $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",selected_currency_code);
 
             var costArray = [];
             var currencyArray = [];
-      
+
             $('.cost').each(function(){
 
                 cost = $(this).val();
@@ -1454,22 +1292,20 @@
 
             });
 
-            // console.log(costArray);
-            // console.log(currencyArray);
-            
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': currency
+                    'from': $selector.attr("data-code")
                 },
                 success: function(response) {
 
                     qoute_currency = $selector.val() * response[$selector.attr("data-code")];
                     $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
-        
+
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
@@ -1487,14 +1323,12 @@
                     $('.selling').val(sellingPrice.toFixed(2));
 
 
-                    // console.log(last_convert_currency);
-                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-                    // $('.per-person').val(perPersonAmount);
 
                 }
             });
-      
+
         });
+
 
         $(document).on('change', '.markup-percent',function(){
 
@@ -1508,7 +1342,7 @@
 
             var sellingPrice = (markupAmount + net_price);
             $('.selling').val(sellingPrice.toFixed(2));
-     
+
         });
 
         $(document).on('change', '.markup-amount',function(){
@@ -1522,16 +1356,9 @@
 
             var sellingPrice = markup_amount + net_price;
             $('.selling').val(sellingPrice.toFixed(2));
-
-            // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
-            // $('.per-person').val(perPersonAmount);
     
         });
 
-        // $(document).on('change', 'select[name="currency"]',function(){
-        //     var selected_currency_code = $(this).val();
-        //     $('.currency').html(selected_currency_code);
-        // });
 
         $(document).on('change', 'select[name="currency"]',function(){
 
@@ -1669,11 +1496,9 @@
 
             $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
-            jQuery(".finance-row").find(".disable-feild").attr("disabled", "disabled");
-
             $.ajax({
                 type: 'POST',
-                url: '{{ route('confirm-booking' , $quote->id  ) }}',
+                url: '{{ route('edit-quote' , $quote->qoute_id  ) }}',
                 data:  new FormData(this),
                 contentType: false,
                 cache: false,
@@ -1684,8 +1509,9 @@
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
+                    // $("#version").load();
 
-                    location.reload();
+                    $("#version").load(location.href + " #version");
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {
@@ -1741,87 +1567,28 @@
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
         });
-        
-        $(document).on('click', '.add_finance',function(){
 
+        // $(document).on('click', '.version',function(e){
+        //     e.preventDefault();
 
-            // $(".disable-feild").attr( "disabled", "disabled" );
-            $(".disable-feild").prop("disabled", false);
-            
-            let $selector = $(this);
-            let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();
+        //     var href = $(this).attr('href');
 
-            $selector.closest(".qoute").append(html);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: href,
+    
+        //         beforeSend: function() {
+        //             $("#divLoading").addClass('show');
+        //         },
+        //         success: function (data) {
+        //             $("#divLoading").removeClass('show');
+        //             // alert(data.success_message);
 
-            $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
-
-            
-            $(".booking-method-select2").removeClass('select2-hidden-accessible').next().remove();
-            $(".booking-method-select2").select2();
-
-            console.log(html);
-        });
-
-        $(document).on('click', '.upload_to_google_calendar',function(){
-
-            let $selector = $(this);
-            let depositAmount     = $selector.closest(".row").find('[class*="deposit_amount"]').val();
-            let deposit_due_date  = $selector.closest(".row").find('[class*="deposit_due_date"]').val();
-            let supplier_currency = $selector.closest(".qoute").find('select[name="supplier_currency[]"]').val();
-
-            var data = {
-                "_token": "{{ csrf_token() }}",
-                "deposit_amount": depositAmount,
-                "supplier_currency": supplier_currency,
-                "deposit_due_date": deposit_due_date,
-                "details": window.location.href,
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('upload-to-calendar') }}',
-                data: data ,
-                beforeSend: function() {},
-                success: function (data) {
-
-                    // console.log(data);
-                    window.open(data, "_blank");
-                    $(this).attr("href", data); // Set herf value
-  
-                },
-            });
-
-        });
-
-
-        $(document).on('click', '#export-to-csv',function(){
-
-            // let $selector = $(this);
-
-            // let depositAmount     = $selector.closest(".row").find('[class*="deposit_amount"]').val();
-            // let deposit_due_date  = $selector.closest(".row").find('[class*="deposit_due_date"]').val();
-            // let supplier_currency = $selector.closest(".qoute").find('select[name="supplier_currency[]"]').val();
-
-            var data = {
-                "_token": "{{ csrf_token() }}",
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('export_to_csv' , $quote->id  ) }}',
-                data: data ,
-                beforeSend: function() {},
-                success: function (data) {
-
-                },
-            });
-
-        });
-
-        $(document).on('click', '.remove_finance',function(){
-            $(this).closest(".row").remove();
-        });
-        
+        //             console.log(data);
+        //         },
+        //         error: function (reject) {}
+        //     });
+        // });
         
     });
 </script>

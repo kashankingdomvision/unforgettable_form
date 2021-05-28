@@ -39,6 +39,22 @@
         border-radius: 10px;
     }
 
+    .mb-2{
+        margin-bottom: 1.5rem;
+    }
+
+    .mb-3{
+        margin-bottom: 3rem;
+    }
+
+    .mt-3{
+        margin-top: 3rem;
+    }
+
+    .mt-2{
+        margin-top: 2rem;
+    }
+
     .hide-arrows::-webkit-inner-spin-button, .hide-arrows::-webkit-outer-spin-button {
         -webkit-appearance: none !important;
         margin: 0 !important;
@@ -252,7 +268,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-info">
-                    <div class="box-header with-border">
+                    <div class="box-header with-border mb-2">
                         <h3 class="box-title">Edit Quote</h3>
                     </div>
                     <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
@@ -268,7 +284,7 @@
                         @csrf
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label for="inputEmail3" class="">Zoho Reference</label> <span style="color:red">*</span>
                                 <div class="input-group">
                                     <input type="text" name="ref_no" value="{{ $quote->ref_no }}" class="form-control" placeholder='Enter Reference Number' >
@@ -288,7 +304,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1"  style="margin-bottom:15px">
+                            
+                            <div class="col-sm-5 mb-2 col-sm-offset-1 mb-2">
+                                <label for="inputEmail3" class="">Lead Passenger Name</label> <span style="color:red">*</span>
+                                <div class="input-group">
+                                    <input type="text" name="lead_passenger_name" class="form-control" value="{{$quote->lead_passenger_name}}" required>
+                                    <span class="input-group-addon"></span>
+                                </div>
+                                <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
+                            </div>
+
+                            <div class="col-sm-5">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name" >
                                     <option value="">Select Brand</option>
@@ -303,7 +329,7 @@
 
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" >
                                     <option value="">Select Holiday</option>
@@ -314,7 +340,7 @@
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
                             </div>
     
-                            <div class="col-sm-5" style="margin-bottom:15px;">
+                            <div class="col-sm-5 mb-2">
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person" >
                                     <option value="">Select Person</option>
@@ -327,7 +353,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Booking Season</label> 
                                 <span style="color:red">*</span>
                                 {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
@@ -366,7 +392,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
                                 <select name="currency" class="form-control select2">
                                     <option value="">Select Currency</option>
@@ -378,7 +404,7 @@
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
 
-                            <div class="col-sm-5" style="margin-bottom:15px">
+                            <div class="col-sm-5 mb-2">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
                                   <select class="form-control dropdown_value select2" name="group_no">
                                     {{-- <option value="">Select Pax No.</option> --}}
@@ -390,12 +416,6 @@
                               </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-10 col-sm-offset-1">
-                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
-                            </div>
-                        </div>
-                        
                         <br><br>
 
                         <div class="parent" id="parent">
@@ -409,7 +429,7 @@
                                 </div>
                                 <br>
                                 <div class="row">
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Date of Service</label> 
                                         <div class="input-group">
                                             <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($quote_detail->date_of_service) ? date('d/m/Y', strtotime($quote_detail->date_of_service)) : "" }}"  class="form-control datepicker" placeholder="Date of Service"  >
@@ -417,13 +437,13 @@
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Service Details</label> 
                                         <textarea name="service_details[]"   class="form-control" cols="30" rows="1">{{ $quote_detail->service_details }}</textarea>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label class="">Select Category</label> 
                                         <select class="form-control category-select2"  name="category[]" >
                                             <option value="">Select Category</option>
@@ -434,7 +454,7 @@
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                                     </div>
         
-                                    <div class="col-sm-2" style="margin-bottom:15px">
+                                    <div class="col-sm-2 mb-3">
                                         <label class="test">Select Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" >
                                             <option value="">Select Supplier</option>
@@ -445,7 +465,7 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
         
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Date</label>
                                         <div class="input-group">
                                             <input type="text" name="booking_date[]" value="{{ !empty($quote_detail->booking_date) ? date('d/m/Y', strtotime($quote_detail->booking_date)) : "" }}" class="form-control datepicker" autocomplete="off" placeholder="Booking Date" >
@@ -453,7 +473,7 @@
                                         <div class="alert-danger booking_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                                     </div>
         
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                                         <div class="input-group">
                                             <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker" placeholder="Booking Date" required>
@@ -465,7 +485,7 @@
                                 </div>
         
                                 <div class="row">
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
                                             <select class="form-control booking-method-select2"  name="booking_method[]"   class="form-control" >
@@ -478,7 +498,7 @@
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booked By </label>
                                         <div class="input-group">
                                             <select class="form-control booked-by-select2"  name="booked_by[]"   class="form-control" >
@@ -491,7 +511,7 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
         
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Reference</label>
                                         <div class="input-group">
                                             <input type="text" name="booking_refrence[]" value="{{ $quote_detail->booking_refrence }}" class="form-control" placeholder="Booking Refrence"  >
@@ -499,13 +519,13 @@
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
         
-                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Comments</label> 
                                         <textarea name="comments[]"   class="form-control" cols="30" rows="1">{{ $quote_detail->comments }}</textarea>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label class="">Select Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
@@ -516,7 +536,7 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
                                     
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon symbol" >{{ $quote_detail->supplier_currency }}</span>
@@ -528,13 +548,13 @@
 
                                 <div class="row">
                                     
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
                                         <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly><br>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Added in Sage</label>
                                         <div class="input-group">
                                             <input type="hidden" name="added_in_sage[]" value="0">
@@ -542,7 +562,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                    <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Supervisor</label>
                                         <div class="input-group">
                                             <select  name="supervisor[]" class="form-control supervisor-select2" >
@@ -573,7 +593,12 @@
                             </div>
                             @endforeach
                         </div>
-                        <br>
+
+                        <div class="row mt-2">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
+                            </div>
+                        </div>
                         
                         
                         <div class="row">
@@ -633,7 +658,7 @@
 
 
                         <div class="row"> 
-                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                            <div class="col-sm-2 col-sm-offset-1 mb-2">
                                 <select class="form-control select2" id="convert-currency" name="convert_currency">
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
@@ -651,7 +676,7 @@
                         </div>
 
                         <div class="row"> 
-                            <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
+                            <div class="col-sm-2 col-sm-offset-1 mb-2">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
                                     <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
                                 </label> 
@@ -1504,7 +1529,6 @@
 
             $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
-
             $.ajax({
                 type: 'POST',
                 url: '{{ route('edit-quote' , $quote->id  ) }}',
@@ -1521,11 +1545,22 @@
                     // $("#version").load();
 
                     $("#version").load(location.href + " #version");
+
+                    window.location.href = "{{ route('view-quote')}}";
+
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {
 
                     var errors = $.parseJSON(reject.responseText);
+
+                    jQuery.each(errors.errors, function( index, value ) {
+                        $('#error_'+ index).html(value);
+
+                        if($('#error_'+ index).length){
+                            $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
+                        }
+                    });
 
                     jQuery.each(errors.errors['date_of_service'], function( index, value ) {
                         jQuery.each(value, function( key, value ) {
@@ -1537,14 +1572,6 @@
                         jQuery.each(value, function( key, value ) {
                             jQuery(".booking_date").eq(key).html(value);
                         });
-                    });
-
-                    jQuery.each(errors.errors, function( index, value ) {
-                        $('#error_'+ index).html(value);
-
-                        if($('#error_'+ index).length){
-                            $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
-                        }
                     });
 
                     // Validating cost feild 

@@ -4,29 +4,26 @@ header('Access-Control-Allow-Origin: *');
 header( 'Access-Control-Allow-Headers: Authorization, Content-Type');
 header( 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 
-
 use Spatie\GoogleCalendar\Event;
 
-Route::get('/test', function () {
-    // return view('welcome');
+    Route::get('/test', function () {
+        // return view('welcome');
+        // $events = Event::get();
 
+        //create a new event
+        $event = new Event;
 
-    // $events = Event::get();
+        $event->name = 'A nedfsdfsdfw event';
+        $event->description = 'Event description';
+        $event->startDateTime = Carbon\Carbon::now();
+        $event->endDateTime = Carbon\Carbon::now()->addHour();
+        
+        // $event->addAttendee(['email' => 'kashan.mehmood13@gmail.com']);
 
-    //create a new event
-$event = new Event;
+        $event->save();
 
-$event->name = 'A nedfsdfsdfw event';
-$event->description = 'Event description';
-$event->startDateTime = Carbon\Carbon::now();
-$event->endDateTime = Carbon\Carbon::now()->addHour();
- 
-// $event->addAttendee(['email' => 'kashan.mehmood13@gmail.com']);
-
-$event->save();
-
-    // dd($events);
-});
+        // dd($events);
+    });
 
 
 /*
@@ -103,6 +100,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get', 'post'],'confirm-booking/{id}',array('as'=>'confirm-booking','uses'=>'AdminController@booking'));
 
 	Route::match(['get', 'post'],'upload-to-calendar',array('as'=>'upload-to-calendar','uses'=>'AdminController@upload_to_calendar'));
+	Route::match(['get', 'post'],'export_to_csv/{id}',array('as'=>'export_to_csv','uses'=>'AdminController@export_to_csv'));
 
     Route::get('view-version/{quote_id}/{log_no}',array('as'=>'view-version','uses'=>'AdminController@view_version'));
 

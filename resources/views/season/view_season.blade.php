@@ -36,24 +36,27 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  {{-- <th>Id</th> --}}
-                  <th>name</th>
-                  <th>Action</th>
+                    <th>Season Name</th>
+                    <th>Season Start Date</th>
+                    <th>Season End Date</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($data as $value)
                 <tr>
-                  {{-- <td>{{ $value->id }}</td> --}}
-                  <td>{{ $value->name }} 
-                    @if ($value->default_season == 1)
-                        <span class="btn btn-primary badge">Default</span>
-                    @endif
-                </td>
-                  <td>
-                    <a href="{{ URL::to('update-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
-                  </td>
+                    <td>
+                        {{ $value->name }} 
+                        @if ($value->default_season == 1)
+                            <span class="btn btn-primary badge">Default</span>
+                        @endif
+                    </td>
+                    <td>{{\Carbon\Carbon::parse(str_replace('-', '/', $value->start_date))->format('d/m/Y')}}</td>
+                    <td>{{\Carbon\Carbon::parse(str_replace('-', '/', $value->end_date))->format('d/m/Y')}}</td>
+                    <td>
+                        <a href="{{ URL::to('update-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
+                        <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    </td>
                 </tr>
                 @endforeach
                 </tbody>
