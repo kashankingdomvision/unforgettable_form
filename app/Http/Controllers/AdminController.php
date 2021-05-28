@@ -1695,7 +1695,7 @@ class AdminController extends Controller
 
     public function view_quote(){
 
-        return view('qoute.view')->with(['quotes' => Qoute::all()]);
+        return view('qoute.view')->with(['quotes' => $results = Qoute::orderBy('created_at', 'desc')->get() ]);
     }
 
     

@@ -281,7 +281,9 @@
 <!-- page script -->
 <script>
   $(function () {
-    $("#example1").DataTable();
+    $("#example1").DataTable({
+        "order": [[ 2, "desc" ]]
+    });
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
