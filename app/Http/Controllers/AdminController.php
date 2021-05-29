@@ -1033,16 +1033,18 @@ class AdminController extends Controller
 
             // dd($request->all());
 
-            $this->validate($request, ['username' => 'required']);
-            $this->validate($request, ['email' => 'required|unique:suppliers']);
-            $this->validate($request, ['phone' => 'required|unique:suppliers']);
-            $this->validate($request, ['categories' => 'required']);
-            $this->validate($request, ['products' => 'required']);
+            $this->validate($request, ['username' => 'required'], ['required' => 'Name is required']);
+            $this->validate($request, ['email' => 'required|unique:suppliers'], ['required' => 'Email is required']);
+            $this->validate($request, ['phone' => 'required|unique:suppliers'], ['required' => 'Phone Number is required']);
+            $this->validate($request, ['categories' => 'required'], ['required' => 'Category is required']);
+            $this->validate($request, ['products' => 'required'], ['required' => 'Product is required']);
+            $this->validate($request, ['currency' => 'required'], ['required' => 'Currency is required']);
 
             $supplier = new Supplier();
             $supplier->name = $request->username;
             $supplier->email = $request->email;
             $supplier->phone = $request->phone;
+            $supplier->currency_id = $request->currency;
             $supplier->save();
 
             $supplier->categories()->sync($request->categories);
@@ -1071,8 +1073,9 @@ class AdminController extends Controller
 
         $categories = Category::all();
         $products = Product::all();
+        $currencies = Currency::all();
 
-        return view('supplier.create_supplier')->with(['categories' => $categories, 'products' => $products ]);
+        return view('supplier.create_supplier')->with([ 'categories' => $categories, 'products' => $products, 'currencies' => $currencies  ]);
     }
 
     public function view_supplier(Request $request)
@@ -1137,16 +1140,17 @@ class AdminController extends Controller
     {
         if($request->isMethod('post')) {
 
-            $this->validate($request, ['username' => 'required']);
-            $this->validate($request, ['email' => 'required|email|unique:suppliers,email,'.$id]);
-            $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ]);
-            $this->validate($request, ['categories' => 'required']);
-            $this->validate($request, ['products' => 'required']);
-
+            $this->validate($request, ['username' => 'required'], ['required' => 'Name is required']);
+            $this->validate($request, ['email' => 'required|email|unique:suppliers,email,'.$id], ['required' => 'Email is required']);
+            $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ], ['required' => 'Phone Number is required']);
+            $this->validate($request, ['categories' => 'required'], ['required' => 'Product is required']);
+            $this->validate($request, ['products' => 'required'], ['required' => 'Currency is required']);
+    
             $supplier = Supplier::find($id);
             $supplier->name = $request->username;
             $supplier->email = $request->email;
             $supplier->phone = $request->phone;
+            $supplier->currency_id = $request->currency;
             $supplier->save();
 
             $supplier->categories()->sync($request->categories);
@@ -1197,11 +1201,12 @@ class AdminController extends Controller
         $supplier = Supplier::find($id);
         $categories = Category::all();
         $products = Product::all();
+        $currencies = Currency::all();
 
         $supplier_category = supplier_category::where('supplier_id', $id)->pluck('category_id')->toArray();
         $supplier_product = supplier_product::where('supplier_id', $id)->pluck('product_id')->toArray();
 
-        return view('supplier.update_supplier')->with([ 'supplier' => $supplier, 'categories' => $categories, 'products' => $products, 'supplier_category' => $supplier_category, 'supplier_product' => $supplier_product ]);
+        return view('supplier.update_supplier')->with([ 'supplier' => $supplier, 'categories' => $categories, 'products' => $products,  'currencies' => $currencies, 'supplier_category' => $supplier_category, 'supplier_product' => $supplier_product ]);
     }
 
     public function add_product(Request $request)

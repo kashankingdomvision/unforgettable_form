@@ -1568,6 +1568,26 @@
             $(this).closest(".qoute").remove();
         });
 
+        // auto select default currency of supplier
+        $(document).on('change', 'select[name="supplier[]"]',function(){
+
+            var $selector = $(this);
+            var supplier_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'supplier_id': supplier_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+                }
+            })
+        });
+
         // $(document).on('click', '.version',function(e){
         //     e.preventDefault();
 

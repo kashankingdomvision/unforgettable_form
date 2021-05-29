@@ -43,7 +43,8 @@
                 <div class="box-body">
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <label for="inputEmail3" class="">Supplier Name</label>
+                            <label for="inputEmail3" class="">Name</label>
+                            <span style="color:red">*</span>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 {{-- {!! Form::text('username',null,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!} --}}
@@ -57,6 +58,7 @@
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
                             <label for="inputEmail3" class="">Email</label>
+                            <span style="color:red">*</span>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                 <!-- <input name="email" type="email" class="form-control" placeholder="Email"> -->
@@ -70,6 +72,7 @@
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
                             <label for="inputEmail3" class="">Phone Number</label>
+                            <span style="color:red">*</span>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 <input class="form-control" name="phone" placeholder="12345678" value="{{$supplier->phone}}">
@@ -80,7 +83,8 @@
     
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <label for="inputEmail3" class="">Select Categories</label>
+                            <label for="inputEmail3" class="">Category</label>
+                            <span style="color:red">*</span>
                             <div class="input-group"> 
                                 <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                                 <select name="categories[]" class="form-control js-example-basic-multiple" multiple>
@@ -108,7 +112,7 @@
     
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <label for="inputEmail3" class="">Select Products</label>
+                            <label for="inputEmail3" class=""> Products</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                                 <select name="products[]" class="form-control  js-example-basic-multiple " multiple >
@@ -130,6 +134,30 @@
                             <div class="alert-danger" style="text-align:center">{{$errors->first('products')}}</div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <label for="inputEmail3" class="">Currecy</label>
+                            <span style="color:red">*</span>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
+                                <select name="currency" class="form-control js-example-basic-multiple">
+                                    <option value="">Select Currecy</option>
+                                    @foreach ($currencies as $currency)
+                                        @if (Input::old('currency') == $currency->id)
+                                            <option value="{{$currency->id}}" selected>{{ $currency->name }} ({{ $currency->symbol }})</option>
+                                        @else
+                                            <option value="{{$currency->id}}" {{ $currency->id == $supplier->currency_id ? "selected" : "" }}>{{ $currency->name }} ({{ $currency->symbol }})</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="alert-danger" style="text-align:center">{{$errors->first('currency')}}</div>
+                        </div>
+                    </div>
+
+
+
                 </div>
               <!-- /.box-body -->
               <div class="box-footer">

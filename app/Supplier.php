@@ -16,4 +16,9 @@ class Supplier extends Model
     public function products(){
         return $this->belongsToMany('App\Product', 'supplier_products');
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

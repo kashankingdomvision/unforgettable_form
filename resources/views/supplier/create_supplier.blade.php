@@ -39,12 +39,13 @@
               <div class="box-body">
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <label for="inputEmail3" class="">Supplier Name</label>
+                        <label for="inputEmail3" class="">Name</label>
+                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                             {{-- {!! Form::text('username',null,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!} --}}
 
-                            <input type="text" name="username"  class="form-control" placeholder="Username" value="{{old('username')}}" >
+                            <input type="text" name="username"  class="form-control" placeholder="Name" value="{{old('username')}}" >
                         </div>
                         <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                     </div>
@@ -53,6 +54,7 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Email</label>
+                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             <!-- <input name="email" type="email" class="form-control" placeholder="Email"> -->
@@ -66,6 +68,7 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Phone Number</label>
+                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                             <input class="form-control" name="phone" placeholder="12345678" value="{{old('phone')}}">
@@ -76,7 +79,8 @@
 
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <label for="inputEmail3" class="">Select Categories</label>
+                        <label for="inputEmail3" class="">Category</label>
+                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                             <select name="categories[]" class="form-control js-example-basic-multiple" multiple>
@@ -92,10 +96,11 @@
 
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <label for="inputEmail3" class="">Select Products</label>
+                        <label for="inputEmail3" class="">Product</label>
+                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
-                            <select name="products[]" class="form-control  js-example-basic-multiple " multiple >
+                            <select name="products[]" class="form-control  js-example-basic-multiple" multiple>
                                 <option value="">Select Products</option>
                                 @foreach ($products as $product)
                                 <option value="{{$product->id}}" {{ in_array($product->id, old('products') ?? []) ? 'selected' : '' }} >{{$product->name}}</option>
@@ -103,6 +108,23 @@
                             </select>
                         </div>
                         <div class="alert-danger" style="text-align:center">{{$errors->first('products')}}</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <label for="inputEmail3" class="">Currecy</label>
+                        <span style="color:red">*</span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
+                            <select name="currency" class="form-control js-example-basic-multiple">
+                                <option value="">Select Currecy</option>
+                                @foreach ($currencies as $currency)
+                                <option value="{{$currency->id}}"  {{ (Input::old("currency") == $currency->id ? "selected" : "") }} >{{ $currency->name }} ({{ $currency->symbol }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="alert-danger" style="text-align:center">{{$errors->first('currency')}}</div>
                     </div>
                 </div>
 

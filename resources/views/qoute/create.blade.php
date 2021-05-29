@@ -485,7 +485,7 @@
                                     </div>
 
                                     <div class="col-sm-2 mb-3">
-                                        <label class="">Select Supplier Currency</label> 
+                                        <label>Select Supplier Currency</label> 
                                         <select class="form-control supplier-currency" id="supplier-currency" name="supplier_currency[]" >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -1410,7 +1410,26 @@
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
         });
-        
+
+        // auto select default currency of supplier
+        $(document).on('change', 'select[name="supplier[]"]',function(){
+
+            var $selector = $(this);
+            var supplier_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'supplier_id': supplier_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+                }
+            })
+        });
 
         // var xc = mainCurrencyConverter('EUR',10,'USD');
 
