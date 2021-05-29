@@ -373,13 +373,22 @@
 
                             <div class="col-sm-5 mb-2">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2" name="group_no" >
+                                  <select id="paxNo" class="form-control dropdown_value select2 sellingPerPersonCost" name="group_no" >
                                     @for($i=1;$i<=30;$i++)
                                     <option value={{$i}} >{{$i}}</option>
                                     @endfor
                                   </select>
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                               </div>
+                        </div>
+                        
+                        
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" class="form-control">
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
                         </div>
 
                         <br><br>
@@ -559,7 +568,7 @@
                                 </div>
 
 
-                                <br><br>
+                                <br />
                             </div>
 
        
@@ -580,7 +589,7 @@
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling" value="0">
+                                        <input type="number" id="sellingprices" class="selling hide-arrows sellingPerPersonCost" min="0" step="any" name="selling" value="0">
                                     </label>
                                 </div>
                     
@@ -601,7 +610,8 @@
 
 
                         <div class="row"> 
-                            <div class="col-sm-2 col-sm-offset-1 mb-2">
+                            <div class="col-sm-2 col-sm-offset-1 mb-2" style="padding: 0px">
+                                <label>Calculate Selling Price in Other Currency</label>
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
                                     {{-- <button type="button" >Convert to USD</button> --}}
 
@@ -621,23 +631,22 @@
                                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div> --}}
                             </div>
 
-                            <div class="col-sm-2 mb-2">
-                                <label class="convert-currency"></label>
-                                    <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0">
-                                </label>
+                            <div class="col-sm-2 mb-2" style="padding: 0px; width: 191px; margin-top: 50px;">
+                            
+                                <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0">
+                          
                             </div>
                         </div>
 
                         <div class="row"> 
-                            <div class="col-sm-2 col-sm-offset-1 mb-2">
+                            <div class="col-sm-2 col-sm-offset-1 mb-2" style="paddin:0px">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
                                 </label> 
                             </div>
 
-                            <div class="col-sm-2 mb-2">
-                                <label class="convert-currency"></label>
-                                <input type="number" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0">
+                            <div class="col-sm-2 mb-2" style="width: 191px; padding: 0px;">
+                                <input type="number" id="bookingPerperson" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0">
                             </div>
                         </div>
 
@@ -1089,7 +1098,10 @@
 
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
-
+                    setTimeout(() => {
+                        updateBookingAmountPerPerson();
+                    }, 200);
+                    console.log('runestimate');
                 }
             });
 
@@ -1151,7 +1163,9 @@
 
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
-
+                   setTimeout(function () {
+                        updateBookingAmountPerPerson();
+                    }, 200)
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1175,7 +1189,9 @@
 
             var sellingPrice = (markupAmount + net_price);
             $('.selling').val(sellingPrice.toFixed(2));
-
+            setTimeout(function () {
+                updateBookingAmountPerPerson();
+            }, 200)
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
         });
@@ -1191,7 +1207,9 @@
 
             var sellingPrice = markup_amount + net_price;
             $('.selling').val(sellingPrice.toFixed(2));
-
+            setTimeout(function () {
+                updateBookingAmountPerPerson();
+            }, 200)
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
     
@@ -1245,7 +1263,9 @@
 
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
-
+                    setTimeout(function () {
+                        updateBookingAmountPerPerson();
+                    }, 200)
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
                     // $('.per-person').val(perPersonAmount);
@@ -1437,7 +1457,28 @@
         //     return ans;
         // }
       
+      ////tabriaz/
+      
+       
+      
+            
+      
+      ///tabriaz/
     });
+        
+    $('.sellingPerPersonCost').change(function(){
+        updateBookingAmountPerPerson();
+    });
+    
+    function updateBookingAmountPerPerson() {
+          console.log('run functions');
+            var paxnumber = parseFloat($('#paxNo').val());
+            var sprice = parseFloat($('#sellingprices').val());
+            var total  = parseFloat(sprice/paxnumber);
+                    // $('.total').val(total_per_person.toFixed(2));
+            // alert(total.toFixed(2));
+            $('#bookingPerperson').val(total.toFixed(2));
+      }
 </script>
 
 

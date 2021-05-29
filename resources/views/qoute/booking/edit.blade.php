@@ -397,7 +397,13 @@
                               </div>
                         </div>
 
-
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
+                        </div>
                         
                         <br><br>
 
@@ -470,19 +476,19 @@
                                 </div>
         
                                 <div class="row">
-
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
-                                        <label for="inputEmail3" class="">Booked By </label>
+                                        <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
-                                            <select class="form-control booked-by-select2"  name="booked_by[]"   class="form-control" >
-                                                <option value="">Select Person</option>
-                                                @foreach ($users as $user)
-                                                    <option value="{{$user->id}}" {{ $quote_detail->booked_by == $user->id ? "selected" : "" }}>{{$user->name}}</option>
+                                            <select class="form-control booking-method-select2" name="booking_method[]" class="form-control">
+                                                <option value="">Select Booking Method</option>
+                                                @foreach ($booking_methods as $booking_method)
+                                                    <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="alert-danger" style="text-align:center"></div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
                                     </div>
+                                 
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Reference</label>
@@ -499,7 +505,7 @@
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom:15px;">
-                                        <label class="">Select Supplier Currency</label> 
+                                        <label class="">Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -530,7 +536,19 @@
 
                                 <div class="row">
                                     
-                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                       <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booked By </label>
+                                        <div class="input-group">
+                                            <select class="form-control booked-by-select2"  name="booked_by[]"   class="form-control" >
+                                                <option value="">Select Person</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{$user->id}}" {{ $quote_detail->booked_by == $user->id ? "selected" : "" }}>{{$user->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+                                    <div class="col-sm-3" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
                                         <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->actual_cost != 0 ? $quote_detail->qoute_base_currency : '' }}" readonly><br>
@@ -599,17 +617,18 @@
                                             <div class="alert-danger" style="text-align:center"> </div>
                                         </div>
     
-                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
+                                         <div class="col-sm-2" style="margin-bottom: 15px;">
+                                            <label for="inputEmail3" class="">Payment Method </label>
                                             <div class="input-group">
-                                                <select class="form-control booking-method-select2 disable-feild" name="booking_method[{{$key}}][]"  >
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                         
+                                                <select class="form-control booking-method-select2 disable-feild" name="payment_method[{{$key}}][]" class="form-control">
+                                                    <option value="">Select Payment Method</option>
+                                                    @foreach ($payment_method as $paymentm)
+                                                        <option value="{{$paymentm->id}}">{{$paymentm->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -625,7 +644,9 @@
 
                                 @php
                                     $finance_booking_details = \App\FinanceBookingDetail::where('booking_detail_id' , $quote_detail->id)->get()
+                                   
                                 @endphp
+                                {{-- {{ dd($quote_detail->id) }} --}}
 
                                 @if($finance_booking_details->count())
 
@@ -658,16 +679,16 @@
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
+                                            <label for="inputEmail3" class="">Payment Method {{  $finance_booking_detail->payment_method }}</label>
                                             <div class="input-group">
-                                                <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $finance_booking_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                                <select class="form-control booking-method-select2" name="payment_method[{{$key}}][]" class="form-control">
+                                                    <option value="">Select Payment Method</option>
+                                                    @foreach ($payment_method as $paymentm)
+                                                        <option value="{{$paymentm->id}}" {{ $finance_booking_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -716,14 +737,14 @@
                                             <div class="col-sm-2" style="margin-bottom: 15px;">
                                                 <label for="inputEmail3" class="">Payment Method</label>
                                                 <div class="input-group">
-                                                    <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
+                                                    <select class="form-control booking-method-select2" name="payment_method[{{$key}}][]" class="form-control">
                                                         <option value="">Select Payment Method</option>
-                                                        @foreach ($booking_methods as $booking_method)
-                                                            <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                                        @foreach ($payment_method as $paymentm)
+                                                            <option value="{{$paymentm->id}}" {{ $quote_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                             </div>
 
                                             <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -1684,8 +1705,9 @@
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
+                    window.location.href = "{{ route('view-quote')}}";
 
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {

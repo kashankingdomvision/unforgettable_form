@@ -364,6 +364,7 @@ class AdminController extends Controller
             $booking_id = booking::create(array(
                 'ref_no'                      => $request->ref_no,
                 'brand_name'                  => $request->brand_name,
+                'dinning_preferences'         => $request->dinning_preferences,
                 'season_id'                   => $request->season_id,
                 'agency_booking'              => $request->agency_booking,
                 'pax_no'                      => $request->pax_no,
@@ -791,6 +792,7 @@ class AdminController extends Controller
             booking::where('id', '=', $id)->update(array(
                 'ref_no'                      => $request->ref_no,
                 'brand_name'                  => $request->brand_name,
+                'dinning_preferences'         => $request->dinning_preferences,
                 'season_id'                   => $request->season_id,
                 'agency_booking'              => $request->agency_booking,
                 'pax_no'                      => $request->pax_no,
@@ -1525,7 +1527,6 @@ class AdminController extends Controller
 
         if($request->isMethod('post')){
 
-            // dd($request->all());
 
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
@@ -1540,7 +1541,9 @@ class AdminController extends Controller
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Please select PAX No']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
-
+            
+             $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
+            
             $season = season::find($request->season_id);
 
             if(!empty($request->date_of_service)){
@@ -1617,6 +1620,7 @@ class AdminController extends Controller
             $qoute = new Qoute;
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->dinning_preferences  = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
@@ -1635,7 +1639,6 @@ class AdminController extends Controller
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;
             $qoute->save();
-
             if(!empty($request->cost)){
                 foreach($request->cost as $key => $cost){
 
@@ -1694,15 +1697,14 @@ class AdminController extends Controller
 
 
     public function view_quote(){
-
+        
         return view('qoute.view')->with(['quotes' => $results = Qoute::orderBy('created_at', 'desc')->get() ]);
     }
 
     
     public function booking(Request $request,$id){
-
+        
         if($request->isMethod('post')){
-
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
@@ -1797,6 +1799,7 @@ class AdminController extends Controller
                     'ref_no'           =>  $request->ref_no,
                     'qoute_id'          => $request->qoute_id,
                     'quotation_no'     =>  $request->quotation_no,
+                    'dinning_preferences'   => $request->dinning_preferences,
                     'brand_name'       =>  $request->brand_name,
                     'type_of_holidays' =>  $request->type_of_holidays,
                     'sale_person'      =>  $request->sale_person,
@@ -1816,7 +1819,6 @@ class AdminController extends Controller
 
                 ]
             );
-            
             if(!empty($request->actual_cost)){
                 foreach($request->actual_cost as $key => $cost){
 
@@ -1869,7 +1871,7 @@ class AdminController extends Controller
                             'supplier'          => $request->supplier[$key],
                             'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
                             'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
-                            // 'booking_method'    => $request->booking_method[$key],
+                            'booking_method'    => $request->booking_method[$key],
                             'booked_by'         => $request->booked_by[$key],
                             'booking_refrence'  => $request->booking_refrence[$key],
                             'comments'          => $request->comments[$key],
@@ -1884,7 +1886,6 @@ class AdminController extends Controller
                     );
 
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
-
                         FinanceBookingDetail::updateOrCreate(
                             [ 
                                 'booking_detail_id' => $bookingDetail->id,
@@ -1895,7 +1896,7 @@ class AdminController extends Controller
                                 'deposit_amount'   =>  !empty($request->deposit_amount[$key][$ikey]) ? $request->deposit_amount[$key][$ikey] : null,
                                 'deposit_due_date' =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'paid_date'        =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
-                                'booking_method'   =>  $request->booking_method[$key][$ikey] ? $request->booking_method[$key][$ikey] : null,
+                                'payment_method'   =>  $request->payment_method[$key][$ikey]??NULL,
                             ]
     
                         );
@@ -1952,6 +1953,7 @@ class AdminController extends Controller
             'booking_methods' => BookingMethod::all()->sortBy('name'),
             'currencies' => Currency::all()->sortBy('name'),
             'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
+            'payment_method' => payment::all()->sortBy('name'),
         ]);
 
             // $booking->ref_no           =  $request->ref_no;
@@ -2125,8 +2127,9 @@ class AdminController extends Controller
             $this->validate($request, ['group_no'            => 'required'], ['required' => 'Please select PAX No']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
 
-            $season = season::find($request->season_id);
+            $season = season::findOrFail($request->season_id);
             
             if(!empty($request->date_of_service)){
                 $error_array = [];
@@ -2200,7 +2203,7 @@ class AdminController extends Controller
             }
 
         
-            $qoute = Qoute::find($id);
+            $qoute = Qoute::findOrFail($id);
 
             $qoute_log = new QouteLog;
 
@@ -2208,6 +2211,7 @@ class AdminController extends Controller
             $qoute_log->qoute_id          =  $id;
             $qoute_log->ref_no            =  $qoute->ref_no;
             $qoute_log->quotation_no      =  $request->quotation_no;
+            $qoute_log->dinning_preferences     = $qoute->dinning_preferences;
             $qoute_log->lead_passenger_name =  $qoute->lead_passenger_name;
             $qoute_log->brand_name        =  $qoute->brand_name;
             $qoute_log->type_of_holidays  =  $qoute->type_of_holidays;
@@ -2233,6 +2237,7 @@ class AdminController extends Controller
   
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->dinning_preferences     = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
@@ -2382,7 +2387,7 @@ class AdminController extends Controller
 
         $qoute_log = QouteLog::where('qoute_id',$quote_id)
         ->where('log_no',$log_no)
-        ->first();
+        ->firstOrFail();
 
 
 
