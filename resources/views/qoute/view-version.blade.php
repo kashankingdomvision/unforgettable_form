@@ -459,7 +459,7 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
                                 </label> 
                             </div>
 

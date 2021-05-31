@@ -284,7 +284,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1"  style="margin-bottom:15px">
+                            
+                            <div class="col-sm-5 mb-2 col-sm-offset-1 mb-2">
+                                <label for="inputEmail3" class="">Lead Passenger Name</label> <span style="color:red">*</span>
+                                <div class="input-group">
+                                    <input type="text" name="lead_passenger_name" class="form-control" value="{{ $quote->lead_passenger_name }}" >
+                                    <span class="input-group-addon"></span>
+                                </div>
+                                <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
+                            </div>
+
+                            <div class="col-sm-5"  style="margin-bottom:15px">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name" >
                                     <option value="">Select Brand</option>
@@ -297,6 +307,8 @@
                         </div>
 
                         <div class="row">
+
+                            
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" >
@@ -384,11 +396,7 @@
                               </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-10 col-sm-offset-1">
-                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
-                            </div>
-                        </div>
+
                         
                         <br><br>
 
@@ -565,6 +573,12 @@
                             </div>
                             @endforeach
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <button type="button" id="new" class="btn btn-info pull-right">+</button>
+                            </div>
+                        </div>
                         <br>
                         
                         
@@ -655,7 +669,7 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
                                 </label> 
                             </div>
 
@@ -1479,13 +1493,15 @@
                     final = sellingPrice * response[selectedMainCurrency];
                     $('.show-convert-currency').val(final.toFixed(2));
 
-                    var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
-
-
+                    var group_no = $("select[name='group_no']").val();
+                    var perPersonAmount = final / group_no;
                     $('.per-person').val(perPersonAmount.toFixed(2));
 
-                    total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
-                    $('.total').val(total_per_person.toFixed(2));
+                    // var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
+                    // $('.per-person').val(perPersonAmount.toFixed(2));
+
+                    // total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
+                    // $('.total').val(total_per_person.toFixed(2));
 
                     $('.convert-currency').text(selected_currency);
                 }

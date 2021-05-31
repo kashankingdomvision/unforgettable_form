@@ -641,7 +641,7 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1 mb-2">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
                                 </label> 
                             </div>
 
@@ -1313,8 +1313,11 @@
                     // console.log(response[selectedMainCurrency]);
              
                     final = sellingPrice * response[selectedMainCurrency];
-                    
                     $('.show-convert-currency').val(final.toFixed(2));
+                    
+                    var group_no = $("select[name='group_no']").val();
+                    var perPersonAmount = final / group_no;
+                    $('.per-person').val(perPersonAmount.toFixed(2));
 
                     // var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
 
@@ -1334,7 +1337,7 @@
             var show_convert_currency =  $('.show-convert-currency').val();
 
             var perPersonAmount = show_convert_currency / group_no;
-            $('.per-person').val(perPersonAmount);
+            $('.per-person').val(perPersonAmount.toFixed(2));
 
             var port_tax = parseFloat($('.port-tax').val());
             total_per_person = port_tax + perPersonAmount;
