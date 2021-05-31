@@ -73,7 +73,7 @@
 
             <div class="row">
                 <div class="col-sm-12" >
-                    <button type="button" class="btn  pull-right close"> x </button>
+                    <button type="button" class="btn pull-right close"> x </button>
                 </div>
             </div><br>
 
@@ -265,11 +265,22 @@
                     <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
+                            <div class="col-md-5 col-sm-offset-1 mb-2">
+                                <label>Select the reference <span style="color:red">*</span></label> <br />
+                                <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
+                                <label class="radio-inline"><input type="radio"  name="reference" value="tas" >TAS Reference</label>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                <label for="inputEmail3" class="">Zoho Reference</label> <span style="color:red">*</span>
+                                <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                 <div class="input-group">
                                     <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
-                                    <span class="input-group-addon" id="link"></span>
+                                    <span  id="link">
+                                    </span>
+                                    <span class="input-group-addon">
+                                        <button id="sendReference" type="button" class="btn-link"> Search </button>
+                                    </span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
                             </div>
@@ -996,21 +1007,40 @@ $(document).ready(function() {
         //         startDate: start_date, endDate: end_date,
         //     });
         // });
+        
+        $('input:radio[name="reference"]').change(
+            function(){
+                if ($(this).is(':checked') && $(this).val() == 'zoho') {
+                    $('#referencename').text('Zoho Reference');
+                }else if($(this).is(':checked') && $(this).val() == 'tas'){
+                    $('#referencename').text('TAS Reference');
+                }
+        });
+        
+        $(document).on('click', '#sendReference', function(){
+            $('#link').html('');
+            $('#link').removeAttr('class');
+            $(this).text('searching');
+            $(this).attr('disabled', 'disabled');
+            $('#error_ref_no').text('');
+            doneTyping();
+            
+        });
 
         var typingTimer;                //timer identifier
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
-        var $input = $('input[name="ref_no"]');
+        // var $input = $('input[name="ref_no"]');
 
-        //on keyup, start the countdown
-        $input.on('keyup', function () {
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
+        // //on keyup, start the countdown
+        // $input.on('keyup', function () {
+        //   clearTimeout(typingTimer);
+        //   typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        // });
 
-        //on keydown, clear the countdown 
-        $input.on('keydown', function () {
-          clearTimeout(typingTimer);
-        });
+        // //on keydown, clear the countdown 
+        // $input.on('keydown', function () {
+        //   clearTimeout(typingTimer);
+        // });
 
         //user is "finished typing," do something
         function doneTyping () {
@@ -1043,6 +1073,7 @@ $(document).ready(function() {
                             if("id" in data.item_rec2){
                                 var id = data.item_rec2.id;
                                 $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
+                                $('#link').attr('class', 'input-group-addon');
                             }
                         }
 
@@ -1060,12 +1091,20 @@ $(document).ready(function() {
                             }
                         }
                         
+                        $('#sendReference').text('Search');
+                         $('#sendReference').removeAttr('disabled');
                         $("#divLoading").removeClass('show');
+                        if(data.item_rec == null && data.item_rec4 == null, data.item_rec2 == null ){
+                            $('#error_ref_no').text('The Reference is not found');
+                        }
                     }
                 });
             }else{
-                // $('select[name="brand_name"]').empty();
+                $('#sendReference').text('Search');
+                $('#sendReference').removeAttr('disabled');
+                $('#error_ref_no').text('Reference feild is required!');
             }
+    
         }
 
         $('.select2').select2();
