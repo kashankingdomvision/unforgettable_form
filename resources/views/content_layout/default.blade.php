@@ -587,3 +587,5 @@ thead.border_thead {
     </section>
   </aside>
   @yield('content')
+  
+  @yield('scripts')

@@ -131,7 +131,12 @@ ALTER TABLE `qoute_logs` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `
 -- //dinning preferences
 ALTER TABLE `quotes` ADD `dinning_preferences` varchar(500) NOT NULL AFTER 'quotation_no';
 ALTER TABLE `qoute_logs` ADD `dinning_preferences` varchar(500) NOT NULL AFTER 'quotation_no';
-ALTER TABLE `booking` ADD `dinning_preferences` varchar(500) NOT NULL AFTER 'quotation_no';
+
+-- ///booking type
+ALTER TABLE `qoute_details` ADD `booking_type` varchar(500) NOT NULL AFTER 'booking_refrence';
+ALTER TABLE `qoute_detail_logs` ADD `booking_type` varchar(500) NOT NULL AFTER 'booking_refrence';
+ALTER TABLE `booking_details` ADD `booking_type` varchar(500) NOT NULL AFTER 'booking_refrence';
+
 
 
 

@@ -139,7 +139,7 @@
                         <select class="form-control booking-method-select2"  name="booking_method[]" >
                             <option value="">Select Booking Method</option>
                             @foreach ($booking_methods as $booking_method)
-                                <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                <option {{($booking_method->name == 'Supplier Own')? 'selected' : NULL}} {{($booking_method->name == 'Supplier Own')? 'selected' : NULL}} value="{{$booking_method->id}}">{{$booking_method->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -158,6 +158,8 @@
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
                 </div>
+                
+              
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Reference</label>
@@ -167,6 +169,17 @@
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_refrence') }} </div>
                 </div>
 
+                <div class="col-sm-2 " style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Type</label> 
+                    <div class="input-group">
+                        <select class="form-control booked-by-select2" name="booking_type[]" >
+                            <option value="">Select Booking Type</option>
+                            <option value="refundable">Refundable</option>
+                            <option value="non_refundable">Non-Refundable</option>
+                        </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_type') }} </div>
+                </div>
 
                 <div class="col-sm-2" style="margin-bottom: 35px;">
                     <label for="inputEmail3" class="">Comments</label> 
@@ -185,6 +198,10 @@
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
 
+               
+            </div>
+
+            <div class="row">
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Estimsted Cost <span style="color:red">*</span></label>
                     <div class="input-group">
@@ -193,9 +210,6 @@
                     </div>
                     <div class="alert-danger error-cost" style="text-align:center"></div>
                 </div>
-            </div>
-
-            <div class="row">
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Currency Conversion</label>
@@ -322,16 +336,12 @@
                                 <label class="">Booking Season</label> 
                                 <span style="color:red">*</span>
                                 {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
-                                <select class="form-control dropdown_value" name="season_id"  >
-                                    <option value="">Select Season</option>
+                                <select class="form-control dropdown_value" name="season_id" onchange="checkSeassondate()" id="seasonDate"  >
+                                    <option selected disabled value="">Select Season</option>
                                     @foreach ($seasons as $sess)
-                                    <option value="{{ $sess->id }}"  
-                                        @if(old('season_id') == $sess->id)
-                                        selected
-                                        @elseif($sess->default_season == 1 )
-                                        selected
-                                        @endif
-                                        >{{ $sess->name }}</option>
+                                    <option value="{{ $sess->id }}" {{ (old('season_id') == $sess->id)? 'selected':(($sess->default_season == 1 )? 'selected': '')}}> 
+                                        {{ $sess->name }}
+                                    </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
@@ -459,7 +469,7 @@
                                             <select class="form-control"  name="booking_method[]" id="booking-method-select2" class="form-control" >
                                                 <option value="">Select Booking Method</option>
                                                 @foreach ($booking_methods as $booking_method)
-                                                    <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                                    <option  {{($booking_method->name == 'Supplier Own')? 'selected' : NULL}} value="{{$booking_method->id}}">{{$booking_method->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -486,6 +496,18 @@
                                         </div>
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
+                                    
+                                    <div class="col-sm-2 " style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Type</label> 
+                                        <div class="input-group">
+                                            <select class="form-control booked-by-select2" name="booking_type[]" >
+                                                <option value="">Select Booking Type</option>
+                                                <option value="refundable">Refundable</option>
+                                                <option value="non_refundable">Non-Refundable</option>
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_type') }} </div>
+                                    </div>
         
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Comments</label> 
@@ -504,6 +526,11 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
                                     
+                                  
+                                </div>
+
+
+                                <div class="row">
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
@@ -512,11 +539,7 @@
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
                                         <input type="text" class="base-currency" name="qoute_base_currency[]" readonly><br>
@@ -908,12 +931,71 @@
 
 <script type="text/javascript">
 
-    $(function(){
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
-    });
 
-    $(document).ready(function() {
 
+// $(document).ready(function(){
+
+// $(".datepicker").datepicker({
+//     todayBtn:  1,
+//     autoclose: true,
+// }).on('changeDate', function (selected) {
+//     var minDate = new Date(selected.date.valueOf());
+//     $('#enddate').datepicker('setStartDate', minDate);
+// });
+
+// $("#enddate").datepicker()
+//     .on('changeDate', function (selected) {
+//         var maxDate = new Date(selected.date.valueOf());
+//         $('#startdate').datepicker('setEndDate', maxDate);
+//     });
+
+// });
+
+// function checkSeassondate() {
+    
+
+//     var season_id = $('#seasonDate').val();
+//     // $('.datepicker').datepicker('setDate', null);
+//     var seasons   = {!! json_encode($seasons->toArray()) !!};
+//     var item = seasons.find(item => item.id == season_id);    
+//     var start_date = new Date (item.start_date);
+//     var end_date = new Date(item.end_date);
+ 
+//     // $( ".datepicker" ).val("").datepicker("change",{ 
+//     //     startDate: start_date, endDate: end_date,
+      
+//     // });
+ 
+//     $('.datepicker').data({date: start_date}).datepicker('update').children("input").val(start_date);   
+//     // $(".datepicker").datepicker({
+//     //     todayBtn:  1,
+//     //     autoclose: true,
+//     // }).on('changeDate', function (item) {
+//     //     var start_date = new Date (item.start_date);
+//     //     var end_date = new Date(item.end_date);
+//     // console.log(item.start_date );
+        
+//     //     // var minDate = new Date(selected.date.valueOf());
+//     //     $('.datepicker').datepicker({startDate: start_date.valueOf(), endDate:end_date.valueOf()});
+//     // });
+// }
+$(document).ready(function() {
+    
+    $(".datepicker").datepicker({ autoclose: true, format: 'yyyy-mm-dd'  });
+    
+        // $(function(){
+        //     var season_id = $('#seasonDate').val();
+        //     var seasons   = {!! json_encode($seasons->toArray()) !!};
+        //     var item = seasons.find(item => item.id == season_id);    
+        //     console.log(item.start_date, item.end_date);
+            
+            
+        //     var start_date = new Date (item.start_date);
+        //     var end_date = new Date(item.end_date);
+        //     $( ".datepicker" ).datepicker({ 
+        //         startDate: start_date, endDate: end_date,
+        //     });
+        // });
 
         var typingTimer;                //timer identifier
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
@@ -1008,7 +1090,8 @@
             $(".booked-by-select2:last").select2();
             $('.supplier-currency:last').select2();
             $('.supervisor-select2:last').select2();
-            $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
+            // checkSeassondate();
+            $(".datepicker").datepicker({ autoclose: true, format:  'yyyy-mm-dd'  });
         }
 
         $(document).on('change', 'select[name="category[]"]',function(){
@@ -1101,7 +1184,6 @@
                     setTimeout(() => {
                         updateBookingAmountPerPerson();
                     }, 200);
-                    console.log('runestimate');
                 }
             });
 
@@ -1371,7 +1453,7 @@
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
 
-                    window.location.href = "{{ route('view-quote')}}";
+                    // window.location.href = "{{ route('view-quote')}}";
                 },
                 error: function (reject) {
 
@@ -1413,10 +1495,21 @@
                     });
                  
                     jQuery.each(rows, function( index, value ) {
-                        var error_row = errors.errors['booking_due_date.' + index] || null;
-                        if(error_row) {
+                        var error_row = errors.errors['booking_due_date.' + index]??null;
+                        if(error_row == null){
+                            if(errors.errors['booking_due_date'] !== undefined){
+                                error_row = errors.errors['booking_due_date'][index]??null;
+                            }else{
+                                error_row = null;
+                            }
+                        }
+                        if(error_row && Array.isArray(error_row) == true) {
                             jQuery(rows[index]).find('.booking_due_date').html(error_row);
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }else{
+                            jQuery.each(error_row, function( key, value ) {
+                                jQuery(".booking_due_date").eq(key).html(value);
+                            });
                         }
                     });
 
@@ -1461,17 +1554,20 @@
       
        
       
-            
-      
       ///tabriaz/
     });
         
+        
+
+            
+            
     $('.sellingPerPersonCost').change(function(){
         updateBookingAmountPerPerson();
     });
     
+   
+    
     function updateBookingAmountPerPerson() {
-          console.log('run functions');
             var paxnumber = parseFloat($('#paxNo').val());
             var sprice = parseFloat($('#sellingprices').val());
             var total  = parseFloat(sprice/paxnumber);
