@@ -418,6 +418,7 @@
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
                                         <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$qoute_log->gross_profit}}" disabled>
+                                        <span>%</span> 
                                     </label>
                                 </div>
                     

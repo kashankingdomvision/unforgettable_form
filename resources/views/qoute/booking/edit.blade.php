@@ -808,6 +808,7 @@
                                     <label class="">
                                         <label class="currency" ></label>
                                         <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$quote->gross_profit}}">
+                                        <span>%</span> 
                                     </label>
                                 </div>
                     

@@ -590,6 +590,7 @@
                                     <label class="">
                                         <label class="currency" ></label>
                                         <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="0">
+                                        <span>%</span> 
                                     </label>
                                 </div>
                     
