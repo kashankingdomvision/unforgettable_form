@@ -385,6 +385,9 @@
                                 <div class="row"> 
                                     <label style="margin-right: 10px; margin-bottom: 10px;">Selling</label>
                                 </div>
+                                <div class="row"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Gross Profit Rate</label>
+                                </div>
 
 
                                 <br><br>
@@ -409,6 +412,12 @@
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
                                         <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{$qoute_log->selling}}" disabled>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="">
+                                        <label class="currency" > {{ $qoute_log->currency }} </label>
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$qoute_log->gross_profit}}" disabled>
                                     </label>
                                 </div>
                     

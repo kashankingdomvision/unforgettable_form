@@ -557,6 +557,9 @@
                                 <div class="row"> 
                                     <label style="margin-right: 10px; margin-bottom: 10px;">Selling Price</label>
                                 </div>
+                                <div class="row"> 
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Gross Profit Rate</label>
+                                </div>
 
 
                                 <br><br>
@@ -581,6 +584,12 @@
                                     <label class="">
                                         <label class="currency" ></label>
                                         <input type="number" class="selling hide-arrows" min="0" step="any" name="selling" value="0">
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <label class="">
+                                        <label class="currency" ></label>
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="0">
                                     </label>
                                 </div>
                     
@@ -1090,6 +1099,9 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
+                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
+                    $('.gross-profit').val(grossProfit.toFixed(2));
+
                 }
             });
 
@@ -1152,6 +1164,8 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
+                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
+                    $('.gross-profit').val(grossProfit.toFixed(2));
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1176,6 +1190,9 @@
             var sellingPrice = (markupAmount + net_price);
             $('.selling').val(sellingPrice.toFixed(2));
 
+            var grossProfit = (((sellingPrice - net_price ) / sellingPrice) * 100)
+            $('.gross-profit').val(grossProfit.toFixed(2));
+
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
         });
@@ -1191,6 +1208,9 @@
 
             var sellingPrice = markup_amount + net_price;
             $('.selling').val(sellingPrice.toFixed(2));
+
+            var grossProfit = (((sellingPrice - net_price ) / sellingPrice) * 100)
+            $('.gross-profit').val(grossProfit.toFixed(2));
 
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
@@ -1245,6 +1265,9 @@
 
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
+
+                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
+                    $('.gross-profit').val(grossProfit.toFixed(2));
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1328,7 +1351,7 @@
 
         $(document).on('submit','#user_form',function(){
 
-        // $('#user_form').on('submit', function(event){
+            // $('#user_form').on('submit', function(event){
 
             event.preventDefault();
             var formdata = $(this).serialize();

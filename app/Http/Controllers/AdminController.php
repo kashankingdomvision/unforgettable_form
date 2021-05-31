@@ -1636,6 +1636,7 @@ class AdminController extends Controller
             $qoute->net_price         =  $request->net_price;
             $qoute->markup_amount     =  $request->markup_amount;
             $qoute->selling           =  $request->selling;
+            $qoute->gross_profit      =  $request->gross_profit;
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;
@@ -1817,6 +1818,7 @@ class AdminController extends Controller
                     'net_price'         =>  $request->net_price,
                     'markup_amount'     =>  $request->markup_amount,
                     'selling'           =>  $request->selling,
+                    'gross_profit'      =>  $request->gross_profit,
                     'markup_percent'    =>  $request->markup_percent,
                     'show_convert_currency' =>  $request->show_convert_currency,
                     'per_person'       =>  $request->per_person,
@@ -2229,6 +2231,7 @@ class AdminController extends Controller
             $qoute_log->net_price         =  $qoute->net_price;
             $qoute_log->markup_amount     =  $qoute->markup_amount;
             $qoute_log->selling           =  $qoute->selling;
+            $qoute_log->gross_profit      =  $qoute->gross_profit;
             $qoute_log->markup_percent    =  $qoute->markup_percent;
             $qoute_log->show_convert_currency =  $qoute->show_convert_currency;
             $qoute_log->per_person        =  $qoute->per_person;
@@ -2254,6 +2257,7 @@ class AdminController extends Controller
             $qoute->net_price         =  $request->net_price;
             $qoute->markup_amount     =  $request->markup_amount;
             $qoute->selling           =  $request->selling;
+            $qoute->gross_profit      =  $request->gross_profit;
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;

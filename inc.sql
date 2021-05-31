@@ -134,6 +134,10 @@ ALTER TABLE `bookings` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `qu
 -- add default curreny in supplier
 ALTER TABLE `suppliers` ADD `currency_id` INT(11) NOT NULL AFTER `phone`;
 
+-- add gross_profit feild in qoutes,qoute_logs, booking
+ALTER TABLE `qoutes` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
+ALTER TABLE `qoute_logs` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
+ALTER TABLE `bookings` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
 
 
 
