@@ -295,7 +295,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1"  style="margin-bottom:15px">
+                            <div class="col-sm-5 mb-2 col-sm-offset-1 mb-2">
+                                <label for="inputEmail3" class="">Lead Passenger Name</label> <span style="color:red">*</span>
+                                <div class="input-group">
+                                    <input type="text" name="lead_passenger_name" class="form-control" value="{{ $quote->lead_passenger_name }}" >
+                                    <span class="input-group-addon"></span>
+                                </div>
+                                <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
+                            </div>
+
+
+                            <div class="col-sm-5"  style="margin-bottom:15px">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name" >
                                     <option value="">Select Brand</option>

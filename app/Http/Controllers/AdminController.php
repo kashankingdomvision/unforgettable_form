@@ -1709,6 +1709,7 @@ class AdminController extends Controller
         if($request->isMethod('post')){
 
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
+            $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
@@ -1802,6 +1803,7 @@ class AdminController extends Controller
                     'ref_no'           =>  $request->ref_no,
                     'qoute_id'          => $request->qoute_id,
                     'quotation_no'     =>  $request->quotation_no,
+                    'lead_passenger_name'=>  $request->lead_passenger_name,
                     'brand_name'       =>  $request->brand_name,
                     'type_of_holidays' =>  $request->type_of_holidays,
                     'sale_person'      =>  $request->sale_person,

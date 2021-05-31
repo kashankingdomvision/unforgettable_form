@@ -128,6 +128,9 @@ CREATE TABLE `booking_details` (
 ALTER TABLE `qoutes` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 ALTER TABLE `qoute_logs` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 
+-- Add lead passenger name feild in bookings
+ALTER TABLE `bookings` ADD `lead_passenger_name` VARCHAR(255) NOT NULL AFTER `quotation_no`;
+
 -- add default curreny in supplier
 ALTER TABLE `suppliers` ADD `currency_id` INT(11) NOT NULL AFTER `phone`;
 
