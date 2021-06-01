@@ -1543,9 +1543,9 @@ class AdminController extends Controller
             $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
             $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
-            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
 
             $season = season::find($request->season_id);
 
@@ -1723,6 +1723,7 @@ class AdminController extends Controller
             $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
             $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, ['dinning_preferences' => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
@@ -2138,9 +2139,9 @@ class AdminController extends Controller
             $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
             $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
-            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
 
             $season = season::find($request->season_id);
             

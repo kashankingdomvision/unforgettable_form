@@ -1578,7 +1578,7 @@
             event.preventDefault();
             var formdata = $(this).serialize();
 
-            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
+            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no,  #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
             $.ajax({
                 type: 'POST',
