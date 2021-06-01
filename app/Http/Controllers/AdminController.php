@@ -2042,7 +2042,17 @@ class AdminController extends Controller
                     );
 
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
-
+                        
+                        if($request->upload_calender[$key][$ikey]  == true){
+                            
+                            $event = new Event;
+                            $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$request->supplier_currency[$key]." to Supplier";
+                            $event->description = 'Event description';
+                            $event->startDate   = Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay();
+                            $event->endDate     = Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay();
+                            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+                            $event->save();
+                        }
                         FinanceBookingDetail::updateOrCreate(
                             [ 
                                 'booking_detail_id' => $bookingDetail->id,
@@ -2241,30 +2251,34 @@ class AdminController extends Controller
     public function upload_to_calendar(Request $request){
 
         if($request->isMethod('post')){
-
-            $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
-
-            $dynamic_text_area = "$request->details";
-
-            $calendar_start_date =  Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
-		    $calendar_end_date   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
-
-            $location = "";
-            $description = "test";
-            // $guests = "kashan.mehmood13@gmail.com";
-            $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
-            return $message_url;
-
-            // $event = new Event;
-            // $event->name        = "To Pay $request->actualCost $request->supplier_currency to Supplier";
-            // $event->description = 'Event description';
-            // $event->startDate   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
-            // $event->endDate     = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
-            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
-            // $event->save();
+        
+        // dd($request->all());
+        
+        // $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
+        
+        // $dynamic_text_area = "$request->details";
+        
+        // $calendar_start_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+        // $calendar_end_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+        
+        // $location = "";
+        // $description = "test";
+        // // $guests = "kashan.mehmood13@gmail.com";
+        // $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
+        // return $message_url;
+        
+        $event = new Event;
+        $event->name = "To Pay $request->depositAmount $request->supplier_currency to Supplier";
+        $event->description = 'Event description';
+        $event->startDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+        $event->endDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
+        // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+        $event->save();
+        
+        dd($request->all());
         }
-
-    }
+        
+        }
 
 
     public function edit_quote(Request $request,$id){
@@ -2286,7 +2300,7 @@ class AdminController extends Controller
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
-            $season = season::find($request->season_id);
+            $season = season::findOrFail($request->season_id);
             
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
@@ -2427,7 +2441,7 @@ class AdminController extends Controller
             }
 
         
-            $qoute = Qoute::find($id);
+            $qoute = Qoute::findOrFail($id);
 
             $qoute_log = new QouteLog;
 

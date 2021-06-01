@@ -662,10 +662,17 @@
                                             <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                        {{-- <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
+                                        </div> --}}
+                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <div class="form-check">
+                                                <input type='hidden' value='false' name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                            </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="remove_finance">-</button>
                                         </div>
@@ -708,22 +715,30 @@
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
+                                            <label for="inputEmail3" class="">Payment Method</label>
                                             <div class="input-group">
-                                                <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $finance_booking_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                                <select class="form-control booking-method-select2" name="payment_method[{{$key}}][]" class="form-control">
+                                                    <option value="">Select Payment Method</option>
+                                                    @foreach ($payment_method as $paymentm)
+                                                        <option value="{{$paymentm->id}}" {{ $quote_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                        {{-- <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                        </div>
+                                        </div> --}}
+                                       
 
+                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <div class="form-check">
+                                                <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender disable-feild"  type="checkbox" value="false"  name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                            </div>
+                                        </div>
                                     
                                         @if($fkey == 0)
                                             <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -776,10 +791,18 @@
                                                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                             </div>
 
-                                            <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                            {{-- <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                                 <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                            </div>
+                                            </div> --}}
 
+                                            <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                <label for="inputEmail3" class=""> Upload to Csalender</label>
+                                                <div class="form-check">
+                                                    <input type='hidden' value='false' name='upload_calender[{{$key}}][]'>
+                                                    <input class="form-check-input uploadCalender" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                                </div>
+                                            </div>
+    
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -1155,6 +1178,22 @@
             doneTyping();
             
         });
+        
+        
+
+///tabraiz queries
+$(document).on('change', '.uploadCalender', function() {
+            
+            if ($(this).is(':checked')) {
+                $(this).parent().find('input[type=hidden]').attr('disabled', 'disabled');
+                $(this).attr('value', 'true');
+            } else {
+                $(this).parent().find('input[type=hidden]').removeAttr('disabled');
+                $(this).attr('value', 'false');
+                
+            }            
+        });        
+//tabraiz queries
 
         //on keyup, start the countdown
         // $input.on('keyup', function () {
@@ -1702,7 +1741,7 @@
 
 
             // $(".disable-feild").attr( "disabled", "disabled" );
-            $(".disable-feild").prop("disabled", false);
+            // $(".disable-feild").prop("disabled", false);
             
             let $selector = $(this);
             let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();
@@ -1720,35 +1759,34 @@
 
         $(document).on('click', '.upload_to_google_calendar',function(){
 
-            let $selector = $(this);
-            let depositAmount     = $selector.closest(".row").find('[class*="deposit_amount"]').val();
-            let deposit_due_date  = $selector.closest(".row").find('[class*="deposit_due_date"]').val();
-            let supplier_currency = $selector.closest(".qoute").find('select[name="supplier_currency[]"]').val();
+let $selector = $(this);
+let depositAmount     = $selector.closest(".row").find('[class*="deposit_amount"]').val();
+let deposit_due_date  = $selector.closest(".row").find('[class*="deposit_due_date"]').val();
+let supplier_currency = $selector.closest(".qoute").find('select[name="supplier_currency[]"]').val();
 
-            var data = {
-                "_token": "{{ csrf_token() }}",
-                "deposit_amount": depositAmount,
-                "supplier_currency": supplier_currency,
-                "deposit_due_date": deposit_due_date,
-                "details": window.location.href,
-            }
+var data = {
+    "_token": "{{ csrf_token() }}",
+    "deposit_amount": depositAmount,
+    "supplier_currency": supplier_currency,
+    "deposit_due_date": deposit_due_date,
+    "details": window.location.href,
+}
 
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('upload-to-calendar') }}',
-                data: data ,
-                beforeSend: function() {},
-                success: function (data) {
+$.ajax({
+    type: 'POST',
+    url: '{{ route('upload-to-calendar') }}',
+    data: data ,
+    beforeSend: function() {},
+    success: function (data) {
 
-                    // console.log(data);
-                    window.open(data, "_blank");
-                    $(this).attr("href", data); // Set herf value
-  
-                },
-            });
+        console.log(data);
+        // window.open(data, "_blank");
+        // $(this).attr("href", data); // Set herf value
 
-        });
+    },
+});
 
+});
 
         $(document).on('click', '#export-to-csv',function(){
 
