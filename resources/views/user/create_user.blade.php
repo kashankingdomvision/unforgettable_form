@@ -40,7 +40,6 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   <label for="inputEmail3" class="">Username</label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
@@ -48,12 +47,12 @@
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        {!! Form::text('username',null,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   </div>
                 </div>
                 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('email')}}</div>
                   <label for="inputEmail3" class="">Email</label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
@@ -61,12 +60,12 @@
                        <!-- <input name="email" type="email" class="form-control" placeholder="Email"> -->
                        {!! Form::email('email',null,['class'=>'form-control','placeholder'=>'Email','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('email')}}</div>
                   </div>
                 </div>
                 
-              <div class="form-group">
+                <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   <label for="inputEmail3" class="">User Type</label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
@@ -74,16 +73,16 @@
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        <select class="form-control" name="role">
                         @foreach($roles as $role)
-                            <option value="{{$role->id}}">{{$role->name}}</option>
+                            <option value="{{$role->id}}" data-role="{{$role->name}}" >{{$role->name}}</option>
                         @endforeach
                        </select>
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('role')}}</div>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('password')}}</div>
                   <label for="inputPassword3" class="">Password</label>
                     <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
                     <div class="input-group">
@@ -91,8 +90,27 @@
                        <!-- <input name="password" type="password" class="form-control" placeholder="Password"> -->
                        {!! Form::password('password',['class'=>'form-control','placeholder'=>'Password','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('password')}}</div>
                   </div>
                 </div>
+
+                <div class="form-group" style="display: none;" id="supervisor">
+                    <div class="col-sm-6 col-sm-offset-3">
+                    <label for="inputEmail3" class="">Supervisor</label>
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <select class="form-control" name="supervisor">
+                            <option value="">Select Supervisor</option>
+                        @foreach($supervisors as $supervisor)
+                            <option value="{{$supervisor->id}}" >{{$supervisor->name}}</option>
+                        @endforeach
+                        </select>
+                      </div>
+                      <div class="alert-danger" style="text-align:center">{{$errors->first('supervisor')}}</div>
+                    </div>
+                </div>
+
+
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
@@ -342,6 +360,27 @@
   $(function () {
     $('.select2').select2();
   });
+
+
+    $(document).ready(function(){
+
+        $(document).on('change', 'select[name="role"]',function(){
+
+
+            var role = $(this).find('option:selected').data('role'); 
+
+            console.log(role);
+
+            if(role == 'Sales Agent' || role == 2 ){
+                $('#supervisor').show();
+            }else{
+                $('#supervisor').hide();
+            }
+        
+        });
+
+    });
+
 </script>
 
 </body>

@@ -129,7 +129,7 @@
                     <div class="input-group">
                         <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" placeholder="Booking Due Date" autocomplete="off" required>
                     </div>
-                    <div class="alert-danger booking_due_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
+                    <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"> {{ $errors->first('booking_date') }} </div>
                 </div>
 
 
@@ -478,7 +478,7 @@
                                         <div class="input-group">
                                             <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker" placeholder="Booking Date" required>
                                         </div>
-                                        <div class="alert-danger booking_due_date" style="text-align:center"></div>
+                                        <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                                     </div>
         
                     
@@ -1613,7 +1613,7 @@
                     jQuery.each(rows, function( index, value ) {
                         var error_row = errors.errors['booking_due_date.' + index] || null;
                         if(error_row) {
-                            jQuery(rows[index]).find('.booking_due_date').html("Booking feild is required")
+                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
                         }
                     });
@@ -1645,6 +1645,25 @@
                 success: function(response) {
 
                     $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+                }
+            })
+        });
+
+        $(document).on('change', 'select[name="booked_by[]"]',function(){
+
+            var $selector = $(this);
+            var booked_by = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-saleagent-supervisor') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'booked_by': booked_by
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="supervisor-select2"]').val(response.supervisor_id).change();
                 }
             })
         });

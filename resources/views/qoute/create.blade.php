@@ -126,7 +126,7 @@
                     <div class="input-group">
                         <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" autocomplete="off" placeholder="Booking Due Date" >
                     </div>
-                    <div class="alert-danger booking_due_date" style="text-align:center"></div>
+                    <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                 </div>
 
 
@@ -437,7 +437,7 @@
                                         <div class="input-group">
                                             <input type="text" name="booking_due_date[]"  class="form-control datepicker" autocomplete="off" placeholder="Booking Due Date" >
                                         </div>
-                                        <div class="alert-danger booking_due_date" style="text-align:center"></div>
+                                        <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                                     </div>
         
                     
@@ -524,7 +524,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Supervisor</label>
                                         <div class="input-group">
-                                            <select class="form-control"  name="supervisor[]" id="supervisor-select2" class="form-control" >
+                                            <select class="form-control supervisor-select2"  name="supervisor[]" id="supervisor-select2" class="form-control" >
                                                 <option value="">Select Supervisor</option>
                                                 @foreach ($supervisors as $supervisor)
                                                     <option value="{{$supervisor->id}}">{{$supervisor->name}}</option>
@@ -1422,7 +1422,7 @@
                     jQuery.each(rows, function( index, value ) {
                         var error_row = errors.errors['booking_due_date.' + index] || null;
                         if(error_row) {
-                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
+                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
                         }
                     });
@@ -1454,6 +1454,26 @@
                 success: function(response) {
 
                     $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+                }
+            })
+        });
+
+       
+        $(document).on('change', 'select[name="booked_by[]"]',function(){
+
+            var $selector = $(this);
+            var booked_by = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-saleagent-supervisor') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'booked_by': booked_by
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="supervisor-select2"]').val(response.supervisor_id).change();
                 }
             })
         });

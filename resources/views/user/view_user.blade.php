@@ -40,6 +40,7 @@
                   <th>name</th>
                   <th>User Role</th>
                   <th>email</th>
+                  <th>Supervisor</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -51,6 +52,7 @@
                   <td>{{ $value->name }}</td>
                   <td style="text-transform: capitalize;">{{ $value->role }}</td>
                   <td>{{ $value->email }}</td>
+                  <td>{{ \App\Http\Helper::get_supervisor($value->supervisor_id)['name'] }}</td>
                   {{-- <td>{{ $value->supervisor_name }}</td> --}}
                   {{-- <td>{{ $value->supervisor_email }}</td> --}}
                   <td>

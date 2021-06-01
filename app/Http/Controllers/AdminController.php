@@ -107,12 +107,12 @@ class AdminController extends Controller
                 'name'          => $request->username,
                 'role'          => $request->role,
                 'email'         => $request->email,
-                'supervisor_id' => $request->supervisor_id,
+                'supervisor_id' => $request->supervisor,
                 'password'      =>  bcrypt($request->password),
             ));
             return Redirect::route('creat-user')->with('success_message', 'Created Successfully');
         } else {
-            return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all()]);
+            return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get() ]);
         }
     }
     public function view_user(Request $request)
@@ -136,7 +136,7 @@ class AdminController extends Controller
                         'name'          => $request->username,
                         'role'          => (int)$request->role,
                         'email'         => $request->email,
-                        'supervisor_id' => $request->supervisor_id,
+                        'supervisor_id' => $request->supervisor,
                         'password'      => bcrypt($request->password)
                     )
                 );
@@ -146,13 +146,13 @@ class AdminController extends Controller
                         'name'          => $request->username,
                         'role'          => (int)$request->role,
                         'email'         => $request->email,
-                        'supervisor_id' => $request->supervisor_id
+                        'supervisor_id' => $request->supervisor,
                     )
                 );
             }
-            return Redirect::route('view-user')->with('success_message', 'update Successfully');
+            return Redirect::route('view-user')->with('success_message', 'Update Successfully');
         } else {
-            return view('user.update_user')->with(['data' => user::find($id), 'id' => $id, 'roles' => role::all(), 'supervisor' => supervisor::all()]);
+            return view('user.update_user')->with(['data' => user::find($id), 'id' => $id, 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),]);
         }
     }
     public function delete_user($id)
@@ -226,7 +226,7 @@ class AdminController extends Controller
                 'end_date'        => Carbon::parse(str_replace('/', '-', $request->end_date))->format('Y-m-d'),
             ));
             
-            return Redirect::route('view-season')->with('success_message', 'update Successfully');
+            return Redirect::route('view-season')->with('success_message', 'Update Successfully');
         } else {
             return view('season.update_season')->with(['data' => season::find($id), 'id' => $id]);
         }
@@ -278,7 +278,7 @@ class AdminController extends Controller
                     'name'  => $request->name
                 )
             );
-            return Redirect::route('view-supervisor')->with('success_message', 'update Successfully');
+            return Redirect::route('view-supervisor')->with('success_message', 'Update Successfully');
         } else {
             return view('supervisor.update_supervisor')->with(['data' => supervisor::find($id), 'id' => $id]);
         }
@@ -886,7 +886,7 @@ class AdminController extends Controller
                     'name'  => $request->name
                 )
             );
-            return Redirect::route('view-airline')->with('success_message', 'update Successfully');
+            return Redirect::route('view-airline')->with('success_message', 'Update Successfully');
         } else {
             return view('airline.update_airline')->with(['data' => airline::find($id), 'id' => $id]);
         }
@@ -938,7 +938,7 @@ class AdminController extends Controller
                     'name'  => $request->name
                 )
             );
-            return Redirect::route('view-payment')->with('success_message', 'update Successfully');
+            return Redirect::route('view-payment')->with('success_message', 'Update Successfully');
         } else {
             return view('payment.update_payment')->with(['data' => payment::find($id), 'id' => $id]);
         }
@@ -1538,12 +1538,12 @@ class AdminController extends Controller
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
             $this->validate($request, ['season_id'        => 'required|numeric'], ['required' => 'Please select Booking Season']);
-            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency name']);
-            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency No.']);
-            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Please select Agency']);
-            $this->validate($request, ['currency'          => 'required'], ['required' => 'Please select Supplier']);
-            $this->validate($request, ['group_no'          => 'required'], ['required' => 'Please select PAX No']);
-            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
+            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Agency Name is required']);
+            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Agency No is required']);
+            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
+            $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
+            $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
             $season = season::find($request->season_id);
@@ -1715,12 +1715,12 @@ class AdminController extends Controller
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
             $this->validate($request, ['season_id'        => 'required|numeric'], ['required' => 'Please select Booking Season']);
-            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency name']);
-            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency No.']);
-            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Please select Agency']);
-            $this->validate($request, ['currency'                 => 'required'], ['required' => 'Please select Supplier']);
-            $this->validate($request, ['group_no'            => 'required'], ['required' => 'Please select PAX No']);
-            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
+            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Agency Name is required']);
+            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Agency No is required']);
+            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
+            $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
+            $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
             $season = season::find($request->season_id);
@@ -2127,12 +2127,12 @@ class AdminController extends Controller
             $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
             $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
             $this->validate($request, ['season_id'        => 'required|numeric'], ['required' => 'Please select Booking Season']);
-            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency name']);
-            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Please select Agency No.']);
-            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Please select Agency']);
-            $this->validate($request, ['currency'                 => 'required'], ['required' => 'Please select Supplier']);
-            $this->validate($request, ['group_no'            => 'required'], ['required' => 'Please select PAX No']);
-            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required"]);
+            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Agency Name is required']);
+            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Agency No is required']);
+            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
+            $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
+            $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
             $season = season::find($request->season_id);
@@ -2841,6 +2841,12 @@ class AdminController extends Controller
         ->first();
 
         return $supplier_currency;
+    }
+    
+    public function get_saleagent_supervisor(Request $request){
+
+        $saleagent_supervisor = User::where('id',$request->booked_by)->first();
+        return $saleagent_supervisor;
     }
 
     public function get_currency(Request $request){

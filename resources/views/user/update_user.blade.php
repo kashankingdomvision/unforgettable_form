@@ -25,7 +25,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            
+
             {!! Form::open(array('route' => array('update-user',$data->id),'method'=>'POST')) !!}
             <input type="hidden" name="id" value="<?=$data->id;?>">
             
@@ -67,7 +67,6 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   <label for="inputEmail3" class="">User Type</label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
@@ -75,27 +74,13 @@
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        <select class="form-control" name="role">
                         @foreach($roles as $role)
-                            <option {{ ($data->role == $role->id) ? 'selected' : ''}} value="{{$role->id}}">{{$role->name}}</option>
+                            <option {{ ($data->role == $role->id) ? 'selected' : ''}} value="{{$role->id}}" data-role="{{$role->name}}">{{$role->name}}</option>
                         @endforeach
                        </select>
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                    <label class="">Sueprvisor</label>
-                      <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                         <select class="form-control select2" name="supervisor_id" required="required">
-                           <option value="">Select Sueprvisor</option>
-                           @foreach($supervisor as $super)
-                           <option value="{{ $super->id }}" @if($super->id == $data->supervisor_id) {{'selected'}} @endif>{{ $super->email }}</option>
-                           @endforeach
-                         </select>
-                      </div>   
-                    <div class="alert-danger" style="text-align:center">{{$errors->first('supervisor_id')}}</div>
-                  </div>
-                </div> -->
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
@@ -109,6 +94,23 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="form-group" id="supervisor">
+                    <div class="col-sm-6 col-sm-offset-3">
+                    <label for="inputEmail3" class="">Supervisor</label>
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <select class="form-control" name="supervisor">
+                            <option value="">Select Supervisor</option>
+                            @foreach($supervisors as $supervisor)
+                                <option value="{{$supervisor->id}}" {{ $supervisor->id == $data->supervisor_id ? 'selected' : '' }} >{{$supervisor->name}}</option>
+                            @endforeach
+                        </select>
+                      </div>
+                      <div class="alert-danger" style="text-align:center">{{$errors->first('supervisor')}}</div>
+                    </div>
+                </div>
+
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
@@ -353,6 +355,30 @@
       // submit the form    
       btn.form.submit();
   }
+
+    $(document).ready(function(){
+
+        var role = $('select[name="role"]').find('option:selected').data('role'); 
+
+        if(role == 'Sales Agent' || role == 2 ){
+            $('#supervisor').show();
+        }else{
+            $('#supervisor').hide();
+        }
+
+        $(document).on('change', 'select[name="role"]',function(){
+
+            var role = $(this).find('option:selected').data('role'); 
+            if(role == 'Sales Agent' || role == 2 ){
+                $('#supervisor').show();
+            }else{
+                $('#supervisor').hide();
+            }
+
+        });
+
+    });
+    
 </script>
 
 </body>

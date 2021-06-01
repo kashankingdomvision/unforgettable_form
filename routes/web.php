@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get','post'],'delete-code/{id}',array('as'=>'delete-code','uses'=>'AdminController@delete_code'));
 	Route::post('get-supplier',array('as'=>'get-supplier','uses'=>'AdminController@get_supplier'));
 	Route::post('get-supplier-currency',array('as'=>'get-supplier-currency','uses'=>'AdminController@get_supplier_currency'));
+    Route::post('get-saleagent-supervisor',array('as'=>'get-saleagent-supervisor','uses'=>'AdminController@get_saleagent_supervisor'));
 	Route::post('get-currency',array('as'=>'get-currency','uses'=>'AdminController@get_currency'));
 	//end category
 
