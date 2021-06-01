@@ -267,14 +267,26 @@
                         <input type="hidden" value="{{$quote->id}}" name="qoute_id">
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1">
-                                <label for="inputEmail3" class="">Zoho Reference</label> <span style="color:red">*</span>
-                                <div class="input-group">
-                                    <input type="text" name="ref_no" value="{{ $quote->ref_no }}" class="form-control" placeholder='Enter Reference Number' >
-                                    <span class="input-group-addon" id="link"></span>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                    <label>Select the reference <span style="color:red">*</span></label> <br />
+                                    <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
+                                    <label class="radio-inline"><input type="radio"  name="reference" value="tas" >TAS Reference</label>
                                 </div>
-                                <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                    <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
+                                    <div class="input-group">
+                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
+                                        <span  id="link">
+                                        </span>
+                                        <span class="input-group-addon">
+                                            <button id="sendReference" type="button" class="btn-link"> Search </button>
+                                        </span>
+                                    </div>
+                                    <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
+                                </div>
 
                             <div class="col-sm-5">
                                 <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
@@ -1134,43 +1146,36 @@
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
         var $input = $('input[name="ref_no"]');
 
+        $(document).on('click', '#sendReference', function(){
+            $('#link').html('');
+            $('#link').removeAttr('class');
+            $(this).text('searching');
+            $(this).attr('disabled', 'disabled');
+            $('#error_ref_no').text('');
+            doneTyping();
+            
+        });
+
         //on keyup, start the countdown
-        $input.on('keyup', function () {
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
+        // $input.on('keyup', function () {
+        //   clearTimeout(typingTimer);
+        //   typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        // });
 
-        //on keydown, clear the countdown 
-        $input.on('keydown', function () {
-          clearTimeout(typingTimer);
-        });
-
-        //user is "finished typing," do something
+        // //on keydown, clear the countdown 
+        // $input.on('keydown', function () {
+        //   clearTimeout(typingTimer);
+        // });
+ 
         function doneTyping () {
-        //   console.log('done-typing');
-
-            // $('#link').html('');
-            // $('#form_received').html('');
-            // $('#app_login_date').val('0000-00-00');
-            // $('#form_received_on').val('0000-00-00');
-            // $('select[name="sale_person"]').val('').trigger('change');
-            // $('select[name="brand_name"]').val('');
-            // $('input:radio[name=agency_booking]').prop('checked', false); 
-            // $('input[name="date_of_travel"]').datepicker("setDate" ,'');
-            // $('input[name="form_sent_on"]').datepicker("setDate" ,'');
-            // $('input:radio[name=electronic_copy_sent]').filter('[value=no]').prop('checked', true);
-            // $('#app_login_detail').html('');
-       
-            // $('input:radio[name=asked_for_transfer_details]').filter('[value=no]').prop('checked', true);
-            // $('.transfer_details').hide(200);
-            // $('textarea[name=transfer_details]').prop('required',false);
-      
+     
+            
             book_id = $('input[name="ref_no"]').val();
             if(book_id) {
-              token = $('input[name=_token]').val();
-              data  = {id: book_id};
-              url   = '{{route('get-ref-detail')}}';
-     
+            token = $('input[name=_token]').val();
+            data  = {id: book_id};
+            url   = '{{route('get-ref-detail')}}';
+
                 $.ajax({
                     url: url,
                     headers: {'X-CSRF-TOKEN': token},
@@ -1182,15 +1187,17 @@
                     dataType: "json",
                     success:function(data) {
 
+            
                         if(data.item_rec != null){
-                          $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                          $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
+                        $('select[name="brand_name"]').val(data.item_rec.branch_name);
+                        $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
                         }
 
                         if(data.item_rec2 != null){
                             if("id" in data.item_rec2){
                                 var id = data.item_rec2.id;
                                 $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
+                                $('#link').attr('class', 'input-group-addon');
                             }
                         }
 
@@ -1207,155 +1214,21 @@
                                 }
                             }
                         }
-
-                        // console.log(data);
-                        // if(data.item_rec != null){
-                        //   $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                        //   $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        // }
-
-                        // if(data.item_rec2 != null){
-                        //     if("id" in data.item_rec2){
-                        //         var id = data.item_rec2.id;
-                        //         $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
-                        //     }
-                        // }
-
-                        // if(data.item_rec4 != null){
-                        //     $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
-                        //     $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
-                        //     $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
-                        //     $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
-                        //     if(data.item_rec4.record[0].client_type == 2){
-                        //         $('#ab_yes').trigger('click');
-                        //     }
-                        // }
-
-
-                        // if(data.item_rec != null){
-                        //   $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                        //   $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        //   // $('select[name="brand_name"]').empty();
-                        //   // $('select[name="brand_name"]').append('<option value="'+ data.item_rec.branch_name +'">'+ data.item_rec.branch_name +'</option>');
-                        //    $('input:radio[name=agency_booking]').filter('[value='+data.item_rec.client_type+']').prop('checked', true);
-                        //    //
-                        //    if(data.item_rec.payment_for == 3){
-                        //       if("departure_date" in data.item_rec){
-                        //         var year  = data.item_rec.departure_date.substr(0, 4);
-                        //         var month = data.item_rec.departure_date.substr(5, 2);
-                        //         var day   = data.item_rec.departure_date.substr(8, 2);
-                        //         var convert_date = month+'/'+day+'/'+year;
-                        //         $('input[name="date_of_travel"]').datepicker("setDate" , convert_date);
-                        //       }
-                        //     }
-                        //    //
-                        //     //
-                        //     $("#example2").on("draw.dt", function () {
-                        //       $(this).find(".dataTables_empty").parents('tbody').empty();
-                        //     }).DataTable();
-                        //     var table = $('#example2').DataTable();
-                        //     table.clear().draw();
-                        //     var $sum=0;
-                        //     $.each(data.item_rec4.record, function(key, value) {
-                        //       if (value.status=="COMPLETED") {
-                        //         $sum+=parseFloat(value.amount_payable);
-                        //       }
-                        //      //
-                        //       if(value.agency_name == ''){
-                        //         var agency_name =  value.agency_name;
-                        //       }else{
-                        //         var agency_name =  '-';
-                        //       }
-                        //       var employee_data = '';
-                        //       employee_data += '<tr>';
-                        //       employee_data += '<td>'+agency_name+'</td>';
-                        //       employee_data += '<td>'+value.agency_contact_num+'</td>';
-                        //       employee_data += '<td>'+value.passenger_first_name+" " +value.passenger_last_name+'</td>';
-                        //       employee_data += '<td>'+value.type+'</td>';
-                        //       employee_data += '<td>'+value.status+'</td>';
-                        //       employee_data += '<td>'+value.curruncy+'</td>';
-                        //       employee_data += '<td>'+value.amount_payable+'</td>';
-                        //       employee_data += '<td>'+value.created_at+'</td>';
-                        //       employee_data += '<tr>';
-                        //       $('#example2 tbody').append(employee_data);
-                        //       $('#finance_detail').val(employee_data);
-                        //     });
-                        //     $("#holiday").val(data.item_rec4.holiday_amount).trigger('change');
-                        //     // $("#total").val($sum).trigger('change');
-                        //     if($sum==data.item_rec4.holiday_amount){
-                        //       // $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        //       $('#deposit').attr('checked', 'checked').trigger('change');
-                        //       $('#remain').attr('checked', 'checked').trigger('change');
-                        //     }
-                        // }
                         
-                          
-                        // if(data.item_rec2 != null){
-                        //   if("id" in data.item_rec2){
-                        //     var id = data.item_rec2.id;
-                        //     $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
-                        //     $('input:radio[name=asked_for_transfer_details]').filter('[value=yes]').prop('checked', true);
-                        //     $('.transfer_details').show(200);
-                        //     $('textarea[name=transfer_details]').prop('required',true);
-                        //     //
-                        //     var detail_rec_date = data.item_rec2.detail_rec_date;
-                        //     if(detail_rec_date == '0000-00-00'){
-                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Form Status (Pending)</a> </strong>');
-                        //       $('#form_received_on').val('0000-00-00');
-                        //       $('.set_reminder').show(200);
-                        //       // $('select[name="fso_person"]').prop('required',true);
-                        //       $('input[name="fso_last_date"]').prop('required',true);
-                        //     }else{
-                        //       var a = detail_rec_date;
-                        //           a = a.split('-');
-                        //           a = a[2]+'/'+a[1]+'/'+a[0];
-                        //       $('#form_received').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">Received On-' + a + '</a></strong>');
-                        //       $('#form_received_on').val(detail_rec_date);
-                        //       $('.set_reminder').hide(200);
-                        //       // $('select[name="fso_person"]').prop('required',false);
-                        //       $('input[name="fso_last_date"]').prop('required',false);
-                        //       //
-                        //       // $('input:radio[name=transfer_info_received]').filter('[value=yes]').prop('checked', true);
-                        //       // $('.transfer_info_details').show(200);
-                        //       // $('textarea[name=transfer_info_details]').prop('required',true);
-                        //       //
-                        //     }
-                        //   }
-                        //   if("date" in data.item_rec2){
-                        //     var year  = data.item_rec2.date.substr(0, 4);
-                        //     var month = data.item_rec2.date.substr(5, 2);
-                        //     var day   = data.item_rec2.date.substr(8, 2);
-                        //     var convert_date = day+'/'+month+'/'+year;
-                        //     // $('input[name="form_sent_on"]').val(convert_date);
-                        //     $('input[name="form_sent_on"]').datepicker("setDate" , convert_date);
-                        //   }
-                        // }
-                        // if(data.item_rec3 != null){
-                        //   if(data.item_rec3.lognum == null){
-                        //     $('#app_login_detail').html('<strong>Status - App login not created </strong>');
-                        //     $('#app_login_date').val('0000-00-00');
-                        //   }else{
-                        //     $('input:radio[name=electronic_copy_sent]').filter('[value=yes]').prop('checked', true);
-                        //     $('textarea[name=electronic_copy_details]').prop('required',true);
-                        //     $('.electronic_copy_details').show(200);
-                        //     //
-                        //     $('.set_reminder_app').show(200);
-                        //     $('select[name=aps_person]').prop('required',true);
-                        //     $('input[name=aps_last_date]').prop('required',true);
-                        //     //
-                        //     $('#app_login_detail').html('<strong>App login created on '+ data.item_rec3.created_at.substr(0, 10) + ' - User loggedin atleast once : yes</strong>')
-                        //     $('#app_login_date').val(data.item_rec3.created_at.substr(0, 10));
-                        //   }
-                        // }
-                        /*$.each(data.item_rec, function(key, value) {
-                            $('select[name="brand_name"]').append('<option value="'+ value.id +'">'+ value.title +'</option>');
-                        });*/
+                        $('#sendReference').text('Search');
+                        $('#sendReference').removeAttr('disabled');
                         $("#divLoading").removeClass('show');
+                        if(data.item_rec == null && data.item_rec4 == null, data.item_rec2 == null ){
+                            $('#error_ref_no').text('The Reference is not found');
+                        }
                     }
                 });
             }else{
-                // $('select[name="brand_name"]').empty();
+                $('#sendReference').text('Search');
+                $('#sendReference').removeAttr('disabled');
+                $('#error_ref_no').text('Reference feild is required!');
             }
+
         }
 
         // Dynamically appened qoute 
@@ -1786,11 +1659,31 @@
                     });
 
                     // Validating booking feild
+                    // jQuery.each(rows, function( index, value ) {
+                    //     var error_row = errors.errors['booking_due_date.' + index] || null;
+                    //     if(error_row) {
+                    //         jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
+                    //         $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                    //     }
+                    // });
+
+                    
                     jQuery.each(rows, function( index, value ) {
-                        var error_row = errors.errors['booking_due_date.' + index] || null;
-                        if(error_row) {
-                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
+                        var error_row = errors.errors['booking_due_date.' + index]??null;
+                        if(error_row == null){
+                            if(errors.errors['booking_due_date'] !== undefined){
+                                error_row = errors.errors['booking_due_date'][index]??null;
+                            }else{
+                                error_row = null;
+                            }
+                        }
+                        if(error_row && Array.isArray(error_row) == true) {
+                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }else{
+                            jQuery.each(error_row, function( key, value ) {
+                                jQuery(".booking_due_date").eq(key).html(value);
+                            });
                         }
                     });
 

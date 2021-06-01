@@ -265,14 +265,26 @@
                     <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                <label for="inputEmail3" class="">Zoho Reference</label> <span style="color:red">*</span>
-                                <div class="input-group">
-                                    <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
-                                    <span class="input-group-addon" id="link"></span>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                    <label>Select the reference <span style="color:red">*</span></label> <br />
+                                    <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
+                                    <label class="radio-inline"><input type="radio"  name="reference" value="tas" >TAS Reference</label>
                                 </div>
-                                <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                    <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
+                                    <div class="input-group">
+                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
+                                        <span  id="link">
+                                        </span>
+                                        <span class="input-group-addon">
+                                            <button id="sendReference" type="button" class="btn-link"> Search </button>
+                                        </span>
+                                    </div>
+                                    <div class="alert-danger" style="text-align:center" id="error_ref_no"></div>
+                                </div>
 
                             <div class="col-sm-5 mb-2">
                                 <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
@@ -959,21 +971,30 @@
 
     $(document).ready(function() {
 
+        $(document).on('click', '#sendReference', function(){
+            $('#link').html('');
+            $('#link').removeAttr('class');
+            $(this).text('searching');
+            $(this).attr('disabled', 'disabled');
+            $('#error_ref_no').text('');
+            doneTyping();
+            
+        });
 
         var typingTimer;                //timer identifier
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
         var $input = $('input[name="ref_no"]');
 
-        //on keyup, start the countdown
-        $input.on('keyup', function () {
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
+        // //on keyup, start the countdown
+        // $input.on('keyup', function () {
+        //   clearTimeout(typingTimer);
+        //   typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        // });
 
-        //on keydown, clear the countdown 
-        $input.on('keydown', function () {
-          clearTimeout(typingTimer);
-        });
+        // //on keydown, clear the countdown 
+        // $input.on('keydown', function () {
+        //   clearTimeout(typingTimer);
+        // });
 
         //user is "finished typing," do something
         function doneTyping () {
@@ -981,10 +1002,10 @@
       
             book_id = $('input[name="ref_no"]').val();
             if(book_id) {
-              token = $('input[name=_token]').val();
-              data  = {id: book_id};
-              url   = '{{route('get-ref-detail')}}';
-     
+            token = $('input[name=_token]').val();
+            data  = {id: book_id};
+            url   = '{{route('get-ref-detail')}}';
+
                 $.ajax({
                     url: url,
                     headers: {'X-CSRF-TOKEN': token},
@@ -996,16 +1017,17 @@
                     dataType: "json",
                     success:function(data) {
 
-             
+            
                         if(data.item_rec != null){
-                          $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                          $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
+                        $('select[name="brand_name"]').val(data.item_rec.branch_name);
+                        $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
                         }
 
                         if(data.item_rec2 != null){
                             if("id" in data.item_rec2){
                                 var id = data.item_rec2.id;
                                 $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
+                                $('#link').attr('class', 'input-group-addon');
                             }
                         }
 
@@ -1023,11 +1045,18 @@
                             }
                         }
                         
+                        $('#sendReference').text('Search');
+                        $('#sendReference').removeAttr('disabled');
                         $("#divLoading").removeClass('show');
+                        if(data.item_rec == null && data.item_rec4 == null, data.item_rec2 == null ){
+                            $('#error_ref_no').text('The Reference is not found');
+                        }
                     }
                 });
             }else{
-                // $('select[name="brand_name"]').empty();
+                $('#sendReference').text('Search');
+                $('#sendReference').removeAttr('disabled');
+                $('#error_ref_no').text('Reference feild is required!');
             }
         }
 
@@ -1462,14 +1491,34 @@
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
                         }
                     });
-                 
+
+                    
                     jQuery.each(rows, function( index, value ) {
-                        var error_row = errors.errors['booking_due_date.' + index] || null;
-                        if(error_row) {
-                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
+                        var error_row = errors.errors['booking_due_date.' + index]??null;
+                        if(error_row == null){
+                            if(errors.errors['booking_due_date'] !== undefined){
+                                error_row = errors.errors['booking_due_date'][index]??null;
+                            }else{
+                                error_row = null;
+                            }
+                        }
+                        if(error_row && Array.isArray(error_row) == true) {
+                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }else{
+                            jQuery.each(error_row, function( key, value ) {
+                                jQuery(".booking_due_date").eq(key).html(value);
+                            });
                         }
                     });
+                 
+                    // jQuery.each(rows, function( index, value ) {
+                    //     var error_row = errors.errors['booking_due_date.' + index] || null;
+                    //     if(error_row) {
+                    //         jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
+                    //         $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                    //     }
+                    // });
 
                     $("#divLoading").removeClass('show');
                 }
