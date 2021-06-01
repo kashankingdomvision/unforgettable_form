@@ -458,6 +458,14 @@
                             </div>
             
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-1 mb-2">
+                                <label for="">
+                                    Selling Price in Other Currency
+                                </label>
+                            </div>
+                        </div>
 
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
