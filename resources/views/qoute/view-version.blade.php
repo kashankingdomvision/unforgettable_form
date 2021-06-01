@@ -199,7 +199,15 @@
                                     @endfor
                                   </select>
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
-                              </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" value="{{ $qoute_log->dinning_preferences }}" class="form-control" disabled>
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
                         </div>
 
                         <br><br>

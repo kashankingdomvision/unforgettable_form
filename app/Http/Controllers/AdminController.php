@@ -1545,6 +1545,7 @@ class AdminController extends Controller
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
 
             $season = season::find($request->season_id);
 
@@ -1622,6 +1623,7 @@ class AdminController extends Controller
             $qoute = new Qoute;
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->dinning_preferences  = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;
@@ -1804,6 +1806,7 @@ class AdminController extends Controller
                     'ref_no'           =>  $request->ref_no,
                     'qoute_id'          => $request->qoute_id,
                     'quotation_no'     =>  $request->quotation_no,
+                    'dinning_preferences'   => $request->dinning_preferences,
                     'lead_passenger_name'=>  $request->lead_passenger_name,
                     'brand_name'       =>  $request->brand_name,
                     'type_of_holidays' =>  $request->type_of_holidays,
@@ -2134,6 +2137,7 @@ class AdminController extends Controller
             $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+            $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
 
             $season = season::find($request->season_id);
             
@@ -2217,6 +2221,7 @@ class AdminController extends Controller
             $qoute_log->qoute_id          =  $id;
             $qoute_log->ref_no            =  $qoute->ref_no;
             $qoute_log->quotation_no      =  $request->quotation_no;
+            $qoute_log->dinning_preferences     = $qoute->dinning_preferences;
             $qoute_log->lead_passenger_name =  $qoute->lead_passenger_name;
             $qoute_log->brand_name        =  $qoute->brand_name;
             $qoute_log->type_of_holidays  =  $qoute->type_of_holidays;
@@ -2243,6 +2248,7 @@ class AdminController extends Controller
   
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->dinning_preferences     = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
             $qoute->type_of_holidays =  $request->type_of_holidays;

@@ -139,9 +139,10 @@ ALTER TABLE `qoutes` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
 ALTER TABLE `qoute_logs` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
 ALTER TABLE `bookings` ADD `gross_profit` FLOAT(16,2) NULL AFTER `selling`;
 
-
-
-
+-- add dinning_preferences feild in qoutes,qoute_logs, booking
+ALTER TABLE `qoutes` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quotation_no`;
+ALTER TABLE `qoute_logs` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quotation_no`;
+ALTER TABLE `bookings` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 
 
 
