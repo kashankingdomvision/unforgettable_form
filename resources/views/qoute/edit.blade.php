@@ -129,7 +129,7 @@
                     <div class="input-group">
                         <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" placeholder="Booking Due Date" autocomplete="off" required>
                     </div>
-                    <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"> {{ $errors->first('booking_date') }} </div>
+                    <div class="alert-danger booking_due_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                 </div>
 
 
@@ -142,7 +142,7 @@
                         <select class="form-control booking-method-select2"  name="booking_method[]" >
                             <option value="">Select Booking Method</option>
                             @foreach ($booking_methods as $booking_method)
-                                <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                <option {{($booking_method->name == 'Supplier Own')? 'selected' : NULL}} value="{{$booking_method->id}}">{{$booking_method->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -170,6 +170,17 @@
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_refrence') }} </div>
                 </div>
 
+                <div class="col-sm-2 " style="margin-bottom: 15px;">
+                    <label for="inputEmail3" class="">Booking Type</label> 
+                    <div class="input-group">
+                        <select class="form-control booked-by-select2" name="booking_type[]" >
+                            <option value="">Select Booking Type</option>
+                            <option value="refundable">Refundable</option>
+                            <option value="non_refundable">Non-Refundable</option>
+                        </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_type') }} </div>
+                </div>
 
                 <div class="col-sm-2" style="margin-bottom: 35px;">
                     <label for="inputEmail3" class="">Comments</label> 
@@ -188,6 +199,11 @@
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
 
+            </div>
+
+            <div class="row">
+            
+            
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Cost <span style="color:red">*</span></label>
                     <div class="input-group">
@@ -196,9 +212,6 @@
                     </div>
                     <div class="alert-danger error-cost" style="text-align:center"></div>
                 </div>
-            </div>
-
-            <div class="row">
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Currency Conversion</label>
@@ -415,6 +428,13 @@
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                               </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
+                        </div>
 
                         <br><br>
 
@@ -478,7 +498,7 @@
                                         <div class="input-group">
                                             <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker" placeholder="Booking Date" required>
                                         </div>
-                                        <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
+                                        <div class="alert-danger booking_due_date" style="text-align:center"></div>
                                     </div>
         
                     
@@ -518,6 +538,19 @@
                                         </div>
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
+                                    
+                                    
+                                    <div class="col-sm-2 " style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Type</label> 
+                                        <div class="input-group">
+                                            <select class="form-control booked-by-select2" name="booking_type[]" >
+                                                <option value="">Select Booking Type</option>
+                                                <option {{  ($quote_detail->booking_type == 'refundable')? 'selected' : '' }} value="refundable">Refundable</option>
+                                                <option {{  ($quote_detail->booking_type == 'non_refundable')? 'selected' : '' }} value="non_refundable">Non-Refundable</option>
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_type') }} </div>
+                                    </div>
         
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Comments</label> 
@@ -526,7 +559,7 @@
                                     </div>
 
                                     <div class="col-sm-2 mb-3">
-                                        <label class="">Select Supplier Currency</label> 
+                                        <label class="">Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -536,6 +569,11 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
                                     
+                                  
+                                </div>
+
+                                <div class="row">
+                                    
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
@@ -544,11 +582,7 @@
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
                                         <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly><br>
@@ -614,9 +648,7 @@
                                 <div class="row"> 
                                     <label style="margin-right: 10px; margin-bottom: 10px;">Selling</label>
                                 </div>
-                                <div class="row"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Gross Profit Rate</label>
-                                </div>
+
 
                                 <br><br>
                             </div>
@@ -640,13 +672,6 @@
                                     <label class="">
                                         <label class="currency" ></label>
                                         <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{$quote->selling}}">
-                                    </label>
-                                </div>
-                                <div class="row">
-                                    <label class="">
-                                        <label class="currency" ></label>
-                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$quote->gross_profit}}">
-                                        <span>%</span> 
                                     </label>
                                 </div>
                     
@@ -687,7 +712,7 @@
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1 mb-2">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
-                                    <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
+                                    <label style="margin-right: 10px; margin-bottom: 10px;">Selling Per Person</label>
                                 </label> 
                             </div>
 
@@ -867,7 +892,6 @@
                         Report panel usage
                         <input type="checkbox" class="pull-right" checked>
                     </label>
-
                     <p>
                         Some information about this general settings option
                     </p>
@@ -959,7 +983,7 @@
 <script type="text/javascript">
 
     $(function(){
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        $( ".datepicker" ).datepicker({ autoclose: true, format: 'yyyy-mm-dd' });
     });
 
     $(document).ready(function() {
@@ -1204,14 +1228,14 @@
 
         // Initialize all Select2 
         $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2 ').select2();
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        $( ".datepicker" ).datepicker({ autoclose: true, format: 'yyyy-mm-dd' });
         
         function reinitializedDynamicFeilds(){
 
             $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2").removeClass('select2-hidden-accessible').next().remove();
             $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2").select2();
 
-            $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
+            $(".datepicker").datepicker({ autoclose: true, format: 'yyyy-mm-dd'  });
         }
 
         $(document).on('change', 'select[name="category[]"]',function(){
@@ -1302,9 +1326,6 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
-                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
-
                 }
             });
 
@@ -1367,8 +1388,6 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
-                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
 
 
                 }
@@ -1390,9 +1409,6 @@
             var sellingPrice = (markupAmount + net_price);
             $('.selling').val(sellingPrice.toFixed(2));
 
-            var grossProfit = (((sellingPrice - net_price ) / sellingPrice) * 100)
-            $('.gross-profit').val(grossProfit.toFixed(2));
-
         });
 
         $(document).on('change', '.markup-amount',function(){
@@ -1406,9 +1422,6 @@
 
             var sellingPrice = markup_amount + net_price;
             $('.selling').val(sellingPrice.toFixed(2));
-
-            var grossProfit = (((sellingPrice - net_price ) / sellingPrice) * 100)
-            $('.gross-profit').val(grossProfit.toFixed(2));
     
         });
 
@@ -1463,9 +1476,6 @@
                     var sellingPrice = (markupAmount + net_price);
                     $('.selling').val(sellingPrice.toFixed(2));
 
-                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
-
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
                     // $('.per-person').val(perPersonAmount);
@@ -1510,15 +1520,13 @@
                     final = sellingPrice * response[selectedMainCurrency];
                     $('.show-convert-currency').val(final.toFixed(2));
 
-                    var group_no = $("select[name='group_no']").val();
-                    var perPersonAmount = final / group_no;
+                    var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
+
+
                     $('.per-person').val(perPersonAmount.toFixed(2));
 
-                    // var perPersonAmount = parseFloat($('.show-convert-currency').val()) / parseFloat($('select[name="group_no"]').val());
-                    // $('.per-person').val(perPersonAmount.toFixed(2));
-
-                    // total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
-                    // $('.total').val(total_per_person.toFixed(2));
+                    total_per_person = parseFloat($('.port-tax').val()) + perPersonAmount;
+                    $('.total').val(total_per_person.toFixed(2));
 
                     $('.convert-currency').text(selected_currency);
                 }
@@ -1569,9 +1577,9 @@
                     alert(data.success_message);
                     // $("#version").load();
 
-                    $("#version").load(location.href + " #version");
+                    // $("#version").load(location.href + " #version");
 
-                    window.location.href = "{{ route('view-quote')}}";
+                    // window.location.href = "{{ route('view-quote')}}";
 
                 },
                 error: function (reject) {
@@ -1610,11 +1618,30 @@
                     });
 
                     // Validating booking feild
+                    // jQuery.each(rows, function( index, value ) {
+                    //     var error_row = errors.errors['booking_due_date.' + index] || null;
+                    //     if(error_row) {
+                    //         jQuery(rows[index]).find('.booking_due_date').html("Booking feild is required")
+                    //         $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                    //     }
+                    // });
+                    
                     jQuery.each(rows, function( index, value ) {
-                        var error_row = errors.errors['booking_due_date.' + index] || null;
-                        if(error_row) {
-                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
+                        var error_row = errors.errors['booking_due_date.' + index]??null;
+                        if(error_row == null){
+                            if(errors.errors['booking_due_date'] !== undefined){
+                                error_row = errors.errors['booking_due_date'][index]??null;
+                            }else{
+                                error_row = null;
+                            }
+                        }
+                        if(error_row && Array.isArray(error_row) == true) {
+                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
+                        }else{
+                            jQuery.each(error_row, function( key, value ) {
+                                jQuery(".booking_due_date").eq(key).html(value);
+                            });
                         }
                     });
 
@@ -1627,45 +1654,6 @@
 
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
-        });
-
-        // auto select default currency of supplier
-        $(document).on('change', 'select[name="supplier[]"]',function(){
-
-            var $selector = $(this);
-            var supplier_id = $(this).val();
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('get-supplier-currency') }}',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'supplier_id': supplier_id
-                },
-                success: function(response) {
-
-                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
-                }
-            })
-        });
-
-        $(document).on('change', 'select[name="booked_by[]"]',function(){
-
-            var $selector = $(this);
-            var booked_by = $(this).val();
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('get-saleagent-supervisor') }}',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'booked_by': booked_by
-                },
-                success: function(response) {
-
-                    $selector.closest('.qoute').find('[class*="supervisor-select2"]').val(response.supervisor_id).change();
-                }
-            })
         });
 
         // $(document).on('click', '.version',function(e){
