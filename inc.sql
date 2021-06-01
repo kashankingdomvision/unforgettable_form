@@ -144,5 +144,8 @@ ALTER TABLE `qoutes` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quot
 ALTER TABLE `qoute_logs` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 ALTER TABLE `bookings` ADD `dinning_preferences` VARCHAR(255) NOT NULL AFTER `quotation_no`;
 
+ALTER TABLE `qoute_details` ADD `booking_type` varchar(255) NOT NULL AFTER `booking_refrence`;
+ALTER TABLE `qoute_detail_logs` ADD `booking_type` varchar(255) NOT NULL AFTER `booking_refrence`;
+ALTER TABLE `booking_details` ADD `booking_type` varchar(255) NOT NULL AFTER `booking_refrence`;
 
 

@@ -188,14 +188,6 @@
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
 
-                <div class="col-sm-2" style="margin-bottom: 15px;">
-                    <label for="inputEmail3" class="">Cost <span style="color:red">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-addon symbol"></span>
-                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" value="0" min="0" required>
-                    </div>
-                    <div class="alert-danger error-cost" style="text-align:center"></div>
-                </div>
             </div>
 
             <div class="row">
@@ -509,6 +501,19 @@
                                         </div>
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
+
+                                    <div class="col-sm-2 " style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Type</label> 
+                                        <div class="input-group">
+                                            <select class="form-control booked-by-select2" name="booking_type[]" >
+                                                <option value="">Select Booking Type</option>
+                                                <option {{  ($quote_detail->booking_type == 'refundable')? 'selected' : '' }} value="refundable">Refundable</option>
+                                                <option {{  ($quote_detail->booking_type == 'non_refundable')? 'selected' : '' }} value="non_refundable">Non-Refundable</option>
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_type') }} </div>
+                                    </div>
+        
         
                                     <div class="col-sm-2" style="margin-bottom: 35px;">
                                         <label for="inputEmail3" class="">Comments</label> 
@@ -527,6 +532,10 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
                                     
+                                </div>
+
+                                <div class="row">
+
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
@@ -543,10 +552,6 @@
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
-  
-                                </div>
-
-                                <div class="row">
                                     
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>

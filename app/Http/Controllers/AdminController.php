@@ -1658,6 +1658,7 @@ class AdminController extends Controller
                     $qouteDetail->booking_method    = $request->booking_method[$key];
                     $qouteDetail->booked_by         = $request->booked_by[$key];
                     $qouteDetail->booking_refrence  = $request->booking_refrence[$key];
+                    $qouteDetail->booking_type      = $request->booking_type[$key];
                     $qouteDetail->comments          = $request->comments[$key];
                     $qouteDetail->supplier_currency = $request->supplier_currency[$key];
                     $qouteDetail->cost              = $request->cost[$key];
@@ -1884,6 +1885,7 @@ class AdminController extends Controller
                             // 'booking_method'    => $request->booking_method[$key],
                             'booked_by'         => $request->booked_by[$key],
                             'booking_refrence'  => $request->booking_refrence[$key],
+                            'booking_type'      => $request->booking_type[$key],
                             'comments'          => $request->comments[$key],
                             'supplier_currency' => $request->supplier_currency[$key],
                             'cost'              => $request->cost[$key],
@@ -2287,6 +2289,7 @@ class AdminController extends Controller
                 $QouteDetailLog->booking_method    =  $qouteDetail->booking_method;
                 $QouteDetailLog->booked_by         =  $qouteDetail->booked_by;
                 $QouteDetailLog->booking_refrence  =  $qouteDetail->booking_refrence;
+                $QouteDetailLog->booking_type         =  $qouteDetail->booking_type;
                 $QouteDetailLog->comments          =  $qouteDetail->comments;
                 $QouteDetailLog->supplier_currency =  $qouteDetail->supplier_currency;
                 $QouteDetailLog->cost              =  $qouteDetail->cost;
@@ -2314,6 +2317,7 @@ class AdminController extends Controller
                     $qouteDetail->booking_method    = $request->booking_method[$key];
                     $qouteDetail->booked_by         = $request->booked_by[$key];
                     $qouteDetail->booking_refrence  = $request->booking_refrence[$key];
+                    $qouteDetail->booking_type      = $request->booking_type[$key];
                     $qouteDetail->comments          = $request->comments[$key];
                     $qouteDetail->supplier_currency = $request->supplier_currency[$key];
                     $qouteDetail->cost              = $request->cost[$key];
