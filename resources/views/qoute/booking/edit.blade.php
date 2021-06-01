@@ -299,9 +299,11 @@
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name" >
                                     <option value="">Select Brand</option>
-                                    @foreach ($get_user_branches->branches as $branche)
-                                    <option value="{{ $branche->name }}" {{$quote->brand_name == $branche->name ? 'selected' : ''}} >{{ $branche->name }}</option>
-                                    @endforeach
+                                    @if(isset($get_user_branches->branches))
+                                        @foreach ($get_user_branches->branches as $branche)
+                                            <option value="{{ $branche->name }}" {{$quote->brand_name == $branche->name ? 'selected' : ''}} >{{ $branche->name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
                             </div>
@@ -314,9 +316,11 @@
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" >
                                     <option value="">Select Holiday</option>
-                                    @foreach ($get_holiday_type->holiday_type as $holiday)
-                                    <option value="{{ $holiday->name }}" {{$quote->type_of_holidays == $holiday->name ? 'selected' : ''}}>{{ $holiday->name }}</option>
-                                    @endforeach
+                                    @if(isset($get_holiday_type->holiday_type))
+                                        @foreach ($get_holiday_type->holiday_type as $holiday)
+                                            <option value="{{ $holiday->name }}" {{$quote->type_of_holidays == $holiday->name ? 'selected' : ''}}>{{ $holiday->name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
                             </div>
@@ -325,9 +329,11 @@
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person" >
                                     <option value="">Select Person</option>
-                                    @foreach ($get_user_branches->users as $user)
-                                    <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->email }}</option>
-                                    @endforeach
+                                    @if(isset($get_user_branches->users))
+                                        @foreach ($get_user_branches->users as $user)
+                                            <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->email }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
                             </div>
@@ -645,9 +651,19 @@
                                             <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
-                                        <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                        {{-- <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
+                                        </div> --}}
+                                        
+                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <div class="form-check">
+                                                <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender disable-feild"  type="checkbox" value="false"  name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                            </div>
                                         </div>
+                                        
+                                        
                                         
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="remove_finance">-</button>
@@ -704,11 +720,17 @@
                                             </div>
                                             <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
-
+{{-- 
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                             <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
+                                        </div> --}}
+                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <div class="form-check">
+                                                <input type='hidden' value='false' name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                            </div>
                                         </div>
-
                                     
                                         @if($fkey == 0)
                                             <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -761,9 +783,10 @@
                                                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                             </div>
 
-                                            <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                            {{-- <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                                 <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
-                                            </div>
+                                            </div> --}}
+                                            
 
                                         </div>
 
@@ -1116,7 +1139,22 @@
 
         $( ".datepicker" ).datepicker({ autoclose: true, format: 'yyyy-mm-dd' });
 
-
+///tabraiz queries
+        $(document).on('change', '.uploadCalender', function() {
+            
+            if ($(this).is(':checked')) {
+                $(this).parent().find('input[type=hidden]').attr('disabled', 'disabled');
+                $(this).attr('value', 'true');
+            } else {
+                $(this).parent().find('input[type=hidden]').removeAttr('disabled');
+                $(this).attr('value', 'false');
+                
+            }            
+        });        
+//tabraiz queries
+        
+        
+                    
         $('.currency').html($('select[name="currency"]').val());
         $('.convert-currency').html($('select[name="convert_currency"]').val());
 
@@ -1802,9 +1840,8 @@
         
         $(document).on('click', '.add_finance',function(){
 
-
             // $(".disable-feild").attr( "disabled", "disabled" );
-            $(".disable-feild").prop("disabled", false);
+            // $(".disable-feild").prop("disabled", false);
             
             let $selector = $(this);
             let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();

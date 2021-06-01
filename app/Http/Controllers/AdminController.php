@@ -1844,65 +1844,65 @@ class AdminController extends Controller
 
             $season = season::find($request->season_id);
              ////////// tabriaz code
-             $errors = [];
-             foreach ($request->booking_due_date as $key => $duedate) {
-                 $duedate  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
-                 $startDate = date('Y-m-d', strtotime($season->start_date));
-                 $endDate   = date('Y-m-d', strtotime($season->end_date));
-                 $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
-                 $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
+            //  $errors = [];
+            //  foreach ($request->booking_due_date as $key => $duedate) {
+            //      $duedate  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
+            //      $startDate = date('Y-m-d', strtotime($season->start_date));
+            //      $endDate   = date('Y-m-d', strtotime($season->end_date));
+            //      $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
+            //      $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
                  
-                 $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
-                 $dateofservice   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $dateofservice))->format('Y-m-d')));
-                 $error = [];
-                 $dueresult = false;
-                 $dofresult = false;
-                 $bookresult = false;
+            //      $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
+            //      $dateofservice   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $dateofservice))->format('Y-m-d')));
+            //      $error = [];
+            //      $dueresult = false;
+            //      $dofresult = false;
+            //      $bookresult = false;
                  
-                 if($this->checkInSession($duedate, $season) == false){
-                     $a[$key+1] = 'Due Date should be season date range.';    
-                 }else{
-                     $dueresult = true;
-                 }
-                 if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
-                     $b[$key+1]  = 'Booking Date should be season date range.';      
-                 }else{
-                     $bookresult = true;
-                 }
-                 if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
-                     $c[$key+1]  = 'Date of service should be season date range.';   
-                 }else{
-                     $dofresult = true;
-                 }
+            //      if($this->checkInSession($duedate, $season) == false){
+            //          $a[$key+1] = 'Due Date should be season date range.';    
+            //      }else{
+            //          $dueresult = true;
+            //      }
+            //      if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
+            //          $b[$key+1]  = 'Booking Date should be season date range.';      
+            //      }else{
+            //          $bookresult = true;
+            //      }
+            //      if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
+            //          $c[$key+1]  = 'Date of service should be season date range.';   
+            //      }else{
+            //          $dofresult = true;
+            //      }
                  
-                 if($dateofservice != NULL && $bookingdate  == NULL){
-                     $b[$key+1]  = 'Booking Date field is required before the date of service.';    
-                     $bookresult = false;
-                 }
+            //      if($dateofservice != NULL && $bookingdate  == NULL){
+            //          $b[$key+1]  = 'Booking Date field is required before the date of service.';    
+            //          $bookresult = false;
+            //      }
                  
-                 if($bookresult == true){
-                     if($bookingdate != null && $bookingdate < $duedate){
-                         $b[$key+1]  = 'Booking Date should be smaller than booking due date.';    
-                     }
-                 }
+            //      if($bookresult == true){
+            //          if($bookingdate != null && $bookingdate < $duedate){
+            //              $b[$key+1]  = 'Booking Date should be smaller than booking due date.';    
+            //          }
+            //      }
                         
-                 if($dofresult == true){
-                     if ($bookingdate != null && $bookingdate > $dateofservice) {
-                         $c[$key+1]  = 'Date of service should be smaller than booking date.';   
-                     }
-                 }
+            //      if($dofresult == true){
+            //          if ($bookingdate != null && $bookingdate > $dateofservice) {
+            //              $c[$key+1]  = 'Date of service should be smaller than booking date.';   
+            //          }
+            //      }
                  
                  
-                 $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
-                 $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
-                 $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
+            //      $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
+            //      $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
+            //      $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
              
-                 $errors = $error;
-             }
+            //      $errors = $error;
+            //  }
              
-             if(count($errors) > 0){
-                 throw \Illuminate\Validation\ValidationException::withMessages($errors);
-             }
+            //  if(count($errors) > 0){
+            //      throw \Illuminate\Validation\ValidationException::withMessages($errors);
+            //  }
              ////////// tabriaz code
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
@@ -2070,6 +2070,26 @@ class AdminController extends Controller
                     );
 
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
+                        if($request->upload_calender[$key][$ikey]  == 'true'){
+  
+                            $event = new Event;
+                            $event->name        = "To Pay ".$request->actual_cost[$key].''.$request->supplier_currency[$key]." to Supplier";
+                            $event->description = 'Event description';
+                            $event->startDate   = Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay();
+                            $event->endDate     = Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay();
+                            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+                            $event->save();
+                        }
+                        // if($request->upload_calender[$key] == true){
+                        //     $event = new Event;
+                        //     $event->name        = "To Pay ".$request->actual_cost]$key].''.$request->supplier_currency[$key]." to Supplier";
+                        //     $event->description = 'Event description';
+                        //     $event->startDate   = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+                        //     $event->endDate     = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
+                        //     // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+                        //     $event->save();
+                        // }
+                                                                                            
                         FinanceBookingDetail::updateOrCreate(
                             [ 
                                 'booking_detail_id' => $bookingDetail->id,
