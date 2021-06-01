@@ -148,4 +148,7 @@ ALTER TABLE `qoute_details` ADD `booking_type` varchar(255) NOT NULL AFTER `book
 ALTER TABLE `qoute_detail_logs` ADD `booking_type` varchar(255) NOT NULL AFTER `booking_refrence`;
 ALTER TABLE `booking_details` ADD `booking_type` varchar(255) NOT NULL AFTER `booking_refrence`;
 
-
+INSERT INTO `booking_methods` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Supplier Own', '2021-05-31 07:26:02', '2021-05-31 07:26:02'),
+(2, 'Stuba', '2021-05-31 07:26:11', '2021-05-31 07:26:11'),
+(3, 'Webhotelier', '2021-05-31 07:26:18', '2021-05-31 07:26:18');

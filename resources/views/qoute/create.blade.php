@@ -139,7 +139,7 @@
                         <select class="form-control booking-method-select2"  name="booking_method[]" >
                             <option value="">Select Booking Method</option>
                             @foreach ($booking_methods as $booking_method)
-                                <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                <option value="{{$booking_method->id}}" {{ $booking_method->name == 'Supplier Own' ? 'selected' : '' }}>{{$booking_method->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -472,7 +472,7 @@
                                             <select class="form-control"  name="booking_method[]" id="booking-method-select2" class="form-control" >
                                                 <option value="">Select Booking Method</option>
                                                 @foreach ($booking_methods as $booking_method)
-                                                    <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                                                <option value="{{$booking_method->id}}" {{ $booking_method->name == 'Supplier Own' ? 'selected' : '' }}>{{$booking_method->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -142,7 +142,7 @@
                         <select class="form-control booking-method-select2"  name="booking_method[]" >
                             <option value="">Select Booking Method</option>
                             @foreach ($booking_methods as $booking_method)
-                                <option value="{{$booking_method->id}}">{{$booking_method->name}}</option>
+                            <option {{($booking_method->name == 'Supplier Own')? 'selected' : NULL}} value="{{$booking_method->id}}">{{$booking_method->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -493,6 +493,20 @@
                                         </div>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
+
+                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                        <label for="inputEmail3" class="">Booking Method</label>
+                                        <div class="input-group">
+                                            <select class="form-control booking-method-select2" name="booking_method[]" class="form-control">
+                                                <option value="">Select Booking Method</option>
+                                                @foreach ($booking_methods as $booking_method)
+                                                    <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : (($booking_method->name == 'Supplier Own')? 'selected' : NULL) }}>{{$booking_method->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                    </div>
+                                 
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Reference</label>
@@ -623,16 +637,17 @@
                                         </div>
     
                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                            <label for="inputEmail3" class="">Booking Method</label>
+                                            <label for="inputEmail3" class="">Payment Method </label>
                                             <div class="input-group">
-                                                <select class="form-control booking-method-select2 disable-feild" name="booking_method[{{$key}}][]"  >
-                                                    <option value="">Select Booking Method</option>
-                                                    @foreach ($booking_methods as $booking_method)
-                                                        <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                         
+                                                <select class="form-control booking-method-select2 disable-feild" name="payment_method[{{$key}}][]" class="form-control">
+                                                    <option value="">Select Payment Method</option>
+                                                    @foreach ($payment_method as $paymentm)
+                                                        <option value="{{$paymentm->id}}">{{$paymentm->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                            <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                         </div>
 
                                         <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
@@ -739,14 +754,14 @@
                                             <div class="col-sm-2" style="margin-bottom: 15px;">
                                                 <label for="inputEmail3" class="">Payment Method</label>
                                                 <div class="input-group">
-                                                    <select class="form-control booking-method-select2" name="booking_method[{{$key}}][]" class="form-control">
+                                                    <select class="form-control booking-method-select2" name="payment_method[{{$key}}][]" class="form-control">
                                                         <option value="">Select Payment Method</option>
-                                                        @foreach ($booking_methods as $booking_method)
-                                                            <option value="{{$booking_method->id}}" {{ $quote_detail->booking_method == $booking_method->id  ? "selected" : "" }}>{{$booking_method->name}}</option>
+                                                        @foreach ($payment_method as $paymentm)
+                                                            <option value="{{$paymentm->id}}" {{ $quote_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('booking_method') }} </div>
+                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('payment_method') }} </div>
                                             </div>
 
                                             <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">

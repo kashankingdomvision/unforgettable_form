@@ -1696,7 +1696,7 @@ class AdminController extends Controller
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name')
         ]);
     }
@@ -1909,7 +1909,7 @@ class AdminController extends Controller
                                 'deposit_amount'   =>  !empty($request->deposit_amount[$key][$ikey]) ? $request->deposit_amount[$key][$ikey] : null,
                                 'deposit_due_date' =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'paid_date'        =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
-                                'booking_method'   =>  $request->booking_method[$key][$ikey] ? $request->booking_method[$key][$ikey] : null,
+                                'payment_method'   =>  $request->payment_method[$key][$ikey]??NULL,
                             ]
     
                         );
@@ -1963,7 +1963,8 @@ class AdminController extends Controller
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
+            'payment_method' => payment::all()->sortBy('name'),
             'currencies' => Currency::all()->sortBy('name'),
             'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
         ]);
@@ -2390,7 +2391,7 @@ class AdminController extends Controller
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name'),
             'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
         ]);
@@ -2435,7 +2436,7 @@ class AdminController extends Controller
 
             'categories' => Category::all()->sortBy('name'),
             'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
             'users' => User::all()->sortBy('name'),
 
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
@@ -2481,7 +2482,7 @@ class AdminController extends Controller
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name'),
             'qoute_logs' => QouteLog::where('qoute_id',$quote_id)->get(),
         ]);
