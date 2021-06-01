@@ -647,7 +647,7 @@
                                             </div>
                                             <div class="alert-danger" style="text-align:center"> </div>
                                         </div>
-    
+     
                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                             <label for="inputEmail3" class="">Payment Method </label>
                                             <div class="input-group">
