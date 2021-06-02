@@ -309,7 +309,7 @@
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
+                                        <input type="text" name="ref_no"  value="{{ $quote->ref_no }}" class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
                                         </span>
                                         <span class="input-group-addon">
@@ -1544,7 +1544,7 @@
                             }
                         }
                         if(error_row && Array.isArray(error_row) == true) {
-                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
+                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
                         }else{
                             jQuery.each(error_row, function( key, value ) {

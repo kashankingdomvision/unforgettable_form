@@ -1717,7 +1717,7 @@ $(document).on('change', '.uploadCalender', function() {
                             }
                         }
                         if(error_row && Array.isArray(error_row) == true) {
-                            jQuery(rows[index]).find('.booking_due_date').html(error_row);
+                            jQuery(rows[index]).find('.booking_due_date').html("Booking Due Date is required");
                             $('html, body').animate({ scrollTop: $(rows[index]).offset().top }, 1000);
                         }else{
                             jQuery.each(error_row, function( key, value ) {
