@@ -152,3 +152,7 @@ INSERT INTO `booking_methods` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 'Supplier Own', '2021-05-31 07:26:02', '2021-05-31 07:26:02'),
 (2, 'Stuba', '2021-05-31 07:26:11', '2021-05-31 07:26:11'),
 (3, 'Webhotelier', '2021-05-31 07:26:18', '2021-05-31 07:26:18');
+
+ALTER TABLE `booking_details` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+ALTER TABLE `finance_booking_details` CHANGE `booking_method` `payment_method` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+ALTER TABLE `finance_booking_details` ADD `upload_calender` VARCHAR(10) NULL AFTER `payment_method`;
