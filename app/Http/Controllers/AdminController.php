@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Request as Routerequest;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Requests;
+use Spatie\GoogleCalendar\Event;
+use App\Mail\DueDateMail;
+use Carbon\Carbon;
 use App\User;
 use App\season;
 use App\Booking;
@@ -34,10 +39,6 @@ use App\QouteDetailLog;
 use File;
 use Image;
 use Response;
-
-use App\Mail\DueDateMail;
-use Illuminate\Support\Facades\Mail;
-
 use Validator;
 use Redirect;
 use DB;
@@ -45,10 +46,6 @@ use Cache;
 use Input;
 use Hash;
 use Session;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Redirect as FacadesRedirect;
-
-use Spatie\GoogleCalendar\Event;
 
  
 
@@ -2043,13 +2040,12 @@ class AdminController extends Controller
 
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
                         
-                        if($request->upload_calender[$key][$ikey]  == true){
-                            
+                        if($request->upload_calender[$key][$ikey]  == true && $deposit_due_date != NULL){
                             $event = new Event;
                             $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$request->supplier_currency[$key]." to Supplier";
                             $event->description = 'Event description';
-                            $event->startDate   = Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay();
-                            $event->endDate     = Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay();
+                            $event->startDate   = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay(): NULL;
+                            $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
                             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
                             $event->save();
                         }
@@ -2058,8 +2054,8 @@ class AdminController extends Controller
                                 'booking_detail_id' => $bookingDetail->id,
                                 'row' => $ikey+1,
                             ],
-    
                             [
+                                'upload_to_calender' => $request->upload_calender[$key][$ikey],
                                 'deposit_amount'   =>  !empty($request->deposit_amount[$key][$ikey]) ? $request->deposit_amount[$key][$ikey] : null,
                                 'deposit_due_date' =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'paid_date'        =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
