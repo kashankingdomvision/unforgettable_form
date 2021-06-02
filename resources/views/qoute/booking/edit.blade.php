@@ -278,7 +278,7 @@
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
+                                        <input type="text" name="ref_no" value="{{ $quote->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
                                         </span>
                                         <span class="input-group-addon">
@@ -666,10 +666,10 @@
                                             <button type="button" class="upload_to_google_calendar">Upload to Calendar</button>
                                         </div> --}}
                                         <div class="col-sm-2" style="margin-bottom: 15px; ">
-                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <label for="inputEmail3" class=""> Upload to Calender</label>
                                             <div class="form-check">
-                                                <input type='hidden' value='false' name='upload_calender[{{$key}}][]'>
-                                                <input class="form-check-input uploadCalender" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                                <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender disable-feild" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
                                             </div>
                                         </div>
 
@@ -720,7 +720,7 @@
                                                 <select class="form-control booking-method-select2" name="payment_method[{{$key}}][]" class="form-control">
                                                     <option value="">Select Payment Method</option>
                                                     @foreach ($payment_method as $paymentm)
-                                                        <option value="{{$paymentm->id}}" {{ $quote_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
+                                                        <option value="{{$paymentm->id}}" {{ $finance_booking_detail->payment_method == $paymentm->id  ? "selected" : "" }}>{{$paymentm->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -733,10 +733,10 @@
                                        
 
                                         <div class="col-sm-2" style="margin-bottom: 15px; ">
-                                            <label for="inputEmail3" class=""> Upload to calender</label>
+                                            <label for="inputEmail3" class=""> Upload to Calender</label>
                                             <div class="form-check">
-                                                <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{$key}}][]'>
-                                                <input class="form-check-input uploadCalender disable-feild"  type="checkbox" value="false"  name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
+                                                <input type='hidden' class="disable-feild" {{ ($finance_booking_detail->upload_to_calender == 'false')?  '': 'disabled="disabled"'}}   value="false" name='upload_calender[{{$key}}][]'>
+                                                <input class="form-check-input uploadCalender disable-feild"  type="checkbox" value="{{ $finance_booking_detail->upload_to_calender??'false'}} "  {{ ($finance_booking_detail->upload_to_calender == 'false')?  '': 'checked'}}  name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
                                             </div>
                                         </div>
                                     
@@ -796,7 +796,7 @@
                                             </div> --}}
 
                                             <div class="col-sm-2" style="margin-bottom: 15px; ">
-                                                <label for="inputEmail3" class=""> Upload to Csalender</label>
+                                                <label for="inputEmail3" class=""> Upload to Calender</label>
                                                 <div class="form-check">
                                                     <input type='hidden' value='false' name='upload_calender[{{$key}}][]'>
                                                     <input class="form-check-input uploadCalender" type="checkbox" value="false" name="upload_calender[{{$key}}][]" style="height: 20px; width:28px;">
@@ -1660,7 +1660,7 @@ $(document).on('change', '.uploadCalender', function() {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
 
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {
