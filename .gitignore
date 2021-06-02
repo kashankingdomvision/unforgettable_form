@@ -16,3 +16,4 @@ composer.lock
 composercopy.json
 composercopy.lock
 config/app.php
+app/Exceptions/Handler.php
