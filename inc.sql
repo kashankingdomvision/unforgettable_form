@@ -155,8 +155,4 @@ INSERT INTO `booking_methods` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
 ALTER TABLE `booking_details` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `finance_booking_details` CHANGE `booking_method` `payment_method` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-
-ALTER TABLE `finance_booking_details` ADD `upload_to_calender` VARCHAR(255) NULL AFTER `payment_method`;
-
--- env google calendar id
-GOOGLE_CALENDAR_ID=bcttfdmuevbf5aod6i8jhhrvm4@group.calendar.google.com
+ALTER TABLE `finance_booking_details` ADD `upload_to_calender` VARCHAR(240) NULL AFTER `payment_method`;
