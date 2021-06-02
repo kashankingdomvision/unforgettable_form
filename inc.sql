@@ -160,3 +160,6 @@ ALTER TABLE `finance_booking_details` ADD `upload_to_calender` VARCHAR(255) NULL
 
 -- env google calendar id
 GOOGLE_CALENDAR_ID=bcttfdmuevbf5aod6i8jhhrvm4@group.calendar.google.com
+
+ALTER TABLE `qoute_details` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+ALTER TABLE `qoute_detail_logs` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
