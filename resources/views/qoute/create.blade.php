@@ -366,7 +366,7 @@
                             <div class="col-sm-1 mb-2">
                                 <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red"> *</span><br>
                                 <input type="radio" name="agency_booking" value="2" id="ab_yes"> <label for="ab_yes"> Yes</label>
-                                <input type="radio" name="agency_booking" value="1"  id="ab_no" > <label for="ab_no"> No</label>
+                                <input type="radio" name="agency_booking" value="1"  id="ab_no" checked> <label for="ab_no"> No</label>
                                 <div class="alert-danger" style="text-align:center" > </div>
                             </div>
                             <div class="row" style="display:none;" id="agency-detail">

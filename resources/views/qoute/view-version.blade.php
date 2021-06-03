@@ -39,6 +39,23 @@
         border-radius: 10px;
     }
 
+    .mb-2{
+        margin-bottom: 1.5rem;
+    }
+
+    .mb-3{
+        margin-bottom: 3rem;
+    }
+
+    .mt-3{
+        margin-top: 3rem;
+    }
+
+    .mt-2{
+        margin-top: 2rem;
+    }
+
+
     .hide-arrows::-webkit-inner-spin-button, .hide-arrows::-webkit-outer-spin-button {
         -webkit-appearance: none !important;
         margin: 0 !important;
@@ -92,7 +109,7 @@
 
                         <div class="row">
                             <div class="row">
-                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
                                     <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'zoho')? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
                                     <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label>

@@ -248,7 +248,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Booking</h3>
                         <span class="pull-right">
-                            <button type="button" target="_blank" id="export-to-csv"> Export CSV</button></span>
+                            {{-- <button type="button" target="_blank" id="export-to-csv"> Export CSV</button></span> --}}
                     </div>
                     <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
                         @if (Session::has('success_message'))
@@ -268,7 +268,7 @@
 
                         <div class="row">
                             <div class="row">
-                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
                                     <label class="radio-inline"><input type="radio" {{ ($quote->reference_name == 'zoho')? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
                                     <label class="radio-inline"><input type="radio" {{ ($quote->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label>
