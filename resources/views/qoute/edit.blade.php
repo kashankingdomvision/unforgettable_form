@@ -301,13 +301,13 @@
                             <div class="row">
                                 <div class="col-md-5 col-sm-offset-1 mb-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
-                                    <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
-                                    <label class="radio-inline"><input type="radio"  name="reference" value="tas" >TAS Reference</label>
+                                    <label class="radio-inline"><input type="radio" {{ ($quote->reference_name == 'zoho')? 'checked': NULL }}  name="reference" value="zoho" >Zoho Reference</label>
+                                    <label class="radio-inline"><input type="radio" {{ ($quote->reference_name == 'tas')? 'checked': NULL }}  name="reference" value="tas" >TAS Reference</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                    <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" id="referencename">{{ ($quote->reference_name == 'zoho')? 'Zoho' : 'TAS' }} Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="ref_no"  value="{{ $quote->ref_no }}" class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
@@ -1022,6 +1022,19 @@
         $('.currency').html($('select[name="currency"]').val());
         $('.convert-currency').html($('select[name="convert_currency"]').val());
 
+
+        $('input[type=radio][name=reference]').on('change', function () {
+            switch ($(this).val()) {
+                case 'zoho':
+                    $('#referencename').text('Zoho Reference');
+                break;
+                
+                case 'tas':
+                    $('#referencename').text('TAS Reference');
+                break;
+            }
+        });
+        
         $(document).on('click', '#sendReference', function(){
             $('#link').html('');
             $('#link').removeAttr('class');
@@ -1048,68 +1061,36 @@
         // });
 
         function doneTyping () {
-     
-        
             book_id = $('input[name="ref_no"]').val();
+            referenceName = $('input[type=radio][name=reference]:checked').val();
+
             if(book_id) {
-            token = $('input[name=_token]').val();
-            data  = {id: book_id};
-            url   = '{{route('get-ref-detail')}}';
-
-            $.ajax({
-                url: url,
-                headers: {'X-CSRF-TOKEN': token},
-                data : data,
-                beforeSend: function() {
-                    $("#divLoading").addClass('show');
-                },
-                type: 'POST',
-                dataType: "json",
-                success:function(data) {
-
-        
-                    if(data.item_rec != null){
-                    $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                    $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                    }
-
-                    if(data.item_rec2 != null){
-                        if("id" in data.item_rec2){
-                            var id = data.item_rec2.id;
-                            $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
-                            $('#link').attr('class', 'input-group-addon');
+                token = $('input[name=_token]').val();
+                data = {id: book_id, reference_name: referenceName};
+                url = '{{route('get-ref-detail')}}';
+                $.ajax({
+                    url: url,
+                    headers: {'X-CSRF-TOKEN': token},
+                    data : data,
+                    beforeSend: function() {
+                        $("#divLoading").addClass('show');
+                    },
+                    type: 'POST',
+                    dataType: "json",
+                    success:function(data) {
+                        console.log(data);
+                        if(data.hasOwnProperty("response") == true){
+                            $('select[name="type_of_holidays"]').val(data.response.internal_information.holiday_type).trigger('change');    
+                        }else{
+                            $('#error_ref_no').text('The Reference is not found');
                         }
+                            $('#sendReference').text('Search');
+                            $("#divLoading").removeClass('show');
+                            $('#sendReference').removeAttr('disabled');
                     }
-
-                    if(data.item_rec4 != null){
-
-                        if(data.item_rec4.record[0] != null){
-
-                            $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
-                            $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
-                            $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
-                            $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
-                            if(data.item_rec4.record[0].client_type == 2){
-                                $('#ab_yes').trigger('click');
-                            }
-                        }
-                    }
-                    
-                    $('#sendReference').text('Search');
-                    $('#sendReference').removeAttr('disabled');
-                    $("#divLoading").removeClass('show');
-                    if(data.item_rec == null && data.item_rec4 == null, data.item_rec2 == null ){
-                        $('#error_ref_no').text('The Reference is not found');
-                    }
-                }
-            });
-            }else{
-                $('#sendReference').text('Search');
-                $('#sendReference').removeAttr('disabled');
-                $('#error_ref_no').text('Reference feild is required!');
+                });
             }
         }
-
         // Dynamically appened qoute 
         $('body').on('click', '#new', function (e) {
             var qoute = $('#qoute').html();

@@ -968,9 +968,23 @@
     $(function(){
         $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
     });
+    
 
     $(document).ready(function() {
 
+
+        $('input[type=radio][name=reference]').on('change', function () {
+                switch ($(this).val()) {
+                    case 'zoho':
+                        $('#referencename').text('Zoho Reference');
+                    break;
+                    
+                    case 'tas':
+                        $('#referencename').text('TAS Reference');
+                    break;
+                }
+        });
+                    
         $(document).on('click', '#sendReference', function(){
             $('#link').html('');
             $('#link').removeAttr('class');
@@ -984,28 +998,17 @@
         var typingTimer;                //timer identifier
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
         var $input = $('input[name="ref_no"]');
-
-        // //on keyup, start the countdown
-        // $input.on('keyup', function () {
-        //   clearTimeout(typingTimer);
-        //   typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        // });
-
-        // //on keydown, clear the countdown 
-        // $input.on('keydown', function () {
-        //   clearTimeout(typingTimer);
-        // });
-
+        
         //user is "finished typing," do something
         function doneTyping () {
-     
-      
-            book_id = $('input[name="ref_no"]').val();
-            if(book_id) {
-            token = $('input[name=_token]').val();
-            data  = {id: book_id};
-            url   = '{{route('get-ref-detail')}}';
 
+            book_id = $('input[name="ref_no"]').val();
+            referenceName = $('input[type=radio][name=reference]:checked').val();
+            
+            if(book_id) {
+                token = $('input[name=_token]').val();
+                data = {id: book_id, reference_name: referenceName};
+                url = '{{route('get-ref-detail')}}';
                 $.ajax({
                     url: url,
                     headers: {'X-CSRF-TOKEN': token},
@@ -1016,47 +1019,17 @@
                     type: 'POST',
                     dataType: "json",
                     success:function(data) {
-
-            
-                        if(data.item_rec != null){
-                        $('select[name="brand_name"]').val(data.item_rec.branch_name);
-                        $('select[name="sale_person"]').val(data.item_rec.created_by).trigger('change');
-                        }
-
-                        if(data.item_rec2 != null){
-                            if("id" in data.item_rec2){
-                                var id = data.item_rec2.id;
-                                $('#link').html('<strong><a href="https://unforgettabletravelcompany.com/ufg-form/user/'+id+'" target="_blank">View Reference Detail</a></strong>');
-                                $('#link').attr('class', 'input-group-addon');
-                            }
-                        }
-
-                        if(data.item_rec4 != null){
-
-                            if(data.item_rec4.record[0] != null){
-
-                                $('input:radio[name=agency_booking]').filter('[value='+data.item_rec4.record[0].client_type+']').prop('checked', true);
-                                $('select[name="sale_person"]').val(data.item_rec4.record[0].sales_person).trigger('change');
-                                $('select[name="type_of_holidays"]').val(data.item_rec4.record[0].holiday_type).trigger('change');
-                                $('select[name="group_no"]').val(data.item_rec4.record[0].pax).trigger('change');
-                                if(data.item_rec4.record[0].client_type == 2){
-                                    $('#ab_yes').trigger('click');
-                                }
-                            }
-                        }
-                        
-                        $('#sendReference').text('Search');
-                        $('#sendReference').removeAttr('disabled');
-                        $("#divLoading").removeClass('show');
-                        if(data.item_rec == null && data.item_rec4 == null, data.item_rec2 == null ){
+                        console.log(data);
+                        if(data.hasOwnProperty("response") == true){
+                            $('select[name="type_of_holidays"]').val(data.response.internal_information.holiday_type).trigger('change');    
+                        }else{
                             $('#error_ref_no').text('The Reference is not found');
                         }
+                            $('#sendReference').text('Search');
+                            $("#divLoading").removeClass('show');
+                            $('#sendReference').removeAttr('disabled');
                     }
                 });
-            }else{
-                $('#sendReference').text('Search');
-                $('#sendReference').removeAttr('disabled');
-                $('#error_ref_no').text('Reference feild is required!');
             }
         }
 

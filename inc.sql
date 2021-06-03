@@ -163,3 +163,16 @@ GOOGLE_CALENDAR_ID=bcttfdmuevbf5aod6i8jhhrvm4@group.calendar.google.com
 
 ALTER TABLE `qoute_details` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `qoute_detail_logs` CHANGE `booking_type` `booking_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+
+ALTER TABLE `qoutes` ADD `reference_name` VARCHAR(255) NULL AFTER `id`;
+ALTER TABLE `qoute_logs` ADD `reference_name` VARCHAR(255) NULL AFTER `id`;
+ALTER TABLE `bookings` ADD `reference_name` VARCHAR(255) NULL AFTER `id`;
+
+-- // table TRUNCATE
+TRUNCATE TABLE `qoutes` ;
+TRUNCATE TABLE `qoute_details` ;
+TRUNCATE TABLE `qoute_logs` ;
+TRUNCATE TABLE `qoute_detail_logs` ;
+TRUNCATE TABLE `bookings` ;
+TRUNCATE TABLE `booking_details` ;
+TRUNCATE TABLE `finance_booking_details` ;

@@ -682,45 +682,134 @@ class AdminController extends Controller
         booking::destroy('id', '=', $booking_id);
         return Redirect::route('view-booking', $season_id)->with('success_message', 'Deleted Successfully');
     }
-    public function get_ref_detail(Request $request)
-    {
-        $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, "http://localhost/unforgettable_payment/backend/api/payment/get_lead_info");
-        curl_setopt($ch, CURLOPT_URL, "http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_lead_info");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('reference' => $request->input('id'))));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $server_output = curl_exec($ch);
-        curl_close($ch);
-
-        //
-        $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, "http://localhost/unforgettable_payment/backend/api/payment/get_lead_by_reference");
-        curl_setopt($ch, CURLOPT_URL, "http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_lead_by_reference");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('ref_no' => $request->input('id'))));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $server_output2 = curl_exec($ch);
-        curl_close($ch);
-        //
-
-        //
-        $url = 'https://unforgettabletravelcompany.com/ufg-form/Admin/Login/LoginCon/get_user_detail/' . $request->input('id');
-        $output =  $this->curl_data($url);
-        //
-        //
-        $url2 = 'https://unforgettabletravelcompany.com/ufg-form/Admin/Login/LoginCon/app_login_detail/' . $request->input('id');
-        $output2 =  $this->curl_data($url2);
-        //
-        if ($request->ajax()) {
-            return response()->json([
-                'item_rec'  => json_decode($server_output) == '' ? json_decode($server_output) : json_decode($server_output),
-                'item_rec2' => json_decode($output),
-                'item_rec3' => json_decode($output2),
-                'item_rec4' => json_decode($server_output2)->data
-            ]);
+    
+    
+    function cf_remote_request($url, $_args = array()) {
+		// prepare array
+		$array = array(
+			//'status' => false,
+			'message' => array(
+				'101' => 'Invalid url',
+				'102' => 'cURL Error #: ',
+				'200' => 'cURL Successful #: ',
+				'400' => '400 Bad Request',
+			)
+		);
+		
+		// initalize args
+		$args = array(
+			'method' 		=> 'POST',
+			'timeout' 		=> 45,
+			'redirection' 	=> 5,
+			'httpversion' 	=> '1.0',
+			'blocking' 		=> true,
+			'ssl' => true,
+			'headers' => array(),
+			'body' => array(),
+			'returntransfer' => true,
+			'encoding' => '',
+			'maxredirs' => 10,
+			'format' => 'JSON'
+		);
+		
+		if( empty($url) ) {
+			$code = 101;
+			$response = array('status' => $code, 'body' => $array['message'][$code]);
+			return $response;
+		}
+		
+		if( !empty($_args) && is_array($_args) )
+			$args = array_merge($args, $_args);
+		
+		$fields = $args['body'];
+		if( strtolower($args['method']) == 'post' && is_array($fields) )
+			$fields = http_build_query( $fields );
+		
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL 			=> $url,
+			CURLOPT_RETURNTRANSFER 	=> $args['returntransfer'],
+			CURLOPT_ENCODING 		=> $args['encoding'],
+			CURLOPT_MAXREDIRS 		=> $args['maxredirs'],
+			CURLOPT_HTTP_VERSION 	=> $args['httpversion'],// CURL_HTTP_VERSION_1_1,
+			CURLOPT_USERAGENT 		=> $_SERVER['HTTP_USER_AGENT'],
+			//CURLOPT_HEADER 			=> true,
+			CURLINFO_HEADER_OUT 	=> true,
+			CURLOPT_TIMEOUT 		=> $args['timeout'],
+			CURLOPT_CONNECTTIMEOUT 	=> $args['timeout'],
+			CURLOPT_SSL_VERIFYPEER 	=> $args['ssl'] === true ? true : false,
+			//CURLOPT_SSL_VERIFYHOST 	=> $args['ssl'] === true ? true : false,
+            // CURLOPT_CAPATH     		=> APPPATH . 'certificates/ca-bundle.crt',
+			CURLOPT_CUSTOMREQUEST 	=> $args['method'],
+			CURLOPT_POSTFIELDS 		=> $fields,
+			CURLOPT_HTTPHEADER 		=> $args['headers'],
+		));
+	
+		$curl_response 	= curl_exec($curl);
+		$err 			= curl_error($curl);
+		$curl_info = array(
+			'status' 		=> curl_getinfo($curl, CURLINFO_HTTP_CODE),
+			'header' 		=> curl_getinfo($curl, CURLINFO_HEADER_OUT),
+			'total_time' 	=> curl_getinfo($curl, CURLINFO_TOTAL_TIME)
+		);
+		
+		curl_close($curl);
+		
+		
+		if( $err ) {
+			$response = array('message' => $err, 'body' => $err);
+			
+		} else {
+			if( $curl_info['status'] == 200
+			&& in_array($args['format'], array('ARRAY', 'OBJECT')) 
+			&& !empty($curl_response) && is_string($curl_response) ) {
+				$curl_response = json_decode( $curl_response, $args['format'] == 'ARRAY' ? true : false );
+                $curl_response = ( json_last_error() == JSON_ERROR_NONE ) ? $curl_response : $curl_response;
+			}
+            else{
+                $curl_response = json_decode($curl_response, TRUE);
+            }
+			
+			$response = array(
+				//'message' 	=> $array['message'][ $curl_info['status'] ],
+				'body' 		=> $curl_response
+			);
+		}
+		
+		$response = array_merge($curl_info, $response);
+		return $response;
+	}
+    
+    // get reference function start
+    public function get_ref_detail(Request $request){
+        
+        if($request->reference_name == "zoho"){
+            $post_data = array('param' => array('zoho_booking_reference' => $request->id));
+            $post_data = json_encode($post_data);
+            $url = 'https://payments.cruisecroatia.com/backend/api/payment/zoho_payment_status';
+        }else{
+            $post_data = array('param' => array('tas_booking_reference' => $request->id));
+            $post_data = json_encode($post_data);
+            $url = 'https://payments.cruisecroatia.com/backend/api/payment/tas_payment_status';
         }
+        
+        $postResult = $this->cf_remote_request($url, array(
+            'body' => $post_data,
+            'headers' => array('Content-Type: application/json')
+        ));
+        
+        if(isset($postResult['body']['zoho_response']) && count($postResult['body']['zoho_response']) > 0){
+            $response['response'] = $postResult['body']['zoho_response'];
+        }
+            $response['reference'] = $request->reference_name;
+        
+        if ($request->ajax()) {
+            return response()->json($response);
+        }
+            return redirect()->back();
     }
+    
+    //get reference funtion end 
     private function curl_data($url)
     {
         $ch = curl_init();
@@ -729,6 +818,7 @@ class AdminController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         return $output = curl_exec($ch);
     }
+    
     public function update_booking(Request $request, $id)
     {
         if ($request->isMethod('post')) {
@@ -1695,6 +1785,7 @@ class AdminController extends Controller
 
             $qoute = new Qoute;
             $qoute->ref_no           =  $request->ref_no;
+            $qoute->reference_name   =  $request->reference;
             $qoute->quotation_no     =  $request->quotation_no;
             $qoute->dinning_preferences  = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
@@ -1946,6 +2037,7 @@ class AdminController extends Controller
 
                 [
                     'ref_no'           =>  $request->ref_no,
+                    'reference_name'   => $request->reference,
                     'qoute_id'          => $request->qoute_id,
                     'quotation_no'     =>  $request->quotation_no,
                     'dinning_preferences'   => $request->dinning_preferences,
@@ -2295,7 +2387,6 @@ class AdminController extends Controller
             $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
-
             $season = season::findOrFail($request->season_id);
             
             // if(!empty($request->date_of_service)){
@@ -2444,7 +2535,8 @@ class AdminController extends Controller
             $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog',$id));
             $qoute_log->qoute_id          =  $id;
             $qoute_log->ref_no            =  $qoute->ref_no;
-            $qoute_log->quotation_no      =  $request->quotation_no;
+            $qoute_log->reference_name    =  $qoute->reference_name;
+            $qoute_log->quotation_no      =  $qoute->quotation_no;
             $qoute_log->dinning_preferences     = $qoute->dinning_preferences;
             $qoute_log->lead_passenger_name =  $qoute->lead_passenger_name;
             $qoute_log->brand_name        =  $qoute->brand_name;
@@ -2472,6 +2564,7 @@ class AdminController extends Controller
   
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
+            $qoute->reference_name    =  $request->reference;
             $qoute->dinning_preferences     = $request->dinning_preferences;
             $qoute->lead_passenger_name =  $request->lead_passenger_name;
             $qoute->brand_name       =  $request->brand_name;
@@ -2527,7 +2620,6 @@ class AdminController extends Controller
 
             if(!empty($request->cost)){
                 foreach($request->cost as $key => $cost){
-
                     $qouteDetail = new QouteDetail;
                     $qouteDetail->qoute_id = $qoute->id;
                     $qouteDetail->date_of_service   = $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null;
