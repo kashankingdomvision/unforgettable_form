@@ -178,6 +178,9 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('add-fatwa',array('before'=>'csrf','as'=>'add-fatwa','uses'=>'AdminController@add_fatwa'));
 	Route::post('update-fatwa/{id}',array('before'=>'csrf','as'=>'update-fatwa','uses'=>'AdminController@update_fatwa'));
 	Route::post('get-ref-detail',array('before'=>'csrf','as'=>'get-ref-detail','uses'=>'AdminController@get_ref_detail'));
+
+	Route::get('refresh-token',array('before'=>'csrf','as'=>'refresh-token','uses'=>'AdminController@refresh_token'));
+
 	// category
 	Route::post('creat-category',array('before'=>'csrf','as'=>'creat-category','uses'=>'AdminController@create_category'));
 	Route::post('update-category/{id}',array('before'=>'csrf','as'=>'update-category','uses'=>'AdminController@update_category'));

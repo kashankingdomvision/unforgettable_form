@@ -36,6 +36,7 @@ use App\QouteDetail;
 use App\QouteEmail;
 use App\QouteLog;
 use App\QouteDetailLog;
+use App\ZohoCredential;
 use File;
 use Image;
 use Response;
@@ -46,7 +47,7 @@ use Cache;
 use Input;
 use Hash;
 use Session;
- 
+use Config;
 use App\old_booking;
 
 class AdminController extends Controller
@@ -797,32 +798,72 @@ class AdminController extends Controller
 		$response = array_merge($curl_info, $response);
 		return $response;
 	}
+
+    
+    public function refresh_token()
+    {
+        $zoho_credentials = ZohoCredential::findOrFail(1);
+        $refresh_token = $zoho_credentials->refresh_token;
+        $url = "https://accounts.zoho.com/oauth/v2/token?refresh_token=" . $refresh_token . "&client_id=1000.0VJP33J6LLOQ63896U88RWYIVJRSFD&client_secret=81212149f53ee4039b280b420835d64b8443c96a83&grant_type=refresh_token";
+        $args = array('ssl' => false, 'format' => 'ARRAY');
+        $response = $this->cf_remote_request($url, $args);
+        if( $response['status'] == 200 ) {
+			$body = $response['body'];
+            $zoho_credentials->access_token = $body['access_token'];
+            $zoho_credentials->save();
+		}
+    }
+
+
+
     
     // get reference function start
     public function get_ref_detail(Request $request){
-        
+
+        $ajax_response = array();
+
         if($request->reference_name == "zoho"){
-            $post_data = array('param' => array('zoho_booking_reference' => $request->id));
-            $post_data = json_encode($post_data);
-            $url = 'https://payments.cruisecroatia.com/backend/api/payment/zoho_payment_status';
-        }else{
-            $post_data = array('param' => array('tas_booking_reference' => $request->id));
-            $post_data = json_encode($post_data);
-            $url = 'https://payments.cruisecroatia.com/backend/api/payment/tas_payment_status';
+
+            $zoho_credentials = ZohoCredential::findOrFail(1);
+            $ref = $request->id;
+            // $refresh_token = '1000.18cb2e5fbe397a6422d8fcece9b67a06.d71539ff6e5fa8364879574343ab799a';
+            $url = "https://www.zohoapis.com/crm/v2/Deals/search?criteria=(Booking_Reference:equals:{$ref})";
+            $args = array(
+                'method' 	=> 'GET',
+                'ssl' 		=> false,
+                'format' 	=> 'ARRAY',
+                'headers' 	=> array(
+                    "Authorization:" . 'Zoho-oauthtoken ' . $zoho_credentials->access_token,
+                    "Content-Type: application/json",
+                )
+            );
+
+            $response = $this->cf_remote_request($url, $args);
+
+            if($response['status'] == 200) {
+    
+                $responses_data = array_shift($response['body']['data']);
+                $passenger_id = $responses_data['id'];
+    
+                $url = "https://www.zohoapis.com/crm/v2/Passengers/search?criteria=(Deal:equals:{$passenger_id})";
+                $passenger_response = $this->cf_remote_request($url, $args);
+    
+                if($passenger_response['status'] == 200) {
+                    $pax_no = count($passenger_response['body']['data']);
+                }
+         
+                $ajax_response = array( 
+                    "holiday_type" => isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type'])  ? $responses_data['Holiday_Type'] : null,
+                    "sale_person"  => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
+                    "currency"     => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null ,
+                    "pax"          => isset($pax_no) && !empty($pax_no) ?  $pax_no : null 
+                );
+            }
+
         }
-        
-        $postResult = $this->cf_remote_request($url, array(
-            'body' => $post_data,
-            'headers' => array('Content-Type: application/json')
-        ));
-        
-        if(isset($postResult['body']['zoho_response']) && count($postResult['body']['zoho_response']) > 0){
-            $response['response'] = $postResult['body']['zoho_response'];
-        }
-            $response['reference'] = $request->reference_name;
-        
+       
         if ($request->ajax()) {
-            return response()->json($response);
+            return response()->json($ajax_response);
         }
             return redirect()->back();
     }
@@ -2375,33 +2416,33 @@ class AdminController extends Controller
 
         if($request->isMethod('post')){
         
-        // dd($request->all());
-        
-        // $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
-        
-        // $dynamic_text_area = "$request->details";
-        
-        // $calendar_start_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
-        // $calendar_end_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
-        
-        // $location = "";
-        // $description = "test";
-        // // $guests = "kashan.mehmood13@gmail.com";
-        // $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
-        // return $message_url;
-        
-        $event = new Event;
-        $event->name = "To Pay $request->depositAmount $request->supplier_currency to Supplier";
-        $event->description = 'Event description';
-        $event->startDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
-        $event->endDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
-        // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
-        $event->save();
-        
-        dd($request->all());
+            // dd($request->all());
+            
+            // $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
+            
+            // $dynamic_text_area = "$request->details";
+            
+            // $calendar_start_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+            // $calendar_end_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
+            
+            // $location = "";
+            // $description = "test";
+            // // $guests = "kashan.mehmood13@gmail.com";
+            // $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
+            // return $message_url;
+            
+            $event = new Event;
+            $event->name = "To Pay $request->depositAmount $request->supplier_currency to Supplier";
+            $event->description = 'Event description';
+            $event->startDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->startOfDay();
+            $event->endDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
+            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+            $event->save();
+            
+            dd($request->all());
         }
         
-        }
+    }
 
 
     public function edit_quote(Request $request,$id){

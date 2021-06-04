@@ -195,3 +195,4 @@ ALTER TABLE `suppliers` CHANGE `phone` `phone` INT(20) NULL;
 ALTER TABLE `suppliers` CHANGE `currency_id` `currency_id` INT(11) NULL;
 ALTER TABLE `suppliers` ADD FOREIGN KEY (`currency_id`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- INSERT INTO `supplier_categories` (`id`, `supplier_id`, `category_id`, `updated_at`, `created_at`) VALUES (NULL, '7', '8', '2021-06-04', '2021-06-04'), (NULL, '8', '8', '2021-06-04', '2021-06-04'), (NULL, '9', '8', '2021-06-04', '2021-06-04')
+CREATE TABLE `lara_unforge`.`zoho_credentials` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `code` VARCHAR(255) NULL , `access_token` VARCHAR(255) NULL , `refresh_token` VARCHAR(255) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
