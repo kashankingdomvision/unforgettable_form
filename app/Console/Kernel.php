@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\ReminderEmail::class,
-        Commands\UpdateCurrencies::class,
+        // Commands\UpdateCurrencies::class,
+        Commands\ZohoCredentials::class,
     ];
 
     /**
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('reminder:email')->everyMinute();
-        $schedule->command('update:currencies')->everyMinute();
+        // $schedule->command('update:currencies')->everyMinute();
+        $schedule->command('zoho:credentials')->hourly();
     }
 
     /**
