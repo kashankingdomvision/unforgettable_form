@@ -176,3 +176,22 @@ TRUNCATE TABLE `qoute_detail_logs` ;
 TRUNCATE TABLE `bookings` ;
 TRUNCATE TABLE `booking_details` ;
 TRUNCATE TABLE `finance_booking_details` ;
+
+
+
+-- Add columns on users brand name and currency
+ALTER TABLE `users` ADD `currency` INT NULL AFTER `password`, ADD `brand_name` VARCHAR(255) NULL AFTER `currency`, ADD PRIMARY KEY (`currency`);
+ALTER TABLE `users` ADD CONSTRAINT `currency_id` FOREIGN KEY (`currency`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- // Add Flight ON Category
+INSERT INTO `categories` (`name`, `updated_at`, `created_at`) VALUES ('Flights', '2021-06-04', '2021-06-04')
+
+-- Add suppliers for flights Easyjet, Jet2 , British Airways			
+INSERT INTO `suppliers` (`id`, `name`, `email`, `phone`, `currency_id`, `updated_at`, `created_at`) VALUES (NULL, ' Easyjet', '', '', '', '2021-06-04', '2021-06-04'), (NULL, 'Jet2', '', '', '', '2021-06-04', '2021-06-04'), (NULL, 'British Airways', '', '', '', '2021-06-04', '2021-06-04')
+
+-- //change Supplier Column 
+ALTER TABLE `suppliers` CHANGE `email` `email` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;
+ALTER TABLE `suppliers` CHANGE `phone` `phone` INT(20) NULL;
+ALTER TABLE `suppliers` CHANGE `currency_id` `currency_id` INT(11) NULL;
+ALTER TABLE `suppliers` ADD FOREIGN KEY (`currency_id`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- INSERT INTO `supplier_categories` (`id`, `supplier_id`, `category_id`, `updated_at`, `created_at`) VALUES (NULL, '7', '8', '2021-06-04', '2021-06-04'), (NULL, '8', '8', '2021-06-04', '2021-06-04'), (NULL, '9', '8', '2021-06-04', '2021-06-04')

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'role', 'email', 'password', 'supervisor_id'
+        'name', 'role', 'email', 'password', 'supervisor_id', 'brand_name','currency'
     ];
 
     /**
@@ -36,4 +36,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    
+    function getRole() {
+        return $this->hasOne(role::class, 'id', 'role_id');
+    }
+    
+    function getSupervisor() {
+        return $this->hasOne(user::class, 'id', 'supervisor_id');
+    }
 }

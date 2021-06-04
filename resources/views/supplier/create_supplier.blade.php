@@ -54,7 +54,6 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Email</label>
-                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                             <!-- <input name="email" type="email" class="form-control" placeholder="Email"> -->
@@ -68,7 +67,6 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Phone Number</label>
-                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                             <input class="form-control" name="phone" placeholder="12345678" value="{{old('phone')}}">
@@ -97,7 +95,6 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Product</label>
-                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                             <select name="products[]" class="form-control  js-example-basic-multiple" multiple>
@@ -114,13 +111,12 @@
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
                         <label for="inputEmail3" class="">Currecy</label>
-                        <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                             <select name="currency" class="form-control js-example-basic-multiple">
                                 <option value="">Select Currecy</option>
                                 @foreach ($currencies as $currency)
-                                <option value="{{$currency->id}}"  {{ (Input::old("currency") == $currency->id ? "selected" : "") }} >{{ $currency->name }} ({{ $currency->symbol }})</option>
+                                <option value="{{$currency->id}}"  {{ (old("currency") == $currency->id ? "selected" : "") }} >{{ $currency->name }} ({{ $currency->symbol }})</option>
                                 @endforeach
                             </select>
                         </div>
