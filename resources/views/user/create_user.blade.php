@@ -20,10 +20,6 @@
         <div class="col-md-12">
           <!-- Horizontal Form -->
           <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">User Form</h3>
-            </div>
-            <!-- /.box-header -->
             <!-- form start -->
             
             {!! Form::open(array('route'=>'creat-user','class'=>'form-horizontal','id'=>'user_form')) !!}

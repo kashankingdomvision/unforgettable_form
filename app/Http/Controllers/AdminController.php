@@ -544,13 +544,13 @@ class AdminController extends Controller
             });
 
             $get_user_branches = Cache::remember('get_user_branches', 60, function () {
-                $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+                $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
 
             $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
-                $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+                $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_holiday_type';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
@@ -1896,21 +1896,21 @@ class AdminController extends Controller
   
         }
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branche = Cache::remember('get_user_branche', 2, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output, true);
         });
         
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', 2, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
         return view('qoute.create')->with([
-            'get_user_branches' => $get_user_branches,
+            'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,
             'categories' => Category::all()->sortBy('name'),
             'seasons' => season::all(),

@@ -20,13 +20,6 @@
         <div class="col-md-12">
           <!-- Horizontal Form -->
           <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">Supplier Form</h3>
-              {{-- @foreach ($supp_cat as $product)
-              <h1>TEst {{var_dump($product)}}</h1>
-              @endforeach --}}
-            </div>
-            <!-- /.box-header -->
             <!-- form start -->
             
             {!! Form::open(array('route' => array('update-supplier',$supplier->id),'method'=>'POST')) !!}

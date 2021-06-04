@@ -6,11 +6,10 @@
     <section class="content-header">
       <h1>
         View All Suppliers
-        <!-- <small>advanced tables</small> -->
       </h1>
       <ol class="breadcrumb">
         <li>
-          <a href="{{ URL::to('add-supplier')}}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add"><span class="fa fa-plus">Add</span></a>
+          <a href="{{ URL::to('add-supplier')}}" class="btn btn-primary btn-xs" ><span class="fa fa-plus">Add</span></a>
         </li>
       </ol>
     </section>
