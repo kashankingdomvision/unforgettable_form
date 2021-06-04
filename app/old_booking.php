@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class booking extends Model
+class old_booking extends Model
 {
+    protected $table = 'old_bookings';
     protected $guarded = [];
 
     public function season(){

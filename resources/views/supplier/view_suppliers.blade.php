@@ -54,7 +54,7 @@
                     <td>{{ $supplier->name }}</td>
                     <td>{{ $supplier->email }}</td>
                     <td>{{ $supplier->phone }}</td>
-                    <td>{{ $supplier->currency['name'] }} ( {{$supplier->currency['symbol']}} )</td>
+                    <td>{{ $supplier->currency['name']??NULL }} {{ (isset($supplier->currency['name']))? '('.$supplier->currency['symbol'].')' : NULL }}</td>
                     <td>
                         <a href="{{ URL::to('update-supplier/'.$supplier->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                     </td>

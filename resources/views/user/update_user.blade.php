@@ -100,7 +100,7 @@
                     <label for="inputEmail3" class="">Supervisor</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                        <select class="form-control" name="supervisor">
+                        <select class="form-control" id="selectSupervisor" name="supervisor">
                             <option value="">Select Supervisor</option>
                             @foreach($supervisors as $supervisor)
                                 <option value="{{$supervisor->id}}" {{ $supervisor->id == $data->supervisor_id ? 'selected' : '' }} >{{$supervisor->name}}</option>
@@ -110,6 +110,38 @@
                       <div class="alert-danger" style="text-align:center">{{$errors->first('supervisor')}}</div>
                     </div>
                 </div>
+                
+                <div class="form-group"  >
+                  <div class="col-sm-6 col-sm-offset-3">
+                  <label for="inputEmail3" class="">Currency</label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                      <select class="form-control" name="currency">
+                          <option selected disabled  value="">Select Currency</option>
+                          @foreach($currencies as $currency)
+                              <option value="{{$currency->id}}" {{ ($data->currency == $currency['id'])? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }} >{{$currency->name}}</option>
+                          @endforeach
+                      </select>
+                    </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('currency')}}</div>
+                  </div>
+              </div>
+              
+              <div class="form-group" >
+                <div class="col-sm-6 col-sm-offset-3">
+                <label for="inputEmail3" class="">Brands</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <select class="form-control" name="brand">
+                        <option selected disabled value="">Select Brands</option>
+                        @foreach($brands as $brand)
+                            <option value="{{$brand['name']}}" {{ ($data->brand_name == $brand['name'])? 'selected' : ((old('brand') == $brand['name'])? 'selected' : NULL) }} >{{$brand['name']}}</option>
+                        @endforeach
+                    </select>
+                  </div>
+                  <div class="alert-danger" style="text-align:center">{{$errors->first('brand')}}</div>
+                </div>
+            </div>
 
               </div>
               <!-- /.box-body -->
@@ -361,18 +393,22 @@
         var role = $('select[name="role"]').find('option:selected').data('role'); 
 
         if(role == 'Sales Agent' || role == 2 ){
-            $('#supervisor').show();
+            $('#supervisor').show();                
+            $('#selectSupervisor').removeAttr('disabled');
         }else{
-            $('#supervisor').hide();
+            $('#supervisor').hide();                
+            $('#selectSupervisor').attr('disabled', 'disabled');
         }
 
         $(document).on('change', 'select[name="role"]',function(){
 
             var role = $(this).find('option:selected').data('role'); 
             if(role == 'Sales Agent' || role == 2 ){
-                $('#supervisor').show();
+                $('#supervisor').show();                
+                $('#selectSupervisor').removeAttr('disabled');
             }else{
-                $('#supervisor').hide();
+                $('#supervisor').hide();                
+                $('#selectSupervisor').attr('disabled', 'disabled');
             }
 
         });

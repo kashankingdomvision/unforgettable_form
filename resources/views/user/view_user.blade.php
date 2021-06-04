@@ -46,13 +46,12 @@
                 </thead>
                 <tbody>
                 @foreach ($data as $value)
-                @if($value->id != 1)
                 <tr>
                   <td>{{ $value->id }}</td>
                   <td>{{ $value->name }}</td>
                   <td style="text-transform: capitalize;">{{ $value->role }}</td>
                   <td>{{ $value->email }}</td>
-                  <td>{{ \App\Http\Helper::get_supervisor($value->supervisor_id)['name'] }}</td>
+                  <td>{{ $value->getSupervisor->name??NULL }}</td>
                   {{-- <td>{{ $value->supervisor_name }}</td> --}}
                   {{-- <td>{{ $value->supervisor_email }}</td> --}}
                   <td>
@@ -60,7 +59,6 @@
                     <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-user/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
                   </td>
                 </tr>
-                @endif
                 @endforeach
                 </tbody>
                 

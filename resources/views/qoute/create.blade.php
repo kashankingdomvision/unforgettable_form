@@ -311,8 +311,8 @@
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name"  >
                                     <option value="">Select Brand</option>
-                                    @foreach ($get_user_branches->branches as $branche)
-                                    <option value="{{ $branche->name }}" >{{ $branche->name }}</option>
+                                    @foreach ($get_user_branches['branches'] as $branche)
+                                    <option {{ (Auth::user()->brand_name == $branche['name'])? 'selected':'' }} value="{{ $branche['name'] }}" >{{ $branche['name'] }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
@@ -335,8 +335,8 @@
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person"  >
                                     <option value="">Select Person</option>
-                                    @foreach ($get_user_branches->users as $user)
-                                    <option value="{{ $user->email }}" > {{ $user->email }}</option>
+                                    @foreach ($get_user_branches['users'] as $user)
+                                    <option {{ (Auth::user()->email == $user['email'])? 'selected':'' }} value="{{ $user['email'] }}" > {{ $user['email'] }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
@@ -391,7 +391,7 @@
                                 <select name="currency" class="form-control select2" >
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option {{ (Auth::user()->currency == $currency['id'])? 'selected':'' }} value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>

@@ -48,8 +48,7 @@ use Input;
 use Hash;
 use Session;
 use Config;
- 
-
+use App\old_booking;
 
 class AdminController extends Controller
 {
@@ -96,61 +95,80 @@ class AdminController extends Controller
     public function create_user(Request $request)
     {
         if ($request->isMethod('post')) {
-            $this->validate($request, ['username'  => 'required']);
-            $this->validate($request, ['email'     => 'required|email|unique:users']);
-            $this->validate($request, ['role'      => 'required']);
-            $this->validate($request, ['password'  => 'required']);
-            $request->role = (int)$request->role;
-            user::create(array(
+            $request->validate([
+                    'username'  => 'required|string',
+                    'email'     => 'required|email|unique:users',
+                    'role'      => 'required',
+                    'password'  => 'required',
+                    'brand'     => 'required',
+                    'currency'  => 'required',
+                    'supervisor'=> 'required|sometimes',
+            ]);
+           
+            $role_id = (int)$request->role;
+            user::create([
                 'name'          => $request->username,
-                'role'          => $request->role,
+                'role'          => $role_id,
                 'email'         => $request->email,
-                'supervisor_id' => $request->supervisor,
-                'password'      =>  bcrypt($request->password),
-            ));
+                'supervisor_id' => $request->supervisor??NULL,
+                'password'      => bcrypt($request->password),
+                'brand_name'    => $request->brand,
+                'currency'      => $request->currency,
+            ]);
             return Redirect::route('creat-user')->with('success_message', 'Created Successfully');
         } else {
-            return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get() ]);
+            $data['roles']          = role::all();
+            $data['supervisors']    = User::where('role',5)->orderBy('name','ASC')->get();
+            $data['currencies']     = Currency::get();
+            $data['brands']         = $this->getUserBranches('brands');
+            return view('user.create_user', $data);
+            // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get() ]);
         }
     }
+    
     public function view_user(Request $request)
-    {
-
-        $data = user::leftjoin('roles', 'roles.id', '=', 'users.role')->get(['users.*', 'roles.name as role']);
-
-        return view('user.view_user')->with('data', $data);
+    {   
+        $data['data'] = user::get();
+        return view('user.view_user', $data);
     }
+    
+    
     public function update_user(Request $request, $id)
     {
+        $user = User::findOrFail($id);
         if ($request->isMethod('post')) {
-            $this->validate($request, ['username'  => 'required']);
-            if (user::select('email')->where('id', $id)->get()->first()->email != $request->email) {
-                $this->validate($request, ['email'     => 'required|email|unique:users']);
-            }
-
-            if ($request->password != '') {
-                user::where('id', '=', $request->id)->update(
-                    array(
-                        'name'          => $request->username,
-                        'role'          => (int)$request->role,
-                        'email'         => $request->email,
-                        'supervisor_id' => $request->supervisor,
-                        'password'      => bcrypt($request->password)
-                    )
-                );
-            } else {
-                user::where('id', '=', $request->id)->update(
-                    array(
-                        'name'          => $request->username,
-                        'role'          => (int)$request->role,
-                        'email'         => $request->email,
-                        'supervisor_id' => $request->supervisor,
-                    )
-                );
-            }
-            return Redirect::route('view-user')->with('success_message', 'Update Successfully');
+            $request->validate([
+                'username'  => 'required|string',
+                'role'      => 'required',
+                'brand'     => 'required',
+                'currency'  => 'required',
+                'supervisor'=> 'required|sometimes',
+            ]);
+         
+            $role_id = (int)$request->role;
+            
+                $updateData = [
+                    'name'          => $request->username,
+                    'role'          => $role_id,
+                    'email'         => $request->email,
+                    'supervisor_id' => $request->supervisor??NULL,
+                    'brand_name'    => $request->brand,
+                    'currency'      => $request->currency,
+                ];
+                
+                if($request->has('password') && $request->password != NULL){
+                    $data['password']   =   bcrypt($request->password);
+                }
+                $user = $user->update($updateData);
+                
+                return Redirect::route('view-user')->with('success_message', 'Update Successfully');
         } else {
-            return view('user.update_user')->with(['data' => user::find($id), 'id' => $id, 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),]);
+            $data['data']           = $user;
+            $data['roles']          = role::all();
+            $data['supervisors']    = User::where('role',5)->orderBy('name','ASC')->get();
+            $data['currencies']     = Currency::get();
+            $data['brands']         = $this->getUserBranches('brands');
+            return view('user.update_user', $data);
         }
     }
     public function delete_user($id)
@@ -578,16 +596,16 @@ class AdminController extends Controller
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
-        $query = booking::join('seasons', 'seasons.id', '=', 'bookings.season_id')
-            ->join('users', 'users.id', '=', 'bookings.user_id')
-            ->leftjoin('users as user_fb', 'user_fb.id', '=', 'bookings.fb_person')
-            ->leftjoin('users as user_ti', 'user_ti.id', '=', 'bookings.aft_person')
-            ->leftjoin('users as user_to', 'user_to.id', '=', 'bookings.to_person')
-            ->leftjoin('users as user_itf', 'user_itf.id', '=', 'bookings.itf_person')
-            ->leftjoin('users as user_tdp', 'user_tdp.id', '=', 'bookings.dp_person')
-            ->leftjoin('users as user_ds', 'user_ds.id', '=', 'bookings.ds_person')
-            ->leftjoin('airlines', 'airlines.id', '=', 'bookings.fb_airline_name_id')
-            ->leftjoin('payments', 'payments.id', '=', 'bookings.fb_payment_method_id')->where('bookings.season_id', '=', $id);
+        $query = old_booking::join('seasons', 'seasons.id', '=', 'old_bookings.season_id')
+            ->join('users', 'users.id', '=', 'old_bookings.user_id')
+            ->leftjoin('users as user_fb', 'user_fb.id', '=', 'old_bookings.fb_person')
+            ->leftjoin('users as user_ti', 'user_ti.id', '=', 'old_bookings.aft_person')
+            ->leftjoin('users as user_to', 'user_to.id', '=', 'old_bookings.to_person')
+            ->leftjoin('users as user_itf', 'user_itf.id', '=', 'old_bookings.itf_person')
+            ->leftjoin('users as user_tdp', 'user_tdp.id', '=', 'old_bookings.dp_person')
+            ->leftjoin('users as user_ds', 'user_ds.id', '=', 'old_bookings.ds_person')
+            ->leftjoin('airlines', 'airlines.id', '=', 'old_bookings.fb_airline_name_id')
+            ->leftjoin('payments', 'payments.id', '=', 'old_bookings.fb_payment_method_id')->where('old_bookings.season_id', '=', $id);
 
         if ($request->created_at != '') {
             $date  = explode('-', $request->created_at);
@@ -596,82 +614,82 @@ class AdminController extends Controller
 
             $start_created_at = Carbon::parse($start_date)->format('Y-m-d');
             $end_created_at   = Carbon::parse($end_date)->format('Y-m-d');
-            $query =  $query->whereRaw('DATE(bookings.created_at) >= ?', $start_created_at);
-            $query =  $query->whereRaw('DATE(bookings.created_at) <= ?', $end_created_at);
+            $query =  $query->whereRaw('DATE(old_bookings.created_at) >= ?', $start_created_at);
+            $query =  $query->whereRaw('DATE(old_bookings.created_at) <= ?', $end_created_at);
         }
         if ($request->created_by != '') {
-            $query =  $query->where('bookings.user_id', '=', $request->created_by);
+            $query =  $query->where('old_bookings.user_id', '=', $request->created_by);
         }
         if ($request->ref_no != '') {
-            $query =  $query->where('bookings.ref_no', '=', $request->ref_no);
+            $query =  $query->where('old_bookings.ref_no', '=', $request->ref_no);
         }
         if ($request->date_of_travel != '') {
             $date  = explode('-', $request->date_of_travel);
             $start_date = $date[0];
             $end_date   = $date[1];
 
-            $query =  $query->where('bookings.date_of_travel', '>=', Carbon::parse($start_date)->format('Y-m-d'));
-            $query =  $query->where('bookings.date_of_travel', '<=', Carbon::parse($end_date)->format('Y-m-d'));
+            $query =  $query->where('old_bookings.date_of_travel', '>=', Carbon::parse($start_date)->format('Y-m-d'));
+            $query =  $query->where('old_bookings.date_of_travel', '<=', Carbon::parse($end_date)->format('Y-m-d'));
         }
         if ($request->brand_name != '') {
-            $query =  $query->where('bookings.brand_name', '=', $request->brand_name);
+            $query =  $query->where('old_bookings.brand_name', '=', $request->brand_name);
         }
         if ($request->season_id != '') {
-            $query =  $query->where('bookings.season_id', '=', $request->season_id);
+            $query =  $query->where('old_bookings.season_id', '=', $request->season_id);
         }
         if ($request->agency_booking != '') {
-            $query =  $query->where('bookings.agency_booking', '=', $request->agency_booking);
+            $query =  $query->where('old_bookings.agency_booking', '=', $request->agency_booking);
         }
         if ($request->flight_booked != '') {
-            $query =  $query->where('bookings.flight_booked', '=', $request->flight_booked);
+            $query =  $query->where('old_bookings.flight_booked', '=', $request->flight_booked);
         }
         if ($request->form_sent_on != '') {
             $date  = explode('-', $request->form_sent_on);
             $start_date = $date[0];
             $end_date   = $date[1];
-            $query =  $query->where('bookings.form_sent_on', '>=', Carbon::parse($start_date)->format('Y-m-d'));
-            $query =  $query->where('bookings.form_sent_on', '<=', Carbon::parse($end_date)->format('Y-m-d'));
+            $query =  $query->where('old_bookings.form_sent_on', '>=', Carbon::parse($start_date)->format('Y-m-d'));
+            $query =  $query->where('old_bookings.form_sent_on', '<=', Carbon::parse($end_date)->format('Y-m-d'));
         }
         if ($request->type_of_holidays != '') {
-            $query =  $query->where('bookings.type_of_holidays', '=', $request->type_of_holidays);
+            $query =  $query->where('old_bookings.type_of_holidays', '=', $request->type_of_holidays);
         }
         if ($request->fb_payment_method_id != '') {
-            $query =  $query->where('bookings.fb_payment_method_id', '=', $request->fb_payment_method_id);
+            $query =  $query->where('old_bookings.fb_payment_method_id', '=', $request->fb_payment_method_id);
         }
         if ($request->fb_airline_name_id != '') {
-            $query =  $query->where('bookings.fb_airline_name_id', '=', $request->fb_airline_name_id);
+            $query =  $query->where('old_bookings.fb_airline_name_id', '=', $request->fb_airline_name_id);
         }
         if ($request->fb_responsible_person != '') {
-            $query =  $query->where('bookings.fb_person', '=', $request->fb_responsible_person);
+            $query =  $query->where('old_bookings.fb_person', '=', $request->fb_responsible_person);
         }
         if ($request->ti_responsible_person != '') {
-            $query =  $query->where('bookings.aft_person', '=', $request->ti_responsible_person);
+            $query =  $query->where('old_bookings.aft_person', '=', $request->ti_responsible_person);
         }
         if ($request->to_responsible_person != '') {
-            $query =  $query->where('bookings.to_person', '=', $request->to_responsible_person);
+            $query =  $query->where('old_bookings.to_person', '=', $request->to_responsible_person);
         }
         if ($request->itf_responsible_person != '') {
-            $query =  $query->where('bookings.itf_person', '=', $request->itf_responsible_person);
+            $query =  $query->where('old_bookings.itf_person', '=', $request->itf_responsible_person);
         }
         if ($request->dp_responsible_person != '') {
-            $query =  $query->where('bookings.dp_person', '=', $request->dp_responsible_person);
+            $query =  $query->where('old_bookings.dp_person', '=', $request->dp_responsible_person);
         }
         if ($request->ds_responsible_person != '') {
-            $query =  $query->where('bookings.ds_person', '=', $request->ds_responsible_person);
+            $query =  $query->where('old_bookings.ds_person', '=', $request->ds_responsible_person);
         }
         if ($request->pax_no != '') {
-            $query =  $query->where('bookings.pax_no', '=', $request->pax_no);
+            $query =  $query->where('old_bookings.pax_no', '=', $request->pax_no);
         }
         if ($request->asked_for_transfer_details != '') {
-            $query =  $query->where('bookings.asked_for_transfer_details', '=', $request->asked_for_transfer_details);
+            $query =  $query->where('old_bookings.asked_for_transfer_details', '=', $request->asked_for_transfer_details);
         }
         if ($request->transfer_organised != '') {
-            $query =  $query->where('bookings.transfer_organised', '=', $request->transfer_organised);
+            $query =  $query->where('old_bookings.transfer_organised', '=', $request->transfer_organised);
         }
         if ($request->itinerary_finalised != '') {
-            $query =  $query->where('bookings.itinerary_finalised', '=', $request->itinerary_finalised);
+            $query =  $query->where('old_bookings.itinerary_finalised', '=', $request->itinerary_finalised);
         }
-        $query = $query->orderBy('bookings.created_at', 'desc')->paginate(10, ['bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends(Input::all());
+        $query = $query->orderBy('old_bookings.created_at', 'desc')->paginate(10, ['old_bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends($request->all());
 
         return view('booking.view_booking')->with([
             'data' => $query, 'book_id' => $id, 'staffs' => $staff, 'get_refs' => $get_ref, 'get_holiday_type' => $get_holiday_type, 'type_of_holidays' => $request->type_of_holidays,
@@ -1162,11 +1180,11 @@ class AdminController extends Controller
             // dd($request->all());
 
             $this->validate($request, ['username' => 'required'], ['required' => 'Name is required']);
-            $this->validate($request, ['email' => 'required|unique:suppliers'], ['required' => 'Email is required']);
-            $this->validate($request, ['phone' => 'required|unique:suppliers'], ['required' => 'Phone Number is required']);
+            // $this->validate($request, ['email' => 'required|unique:suppliers'], ['required' => 'Email is required']);
+            // $this->validate($request, ['phone' => 'required|unique:suppliers'], ['required' => 'Phone Number is required']);
             $this->validate($request, ['categories' => 'required'], ['required' => 'Category is required']);
-            $this->validate($request, ['products' => 'required'], ['required' => 'Product is required']);
-            $this->validate($request, ['currency' => 'required'], ['required' => 'Currency is required']);
+            // $this->validate($request, ['products' => 'required'], ['required' => 'Product is required']);
+            // $this->validate($request, ['currency' => 'required'], ['required' => 'Currency is required']);
 
             $supplier = new Supplier();
             $supplier->name = $request->username;
@@ -1269,12 +1287,12 @@ class AdminController extends Controller
         if($request->isMethod('post')) {
 
             $this->validate($request, ['username' => 'required'], ['required' => 'Name is required']);
-            $this->validate($request, ['email' => 'required|email|unique:suppliers,email,'.$id], ['required' => 'Email is required']);
-            $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ], ['required' => 'Phone Number is required']);
+            // $this->validate($request, ['email' => 'required|email|unique:suppliers,email,'.$id], ['required' => 'Email is required']);
+            // $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ], ['required' => 'Phone Number is required']);
             $this->validate($request, ['categories' => 'required'], ['required' => 'Product is required']);
-            $this->validate($request, ['products' => 'required'], ['required' => 'Currency is required']);
+            // $this->validate($request, ['products' => 'required'], ['required' => 'Currency is required']);
     
-            $supplier = Supplier::find($id);
+            $supplier = Supplier::findOrFail($id);
             $supplier->name = $request->username;
             $supplier->email = $request->email;
             $supplier->phone = $request->phone;
@@ -1882,17 +1900,15 @@ class AdminController extends Controller
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
-            return json_decode($output);
+            return json_decode($output, true);
         });
-
+        
         $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
-            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        
         return view('qoute.create')->with([
             'get_user_branches' => $get_user_branches,
             'get_holiday_type' => $get_holiday_type,
@@ -1906,6 +1922,24 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getUserBranches($anyOne = NULL) {
+        $data  = Cache::remember('get_user_branches', 60, function () {
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+                $output =  $this->curl_data($url);
+                return json_decode($output, true);
+            });
+        switch ($anyOne) {
+            case 'brands':
+                return    $data['branches'];
+                break;
+            case 'users':
+                return    $data['users'];
+                break;
+            default:
+                return    $data;
+        }
+            return false;
+    }
 
     public function view_quote(){
 
@@ -2181,6 +2215,7 @@ class AdminController extends Controller
                             $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
                             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
                             $event->save();
+                         
                         }
                         FinanceBookingDetail::updateOrCreate(
                             [ 
@@ -2202,7 +2237,7 @@ class AdminController extends Controller
                 }
             }
 
-            return response()->json(['success_message'=>' Changes Save Successfully ']);
+            return response()->json(['success_message' => 'Successfully Converted To Booked']);
         }
 
         $get_user_branches = Cache::remember('get_user_branches', 60, function () {
