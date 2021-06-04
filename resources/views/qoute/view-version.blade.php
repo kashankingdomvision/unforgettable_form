@@ -112,7 +112,7 @@
                                 <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
                                     <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'zoho')? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
-                                    <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label>
+                                    {{-- <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label> --}}
                                 </div>
                             </div>
                             <div class="row">

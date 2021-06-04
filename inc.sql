@@ -176,3 +176,5 @@ TRUNCATE TABLE `qoute_detail_logs` ;
 TRUNCATE TABLE `bookings` ;
 TRUNCATE TABLE `booking_details` ;
 TRUNCATE TABLE `finance_booking_details` ;
+
+CREATE TABLE `lara_unforge`.`zoho_credentials` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `code` VARCHAR(255) NULL , `access_token` VARCHAR(255) NULL , `refresh_token` VARCHAR(255) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;

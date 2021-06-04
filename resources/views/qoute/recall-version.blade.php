@@ -297,7 +297,7 @@
                                 <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
                                     <label class="radio-inline"><input type="radio" {{ ($qoute_log->reference_name == 'zoho')? 'checked': NULL }}  name="reference" value="zoho" checked>Zoho Reference</label>
-                                    <label class="radio-inline"><input type="radio" {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }}  name="reference" value="tas" >TAS Reference</label>
+                                    {{-- <label class="radio-inline"><input type="radio" {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }}  name="reference" value="tas" >TAS Reference</label> --}}
                                 </div>
                             </div>
                             <div class="row">
@@ -1039,7 +1039,7 @@
         $(document).on('click', '#sendReference', function(){
             $('#link').html('');
             $('#link').removeAttr('class');
-            $(this).text('searching');
+            $(this).text('Searching');
             $(this).attr('disabled', 'disabled');
             $('#error_ref_no').text('');
             doneTyping();
@@ -1076,16 +1076,20 @@
                     type: 'POST',
                     dataType: "json",
                     success:function(data) {
-                        console.log(data);
-                        if(data.hasOwnProperty("response") == true){
-                            $('select[name="type_of_holidays"]').val(data.response.internal_information.holiday_type).trigger('change');    
+
+                        if( Object.keys(data).length > 0 ){
+                            $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
+                            // $('select[name="sale_person"]').val(data.sale_person).trigger('change');  
+                            // $('select[name="currency"]').val(data.currency).trigger('change');  
+                            $('select[name="group_no"]').val(data.pax).trigger('change');  
                         }else{
                             $('#error_ref_no').text('The Reference is not found');
                         }
-                            $('#sendReference').text('Search');
-                            $("#divLoading").removeClass('show');
-                            $('#sendReference').removeAttr('disabled');
-                    }
+
+                        $('#sendReference').text('Search');
+                        $("#divLoading").removeClass('show');
+                        $('#sendReference').removeAttr('disabled');
+                    } //end success
                 });
             }
         }
@@ -1447,7 +1451,7 @@
             event.preventDefault();
             var formdata = $(this).serialize();
 
-            $('#error_ref_no, #error_brand_name, #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no,  #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
+            $('#error_ref_no, #error_brand_name, #error_lead_passenger_name , #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
             $.ajax({
                 type: 'POST',
