@@ -45,4 +45,9 @@ class User extends Authenticatable
     function getSupervisor() {
         return $this->hasOne(user::class, 'id', 'supervisor_id');
     }
+
+    function getCurrency() {
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
+    }
+    
 }

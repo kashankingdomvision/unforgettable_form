@@ -520,7 +520,7 @@ thead.border_thead {
           </ul>
         </li>
         
-        <li class="treeview @if (Request::is('creat-user') || Request::is('add-role') || Request::is('view-role') || Request::is('view-user') || Request::is('update-user/'.$id)) active @endif">
+        <li class="treeview @if (Request::is('creat-user') || Request::is('add-role') || Request::is('view-role') || Request::is('view-user') || Request::is('update-user/'.$id) || $route == 'update-user') active @endif">
           <a href="#">
             <i class="fa fa-user"></i> <span>User Management</span>
             <span class="pull-right-container">
@@ -529,7 +529,7 @@ thead.border_thead {
           </a>
           <ul class="treeview-menu">
             <li class="{{Request::is('creat-user') ? 'active' : ''}}"><a href="{{ URL::to('creat-user')}}"><i class="fa fa-plus"></i>Create User</a></li>
-            <li class="{{Request::is('view-user') ? 'active' : ''}}"><a href="{{ URL::to('view-user')}}"><i class="fa fa-eye"></i>View User</a></li>
+            <li class="{{Request::is('view-user') || $route == 'update-user' ? 'active' : ''}}"><a href="{{ URL::to('view-user')}}"><i class="fa fa-eye"></i>View User</a></li>
             <li class="{{Request::is('add-role') ? 'active' : ''}}"><a href="{{ route('add-role')}}"><i class="fa fa-plus"></i>Add Role</a></li>
             <li class="{{Request::is('view-role') ? 'active' : ''}}"><a href="{{ route('view-role')}}"><i class="fa fa-eye"></i>View Roles</a></li>
           </ul>

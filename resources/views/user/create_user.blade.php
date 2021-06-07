@@ -36,7 +36,7 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputEmail3" class="">Username</label>
+                  <label for="inputEmail3" class="">Username <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -49,7 +49,7 @@
                 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputEmail3" class="">Email</label>
+                  <label for="inputEmail3" class="">Email <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
@@ -62,7 +62,7 @@
                 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputEmail3" class="">User Type</label>
+                  <label for="inputEmail3" class="">User Type <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -79,7 +79,7 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputPassword3" class="">Password</label>
+                  <label for="inputPassword3" class="">Password <span style="color:red">*</span></label>
                     <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
@@ -112,7 +112,7 @@
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
                       <select class="form-control" name="currency">
-                          <option selected disabled  value="">Select Currency</option>
+                          <option selected value="">Select Currency</option>
                           @foreach($currencies as $currency)
                               <option value="{{$currency->id}}" {{ (old('currency') == $currency->id)? 'selected' : NULL }} >{{$currency->name}}</option>
                           @endforeach
@@ -128,9 +128,9 @@
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <select class="form-control" name="brand">
-                        <option selected disabled value="">Select Brands</option>
+                        <option selected value="">Select Brands</option>
                         @foreach($brands as $brand)
-                            <option value="{{$brand['id']}}" {{ (old('brand') == $brand['id'])? 'selected' : NULL }} >{{$brand['name']}}</option>
+                            <option value="{{ $brand['name'] }}" {{ (old('brand') == $brand['name'])? 'selected' : NULL }} >{{$brand['name']}}</option>
                         @endforeach
                     </select>
                   </div>
@@ -143,7 +143,7 @@
               <!-- /.box-body -->
               <div class="box-footer">
                 <!-- <button type="submit" class="btn btn-info pull-right">Sign in</button> -->
-                {!! Form::submit('submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
+                {!! Form::submit('Submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
               </div>
               <!-- /.box-footer -->
             </form>
@@ -379,15 +379,13 @@
 {!! HTML::script('dist/js/demo.js') !!}
 
 <script type="text/javascript">
-  function submitForm(btn) {
-      // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
-  }
-  $(function () {
-    $('.select2').select2();
-  });
+    function submitForm(btn) {
+        // btn.disabled = true;
+        // btn.form.submit();
+    }
+    $(function () {
+        $('.select2').select2();
+    });
 
 
     $(document).ready(function(){

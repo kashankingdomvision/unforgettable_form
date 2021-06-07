@@ -180,8 +180,9 @@ TRUNCATE TABLE `finance_booking_details` ;
 
 
 -- Add columns on users brand name and currency
-ALTER TABLE `users` ADD `currency` INT NULL AFTER `password`, ADD `brand_name` VARCHAR(255) NULL AFTER `currency`, ADD PRIMARY KEY (`currency`);
-ALTER TABLE `users` ADD CONSTRAINT `currency_id` FOREIGN KEY (`currency`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `users` ADD `currency_id` INT(10) NULL AFTER `is_login`, ADD `brand_name` VARCHAR(255) NULL AFTER `currency_id`;
+-- ALTER TABLE `users` ADD `currency` INT NULL AFTER `password`, ADD `brand_name` VARCHAR(255) NULL AFTER `currency`, ADD PRIMARY KEY (`currency`);
+-- ALTER TABLE `users` ADD CONSTRAINT `currency_id` FOREIGN KEY (`currency`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- // Add Flight ON Category
 INSERT INTO `categories` (`name`, `updated_at`, `created_at`) VALUES ('Flights', '2021-06-04', '2021-06-04')

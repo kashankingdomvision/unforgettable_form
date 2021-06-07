@@ -100,25 +100,26 @@ class AdminController extends Controller
                     'email'     => 'required|email|unique:users',
                     'role'      => 'required',
                     'password'  => 'required',
-                    'brand'     => 'required',
-                    'currency'  => 'required',
-                    'supervisor'=> 'required|sometimes',
+                    // 'brand'     => 'required',
+                    // 'currency'  => 'required',
+                    // 'supervisor'=> 'required|sometimes',
             ]);
-           
-            $role_id = (int)$request->role;
-            user::create([
-                'name'          => $request->username,
-                'role'          => $role_id,
-                'email'         => $request->email,
-                'supervisor_id' => $request->supervisor??NULL,
-                'password'      => bcrypt($request->password),
-                'brand_name'    => $request->brand,
-                'currency'      => $request->currency,
-            ]);
-            return Redirect::route('creat-user')->with('success_message', 'Created Successfully');
+
+            $user = new User;
+            $user->name           = $request->username;
+            $user->role_id        = (int) $request->role;
+            $user->email          = $request->email;
+            $user->supervisor_id  = $request->supervisor ?? NULL;
+            $user->brand_name     = $request->brand ?? NULL;
+            $user->currency_id    = $request->currency ?? NULL;
+            $user->password   =    bcrypt($request->password);
+            $user->save();
+    
+            return Redirect::route('view-user')->with('success_message', 'Created Successfully');
+
         } else {
             $data['roles']          = role::all();
-            $data['supervisors']    = User::where('role',5)->orderBy('name','ASC')->get();
+            $data['supervisors']    = User::where('role_id',5)->orderBy('name','ASC')->get();
             $data['currencies']     = Currency::get();
             $data['brands']         = $this->getUserBranches('brands');
             return view('user.create_user', $data);
@@ -136,46 +137,47 @@ class AdminController extends Controller
     public function update_user(Request $request, $id)
     {
         $user = User::findOrFail($id);
+
         if ($request->isMethod('post')) {
+
             $request->validate([
                 'username'  => 'required|string',
                 'role'      => 'required',
-                'brand'     => 'required',
-                'currency'  => 'required',
-                'supervisor'=> 'required|sometimes',
+                // 'brand'     => 'required',
+                // 'currency'  => 'required',
+                // 'supervisor'=> 'required|sometimes',
             ]);
-         
-            $role_id = (int)$request->role;
-            
-                $updateData = [
-                    'name'          => $request->username,
-                    'role'          => $role_id,
-                    'email'         => $request->email,
-                    'supervisor_id' => $request->supervisor??NULL,
-                    'brand_name'    => $request->brand,
-                    'currency'      => $request->currency,
-                ];
-                
-                if($request->has('password') && $request->password != NULL){
-                    $data['password']   =   bcrypt($request->password);
-                }
-                $user = $user->update($updateData);
-                
-                return Redirect::route('view-user')->with('success_message', 'Update Successfully');
+
+
+            $user->name           = $request->username;
+            $user->role_id        = (int) $request->role;
+            $user->email          = $request->email;
+            $user->supervisor_id  = $request->supervisor ?? NULL;
+            $user->brand_name     = $request->brand ?? NULL;
+            $user->currency_id    = $request->currency ?? NULL;
+            if($request->has('password') && $request->password != NULL){
+                $user->password   =    bcrypt($request->password);
+            }
+            $user->save();
+
+
+            return Redirect::route('view-user')->with('success_message', 'Update Successfully');
+
         } else {
             $data['data']           = $user;
             $data['roles']          = role::all();
-            $data['supervisors']    = User::where('role',5)->orderBy('name','ASC')->get();
+            $data['supervisors']    = User::where('role_id',5)->orderBy('name','ASC')->get();
             $data['currencies']     = Currency::get();
             $data['brands']         = $this->getUserBranches('brands');
+
             return view('user.update_user', $data);
         }
     }
     public function delete_user($id)
     {
-        if (booking::where('user_id', $id)->count() == 1) {
-            return Redirect::route('view-user')->with('error_message', 'You can not delete this user because user already in use');
-        }
+        // if (booking::where('user_id', $id)->count() == 1) {
+        //     return Redirect::route('view-user')->with('error_message', 'You can not delete this user because user already in use');
+        // }
         user::destroy('id', '=', $id);
         return Redirect::route('view-user')->with('success_message', 'Delete Successfully');
     }
@@ -1919,6 +1921,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // get specific data from api
     public function getUserBranches($anyOne = NULL) {
         $data  = Cache::remember('get_user_branches', 60, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';

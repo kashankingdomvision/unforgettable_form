@@ -37,9 +37,11 @@
                 <thead>
                 <tr>
                   <th>Id</th>
-                  <th>name</th>
+                  <th>Name</th>
                   <th>User Role</th>
-                  <th>email</th>
+                  <th>Email</th>
+                  <th>Currency</th>
+                  <th>Brand</th>
                   <th>Supervisor</th>
                   <th>Action</th>
                 </tr>
@@ -49,14 +51,16 @@
                 <tr>
                   <td>{{ $value->id }}</td>
                   <td>{{ $value->name }}</td>
-                  <td style="text-transform: capitalize;">{{ $value->role }}</td>
+                  <td style="text-transform: capitalize;">{{ $value->getRole->name ?? null }}</td>
                   <td>{{ $value->email }}</td>
-                  <td>{{ $value->getSupervisor->name??NULL }}</td>
+                  <td>{{ $value->getCurrency->name ?? NULL }} {{ !empty($value->getCurrency->name) ? '( '.$value->getCurrency->symbol.' )' : ''  }}</td>
+                  <td>{{ $value->brand_name ?? NULL }}</td>
+                  <td>{{ $value->getSupervisor->name ?? NULL }}</td>
                   {{-- <td>{{ $value->supervisor_name }}</td> --}}
                   {{-- <td>{{ $value->supervisor_email }}</td> --}}
                   <td>
                     <a href="{{ URL::to('update-user/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-user/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    <a onclick="return confirm('Are you sure want to this delete this record?');" href="{{ URL::to('del-user/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
                   </td>
                 </tr>
                 @endforeach

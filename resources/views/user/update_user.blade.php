@@ -1,6 +1,12 @@
 @extends('content_layout.default')
 
 @section('content')
+
+<style>
+    .mb-2{
+        margin-bottom: 2rem;
+    }
+</style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -36,41 +42,41 @@
               <div class="box-body">
 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
-                  <label for="inputEmail3" class="">Username</label>
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
+                  <label for="inputEmail3" class="">Username <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        {!! Form::text('username',$data->name,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   </div>
                 </div>
                 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('email')}}</div>
-                  <label for="inputEmail3" class="">Email</label>
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
+                  <label for="inputEmail3" class="">Email <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                        <!-- <input name="email" type="email" class="form-control" placeholder="Email"> -->
                        {!! Form::email('email',$data->email,['class'=>'form-control','placeholder'=>'Email','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('email')}}</div>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputEmail3" class="">User Type</label>
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
+                  <label for="inputEmail3" class="">User Type {{$data->role}} <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        <select class="form-control" name="role">
                         @foreach($roles as $role)
-                            <option {{ ($data->role == $role->id) ? 'selected' : ''}} value="{{$role->id}}" data-role="{{$role->name}}">{{$role->name}}</option>
+                            <option {{ ($data->role_id == $role->id) ? 'selected' : ''}} value="{{$role->id}}" data-role="{{$role->name}}">{{$role->name}}</option>
                         @endforeach
                        </select>
                     </div>
@@ -79,20 +85,21 @@
                 </div>
 
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('password')}}</div>
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
+                 
                   <label for="inputPassword3" class="">Password</label>
                     <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
                        <!-- <input name="password" type="password" class="form-control" placeholder="Password"> -->
-                       {!! Form::password('password',['class'=>'form-control','placeholder'=>'Password','required'=>'true']) !!}
+                       {!! Form::password('password',['class'=>'form-control','placeholder'=>'Password']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('password')}}</div>
                   </div>
                 </div>
 
                 <div class="form-group" id="supervisor">
-                    <div class="col-sm-6 col-sm-offset-3">
+                    <div class="col-sm-6 col-sm-offset-3 mb-2">
                     <label for="inputEmail3" class="">Supervisor</label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -107,15 +114,15 @@
                     </div>
                 </div>
                 
-                <div class="form-group"  >
-                  <div class="col-sm-6 col-sm-offset-3">
+                <div class="form-group">
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
                   <label for="inputEmail3" class="">Currency</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
                       <select class="form-control" name="currency">
                           <option selected disabled  value="">Select Currency</option>
                           @foreach($currencies as $currency)
-                              <option value="{{$currency->id}}" {{ ($data->currency == $currency['id'])? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }} >{{$currency->name}}</option>
+                              <option value="{{$currency->id}}" {{ ($data->currency_id == $currency->id )? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }} >{{$currency->name}}</option>
                           @endforeach
                       </select>
                     </div>
@@ -124,7 +131,7 @@
               </div>
               
               <div class="form-group" >
-                <div class="col-sm-6 col-sm-offset-3">
+                <div class="col-sm-6 col-sm-offset-3 mb-2">
                 <label for="inputEmail3" class="">Brands</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -377,12 +384,10 @@
 {!! HTML::script('dist/js/demo.js') !!}
 
 <script type="text/javascript">
-  function submitForm(btn) {
-      // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
-  }
+    function submitForm(btn) {
+        // btn.disabled = true;
+        // btn.form.submit();
+    }
 
     $(document).ready(function(){
 
