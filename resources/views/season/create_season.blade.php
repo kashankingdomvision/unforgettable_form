@@ -40,7 +40,7 @@
  
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-3">
-                    <label for="inputEmail3" class="">Enter Season Name</label>
+                    <label for="inputEmail3" class=""> Season Name <span style="color:red">*</span></label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
                         <input type="text" name="name" id="" class="form-control" autocomplete="off" placeholder="YYYY-YYYY" value="{{ old('name') }}" required>
@@ -54,7 +54,7 @@
                     <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        <input type="text" name="start_date" autocomplete="off" class="form-control datepicker" value="{{ old('start_date') }}" >
+                        <input type="text" name="start_date" autocomplete="off" class="form-control datepicker" value="{{ old('start_date') }}" placeholder="{{ date("d/m/Y") }}" required>
                         {{-- {!! Form::text('start_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker', 'placeholder' => 'Start Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!} --}}
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
@@ -65,7 +65,7 @@
                     <div class="input-group">
                         <span class="input-group-addon"></span>
                         {{-- <input type="text" name="end_date" value="{{ !empty($data->end_date) ? date("d/m/y", strtotime($data->end_date)) : "" }}" class="form-control" id="datepicker2" > --}}
-                        <input type="text" name="end_date"  autocomplete="off" value="{{ old('end_date') }}" class="form-control datepicker"  >
+                        <input type="text" name="end_date"  autocomplete="off" value="{{ old('end_date') }}" class="form-control datepicker" placeholder="{{ date("d/m/Y") }}" required>
                         {{-- {!! Form::text('end_date', null, ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'End Date', 'required' => 'true', 'value' => "{{old('date_of_travel')}}"]) !!} --}}
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
@@ -327,9 +327,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
+    //   btn.disabled = true;
+    //   // submit the form    
+    //   btn.form.submit();
   }
 
   

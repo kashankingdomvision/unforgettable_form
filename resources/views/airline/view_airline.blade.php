@@ -5,7 +5,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        View All User
+        View All Airline
         <!-- <small>advanced tables</small> -->
       </h1>
       <ol class="breadcrumb">
@@ -36,9 +36,8 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>name</th>
-              
+                  <th>ID</th>
+                  <th> Airline Name</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -46,13 +45,12 @@
                 @foreach ($data as $value)
                
                 <tr>
-                  <td>{{ $value->id }}</td>
-                  <td>{{ $value->name }}</td>
-         
-                  <td>
-                    <a href="{{ URL::to('update-airline/'.$value->id)}}" class="btn btn-primary btn-xs" ><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-airline/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
-                  </td>
+                    <td>{{ $value->id }}</td>
+                    <td>{{ $value->name }}</td>
+                    <td>
+                        <a href="{{ URL::to('update-airline/'.$value->id)}}" class="btn btn-primary btn-xs" ><span class="fa fa-pencil"></span></a>
+                        <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-airline/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    </td>
                 </tr>
               
                 @endforeach

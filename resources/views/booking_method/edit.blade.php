@@ -42,11 +42,11 @@
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
                   
-                  <label for="inputEmail3" class="">Booking Method Name</label>
+                  <label for="inputEmail3" class="">Name <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                       <input type="text" name="booking_method_name" class="form-control" value="{{ $booking_method->name }}" required>
+                       <input type="text" name="booking_method_name" class="form-control" placeholder="Name" value="{{ $booking_method->name }}" required>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        {{-- {!! Form::text('name',$data->name,['class'=>'form-control','placeholder'=>'Category Name','required'=>'true']) !!} --}}
                        <div class="alert-danger" style="text-align:center">{{$errors->first('booking_method_name')}}</div>

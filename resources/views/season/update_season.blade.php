@@ -41,11 +41,11 @@
  
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-3">
-                    <label for="inputEmail3" class="">Enter Season Name</label>
+                    <label for="inputEmail3" class=""> Season Name <span style="color:red">*</span></label>
                       <div class="input-group">
                          <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
 
-                         <input type="text" name="name" id="" class="form-control" value="{{ $data->name }}" >
+                         <input type="text" name="name" class="form-control" value="{{ $data->name }}"  placeholder="YYYY-YYYY">
                          {{-- {!! Form::text('name',,['class'=>'form-control','placeholder'=>'YYYY-YYYY','required'=>'true']) !!} --}}
                       </div>
                       <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
@@ -56,7 +56,7 @@
                     <label for="inputEmail3" class="">Start Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        <input type="text" name="start_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->start_date))->format('d/m/Y')}}" >
+                        <input type="text" name="start_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->start_date))->format('d/m/Y')}}" placeholder="{{ date("d/m/Y") }}">
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('start_date') }} </div>
                 </div>
@@ -65,7 +65,7 @@
                     <label for="inputEmail3" class="">End Date</label><span style="color:red"> * </span>
                     <div class="input-group">
                         <span class="input-group-addon"></span>
-                        <input type="text" name="end_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->end_date))->format('d/m/Y')}}" >
+                        <input type="text" name="end_date" class="form-control datepicker"  value="{{\Carbon\Carbon::parse(str_replace('-', '/', $data->end_date))->format('d/m/Y')}}" placeholder="{{ date("d/m/Y") }}">
                     </div>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('end_date') }} </div>
                 </div>

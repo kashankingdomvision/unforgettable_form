@@ -997,7 +997,7 @@ class AdminController extends Controller
     {
 
         if ($request->isMethod('post')) {
-            $this->validate($request, ['name'  => 'required']);
+            $this->validate($request, ['name'  => 'required'], ['required' => 'Name is required.']);
 
             airline::create(array(
                 'name'  => $request->name
@@ -1017,10 +1017,8 @@ class AdminController extends Controller
     {
         if ($request->isMethod('post')) {
 
-            $validator = Validator::make($request->all(), [
-
-                'name'  => 'required'
-            ]);
+            $validator = Validator::make($request->all(), ['name'  => 'required'], ['required' => 'Name is required.']);
+            
             if ($validator->fails()) {
                 return back()
                     ->withErrors($validator)
@@ -1050,7 +1048,7 @@ class AdminController extends Controller
     {
 
         if ($request->isMethod('post')) {
-            $this->validate($request, ['name'  => 'required']);
+            $this->validate($request, ['name'  => 'required'], ['required' => 'Name is required']);
 
             payment::create(array(
                 'name'  => $request->name,
@@ -1063,17 +1061,16 @@ class AdminController extends Controller
     }
     public function view_payment(Request $request)
     {
-        return view('payment.view_payment')->with('data', payment::all());
+        return view('payment.view_payment')->with('data',payment::all()->sortByDesc("id") );
     }
 
     public function update_payment(Request $request, $id)
     {
         if ($request->isMethod('post')) {
 
-            $validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [ 'name'  => 'required' ], ['required' => 'Name is required.']);
 
-                'name'  => 'required'
-            ]);
+
             if ($validator->fails()) {
                 return back()
                     ->withErrors($validator)
@@ -1092,9 +1089,9 @@ class AdminController extends Controller
 
     public function delete_payment($id)
     {
-        if (booking::where('fb_payment_method_id', $id)->count() >= 1) {
-            return Redirect::route('view-payment')->with('error_message', 'You can not delete this record because season already in use');
-        }
+        // if (booking::where('fb_payment_method_id', $id)->count() >= 1) {
+        //     return Redirect::route('view-payment')->with('error_message', 'You can not delete this record because season already in use');
+        // }
         payment::destroy('id', '=', $id);
         return Redirect::route('view-payment')->with('success_message', 'Deleted Successfully');
     }
@@ -2911,7 +2908,7 @@ class AdminController extends Controller
             $booking_method->name = $request->booking_method_name;
             $booking_method->save();
 
-            return view('booking_method.create');
+            return Redirect::route('view-booking-method')->with('success_message', 'Created Successfully');
         }
 
         return view('booking_method.create');
@@ -2934,7 +2931,7 @@ class AdminController extends Controller
             $booking_method->name = $request->booking_method_name;
             $booking_method->save();
 
-            return Redirect::route('view-booking-method')->with('success_message', 'Booking Method Successfully Updated!!');
+            return Redirect::route('view-booking-method')->with('success_message', 'Successfully Updated!!');
         }
 
         $booking_method = BookingMethod::find($id);

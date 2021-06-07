@@ -21,7 +21,7 @@
           <!-- Horizontal Form -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Category Form</h3>
+              <h3 class="box-title">Category Form </h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -42,7 +42,7 @@
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
                   
-                  <label for="inputEmail3" class="">Category Name</label>
+                  <label for="inputEmail3" class="">Category Name <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -289,9 +289,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
+    //   btn.disabled = true;
+    //   // submit the form    
+    //   btn.form.submit();
   }
 </script>
 

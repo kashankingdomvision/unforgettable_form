@@ -41,12 +41,13 @@
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
                
-                  <label for="inputEmail3" class="">Booking Method Name</label>
+                  <label for="inputEmail3" class="">Name <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
+                    
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
 
-                       <input type="text" name="booking_method_name" class="form-control" id="" required>
+                       <input type="text" name="booking_method_name" placeholder="Name" class="form-control" required>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
                        {{-- {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'Name','required'=>'true']) !!} --}}
                     </div>
@@ -62,7 +63,7 @@
               <!-- /.box-body -->
               <div class="box-footer">
                 <!-- <button type="submit" class="btn btn-info pull-right">Sign in</button> -->
-                {!! Form::submit('submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
+                {!! Form::submit('Submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
               </div>
               <!-- /.box-footer -->
             </form>
@@ -300,9 +301,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
+    //   btn.disabled = true;
+    //   // submit the form    
+    //   btn.form.submit();
   }
   $(function () {
     $('.select2').select2();

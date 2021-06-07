@@ -45,7 +45,7 @@
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                             {{-- {!! Form::text('username',null,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!} --}}
 
-                            <input type="text" name="username"  class="form-control" placeholder="Name" value="{{old('username')}}" >
+                            <input type="text" name="username"  class="form-control" placeholder="Name" value="{{old('username')}}" required>
                         </div>
                         <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                     </div>
@@ -81,7 +81,7 @@
                         <span style="color:red">*</span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
-                            <select name="categories[]" class="form-control js-example-basic-multiple" multiple>
+                            <select name="categories[]" class="form-control js-example-basic-multiple" multiple required>
                                 <option value="">Select Category</option>
                                 @foreach ($categories as $category)
                                 <option value="{{$category->id}}" {{ in_array($category->id, old('categories') ?? []) ? 'selected' : '' }} >{{$category->name}}</option>

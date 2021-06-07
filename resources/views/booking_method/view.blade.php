@@ -37,7 +37,7 @@
                 <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Booking Method Name</th>
+                  <th>Booking Method</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -48,7 +48,7 @@
                   <td style="text-transform: capitalize;">{{ $booking_methods->name }}</td>
                   <td>
                       <a href="{{ route('edit-booking-method' , $booking_methods->id ) }}"  class="btn btn-primary btn-xs"><span class="fa fa-pencil"></span></a>
-                      <a onclick="return confirm('Are you sure want to Delete {{ $booking_methods->name }}');" href="{{ route('del-booking-method',$booking_methods->id ) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                      <a onclick="return confirm('Are you sure want to delete this record ?');" href="{{ route('del-booking-method',$booking_methods->id ) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
                   </td>
                   {{-- <td>
                     <a href="{{ URL::to('update-category/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>

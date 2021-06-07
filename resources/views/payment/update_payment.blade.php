@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Edit New Airline
+        Edit Payment Method
       </h1>
     </section>
 
@@ -21,7 +21,7 @@
           <!-- Horizontal Form -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Airline Form</h3>
+              <h3 class="box-title"> Payment Method Form</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -41,10 +41,10 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <label for="inputEmail3" class="">Name</label>
+                  <label for="inputEmail3" class="">Name <span style="color:red">*</span></label>
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                       {!! Form::text('name',$data->name,['class'=>'form-control','placeholder'=>'name','required'=>'true']) !!}
+                       {!! Form::text('name',$data->name,['class'=>'form-control','placeholder'=>'Name','required'=>'true']) !!}
                     </div>
                     <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
                   </div>
@@ -292,9 +292,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
+    //   btn.disabled = true;
+    //   // submit the form    
+    //   btn.form.submit();
   }
 </script>
 

@@ -474,7 +474,7 @@ thead.border_thead {
         $book_id = @$book_id;
         $id      = @$id;
         ?>
-        <li class="treeview @if ( Request::is('create-booking') || Request::is('creat-booking-method') ||  Request::is('view-booking-method')   ||  Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif  ">
+        <li class="treeview @if ( Request::is('create-booking') ||   Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif  ">
           <a href="#">
             <i class="fa fa-user"></i> <span>Booking</span>
             <span class="pull-right-container">
@@ -484,8 +484,7 @@ thead.border_thead {
           <ul class="treeview-menu">
             <li class="{{Request::is('create-booking') ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking</a></li>
             <li class="{{Request::is('view-booking-season') ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
-            <li class="{{$route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
-            <li class="{{$route == 'view-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
+
           </ul>
         </li>
 
@@ -554,19 +553,24 @@ thead.border_thead {
           </ul>
         </li> 
 
-          <li class="treeview @if (Request::is('creat-airline') || Request::is('view-airline') || Request::is('creat-payment') || Request::is('view-payment')) active @endif">
-          <a href="#">
-            <i class="fa fa-user"></i> <span>Setting</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="{{Request::is('creat-airline') ? 'active' : ''}}"><a href="{{ route('creat-airline')}}"><i class="fa fa-plus"></i>Create Airline</a></li>
-            <li class="{{Request::is('view-airline') ? 'active' : ''}}"><a href="{{ route('view-airline')}}"><i class="fa fa-eye"></i>View Airline</a></li>
-            <li class="{{Request::is('creat-payment') ? 'active' : ''}}"><a href="{{ route('creat-payment')}}"><i class="fa fa-plus"></i>Create Payment Method</a></li>
-            <li class="{{Request::is('view-payment') ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
-          </ul>
+        {{-- @if (Request::is('creat-airline') || Request::is('view-airline') || Request::is('creat-payment') || Request::is('view-payment') || Request::is('creat-booking-method') ||  Request::is('view-booking-method') )  active @endif --}}
+
+        <li class="treeview {{ $route == 'creat-airline' || $route == 'view-airline' || $route == 'update-airline' || $route == 'creat-payment' || $route == 'view-payment' || $route == 'update-payment' || $route == 'creat-booking-method' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'view-booking-method' ? 'active' : '' }}">
+            <a href="#">
+                <i class="fa fa-user"></i>
+                <span>Setting</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li class="{{ $route == 'creat-airline' ? 'active' : ''}}"><a href="{{ route('creat-airline')}}"><i class="fa fa-plus"></i>Create Airline</a></li>
+                <li class="{{ $route == 'view-airline' || $route == 'update-airline' ? 'active' : ''}}"><a href="{{ route('view-airline')}}"><i class="fa fa-eye"></i>View Airline</a></li>
+                <li class="{{ $route == 'creat-payment' ? 'active' : ''}}"><a href="{{ route('creat-payment')}}"><i class="fa fa-plus"></i>Create Payment Method</a></li>
+                <li class="{{ $route == 'view-payment' || $route == 'update-payment'  ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
+                <li class="{{ $route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
+                <li class="{{ $route == 'view-booking-method' || $route == 'edit-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
+            </ul>
         </li>
 
 

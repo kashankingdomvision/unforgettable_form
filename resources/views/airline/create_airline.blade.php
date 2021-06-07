@@ -40,14 +40,15 @@
 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3">
-                  <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
-                  <label for="inputEmail3" class="">Name</label>
+                  
+                  <label for="inputEmail3" class="">Airline Name <span style="color:red">*</span></label>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
-                       {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'name','required'=>'true']) !!}
+                       {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'Airline Name','required'=>'true']) !!}
                     </div>
+                    <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
                   </div>
                 </div>
                 
@@ -59,7 +60,7 @@
               <!-- /.box-body -->
               <div class="box-footer">
                 <!-- <button type="submit" class="btn btn-info pull-right">Sign in</button> -->
-                {!! Form::submit('submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
+                {!! Form::submit('Submit',['required' => 'required','onclick'=>'submitForm(this)','class'=>'btn btn-info pull-right']) !!}
               </div>
               <!-- /.box-footer -->
             </form>
@@ -297,9 +298,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
+    //   btn.disabled = true;
       // submit the form    
-      btn.form.submit();
+    //   btn.form.submit();
   }
   $(function () {
     $('.select2').select2();

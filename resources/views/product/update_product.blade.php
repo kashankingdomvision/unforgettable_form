@@ -1,6 +1,12 @@
 @extends('content_layout.default')
 
 @section('content')
+
+<style>
+    .mb-2{
+        margin-bottom: 2rem;
+    }
+</style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -39,8 +45,7 @@
             <!-- <form class="form-horizontal"> -->
               <div class="box-body">
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
-                  
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
                   <label for="inputEmail3" class="">Product Code</label>
                   <span style="color:red">*</span>
                     <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
@@ -53,7 +58,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="col-sm-6 col-sm-offset-3">
+                  <div class="col-sm-6 col-sm-offset-3 mb-2">
                   
                   <label for="inputEmail3" class="">Product Name</label>
                   <span style="color:red">*</span>
@@ -67,7 +72,7 @@
                   </div>
                    
                   <div class="form-group">
-                    <div class="col-sm-6 col-sm-offset-3">
+                    <div class="col-sm-6 col-sm-offset-3 mb-2">
                   
                     <label for="inputEmail3" class="">Product Description</label>
                     <span style="color:red">*</span>
@@ -317,9 +322,9 @@
 <script type="text/javascript">
   function submitForm(btn) {
       // disable the button
-      btn.disabled = true;
-      // submit the form    
-      btn.form.submit();
+    //   btn.disabled = true;
+    //   // submit the form    
+    //   btn.form.submit();
   }
 </script>
 

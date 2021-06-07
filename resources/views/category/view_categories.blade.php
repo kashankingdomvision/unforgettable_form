@@ -36,8 +36,8 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Category name</th>
+                  <th>ID</th>
+                  <th>Category Name</th>
                   <th>Action</th>
                 </tr>
                 </thead>
