@@ -1038,9 +1038,9 @@ class AdminController extends Controller
 
     public function delete_airline($id)
     {
-        if (booking::where('fb_airline_name_id', $id)->count() >= 1) {
-            return Redirect::route('view-airline')->with('error_message', 'You can not delete this record because season already in use');
-        }
+        // if (booking::where('fb_airline_name_id', $id)->count() >= 1) {
+        //     return Redirect::route('view-airline')->with('error_message', 'You can not delete this record because season already in use');
+        // }
         airline::destroy('id', '=', $id);
         return Redirect::route('view-airline')->with('success_message', 'Deleted Successfully');
     }
