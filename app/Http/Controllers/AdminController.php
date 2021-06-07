@@ -971,18 +971,22 @@ class AdminController extends Controller
         } else {
 
             $get_ref = Cache::remember('get_ref', 60, function () {
-                $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_ref';
+                // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_ref';
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_ref';
                 $output =  $this->curl_data($url);
                 return json_decode($output)->data;
             });
 
+
             $get_user_branches = Cache::remember('get_user_branches', 60, function () {
-                $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
+                // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
             $booking_email = booking_email::where('booking_id', '=', $id)->get();
-            return view('booking.update_booking')->with(['booking_email' => $booking_email, 'persons' => user::all(), 'seasons' => season::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'record' => booking::where('id', '=', $id)->get()->first(), 'id' => $id]);
+
+            return view('booking.update_booking')->with(['booking_email' => $booking_email, 'persons' => user::all(), 'seasons' => season::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'record' => old_booking::where('id', '=', $id)->get()->first(), 'id' => $id]);
         }
     }
     public function delete_multi_booking(Request $request, $id)
