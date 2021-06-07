@@ -1101,12 +1101,13 @@ class AdminController extends Controller
     public function add_role(Request $request)
     {
         if ($request->isMethod('post')) {
-            $this->validate($request, ['name' => 'required']);
+            $this->validate($request, ['name'  => 'required'], ['required' => 'Name is required']);
 
             role::create(array(
                 'name' => $request->name
             ));
-            return Redirect::route('add-role')->with('success_message', 'Role Added Successfully');
+
+            return Redirect::route('view-role')->with('success_message', 'Created Successfully');
         }
         return view('roles.create');
     }
@@ -1119,19 +1120,19 @@ class AdminController extends Controller
     public function del_role(Request $request, $id)
     {
         role::destroy('id', '=', $id);
-        return Redirect::route('view-role')->with('success_message', 'Role Successfully Deleted!!');
+        return Redirect::route('view-role')->with('success_message', 'Deleted Successfully');
     }
 
     public function update_role(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-            $this->validate($request, ['name' => 'required']);
+            $this->validate($request, ['name'  => 'required'], ['required' => 'Name is required']);
 
             role::where('id', '=', $id)->update(array(
                 'name' => $request->name
             ));
 
-            return Redirect::route('view-role')->with('success_message', 'Role Successfully Updated!!');
+            return Redirect::route('view-role')->with('success_message', 'Update Successfully');
         }
         return view('roles.update_role')->with(['data' => role::find($id)]);
     }
