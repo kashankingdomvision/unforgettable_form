@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Add Supplier
+        Add New Supplier
       </h1>
     </section>
 
@@ -20,10 +20,6 @@
         <div class="col-md-12">
           <!-- Horizontal Form -->
           <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">Supplier Form</h3>
-            </div>
-            <!-- /.box-header -->
             <!-- form start -->
             
             {!! Form::open(array('route'=>'add-supplier','class'=>'form-horizontal','id'=>'user_form')) !!}
@@ -110,11 +106,11 @@
 
                 <div class="form-group">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <label for="inputEmail3" class="">Currecy</label>
+                        <label for="inputEmail3" class="">Currency</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-list-alt"></i></span>
                             <select name="currency" class="form-control js-example-basic-multiple">
-                                <option value="">Select Currecy</option>
+                                <option value="">Select Currency</option>
                                 @foreach ($currencies as $currency)
                                 <option value="{{$currency->id}}"  {{ (old("currency") == $currency->id ? "selected" : "") }} >{{ $currency->name }} ({{ $currency->symbol }})</option>
                                 @endforeach

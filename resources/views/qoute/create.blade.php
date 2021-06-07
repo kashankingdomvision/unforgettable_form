@@ -311,7 +311,7 @@
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
                                 <select class="form-control select2" name="brand_name"  >
                                     <option value="">Select Brand</option>
-                                    @foreach ($get_user_branches['branches'] as $branche)
+                                    @foreach ($get_user_branche['branches'] as $branche)
                                     <option {{ (Auth::user()->brand_name == $branche['name'])? 'selected':'' }} value="{{ $branche['name'] }}" >{{ $branche['name'] }}</option>
                                     @endforeach
                                 </select>
@@ -335,7 +335,7 @@
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person"  >
                                     <option value="">Select Person</option>
-                                    @foreach ($get_user_branches['users'] as $user)
+                                    @foreach ($get_user_branche['users'] as $user)
                                     <option {{ (Auth::user()->email == $user['email'])? 'selected':'' }} value="{{ $user['email'] }}" > {{ $user['email'] }}</option>
                                     @endforeach
                                 </select>
