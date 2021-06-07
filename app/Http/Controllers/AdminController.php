@@ -123,7 +123,7 @@ class AdminController extends Controller
             $data['currencies']     = Currency::get();
             $data['brands']         = $this->getUserBranches('brands');
             return view('user.create_user', $data);
-            // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role',5)->orderBy('name','ASC')->get() ]);
+            // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get() ]);
         }
     }
     
@@ -1919,7 +1919,7 @@ class AdminController extends Controller
             'categories' => Category::all()->sortBy('name'),
             'seasons' => season::all(),
             'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name')
@@ -2284,7 +2284,7 @@ class AdminController extends Controller
             // 'seasons' => season::where('default_season',1)->first(),
             'seasons' => season::all(),
             'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'payment_method' => payment::all()->sortBy('name'),
@@ -2783,7 +2783,7 @@ class AdminController extends Controller
             // 'seasons' => season::where('default_season',1)->first(),
             'seasons' => season::all(),
             'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name'),
@@ -2833,7 +2833,7 @@ class AdminController extends Controller
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'users' => User::all()->sortBy('name'),
 
-            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
 
             'get_user_branches' => $get_user_branches,
             'get_holiday_type' => $get_holiday_type
@@ -2874,7 +2874,7 @@ class AdminController extends Controller
             // 'seasons' => season::where('default_season',1)->first(),
             'seasons' => season::all(),
             'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role',5)->orderBy('name','ASC')->get(),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name'),
