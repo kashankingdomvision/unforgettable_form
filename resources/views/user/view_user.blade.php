@@ -40,8 +40,8 @@
                   <th>Name</th>
                   <th>User Role</th>
                   <th>Email</th>
-                  <th>Currency</th>
-                  <th>Brand</th>
+                  <th>Default Currency</th>
+                  <th>Default Brand</th>
                   <th>Supervisor</th>
                   <th>Action</th>
                 </tr>

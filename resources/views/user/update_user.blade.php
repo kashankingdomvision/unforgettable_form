@@ -48,7 +48,7 @@
                     <div class="input-group">
                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
                        <!-- <input name="username" type="email" class="form-control" placeholder="Username"> -->
-                       {!! Form::text('username',$data->name,['class'=>'form-control','placeholder'=>'username','required'=>'true']) !!}
+                       {!! Form::text('username',$data->name,['class'=>'form-control','placeholder'=>'Username','required'=>'true']) !!}
                     </div>
                     <div class="alert-danger" style="text-align:center">{{$errors->first('username')}}</div>
                   </div>
@@ -116,11 +116,11 @@
                 
                 <div class="form-group">
                   <div class="col-sm-6 col-sm-offset-3 mb-2">
-                  <label for="inputEmail3" class="">Currency</label>
+                  <label for="inputEmail3" class="">Default Currency</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
                       <select class="form-control" name="currency">
-                          <option selected disabled  value="">Select Currency</option>
+                          <option value="">Select Currency</option>
                           @foreach($currencies as $currency)
                               <option value="{{$currency->id}}" {{ ($data->currency_id == $currency->id )? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }} >{{$currency->name}}</option>
                           @endforeach
@@ -132,11 +132,11 @@
               
               <div class="form-group" >
                 <div class="col-sm-6 col-sm-offset-3 mb-2">
-                <label for="inputEmail3" class="">Brands</label>
+                  <label for="inputEmail3" class="">Default Brands</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <select class="form-control" name="brand">
-                        <option selected disabled value="">Select Brands</option>
+                        <option value="">Select Brands</option>
                         @foreach($brands as $brand)
                             <option value="{{$brand['name']}}" {{ ($data->brand_name == $brand['name'])? 'selected' : ((old('brand') == $brand['name'])? 'selected' : NULL) }} >{{$brand['name']}}</option>
                         @endforeach
