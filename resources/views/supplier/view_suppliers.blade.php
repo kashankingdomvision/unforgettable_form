@@ -37,7 +37,7 @@
                 <tr>
            
                   <th>ID</th>
-                  <th>Supplier name</th>
+                  <th>Supplier Name</th>
                   <th>Supplier Email</th>
                   <th>Supplier Phone</th>
                   <th>Supplier Currency</th>
