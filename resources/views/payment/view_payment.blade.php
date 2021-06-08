@@ -36,16 +36,16 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>#</th>
                   <th>Payment Method</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                @foreach ($data as $key => $value)
                
                 <tr>
-                  <td>{{ $value->id }}</td>
+                  <td>{{ $key+1 }}</td>
                   <td>{{ $value->name }}</td>
          
                   <td>
@@ -293,7 +293,7 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-        "order": [[ 2, "desc" ]]
+        // "order": [[ 2, "desc" ]]
     });
     $('#example2').DataTable({
       "paging": true,

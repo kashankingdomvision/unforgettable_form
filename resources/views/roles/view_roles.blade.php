@@ -36,15 +36,15 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Role name</th>
+                  <th>#</th>
+                  <th>Role Name</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                  @foreach ($data as $key => $value)
                 <tr>
-                  <td>{{ $value->id }}</td>
+                  <td>{{ $key+1 }}</td>
                   <td style="text-transform: capitalize;">{{ $value->name }}</td>
                   <td>
                     <a href="{{ URL::to('update-role/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>

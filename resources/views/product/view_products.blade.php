@@ -36,17 +36,17 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Product Code</th>
-                  <th>Product name</th>
+                  <th style="width: 5rem;">#</th>
+                  <th style="width: 10rem;">Product Code</th>
+                  <th style="width: 13rem;">Product Name</th>
                   <th>Product Description</th>
-                  <th>Action</th>
+                  <th style="width: 10rem;">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                @foreach ($data as $key => $value)
                 <tr>
-                  <td>{{ $value->id }}</td>
+                  <td>{{ $key+1 }}</td>
                   <td>{{ $value->code }}</td>
                   <td style="text-transform: capitalize;">{{ $value->name }}</td>
                   <td>{{ $value->description }}</td>

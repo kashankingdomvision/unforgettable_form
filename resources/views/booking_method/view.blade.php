@@ -36,15 +36,15 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>#</th>
                   <th>Booking Method</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($booking_methods as $booking_methods)
+                @foreach ($booking_methods as $key => $booking_methods)
                 <tr>
-                  <td>{{ $booking_methods->id }}</td>
+                  <td>{{ $key+1 }}</td>
                   <td style="text-transform: capitalize;">{{ $booking_methods->name }}</td>
                   <td>
                       <a href="{{ route('edit-booking-method' , $booking_methods->id ) }}"  class="btn btn-primary btn-xs"><span class="fa fa-pencil"></span></a>

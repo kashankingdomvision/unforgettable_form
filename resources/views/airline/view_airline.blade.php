@@ -36,16 +36,16 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>#</th>
                   <th> Airline Name</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                @foreach ($data as $key => $value)
                
                 <tr>
-                    <td>{{ $value->id }}</td>
+                    <td>{{ $key+1 }}</td>
                     <td>{{ $value->name }}</td>
                     <td>
                         <a href="{{ URL::to('update-airline/'.$value->id)}}" class="btn btn-primary btn-xs" ><span class="fa fa-pencil"></span></a>
