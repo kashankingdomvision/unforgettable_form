@@ -36,7 +36,7 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Id</th>
+                  <th>#</th>
                   <th>Name</th>
                   <th>User Role</th>
                   <th>Email</th>
@@ -47,9 +47,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                @foreach ($data as $key => $value)
                 <tr>
-                  <td>{{ $value->id }}</td>
+                  <td>{{ $key+1 }}</td>
                   <td>{{ $value->name }}</td>
                   <td style="text-transform: capitalize;">{{ $value->getRole->name ?? null }}</td>
                   <td>{{ $value->email }}</td>

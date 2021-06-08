@@ -183,7 +183,7 @@ td.day{
                 <div class="col-sm-2 " style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Type</label> 
                     <div class="input-group">
-                        <select class="form-control booked-by-select2" name="booking_type[]" >
+                        <select class="form-control booking-type-select2" name="booking_type[]" >
                             <option value="">Select Booking Type</option>
                             <option value="refundable">Refundable</option>
                             <option value="non_refundable">Non-Refundable</option>
@@ -522,7 +522,7 @@ td.day{
                                     <div class="col-sm-2 " style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Type</label> 
                                         <div class="input-group">
-                                            <select class="form-control booked-by-select2" name="booking_type[]" >
+                                            <select class="form-control" id="booking-type-select2" name="booking_type[]" >
                                                 <option value="">Select Booking Type</option>
                                                 <option value="refundable">Refundable</option>
                                                 <option value="non_refundable">Non-Refundable</option>
@@ -1140,6 +1140,7 @@ function datePickerSetDate(y = 1) {
         $('#booked-by-select2').select2();
         $('#supplier-currency').select2();
         $('#supervisor-select2').select2();
+        $('#booking-type-select2').select2();
         // $('#convert-currency').select2();
  
         $('body').on('click', '#new', function (e) {
@@ -1155,6 +1156,7 @@ function datePickerSetDate(y = 1) {
             $(".booked-by-select2:last").select2();
             $('.supplier-currency:last').select2();
             $('.supervisor-select2:last').select2();
+            $('.booking-type-select2').select2();
             
         
             // $(".datepicker").datepicker({ autoclose: true, format: 'dd-mm-yyyy'  });

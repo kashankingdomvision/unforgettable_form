@@ -1,15 +1,32 @@
 @extends('content_layout.default')
 
   @section('content')
+  <style>
+    .th{
+      width: 15rem;
+    }
+
+    .td{
+      width: 60rem;
+    }
+
+    .mt-2{
+      margin-top: 1rem;
+
+    } 
+    .mb-2{
+      margin-bottom: 1rem
+    }
+  </style>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        View Details Supplier <strong>{{ $name }}</strong>
+        Supplier Details
       </h1>
       <ol class="breadcrumb">
         <li>
-          <a href="{{ route('view-supplier') }}" class="btn btn-primary  btn-sm" >View All</a>
+          <a href="{{ route('view-supplier') }}" class="btn btn-primary btn-sm" style="color: white;">Back</a>
         </li>
       </ol>
     </section>
@@ -35,38 +52,38 @@
                 <table class="table">
                     <tbody>
                       <tr>
-                        <th scope="row">Name: </th>
+                        <th class="th">Supplier Name: </th>
                         <td>{{ $name }}</td>
                       </tr>
                       
                       <tr>
-                        <th scope="row">Email Address: </th>
+                        <th class="th">Supplier Email: </th>
                         <td>{{ $email }}</td>
                       </tr>
                       
                       <tr>
-                        <th scope="row">Phone number: </th>
+                        <th class="th"> Supplier Phone: </th>
                         <td>{{ $phone }}</td>
                       </tr>
                       
                       <tr>
-                        <th scope="row">Currency: </th>
+                        <th class="th">Supplier Currency: </th>
                         <td>{{ $currency }}</td>
                       </tr>
                       
                       <tr>
-                        <th scope="row">Categories: </th>
-                        <td>
+                        <th class="th"> Supplier Categories: </th>
+                        <td class="td">
                             @foreach ($category as $cate)
-                            <span class="badge badge-pill badge-primary">{{ $cate['name'] }}</span>  
+                            <span class="badge badge-pill badge-primary mt-2 mb-2">{{ $cate['name'] }}</span>  
                             @endforeach
                         </td>
                       </tr>
                       <tr>
-                        <th scope="row">Products: </th>
+                        <th class="th"> Supplier Products: </th>
                         <td>
                             @foreach ($product as $prod)
-                            <span class="badge badge-pill badge-primary">{{ $prod['name'] }}</span>  
+                            <span class="badge badge-pill badge-primary mt-2 mb-2">{{ $prod['name'] }}</span>  
                             @endforeach
                         </td>
                       </tr>

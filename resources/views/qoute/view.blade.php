@@ -28,7 +28,7 @@
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    {{-- <td>ID</td> --}}
+                    <th>#</th>
                     <th>Ref #</th>
                     <th>Season</th>
                     <th>Type Of Holidays</th>
@@ -40,9 +40,9 @@
                   </tr>
                 </thead>
               
-                @foreach ($quotes as $quote)
+                @foreach ($quotes as $key => $quote)
                     <tr>
-                        {{-- <td>{{ $quote->id }}</td> --}}
+                        <td>{{ $key+1 }}</td>
                         <td>{{ $quote->ref_no }}</td>
                         <td>{{ $quote->season->name }}</td>
                         <td>{{ $quote->type_of_holidays }}</td>

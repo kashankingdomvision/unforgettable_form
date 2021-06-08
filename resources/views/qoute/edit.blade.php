@@ -173,7 +173,7 @@
                 <div class="col-sm-2 " style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Type</label> 
                     <div class="input-group">
-                        <select class="form-control booked-by-select2" name="booking_type[]" >
+                        <select class="form-control booking-type-select2" name="booking_type[]" >
                             <option value="">Select Booking Type</option>
                             <option value="refundable">Refundable</option>
                             <option value="non_refundable">Non-Refundable</option>
@@ -556,7 +556,7 @@
                                     <div class="col-sm-2 " style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Type</label> 
                                         <div class="input-group">
-                                            <select class="form-control booked-by-select2" name="booking_type[]" >
+                                            <select class="form-control booking-type-select2" name="booking_type[]" >
                                                 <option value="">Select Booking Type</option>
                                                 <option {{  ($quote_detail->booking_type == 'refundable')? 'selected' : '' }} value="refundable">Refundable</option>
                                                 <option {{  ($quote_detail->booking_type == 'non_refundable')? 'selected' : '' }} value="non_refundable">Non-Refundable</option>
@@ -1104,13 +1104,13 @@
         });
 
         // Initialize all Select2 
-        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2 ').select2();
+        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
         $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
         
         function reinitializedDynamicFeilds(){
 
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2").removeClass('select2-hidden-accessible').next().remove();
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2").select2();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();
 
             $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
         }

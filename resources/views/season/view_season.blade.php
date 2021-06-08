@@ -36,6 +36,7 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th>#</th>
                     <th>Season Name</th>
                     <th>Season Start Date</th>
                     <th>Season End Date</th>
@@ -43,8 +44,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $value)
+                @foreach ($data as $key => $value)
                 <tr>
+                  <td>{{ $key+1 }}</td>
                     <td>
                         {{ $value->name }} 
                         @if ($value->default_season == 1)

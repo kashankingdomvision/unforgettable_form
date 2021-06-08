@@ -36,8 +36,8 @@
                 <thead>
                 <tr>
            
-                  <th>ID</th>
-                  <th>Supplier name</th>
+                  <th>#</th>
+                  <th>Supplier Name</th>
                   <th>Supplier Email</th>
                   <th>Supplier Phone</th>
                   <th>Supplier Currency</th>
@@ -45,11 +45,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($suppliers as $supplier)
+                @foreach ($suppliers as $key => $supplier)
                 <tr>
         
             
-                    <td>{{ $supplier->id }}</td>
+                    <td>{{ $key+1 }}</td>
                     <td>{{ $supplier->name }}</td>
                     <td>{{ $supplier->email }}</td>
                     <td>{{ $supplier->phone }}</td>
