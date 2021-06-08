@@ -5,11 +5,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        View All Suppliers
+        View Details Supplier <strong>{{ $name }}</strong>
       </h1>
       <ol class="breadcrumb">
         <li>
-          <a href="{{ URL::to('add-supplier')}}" class="btn btn-primary btn-xs" ><span class="fa fa-plus">Add</span></a>
+          <a href="{{ route('view-supplier') }}" class="btn btn-primary  btn-sm" >View All</a>
         </li>
       </ol>
     </section>
@@ -32,63 +32,50 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-           
-                  <th>ID</th>
-                  <th>Supplier name</th>
-                  <th>Supplier Email</th>
-                  <th>Supplier Phone</th>
-                  <th>Supplier Currency</th>
-                  <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($suppliers as $supplier)
-                <tr>
-        
-            
-                    <td>{{ $supplier->id }}</td>
-                    <td>{{ $supplier->name }}</td>
-                    <td>{{ $supplier->email }}</td>
-                    <td>{{ $supplier->phone }}</td>
-                    <td>{{ $supplier->currency['name']??NULL }} {{ (isset($supplier->currency['name']))? '('.$supplier->currency['symbol'].')' : NULL }}</td>
-                    <td>
-                        <a href="{{ URL::to('update-supplier/'.$supplier->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                        <a href="{{ route('details-supplier', encrypt($supplier->id)) }}" class="btn btn-primary btn-xs" data-title="Details" data-target="#details"><span class="fa fa-eye"></span></a>
-                        <a onclick="return confirm('Are you sure want to Delete {{ $supplier->name }}');" href="{{ route('delete-supplier', encrypt($supplier->id)) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-remove"></span></a>
-                        
-                    </td>
-                    {{-- <td>
-                        @foreach ($supplier->categories as $category) 
-                            <span class="badge badge-primary">{{ $category->name }}</span>
-                        @endforeach
-                    </td> --}}
-
-                    {{-- <td>
-                      @if (!empty($categories))
-                      @foreach($categories[0][$value->id] as $cate )
-                      &nbsp;{{$cate}}&nbsp;
-                      @endforeach
-                      @endif
-                    </td>
-                    <td>
-                      @if (!empty($prod))
-                      @foreach($prod[0][$value->id] as $pro )
-                      &nbsp;{{$pro}}&nbsp;
-                      @endforeach
-                      @endif
-                  </td>
-                  <td>
-                    <a href="{{ URL::to('update-supplier/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to Delete {{ $value->name }}');" href="{{ URL::to('delete-supplier/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
-                  </td> --}}
-                </tr>
-                @endforeach
-                </tbody>
+                <table class="table">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Name: </th>
+                        <td>{{ $name }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <th scope="row">Email Address: </th>
+                        <td>{{ $email }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <th scope="row">Phone number: </th>
+                        <td>{{ $phone }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <th scope="row">Currency: </th>
+                        <td>{{ $currency }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <th scope="row">Categories: </th>
+                        <td>
+                            @foreach ($category as $cate)
+                            <span class="badge badge-pill badge-primary">{{ $cate['name'] }}</span>  
+                            @endforeach
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Products: </th>
+                        <td>
+                            @foreach ($product as $prod)
+                            <span class="badge badge-pill badge-primary">{{ $prod['name'] }}</span>  
+                            @endforeach
+                        </td>
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+                  
                 
-              </table>
+
             </div>
             <!-- /.box-body -->
           </div>
@@ -321,19 +308,7 @@
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
 <!-- page script -->
-<script>
-  $(function () {
-    $("#example1").DataTable();
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
-  });
-</script>
+
 </body>
 </html>
 @endsection

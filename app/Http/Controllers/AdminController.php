@@ -1009,7 +1009,7 @@ class AdminController extends Controller
                 'name'  => $request->name
 
             ));
-            return Redirect::route('creat-airline')->with('success_message', 'Created Successfully');
+            return Redirect::route('view-airline')->with('success_message', 'Created Successfully');
         } else {
             return view('airline.create_airline')->with(['name' => '', 'id' => '']);
         }
@@ -1060,7 +1060,7 @@ class AdminController extends Controller
                 'name'  => $request->name,
 
             ));
-            return Redirect::route('creat-payment')->with('success_message', 'Created Successfully');
+            return Redirect::route('view-payment')->with('success_message', 'Created Successfully');
         } else {
             return view('payment.create_payment')->with(['name' => '', 'id' => '', 'email' => '']);
         }
@@ -1176,6 +1176,38 @@ class AdminController extends Controller
         }
         return view('category.update_category')->with(['data' => Category::find($id)]);
     }
+    
+    public function details_supplier($id) {
+        
+        $supplier = Supplier::findOrFail(decrypt($id));
+        $data = [
+            'name'      => $supplier->name,
+            'email'     => $supplier->email,
+            'phone'     => $supplier->phone,
+            'currency'  => $supplier->currency->name,
+        ];
+        
+        $category = [];
+        foreach ($supplier->categories as $categoires) {
+            $c = [
+                'name' => $categoires->name,
+            ];
+            array_push($category, $c);
+        }
+        
+        $product = [];
+        foreach ($supplier->products as $pro) {
+            $p = [
+                'name' => $pro->name,
+            ];
+            array_push($product, $p);
+        }
+        
+        $data['category'] = $category;
+        $data['product']  = $product;
+        
+        return view('supplier.detail_supplier', $data);
+    }
 
     public function add_supplier(Request $request)
     {
@@ -1280,9 +1312,8 @@ class AdminController extends Controller
 
     public function delete_supplier(Request $request, $id)
     {
-        supplier::destroy('id', '=', $id);
-        supplier_product::where('supplier_id', $id)->delete();
-        supplier_category::where('supplier_id', $id)->delete();
+        $supplier = Supplier::findOrFail(decrypt($id));
+        $supplier->delete();
         return Redirect::route('view-supplier')->with('success_message', 'Supplier Successfully Deleted!!');
     }
 
@@ -1778,7 +1809,6 @@ class AdminController extends Controller
             //         'booking_date' => (object) $booking_error
             //     ]);
             // }
-
             $errors = [];
             foreach ($request->booking_due_date as $key => $duedate) {
                 $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));

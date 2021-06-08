@@ -198,3 +198,13 @@ ALTER TABLE `suppliers` ADD FOREIGN KEY (`currency_id`) REFERENCES `currencies`(
 
 -- INSERT INTO `supplier_categories` (`id`, `supplier_id`, `category_id`, `updated_at`, `created_at`) VALUES (NULL, '7', '8', '2021-06-04', '2021-06-04'), (NULL, '8', '8', '2021-06-04', '2021-06-04'), (NULL, '9', '8', '2021-06-04', '2021-06-04')
 CREATE TABLE `lara_unforge`.`zoho_credentials` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `code` VARCHAR(255) NULL , `access_token` VARCHAR(255) NULL , `refresh_token` VARCHAR(255) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+-- //relation suppliers
+ALTER TABLE `supplier_categories` ADD FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `supplier_categories` DROP FOREIGN KEY `supplier_categories_ibfk_2`; ALTER TABLE `supplier_categories` ADD FOREIGN KEY (`supplier_id`) REFERENCES `suppliers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `supplier_products` ADD FOREIGN KEY (`supplier_id`) REFERENCES `suppliers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `supplier_products` ADD FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- //users relation
+ALTER TABLE `users` ADD FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `users` ADD FOREIGN KEY (`currency_id`) REFERENCES `currencies`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
