@@ -214,14 +214,12 @@ ALTER TABLE `users` ADD FOREIGN KEY (`currency_id`) REFERENCES `currencies`(`id`
 ALTER TABLE `qoute_details` ADD FOREIGN KEY (`qoute_id`) REFERENCES `qoutes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `qoute_details` ADD FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- //log_no
-ALTER TABLE `qoute_detail_logs` ADD FOREIGN KEY (`qoute_id`) REFERENCES `qoute_logs`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `qoute_detail_logs` ADD FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- quote log_no
 
 ALTER TABLE `qoute_logs` ADD FOREIGN KEY (`qoute_id`) REFERENCES `qoutes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- booking
-ALTER TABLE `bookings` ADD FOREIGN KEY (`qoute_id`) REFERENCES `qoutes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `booking_details` ADD FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- //user supervisor_id relation
