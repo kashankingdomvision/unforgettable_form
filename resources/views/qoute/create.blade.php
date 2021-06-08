@@ -2,6 +2,19 @@
 
 @section('content')
 <style type="text/css">
+td.day{
+  position:relative;  
+}
+td.day.disabled:read-only {
+    color: gray;
+}
+
+td.day{
+    color: #000;
+    font-weight: 700;
+}
+
+
     .row.box-cus {
         width: 83%;
         border: solid 1px #000;
@@ -463,7 +476,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                                         <div class="input-group">
-                                            <input type="text" name="booking_due_date[]"  class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
+                                            <input type="text" name="booking_due_date[]"   class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
                                         </div>
                                         <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                                     </div>
@@ -1000,41 +1013,44 @@ function datePickerSetDate(y = 1) {
                 var date = new Date(val);
                 var name = $(this).attr("name");
                 var $selector = $(this);
-                    var bookingDate    = new Date($selector.closest(".qoute").find('[class*="bookingDate"]').val());
-                    console.log(bookingDate);
                 switch (name) {
                     case 'date_of_service[]':
                             //booking due date 
-                            var bdu = $selector.closest(".qoute").find('[class*="bookingDueDate"]').val();
-                            var bookingDueDate = (bdu != '')? new Date(bdu): date;
-                            //booking due date 
                             
-                            //bookin date
-                            // var bd = $selector.closest(".qoute").find('[class*="bookingDate"]').val();
-                            // var bookingDate = (bd != '')? new Date(bd): date;
-                            // console.log(bookingDueDate);
-                            //booking date
-                            // var bookingDueDate = new Date($selector.closest(".qoute").find('[class*="bookingDueDate"]').val());
-                            // var bookingDate    = new Date($selector.closest(".qoute").find('[class*="bookingDate"]').val());
-                            $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDueDate, endDate: date});
+                            var bdu = $selector.closest(".qoute").find('[class*="bookingDueDate"]').val();
+                            var bookingDueDate = (bdu != '')? new Date(bdu): startdate;
+                            
+                            var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                            var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;
+
+                            var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
+                            var dateoserve    = (dateoserve != '')? new Date(dateoserve): startdate;
+                            
+                            $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDueDate, endDate: dateoserve});
                             $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
                         
                         break;
                         
                     case 'booking_date[]':
-                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: date, endDate: enddate});
-                        $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: date});
+                        var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                        var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
+                        
+                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
+                        $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
                         
                         break;
                         
                     case 'booking_due_date[]':
+                    
+                      
+                        var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                        var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
+
+                        var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
+                        var dateoserve    = (dateoserve != '')? new Date(dateoserve): enddate;
                         
-                        var bd = $selector.closest(".qoute").find('[class*="bookingDate"]').val();
-                        var bookingDate = (bd != '')? new Date(bd): date;
-                        console.log(bookingDate); 
-                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: date, endDate: bookingDate});
-                        $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
-                        console.log('due date', date);                    
+                        $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: dateoserve});
+                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
                         break;
                 }
             // });
