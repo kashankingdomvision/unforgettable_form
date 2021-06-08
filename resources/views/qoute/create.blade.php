@@ -230,7 +230,7 @@
                         <select  name="supervisor[]" class="form-control supervisor-select2" >
                             <option value="">Select Supervisor</option>
                             @foreach ($supervisors as $supervisor)
-                                <option value="{{$supervisor->id}}">{{$supervisor->name}}</option>
+                                <option value="{{$supervisor->id}}" {{ (isset(Auth::user()->getSupervisor))? ((Auth::user()->getSupervisor->id == $supervisor->id)? 'selected': NULL) : NULL }}   >{{$supervisor->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -569,7 +569,7 @@
                                             <select class="form-control supervisor-select2"  name="supervisor[]" id="supervisor-select2" class="form-control" >
                                                 <option value="">Select Supervisor</option>
                                                 @foreach ($supervisors as $supervisor)
-                                                    <option value="{{$supervisor->id}}">{{$supervisor->name}}</option>
+                                                    <option value="{{$supervisor->id}}" {{ (isset(Auth::user()->getSupervisor))? ((Auth::user()->getSupervisor->id == $supervisor->id)? 'selected': NULL) : NULL }} >{{$supervisor->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
