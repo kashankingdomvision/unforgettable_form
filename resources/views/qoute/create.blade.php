@@ -391,7 +391,7 @@
                                 <select name="currency" class="form-control select2" >
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
-                                        <option {{ (Auth::user()->currency == $currency['id'])? 'selected':'' }} value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option {{ (Auth::user()->currency_id == $currency['id'])? 'selected':'' }} value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
