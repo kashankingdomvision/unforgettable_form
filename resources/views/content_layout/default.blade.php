@@ -534,7 +534,7 @@ thead.border_thead {
             <li class="{{Request::is('view-role') ? 'active' : ''}}"><a href="{{ route('view-role')}}"><i class="fa fa-eye"></i>View Roles</a></li>
           </ul>
         </li>
-        <li class="treeview {{ $route == 'add-category' || $route == 'view-category' || $route == 'update-category' ||  $route == 'add-product' ||  $route == 'update-product' || $route == 'view-product' ||  $route == 'add-supplier' || $route == 'view-supplier' || $route ==  'update-supplier'  ? 'active' : ''  }}">
+        <li class="treeview {{ $route == 'add-category' || $route == 'view-category' || $route == 'update-category' ||  $route == 'add-product' ||  $route == 'update-product' || $route == 'view-product' ||  $route == 'add-supplier' || $route == 'view-supplier' || $route ==  'update-supplier' || $route == 'details-supplier' ? 'active' : ''  }}">
           <a href="#">
             <i class="fa fa-user"></i> <span>Suppliers</span>
             <span class="pull-right-container">
@@ -547,7 +547,7 @@ thead.border_thead {
           <li class="{{ $route == 'add-product' ? 'active' : ''}}"><a href="{{ route('add-product')}}"><i class="fa fa-plus"></i>Add Product</a></li>
           <li class="{{ $route == 'view-product' || $route == 'update-product'  ? 'active' : ''}}"><a href="{{ route('view-product')}}"><i class="fa fa-eye"></i>View Products</a></li>
           <li class="{{ $route == 'add-supplier' ? 'active' : ''}}"><a href="{{ route('add-supplier')}}"><i class="fa fa-plus"></i>Add Supplier</a></li>
-          <li class="{{ $route == 'view-supplier' || $route ==  'update-supplier' ? 'active' : ''}}"><a href="{{ route('view-supplier')}}"><i class="fa fa-eye"></i>View Suppliers</a></li>
+          <li class="{{ $route == 'view-supplier' || $route ==  'update-supplier' || $route == 'details-supplier' ? 'active' : ''}}"><a href="{{ route('view-supplier')}}"><i class="fa fa-eye"></i>View Suppliers</a></li>
           {{-- <li class="{{ $route == 'view-supplier-products' ? 'active' : ''}}"><a href="{{ route('view-supplier-products')}}"><i class="fa fa-eye"></i> Suppliers Products</a></li> --}}
           {{-- <li class="{{ $route == 'view-supplier-categories' ? 'active' : ''}}"><a href="{{ route('view-supplier-categories')}}"><i class="fa fa-eye"></i> Suppliers Categories</a></li> --}}
           </ul>
