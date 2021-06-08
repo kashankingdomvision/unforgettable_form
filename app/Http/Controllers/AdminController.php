@@ -1715,6 +1715,13 @@ class AdminController extends Controller
         }
     }
 
+    public function delete_quote($id)
+    {
+        $qoute = Qoute::findOrFail(decrypt($id));
+        $qoute->delete();
+        return Redirect::route('view-quote')->with('success_message', 'Supplier Successfully Updated!!');
+        
+    }
 
     public function create_quote(Request $request){
 
@@ -1811,18 +1818,17 @@ class AdminController extends Controller
             // }
             $errors = [];
             foreach ($request->booking_due_date as $key => $duedate) {
-                $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
+                $duedate   = date('Y-m-d', strtotime(Carbon::parse($duedate)));
                 
-                $startDate = date('Y-m-d', strtotime($season->start_date));
-                $endDate   = date('Y-m-d', strtotime($season->end_date));
-
+                $startDate = date('Y-m-d', strtotime(Carbon::parse($season->start_date)));
+                $endDate   = date('Y-m-d', strtotime(Carbon::parse($season->end_date)));
                 $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
                 if($bookingdate != NULL){
-                    $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
+                    $bookingdate   = date('Y-m-d', strtotime(Carbon::parse($bookingdate)));
                 }
                 $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
                 if ($dateofservice != null) {
-                    $dateofservice   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $dateofservice))->format('Y-m-d')));
+                    $dateofservice   = date('Y-m-d', strtotime(Carbon::parse($dateofservice)));
                 }
                 $error = [];
                 $dueresult = false;
@@ -1906,12 +1912,12 @@ class AdminController extends Controller
 
                     $qouteDetail = new QouteDetail;
                     $qouteDetail->qoute_id = $qoute->id;
-                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null;
+                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ?date('Y-m-d', strtotime(Carbon::parse($request->date_of_service[$key]))) : null;
                     $qouteDetail->service_details   = $request->service_details[$key];
                     $qouteDetail->category_id       = $request->category[$key];
                     $qouteDetail->supplier          = $request->supplier[$key];
-                    $qouteDetail->booking_date      = $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null;
-                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null;
+                    $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse($request->booking_date[$key]))) : null;
+                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse($request->booking_due_date[$key]))): null;
                     $qouteDetail->booking_method    = $request->booking_method[$key];
                     $qouteDetail->booked_by         = $request->booked_by[$key];
                     $qouteDetail->booking_refrence  = $request->booking_refrence[$key];
@@ -3297,7 +3303,7 @@ class AdminController extends Controller
     }
 
     public function delete_code(Request $request,$id){
-        code::destroy('id','=',$id);
+        code::destroy($id);
         return Redirect::route('view-code')->with('success_message', 'Code Successfully Deleted!!');
     }
 }

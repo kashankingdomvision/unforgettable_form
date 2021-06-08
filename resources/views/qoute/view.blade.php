@@ -55,7 +55,7 @@
 
                         <a href="{{ URL::to('confirm-booking/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class=""></span>Booking</a>
                         
-                        <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ URL::to('delete-code/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                        <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-remove"></span></a>
                         </td>
                     </tr>
                 @endforeach
