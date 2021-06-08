@@ -80,8 +80,11 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get', 'post'],'creat-code',array('as'=>'creat-code','uses'=>'AdminController@create_code'));
 	Route::match(['get', 'post'],'view-code',array('as'=>'view-code','uses'=>'AdminController@view_code'));
 	
-    Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
-    Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
+	
+    // Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
+    // Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
+
+    Route::get('details-supplier/{id}',array('as'=>'details-supplier','uses'=>'AdminController@details_supplier'));
 
 	Route::get('edit-code/{id}',array('as'=>'edit-code','uses'=>'AdminController@edit_code'));
 	Route::put('update-code/{id}',array('as'=>'update-code','uses'=>'AdminController@update_code'));
