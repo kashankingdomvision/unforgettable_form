@@ -947,7 +947,7 @@ td.day{
 <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-{!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
+{{-- {!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!} --}}
 
 <!-- jQuery 2.2.3 -->
 {!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
@@ -970,88 +970,79 @@ td.day{
 
 <script type="text/javascript">
 
-function datePickerSetDate(y = 1) {
-    var season_id  = $('#bookingSeason').val();
-    var season  = {!! json_encode($seasons->toArray()) !!};
-    var item = season.filter(function(a){ return a.id == season_id })[0];
-    var startdate = new Date(item.start_date);
-    var enddate = new Date(item.end_date);
-    if(y != 1){
-// format: 'yyyy-mm-dd',
-        $('.bookingDate:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
-        $('.bookingDateOfService:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
-        $('.bookingDueDate:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
-        console.log('reinitializedDynamicFeilds');
-    }else{
-        console.log('now'); 
-        $('.datepicker').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
+    function datePickerSetDate(y = 1) {
+        var season_id  = $('#bookingSeason').val();
+        var season  = {!! json_encode($seasons->toArray()) !!};
+        var item = season.filter(function(a){ return a.id == season_id })[0];
+        var startdate = new Date(item.start_date);
+        var enddate = new Date(item.end_date);
+        if(y != 1){
+            $('.bookingDate:last').datepicker('remove').datepicker({  autoclose: true, format:'dd/mm/yyyy', startDate: startdate, endDate: enddate });
+            $('.bookingDateOfService:last').datepicker('remove').datepicker({  autoclose: true, format:'dd/mm/yyyy',  startDate: startdate, endDate: enddate });
+            $('.bookingDueDate:last').datepicker('remove').datepicker({  autoclose: true, format:'dd/mm/yyyy',  startDate: startdate, endDate: enddate });
+        }else{
+            $('.datepicker').datepicker('remove').datepicker({  autoclose: true, format:'dd/mm/yyyy',  startDate: startdate, endDate: enddate});
+        }
     }
-}
+
+    function convertDate(date) {
+        var dateParts = date.split("/");
+        return dateParts = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    }
 
     $(function(){
         datePickerSetDate();
-        // var startdate = new Date("2021-04-13");
-        // $( ".datepicker" ).datepicker({  startDate: startdate, endDate: '4-27-2021' });
-        // $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd-mm-yyyy' });
     });
 
     $(document).ready(function() {
         
-        $(document).on('change', '.datepicker', function () {
-            
-        // $('.datepicker').datepicker()
-        //     .on('changeDate', function(e) {
+        $(document).on('change', '.datepicker', function (event) {
                 
-                var season_id  = $('#bookingSeason').val();
-                var season  = {!! json_encode($seasons->toArray()) !!};
-                var item = season.filter(function(a){ return a.id == season_id })[0];
-                var startdate = new Date(item.start_date);
-                var enddate = new Date(item.end_date);
+                var season_id   = $('#bookingSeason').val();
+                var season      = {!! json_encode($seasons->toArray()) !!};
+                var item        = season.filter(function(a){ return a.id == season_id })[0];
+                var startdate   = new Date(item.start_date);
+                var enddate     = new Date(item.end_date);
                 
                 
-                var val  = $(this).val();
-                var date = new Date(val);
-                var name = $(this).attr("name");
-                var $selector = $(this);
+                var date        = $(this).val();
+                var name        = $(this).attr("name");
+                var $selector   = $(this);
+                var inValBookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                var inValDateOfService  = $selector.closest(".qoute").find("input[name='date_of_service[]']").val();
+                var inValBookingDueDate = $selector.closest(".qoute").find("input[name='booking_due_date[]']").val();
+                
                 switch (name) {
                     case 'date_of_service[]':
-                            //booking due date 
+                            var booking_due_date = (inValBookingDueDate != '')? convertDate(inValBookingDueDate): startdate;
+                            var booking_dateofservice = (date != '')? convertDate(date): enddate;
+                            if(booking_dateofservice > startdate ){
+                                booking_dateofservice.setDate(booking_dateofservice.getDate() - 1);
+                            }
                             
-                            var bdu = $selector.closest(".qoute").find('[class*="bookingDueDate"]').val();
-                            var bookingDueDate = (bdu != '')? new Date(bdu): startdate;
-                            
-                            var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
-                            var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;
-
-                            var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
-                            var dateoserve    = (dateoserve != '')? new Date(dateoserve): startdate;
-                            
-                            $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDueDate, endDate: dateoserve});
-                            $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
+                            $selector.closest(".qoute").find("input[name='booking_date[]']").datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: booking_due_date, endDate: booking_dateofservice});
+                            booking_dateofservice = (inValBookingDate != '')? convertDate(inValBookingDate): booking_dateofservice;
+                            $selector.closest(".qoute").find("input[name='booking_due_date[]']").datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: startdate, endDate: booking_dateofservice});
                         
                         break;
                         
                     case 'booking_date[]':
-                        var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
-                        var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
-                        
-                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
-                        $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
+                        var booking_date = (date != '')? convertDate(date): startdate;
+                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: booking_date, endDate: enddate});
+                        booking_date = (date != '')? convertDate(date): (inValDateOfService != '')? convertDate(inValDateOfService) : enddate;
+                        $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: startdate, endDate: booking_date});
                         
                         break;
                         
                     case 'booking_due_date[]':
                     
-                      
-                        var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
-                        var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
-
-                        var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
-                        var dateoserve    = (dateoserve != '')? new Date(dateoserve): enddate;
-                        
-                        $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: dateoserve});
-                        $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
-                        break;
+                        var booking_due_date = convertDate(date);
+                        booking_dateofservice = (inValDateOfService != '')? convertDate(inValDateOfService): enddate;
+                        $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: booking_due_date, endDate: booking_dateofservice});
+                        booking_due_date = (inValBookingDate != '')? convertDate(inValBookingDate): booking_due_date;
+                    
+                            $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, format:'dd/mm/yyyy', startDate: booking_due_date, endDate: enddate});
+                    break;
                 }
             // });
         });
@@ -1066,7 +1057,6 @@ function datePickerSetDate(y = 1) {
         $(function () {
             $('#bookingSeason').change(function() {
                 datePickerSetDate();
-                console.log('done');
             })
         })
 
