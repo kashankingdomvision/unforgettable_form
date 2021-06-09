@@ -217,7 +217,7 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Currency Conversion</label>
                     <label class="currency"></label>  
-                    <input type="text" class="base-currency" name="qoute_base_currency[]" readonly><br>
+                    <input type="text" class="base-currency" name="qoute_base_currency[]" value="0.00" readonly><br>
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -599,7 +599,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
-                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly><br>
+                                        <input type="text" class="base-currency" name="qoute_base_currency[]" value="{{ number_format($quote_detail->qoute_base_currency, 2, '.', '') }}" readonly><br>
                                     </div>
 
                                     <div class="col-sm-2 mb-3">
@@ -675,25 +675,25 @@
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{$quote->net_price}}">
+                                        <input type="number" name="net_price" step="0.00" min="0" class="net_price hide-arrows" value="{{ number_format($quote->net_price, 2, '.', '') }}">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{$quote->markup_amount}}">
+                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{ number_format($quote->markup_amount, 2, '.', '') }}">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{$quote->selling}}">
+                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{ number_format($quote->selling, 2, '.', '') }}">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$quote->gross_profit}}">
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="{{ number_format($quote->gross_profit, 2, '.', '') }}">
                                         <span>%</span> 
                                     </label>
                                 </div>
@@ -734,7 +734,7 @@
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency"></label>
-                                    <input type="number" name="show_convert_currency" min="0" value="{{$quote->show_convert_currency}}" step="any" class="show-convert-currency hide-arrows" value="0">
+                                    <input type="number" name="show_convert_currency"  min="0" step="0.01"  value="{{ number_format($quote->show_convert_currency, 2, '.', '') }}" class="show-convert-currency hide-arrows">
                                 </label>
                             </div>
                         </div>
@@ -748,7 +748,7 @@
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency"></label>
-                                <input type="number" class="per-person hide-arrows" min="0" value="{{$quote->per_person}}" step="any" name="per_person" value="0">
+                                <input type="number" class="per-person hide-arrows" min="0" value="{{ number_format($quote->per_person, 2, '.', '') }}"  step="any" name="per_person" value="0">
                             </div>
                         </div>
 
@@ -1186,25 +1186,30 @@
                 success: function(response) {
 
                     qoute_currency = currentCost * response[selected_currency_code];
-                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
+                    // $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((!isNaN(parseFloat(qoute_currency)) ? parseFloat(qoute_currency).toFixed(2) : parseFloat(0).toFixed(2) ));
 
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final.toFixed(2));
+                    // $('.net_price').val(final.toFixed(2));
+                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount.toFixed(2));
+                    // $('.markup-amount').val(markupAmount.toFixed(2));
+                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice.toFixed(2));
+                    // $('.selling').val(sellingPrice.toFixed(2));
+                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
+                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
+                    // $('.gross-profit').val(grossProfit.toFixed(2));
 
                 }
             });
@@ -1250,27 +1255,35 @@
                 success: function(response) {
 
                     qoute_currency = $selector.val() * response[$selector.attr("data-code")];
-                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((!isNaN(parseFloat(qoute_currency)) ? parseFloat(qoute_currency).toFixed(2) : parseFloat(0).toFixed(2) ));
 
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final.toFixed(2));
+                    // $('.net_price').val(final.toFixed(2));
+                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
 
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount.toFixed(2));
+                    // $('.markup-amount').val(markupAmount.toFixed(2));
+                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice.toFixed(2));
+                    // $('.selling').val(sellingPrice.toFixed(2));
+                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
+                    // $('.gross-profit').val(grossProfit.toFixed(2));
+                    
+                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
 
+                    // console.log(last_convert_currency);
+                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                    // $('.per-person').val(perPersonAmount);
 
                 }
             });
@@ -1317,12 +1330,11 @@
         $(document).on('change', 'select[name="currency"]',function(){
 
             var selected_currency_code = $(this).val();
-
             var costArray = [];
             var currencyArray = [];
             var selectedMainCurrency = $("select[name='currency']").val();
             var final = 0;
-      
+
             $('.cost').each(function(){
 
                 cost = $(this).val();
@@ -1347,25 +1359,33 @@
                     'from': currency
                 },
                 success: function(response) {
-           
+
                     for(i=0 ; i < currencyArray.length; i++){
-                        $(".base-currency").eq(i+1).val((costArray[i] * response[currencyArray[i]]).toFixed(2));
+
+                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+
+
+                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    $('.net_price').val(final.toFixed(2));
+                    // $('.net_price').val(final.toFixed(2));
+                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    $('.markup-amount').val(markupAmount.toFixed(2));
+                    // $('.markup-amount').val(markupAmount.toFixed(2));
+                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val(sellingPrice.toFixed(2));
+                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
+                    // $('.selling').val(sellingPrice.toFixed(2));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val(grossProfit.toFixed(2));
+                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
+                    // $('.gross-profit').val(grossProfit.toFixed(2));
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
