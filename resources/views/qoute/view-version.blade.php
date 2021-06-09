@@ -88,7 +88,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"> Quote</h3>
                         <div class="pull-right">
-                            <a onclick="return confirm('Are you sure want to recall this quote');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
+                            <a onclick="return confirm('Are you sure you want to recall this quote?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
                                 <button class="btn btn-info pull-right"> Recall Quote</button>
                             </a>
                         </div>
