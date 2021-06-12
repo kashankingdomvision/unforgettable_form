@@ -48,7 +48,7 @@
                   <td>
                     <a href="{{ route('template.edit', encrypt($temp->id)) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                     <a href="{{ route('template.detail', encrypt($temp->id)) }}" class="btn btn-primary btn-xs" data-title="view details" data-target="#details"><span class="fa fa-eye"></span></a>
-                    <a href="{{ route('template.delete', encrypt($temp->id)) }}" class="btn btn-danger btn-xs" data-title="view details" data-target="#details"><span class="fa fa-trash text-light"></span></a>
+                    <a onclick="return confirm('Are you sure you want to delete this record?');" href="{{ route('template.delete', encrypt($temp->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash text-light"></span></a>
                   </td>
                 </tr>
                 @endforeach
