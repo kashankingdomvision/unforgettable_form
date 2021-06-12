@@ -101,7 +101,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get', 'post'],'view-quote',array('as'=>'view-quote','uses'=>'AdminController@view_quote'));
     Route::match(['get', 'post'],'edit-quote/{id}',array('as'=>'edit-quote','uses'=>'AdminController@edit_quote'));
     Route::get('delete-quote/{id}',array('as'=>'delete-quote','uses'=>'AdminController@delete_quote'));
-    
+	Route::get('convert-quote-to-booking/{id}',array('as'=>'convert-quote-to-booking','uses'=>'AdminController@convert_quote_to_booking'));
+
 	Route::match(['get', 'post'],'confirm-booking/{id}',array('as'=>'confirm-booking','uses'=>'AdminController@booking'));
 
 	Route::match(['get', 'post'],'upload-to-calendar',array('as'=>'upload-to-calendar','uses'=>'AdminController@upload_to_calendar'));
@@ -169,6 +170,11 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get','post'],'create-booking',array('as'=>'create-booking','uses'=>'AdminController@create_booking'));
 	Route::get('view-booking/{id}',array('as'=>'view-booking','uses'=>'AdminController@view_booking'));
 	Route::match(['get','post'],'update-booking/{id}',array('as'=>'update-booking','uses'=>'AdminController@update_booking'));
+
+	// view quotation in booking
+	Route::get('view-quotation/{id}',array('as'=>'view-quotation','uses'=>'AdminController@view_quotation'));
+	Route::get('view-booking-version/{booking_id}/{log_no}',array('as'=>'view-booking-version','uses'=>'AdminController@view_booking_version'));
+
 	Route::get('del-booking/{season_id}/{booking_id}',array('as'=>'del-booking','uses'=>'AdminController@delete_booking'));
 	Route::post('del-multi-booking/{id}',array('as'=>'del-multi-booking','uses'=>'AdminController@delete_multi_booking'));
 

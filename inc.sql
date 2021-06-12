@@ -224,3 +224,88 @@ ALTER TABLE `booking_details` ADD FOREIGN KEY (`booking_id`) REFERENCES `booking
 
 -- //user supervisor_id relation
 ALTER TABLE `users` ADD FOREIGN KEY (`supervisor_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+TRUNCATE TABLE `bookings`;
+TRUNCATE TABLE `booking_details`;
+TRUNCATE TABLE `finance_booking_details`
+
+ALTER TABLE `qoutes` ADD `qoute_to_booking_status` INT(10) NOT NULL DEFAULT '0' AFTER `is_email_send`;
+ALTER TABLE `qoutes` ADD `qoute_to_booking_date` DATE NULL AFTER `is_email_send`;
+ALTER TABLE `bookings` ADD `qoute_to_booking_date` DATE NULL AFTER `is_email_send`;
+
+CREATE TABLE `booking_logs` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(10) DEFAULT NULL,
+  `reference_name` varchar(255) DEFAULT NULL,
+  `ref_no` varchar(255) DEFAULT NULL,
+  `qoute_id` int(10) DEFAULT NULL,
+  `quotation_no` varchar(255) DEFAULT NULL,
+  `dinning_preferences` varchar(255) NOT NULL,
+  `lead_passenger_name` varchar(255) NOT NULL,
+  `brand_name` varchar(255) DEFAULT NULL,
+  `type_of_holidays` varchar(255) DEFAULT NULL,
+  `sale_person` varchar(255) DEFAULT NULL,
+  `season_id` int(10) DEFAULT NULL,
+  `agency_booking` tinyint(1) DEFAULT NULL,
+  `agency_name` varchar(255) DEFAULT NULL,
+  `agency_contact_no` int(11) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
+  `convert_currency` varchar(255) DEFAULT NULL,
+  `group_no` int(10) DEFAULT NULL,
+  `net_price` float(16,2) DEFAULT NULL,
+  `markup_amount` float(16,2) DEFAULT NULL,
+  `selling` float(16,2) DEFAULT NULL,
+  `gross_profit` float(16,2) DEFAULT NULL,
+  `markup_percent` int(10) DEFAULT NULL,
+  `show_convert_currency` float(16,2) DEFAULT NULL,
+  `per_person` float(16,2) DEFAULT NULL,
+  `port_tax` float(16,2) DEFAULT NULL,
+  `total_per_person` float(16,2) DEFAULT NULL,
+  `is_email_send` tinyint(1) DEFAULT 0,
+  `created_date` date DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `booking_logs` ADD PRIMARY KEY( `id`);
+ALTER TABLE `booking_logs` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `booking_logs` CHANGE `qoute_to_booking_date` `created_date` DATE NULL DEFAULT NULL;
+ALTER TABLE `booking_logs` ADD `log_no` INT NULL DEFAULT '0' AFTER `booking_id`;
+
+CREATE TABLE `booking_detail_logs` (
+  `id` int(10) NOT NULL,
+  `qoute_id` int(10) DEFAULT NULL,
+  `booking_id` int(10) DEFAULT NULL,
+  `quotation_no` varchar(255) DEFAULT NULL,
+  `row` int(10) DEFAULT NULL,
+  `date_of_service` date DEFAULT NULL,
+  `service_details` varchar(255) DEFAULT NULL,
+  `category_id` int(10) DEFAULT NULL,
+  `supplier` int(10) DEFAULT NULL,
+  `booking_date` date DEFAULT NULL,
+  `booking_due_date` date DEFAULT NULL,
+  `booking_method` int(10) DEFAULT NULL,
+  `booked_by` int(10) DEFAULT NULL,
+  `booking_refrence` varchar(255) DEFAULT NULL,
+  `booking_type` varchar(255) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `supplier_currency` varchar(255) DEFAULT NULL,
+  `cost` float(16,2) DEFAULT NULL,
+  `actual_cost` float(16,2) DEFAULT NULL,
+  `supervisor_id` int(10) DEFAULT NULL,
+  `added_in_sage` tinyint(4) DEFAULT 0,
+  `qoute_base_currency` float(16,2) DEFAULT NULL,
+  `qoute_invoice` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `booking_detail_logs` ADD `log_no` INT(10) NOT NULL DEFAULT '0' AFTER `booking_id`;
+ALTER TABLE `booking_detail_logs` ADD PRIMARY KEY( `id`);
+ALTER TABLE `booking_detail_logs` CHANGE `id` `id` INT(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `booking_logs` ADD `user_id` INT NULL AFTER `created_date`;
+
+CREATE TABLE `lara_unforge`.`finance_booking_detail_logs` ( `id` INT NOT NULL AUTO_INCREMENT , `booking_detail_id` INT(10) NULL , `row` INT(10) NULL , `deposit_amount` FLOAT(16,2) NULL , `paid_date` DATE NULL , `payment_method` VARCHAR(255) NULL , `upload_to_calender` VARCHAR(255) NULL , `created_at` TIMESTAMP NULL , `updated_at` TIMESTAMP NULL , `deposit_due_date` DATE NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `finance_booking_detail_logs` ADD `log_no` INT(10) NOT NULL DEFAULT '0' AFTER `booking_detail_id`;
+
