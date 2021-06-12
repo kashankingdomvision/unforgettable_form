@@ -2504,6 +2504,7 @@ class AdminController extends Controller
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'currencies' => Currency::all()->sortBy('name'),
             'templates' => Template::all()->sortBy('name'),
+            // 'sale_person' => User::where('role_id',2)->orderBy('name', 'asc')->get(),
         ]);
     }
 
