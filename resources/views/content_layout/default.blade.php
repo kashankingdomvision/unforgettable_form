@@ -520,7 +520,7 @@ thead.border_thead {
 
         </li>
         
-        <li class="treeview {{ $route == 'template/index'  || $route == 'template/create'? 'active' : ''  }}">
+        <li class="treeview {{ $route == 'template.index'  || $route == 'template.create'? 'active' : ''  }}">
           <a href="#">
             <i class="fa fa-clone  "></i> <span>Template Mangment</span>
             <span class="pull-right-container">
@@ -528,8 +528,8 @@ thead.border_thead {
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $route == 'template/create' ? 'active' : ''}}"><a href="{{ route('template.create')}}"><i class="fa fa-plus"></i>Create Template</a></li>
-            <li class="{{ $route == 'template/index' ? 'active' : ''}}"><a href="{{ route('template.index')}}"><i class="fa fa-eye"></i>View Template</a></li>
+            <li class="{{ $route == 'template.create' ? 'active' : ''}}"><a href="{{ route('template.create')}}"><i class="fa fa-plus"></i>Create Template</a></li>
+            <li class="{{ $route == 'template.index' ? 'active' : ''}}"><a href="{{ route('template.index')}}"><i class="fa fa-eye"></i>View Template</a></li>
           </ul>
         </li> 
         
