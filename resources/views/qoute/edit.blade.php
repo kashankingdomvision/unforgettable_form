@@ -689,7 +689,7 @@ td.day{
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" name="net_price" step="0.00" min="0" class="net_price hide-arrows" value="{{ number_format($quote->net_price, 2, '.', '') }}">
+                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{ number_format($quote->net_price, 2, '.', '') }}">
                                     </label>
                                 </div>
                                 <div class="row">

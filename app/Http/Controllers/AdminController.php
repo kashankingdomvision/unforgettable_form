@@ -49,6 +49,10 @@ use Hash;
 use Session;
 use Config;
 use App\old_booking;
+use App\BookingLog;
+use App\BookingDetailLog;
+use App\FinanceBookingDetailLog;
+
 use App\Template;
 class AdminController extends Controller
 {
@@ -91,7 +95,7 @@ class AdminController extends Controller
         }
     }
 
-
+        
     public function create_user(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -114,7 +118,7 @@ class AdminController extends Controller
             $user->currency_id    = $request->currency ?? NULL;
             $user->password   =    bcrypt($request->password);
             $user->save();
-    
+
             return Redirect::route('view-user')->with('success_message', 'Created Successfully');
 
         } else {
@@ -126,14 +130,14 @@ class AdminController extends Controller
             // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get() ]);
         }
     }
-    
+
     public function view_user(Request $request)
-    {   
+    {
         $data['data'] = user::get();
         return view('user.view_user', $data);
     }
-    
-    
+
+
     public function update_user(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -187,7 +191,7 @@ class AdminController extends Controller
     {
 
         if ($request->isMethod('post')) {
-            
+
             $this->validate($request, ['name'  => 'required|unique:seasons']);
             $this->validate($request, ['start_date'  => 'required']);
             $this->validate($request, ['end_date'  => 'required']);
@@ -207,14 +211,14 @@ class AdminController extends Controller
             $season->default_season     = $request->set_default_season;
             $season->start_date         = Carbon::parse(str_replace('/', '-', $request->start_date))->format('Y-m-d');
             $season->end_date           = Carbon::parse(str_replace('/', '-', $request->end_date))->format('Y-m-d');
-            $season->save(); 
+            $season->save();
 
             return Redirect::route('view-season')->with('success_message', 'Created Successfully');
         } else {
             return view('season.create_season')->with(['name' => '', 'id' => '']);
         }
     }
-    
+
     public function view_season(Request $request)
     {
         return view('season.view_season')->with('data', season::all());
@@ -243,7 +247,7 @@ class AdminController extends Controller
                 'start_date'      => Carbon::parse(str_replace('/', '-', $request->start_date))->format('Y-m-d'),
                 'end_date'        => Carbon::parse(str_replace('/', '-', $request->end_date))->format('Y-m-d'),
             ));
-            
+
             return Redirect::route('view-season')->with('success_message', 'Update Successfully');
         } else {
             return view('season.update_season')->with(['data' => season::find($id), 'id' => $id]);
@@ -333,7 +337,7 @@ class AdminController extends Controller
 
             // $this->validate($request, ['flight_booking_details'     => 'required_if:flight_booked,yes'], ['required_if' => 'Please enter flight booking details']);
             // //
-            // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']); 
+            // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']);
             // $this->validate($request, ['fb_last_date'               => 'required_if:flight_booked,no'], ['required_if' => 'Plesse enter flight booking date']);
             // //
             // // $this->validate($request, ['aft_person'                 => 'required_if:asked_for_transfer_details,no'],['required_if' => 'Please select asked for transfer person']);
@@ -342,12 +346,12 @@ class AdminController extends Controller
             // $this->validate($request, ['ds_last_date'              => 'required_if:documents_sent,no'], ['required_if' => 'Plesse enter document sent date']);
             // // $this->validate($request, ['to_person'                 => 'required_if:transfer_organised,no'],['required_if' => 'Please select document person']);
             // $this->validate($request, ['to_last_date'              => 'required_if:transfer_organised,no'], ['required_if' => 'Plesse enter document sent date']);
-            // // 
+            // //
             // $this->validate($request, ['asked_for_transfer_details' => 'required'], ['required' => 'Please select asked for transfer detail box']);
             // $this->validate($request, ['transfer_details'           => 'required_if:asked_for_transfer_details,yes'], ['required_if' => 'Please transfer detail']);
             // $this->validate($request, ['form_sent_on'               => 'required'], ['required' => 'Please select form sent on']);
             // // $this->validate($request, ['transfer_info_received'     => 'required'],['required' => 'Please select transfer info received']);
-            // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']); 
+            // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']);
 
             // $this->validate($request, ['itinerary_finalised'        => 'required'], ['required' => 'Please select itinerary finalised']);
             // $this->validate($request, ['itinerary_finalised_details' => 'required_if:itinerary_finalised,yes'], ['required_if' => 'Please enter itinerary finalised details']);
@@ -424,7 +428,7 @@ class AdminController extends Controller
                 'electronic_copy_details'     => $request->electronic_copy_details,
                 'transfer_organised'          => $request->transfer_organised,
                 'transfer_organised_details'  => $request->transfer_organised_details,
-                
+
                 'sale_person'                 => $request->sale_person,
                 'deposit_received'            => $request->deposit_received == '' ? 0 : $request->deposit_received,
                 'remaining_amount_received'   => $request->remaining_amount_received == '' ? 0 : $request->remaining_amount_received,
@@ -442,7 +446,7 @@ class AdminController extends Controller
 
             ));
 
-          
+
 
 
             if ($request->flight_booked == 'yes') {
@@ -694,8 +698,35 @@ class AdminController extends Controller
         $query = $query->orderBy('old_bookings.created_at', 'desc')->paginate(10, ['old_bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends($request->all());
 
         return view('booking.view_booking')->with([
-            'data' => $query, 'book_id' => $id, 'staffs' => $staff, 'get_refs' => $get_ref, 'get_holiday_type' => $get_holiday_type, 'type_of_holidays' => $request->type_of_holidays,
-            'get_user_branches' => $get_user_branches, 'created_at' => $request->created_at, 'created_by' => $request->created_by, 'ref_no' => $request->ref_no, 'date_of_travel' => $request->date_of_travel, 'brand_name' => $request->brand_name, 'seasons' => season::all(), 'session_id' => $request->season_id, 'agency_booking' => $request->agency_booking, 'flight_booked' => $request->flight_booked, 'form_sent_on' => $request->form_sent_on, 'payment' => payment::all(), 'airline' => airline::all(), 'fb_payment_method_id' => $request->fb_payment_method_id, 'fb_airline_name_id' => $request->fb_airline_name_id, 'fb_responsible_person' => $request->fb_responsible_person, 'ti_responsible_person' => $request->ti_responsible_person, 'to_responsible_person' => $request->to_responsible_person, 'itf_responsible_person' => $request->itf_responsible_person, 'dp_responsible_person' => $request->dp_responsible_person, 'ds_responsible_person' => $request->ds_responsible_person, 'pax_no' => $request->pax_no, 'asked_for_transfer_details' => $request->asked_for_transfer_details, 'transfer_organised' => $request->transfer_organised, 'itinerary_finalised' => $request->itinerary_finalised
+            'data'                  => $query,
+            'book_id'               => $id,
+            'staffs'                => $staff,
+            'get_refs'              => $get_ref,
+            'get_holiday_type'      => $get_holiday_type,
+            'type_of_holidays'      => $request->type_of_holidays,
+            'get_user_branches'     => $get_user_branches,
+            'created_at'            => $request->created_at,
+            'created_by'            => $request->created_by,
+            'ref_no'                => $request->ref_no,
+            'date_of_travel'        => $request->date_of_travel,
+            'brand_name'            => $request->brand_name,
+            'seasons'               => season::all(),
+            'session_id'            => $request->season_id,
+            'agency_booking'        => $request->agency_booking,
+            'flight_booked'         => $request->flight_booked,
+            'form_sent_on'          => $request->form_sent_on,
+            'payment'               => payment::all(), 'airline' => airline::all(),
+            'fb_payment_method_id'  => $request->fb_payment_method_id,
+            'fb_airline_name_id'    => $request->fb_airline_name_id,
+            'fb_responsible_person' => $request->fb_responsible_person,
+            'ti_responsible_person' => $request->ti_responsible_person,
+            'to_responsible_person' => $request->to_responsible_person,
+            'itf_responsible_person'=> $request->itf_responsible_person,
+            'dp_responsible_person' => $request->dp_responsible_person,
+            'ds_responsible_person' => $request->ds_responsible_person,
+            'pax_no'                => $request->pax_no, 'asked_for_transfer_details' => $request->asked_for_transfer_details,
+            'transfer_organised'    => $request->transfer_organised,
+            'itinerary_finalised'   => $request->itinerary_finalised
         ]);
     }
     public function delete_booking($season_id, $booking_id)
@@ -703,8 +734,8 @@ class AdminController extends Controller
         booking::destroy('id', '=', $booking_id);
         return Redirect::route('view-booking', $season_id)->with('success_message', 'Deleted Successfully');
     }
-    
-    
+
+
     function cf_remote_request($url, $_args = array()) {
 		// prepare array
 		$array = array(
@@ -716,7 +747,7 @@ class AdminController extends Controller
 				'400' => '400 Bad Request',
 			)
 		);
-		
+
 		// initalize args
 		$args = array(
 			'method' 		=> 'POST',
@@ -732,20 +763,20 @@ class AdminController extends Controller
 			'maxredirs' => 10,
 			'format' => 'JSON'
 		);
-		
+
 		if( empty($url) ) {
 			$code = 101;
 			$response = array('status' => $code, 'body' => $array['message'][$code]);
 			return $response;
 		}
-		
+
 		if( !empty($_args) && is_array($_args) )
 			$args = array_merge($args, $_args);
-		
+
 		$fields = $args['body'];
 		if( strtolower($args['method']) == 'post' && is_array($fields) )
 			$fields = http_build_query( $fields );
-		
+
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
 			CURLOPT_URL 			=> $url,
@@ -765,7 +796,7 @@ class AdminController extends Controller
 			CURLOPT_POSTFIELDS 		=> $fields,
 			CURLOPT_HTTPHEADER 		=> $args['headers'],
 		));
-	
+
 		$curl_response 	= curl_exec($curl);
 		$err 			= curl_error($curl);
 		$curl_info = array(
@@ -773,16 +804,16 @@ class AdminController extends Controller
 			'header' 		=> curl_getinfo($curl, CURLINFO_HEADER_OUT),
 			'total_time' 	=> curl_getinfo($curl, CURLINFO_TOTAL_TIME)
 		);
-		
+
 		curl_close($curl);
-		
-		
+
+
 		if( $err ) {
 			$response = array('message' => $err, 'body' => $err);
-			
+
 		} else {
 			if( $curl_info['status'] == 200
-			&& in_array($args['format'], array('ARRAY', 'OBJECT')) 
+			&& in_array($args['format'], array('ARRAY', 'OBJECT'))
 			&& !empty($curl_response) && is_string($curl_response) ) {
 				$curl_response = json_decode( $curl_response, $args['format'] == 'ARRAY' ? true : false );
                 $curl_response = ( json_last_error() == JSON_ERROR_NONE ) ? $curl_response : $curl_response;
@@ -790,18 +821,18 @@ class AdminController extends Controller
             else{
                 $curl_response = json_decode($curl_response, TRUE);
             }
-			
+
 			$response = array(
 				//'message' 	=> $array['message'][ $curl_info['status'] ],
 				'body' 		=> $curl_response
 			);
 		}
-		
+
 		$response = array_merge($curl_info, $response);
 		return $response;
 	}
 
-    
+
     public function refresh_token()
     {
         $zoho_credentials = ZohoCredential::findOrFail(1);
@@ -818,7 +849,7 @@ class AdminController extends Controller
 
 
 
-    
+
     // get reference function start
     public function get_ref_detail(Request $request){
 
@@ -843,34 +874,34 @@ class AdminController extends Controller
             $response = $this->cf_remote_request($url, $args);
 
             if($response['status'] == 200) {
-    
+
                 $responses_data = array_shift($response['body']['data']);
                 $passenger_id = $responses_data['id'];
-    
+
                 $url = "https://www.zohoapis.com/crm/v2/Passengers/search?criteria=(Deal:equals:{$passenger_id})";
                 $passenger_response = $this->cf_remote_request($url, $args);
-    
+
                 if($passenger_response['status'] == 200) {
                     $pax_no = count($passenger_response['body']['data']);
                 }
-         
-                $ajax_response = array( 
+
+                $ajax_response = array(
                     "holiday_type" => isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type'])  ? $responses_data['Holiday_Type'] : null,
                     "sale_person"  => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
                     "currency"     => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null ,
-                    "pax"          => isset($pax_no) && !empty($pax_no) ?  $pax_no : null 
+                    "pax"          => isset($pax_no) && !empty($pax_no) ?  $pax_no : null
                 );
             }
 
         }
-       
+
         if ($request->ajax()) {
             return response()->json($ajax_response);
         }
             return redirect()->back();
     }
-    
-    //get reference funtion end 
+
+    //get reference funtion end
     private function curl_data($url)
     {
         $ch = curl_init();
@@ -879,116 +910,567 @@ class AdminController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         return $output = curl_exec($ch);
     }
-    
+
     public function update_booking(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-            $this->validate($request, ['ref_no'                     => 'required'], ['required' => 'Reference number is required']);
-            $this->validate($request, ['brand_name'                 => 'required'], ['required' => 'Please select Brand Name']);
-            $this->validate($request, ['season_id'                  => 'required|numeric'], ['required' => 'Please select Booking Season']);
-            $this->validate($request, ['agency_booking'             => 'required'], ['required' => 'Please select Agency']);
-            $this->validate($request, ['pax_no'                     => 'required'], ['required' => 'Please select PAX No']);
-            $this->validate($request, ['date_of_travel'             => 'required'], ['required' => 'Please select date of travel']);
-            $this->validate($request, ['flight_booked'              => 'required'], ['required' => 'Please select flight booked']);
-            $this->validate($request, ['flight_booking_details'     => 'required_if:flight_booked,yes'], ['required_if' => 'Please enter flight booking details']);
-            $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'], ['required_if' => 'Please select booked person']);
-            $this->validate($request, ['fb_last_date'               => 'required_if:flight_booked,no'], ['required_if' => 'Plesse enter flight booking date']);
-            //
-            // $this->validate($request, ['aft_person'                 => 'required_if:asked_for_transfer_details,no'],['required_if' => 'Please select asked for transfer person']);
-            $this->validate($request, ['aft_last_date'              => 'required_if:asked_for_transfer_details,no'], ['required_if' => 'Plesse enter transfer date']);
-            $this->validate($request, ['ds_person'                 => 'required_if:documents_sent,no'], ['required_if' => 'Please select document person']);
-            $this->validate($request, ['ds_last_date'              => 'required_if:documents_sent,no'], ['required_if' => 'Plesse enter document sent date']);
-            // $this->validate($request, ['to_person'                 => 'required_if:transfer_organised,no'],['required_if' => 'Please select document person']);
-            $this->validate($request, ['to_last_date'              => 'required_if:transfer_organised,no'], ['required_if' => 'Plesse enter document sent date']);
-            // 
-            $this->validate($request, ['asked_for_transfer_details' => 'required'], ['required' => 'Please select asked for transfer detail box']);
-            $this->validate($request, ['transfer_details'           => 'required_if:asked_for_transfer_details,yes'], ['required_if' => 'Please transfer detail']);
-            $this->validate($request, ['form_sent_on'               => 'required'], ['required' => 'Please select form sent on']);
-            $this->validate($request, ['transfer_info_received'     => 'required'], ['required' => 'Please select transfer info received']);
-            $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'], ['required_if' => 'Please transfer info detail']);
-            $this->validate($request, ['itinerary_finalised'        => 'required'], ['required' => 'Please select itinerary finalised']);
-            $this->validate($request, ['itinerary_finalised_details' => 'required_if:itinerary_finalised,yes'], ['required_if' => 'Please enter itinerary finalised details']);
 
-            $this->validate($request, ['documents_sent'             => 'required'], ['required' => 'Please select documents sent']);
-            $this->validate($request, ['documents_sent_details'     => 'required_if:documents_sent,yes'], ['required_if' => 'Please enter document sent details']);
+            // old code start
 
-            $this->validate($request, ['electronic_copy_sent'       => 'required'], ['required' => 'Please select electronic copy sent']);
-            $this->validate($request, ['electronic_copy_details'    => 'required_if:electronic_copy_sent,yes'], ['required_if' => 'Please enter electronic copy details']);
+            // $this->validate($request, ['ref_no'                     => 'required'], ['required' => 'Reference number is required']);
+            // $this->validate($request, ['brand_name'                 => 'required'], ['required' => 'Please select Brand Name']);
+            // $this->validate($request, ['season_id'                  => 'required|numeric'], ['required' => 'Please select Booking Season']);
+            // $this->validate($request, ['agency_booking'             => 'required'], ['required' => 'Please select Agency']);
+            // $this->validate($request, ['pax_no'                     => 'required'], ['required' => 'Please select PAX No']);
+            // $this->validate($request, ['date_of_travel'             => 'required'], ['required' => 'Please select date of travel']);
+            // $this->validate($request, ['flight_booked'              => 'required'], ['required' => 'Please select flight booked']);
+            // $this->validate($request, ['flight_booking_details'     => 'required_if:flight_booked,yes'], ['required_if' => 'Please enter flight booking details']);
+            // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'], ['required_if' => 'Please select booked person']);
+            // $this->validate($request, ['fb_last_date'               => 'required_if:flight_booked,no'], ['required_if' => 'Plesse enter flight booking date']);
+            // //
+            // // $this->validate($request, ['aft_person'                 => 'required_if:asked_for_transfer_details,no'],['required_if' => 'Please select asked for transfer person']);
+            // $this->validate($request, ['aft_last_date'              => 'required_if:asked_for_transfer_details,no'], ['required_if' => 'Plesse enter transfer date']);
+            // $this->validate($request, ['ds_person'                 => 'required_if:documents_sent,no'], ['required_if' => 'Please select document person']);
+            // $this->validate($request, ['ds_last_date'              => 'required_if:documents_sent,no'], ['required_if' => 'Plesse enter document sent date']);
+            // // $this->validate($request, ['to_person'                 => 'required_if:transfer_organised,no'],['required_if' => 'Please select document person']);
+            // $this->validate($request, ['to_last_date'              => 'required_if:transfer_organised,no'], ['required_if' => 'Plesse enter document sent date']);
+            // //
+            // $this->validate($request, ['asked_for_transfer_details' => 'required'], ['required' => 'Please select asked for transfer detail box']);
+            // $this->validate($request, ['transfer_details'           => 'required_if:asked_for_transfer_details,yes'], ['required_if' => 'Please transfer detail']);
+            // $this->validate($request, ['form_sent_on'               => 'required'], ['required' => 'Please select form sent on']);
+            // $this->validate($request, ['transfer_info_received'     => 'required'], ['required' => 'Please select transfer info received']);
+            // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'], ['required_if' => 'Please transfer info detail']);
+            // $this->validate($request, ['itinerary_finalised'        => 'required'], ['required' => 'Please select itinerary finalised']);
+            // $this->validate($request, ['itinerary_finalised_details' => 'required_if:itinerary_finalised,yes'], ['required_if' => 'Please enter itinerary finalised details']);
 
-            $this->validate($request, ['transfer_organised'         => 'required'], ['required' => 'Please select transfer organised']);
-            $this->validate($request, ['transfer_organised_details' => 'required_if:transfer_organised,yes'], ['required_if' => 'Please enter transfer organised details']);
-            $this->validate($request, ['type_of_holidays'           => 'required'], ['required' => 'Please select type of holidays']);
-            $this->validate($request, ['sale_person'                => 'required'], ['required' => 'Please select type of sale person']);
+            // $this->validate($request, ['documents_sent'             => 'required'], ['required' => 'Please select documents sent']);
+            // $this->validate($request, ['documents_sent_details'     => 'required_if:documents_sent,yes'], ['required_if' => 'Please enter document sent details']);
 
-            if ($request->form_received_on == '0000-00-00') {
-                $form_received_on = NULL;
-            } elseif ($request->form_received_on == '') {
-                $form_received_on = NULL;
-            } else {
-                $form_received_on = $request->form_received_on;
+            // $this->validate($request, ['electronic_copy_sent'       => 'required'], ['required' => 'Please select electronic copy sent']);
+            // $this->validate($request, ['electronic_copy_details'    => 'required_if:electronic_copy_sent,yes'], ['required_if' => 'Please enter electronic copy details']);
+
+            // $this->validate($request, ['transfer_organised'         => 'required'], ['required' => 'Please select transfer organised']);
+            // $this->validate($request, ['transfer_organised_details' => 'required_if:transfer_organised,yes'], ['required_if' => 'Please enter transfer organised details']);
+            // $this->validate($request, ['type_of_holidays'           => 'required'], ['required' => 'Please select type of holidays']);
+            // $this->validate($request, ['sale_person'                => 'required'], ['required' => 'Please select type of sale person']);
+
+            // if ($request->form_received_on == '0000-00-00') {
+            //     $form_received_on = NULL;
+            // } elseif ($request->form_received_on == '') {
+            //     $form_received_on = NULL;
+            // } else {
+            //     $form_received_on = $request->form_received_on;
+            // }
+
+            // if ($request->app_login_date == '0000-00-00') {
+            //     $app_login_date = NULL;
+            // } elseif ($request->app_login_date == '') {
+            //     $app_login_date = NULL;
+            // } else {
+            //     $app_login_date = $request->app_login_date;
+            // }
+
+            // booking::where('id', '=', $id)->update(array(
+            //     'ref_no'                      => $request->ref_no,
+            //     'brand_name'                  => $request->brand_name,
+            //     'season_id'                   => $request->season_id,
+            //     'agency_booking'              => $request->agency_booking,
+            //     'pax_no'                      => $request->pax_no,
+            //     'date_of_travel'              => Carbon::parse($request->date_of_travel)->format('Y-m-d'),
+            //     'flight_booked'               => $request->flight_booked,
+            //     'flight_booking_details'      => $request->flight_booking_details,
+            //     'asked_for_transfer_details'  => $request->asked_for_transfer_details,
+            //     'transfer_details'            => $request->transfer_details,
+            //     'form_sent_on'                => Carbon::parse($request->form_sent_on)->format('Y-m-d'),
+            //     'form_received_on'            => $form_received_on,
+            //     'app_login_date'              => $app_login_date,
+            //     'transfer_info_received'      => $request->transfer_info_received,
+            //     'transfer_info_details'       => $request->transfer_info_details,
+            //     'itinerary_finalised'         => $request->itinerary_finalised,
+            //     'itinerary_finalised_details' => $request->itinerary_finalised_details,
+            //     'documents_sent'              => $request->documents_sent,
+            //     'documents_sent_details'      => $request->documents_sent_details,
+            //     'electronic_copy_sent'        => $request->electronic_copy_sent,
+            //     'electronic_copy_details'     => $request->electronic_copy_details,
+            //     'transfer_organised'          => $request->transfer_organised,
+            //     'transfer_organised_details'  => $request->transfer_organised_details,
+            //     'type_of_holidays'            => $request->type_of_holidays,
+            //     'sale_person'                 => $request->sale_person,
+            //     'deposit_received'            => $request->deposit_received == '' ? 0 : $request->deposit_received,
+            //     'remaining_amount_received'   => $request->remaining_amount_received == '' ? 0 : $request->remaining_amount_received,
+            //     'finance_detail'              => $request->finance_detail,
+            //     'destination'                 => $request->destination
+            // ));
+
+            // old code end
+
+            $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
+            $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
+            $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
+            $this->validate($request, ['type_of_holidays' => 'required'], ['required' => 'Please select Type Of Holidays']);
+            $this->validate($request, ['sale_person'      => 'required'], ['required' => 'Please select Sale Person']);
+            $this->validate($request, ['season_id'        => 'required|numeric'], ['required' => 'Please select Booking Season']);
+            $this->validate($request, ['agency_name'       => 'required_if:agency_booking,2'], ['required_if' => 'Agency Name is required']);
+            $this->validate($request, ['agency_contact_no' => 'required_if:agency_booking,2'], ['required_if' => 'Agency No is required']);
+            $this->validate($request, ['agency_booking'    => 'required'], ['required' => 'Agency is required']);
+            $this->validate($request, ['currency'          => 'required'], ['required' => 'Booking Currency is required']);
+            $this->validate($request, ['group_no'          => 'required'], ['required' => 'Pax No is required']);
+            $this->validate($request, ['dinning_preferences' => 'required'], ['required' => 'Dinning Preferences is required']);
+            $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
+            $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+
+            $season = season::find($request->season_id);
+
+            // $booking_error = [];
+            // if(!empty($request->booking_date)){
+            //     foreach($request->booking_date as $key => $date){
+
+            //         if(!is_null($date)){
+            //             $date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
+            //         }else{
+            //             $date  = null;
+            //         }
+
+            //         if(!is_null($request->booking_due_date[$key])){
+            //             $booking_due_date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d')));
+            //         }else{
+            //             $booking_due_date  = null;
+            //         }
+
+            //         if(!is_null($request->date_of_service[$key])){
+            //             $date_of_service  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d')));
+            //         }else{
+            //             $date_of_service  = null;
+            //         }
+
+            //         if(is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+            //             if( ($date > $booking_due_date ) ){
+            //                 $booking_error[$key+1] = "Booking Date should be smaller than due date";
+            //             }
+            //         }
+
+            //         if(!is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+            //             if( !(($date >= $date_of_service) && ($date <= $booking_due_date)) ){
+            //                 $booking_error[$key+1] = "Booking Date should be greater Date of service and smaller than Booking Due Date";
+            //             }
+            //         }
+
+            //     }
+            // }
+
+            // if(!empty($booking_error)){
+            //     throw \Illuminate\Validation\ValidationException::withMessages([
+            //         'booking_date' => (object) $booking_error
+            //     ]);
+            // }
+
+
+            // $errors = [];
+            // foreach ($request->booking_due_date as $key => $duedate) {
+            //     $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
+
+            //     $startDate = date('Y-m-d', strtotime($season->start_date));
+            //     $endDate   = date('Y-m-d', strtotime($season->end_date));
+
+            //     $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
+            //     if($bookingdate != NULL){
+            //         $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
+            //     }
+            //     $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
+            //     if ($dateofservice != null) {
+            //         $dateofservice   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $dateofservice))->format('Y-m-d')));
+            //     }
+            //     $error = [];
+            //     $dueresult = false;
+            //     $dofresult = false;
+            //     $bookresult = false;
+
+            //     if($this->checkInSession($duedate, $season) == false){
+            //         $a[$key+1] = 'Due Date should be season date range.';
+            //     }else{
+            //         $dueresult = true;
+            //     }
+            //     if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
+            //         $b[$key+1]  = 'Booking Date should be season date range.';
+            //     }else{
+            //         $bookresult = true;
+            //     }
+            //     if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
+            //         $c[$key+1]  = 'Date of service should be season date range.';
+            //     }else{
+            //         $dofresult = true;
+            //     }
+
+            //     if($dateofservice != NULL && $bookingdate  == NULL){
+            //         $b[$key+1]  = 'Booking Date field is required before the date of service.';
+            //         $bookresult = false;
+            //     }
+
+            //     if($bookresult == true){
+            //         if($bookingdate != null && $bookingdate < $duedate){
+            //             $b[$key+1]  = 'Booking Date should be smaller than booking due date.';
+            //         }
+            //     }
+
+            //     if($dofresult == true){
+            //         if ($bookingdate != null && $bookingdate > $dateofservice) {
+            //             $c[$key+1]  = 'Date of service should be smaller than booking date.';
+            //         }
+            //     }
+
+
+            //     $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
+            //     $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
+            //     $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
+
+            //     $errors = $error;
+            // }
+
+            // if(count($errors) > 0){
+            //   if($error['date_of_service'] != NULL || $error['date_of_service'] != NULL || $error['date_of_service'] != NULL){
+            //     throw \Illuminate\Validation\ValidationException::withMessages($errors);
+            //     }
+            // }
+
+            $booking = Booking::find($id);
+
+            $booking_log = new BookingLog;
+            $bookingDetailLogNumber             = $this->increment_log_no($this->get_log_no('BookingLog',$id));
+            $booking_log->booking_id            =  $booking->id;
+            $booking_log->log_no                =  $bookingDetailLogNumber;
+            $booking_log->reference_name        =  $booking->reference;
+            $booking_log->ref_no                =  $booking->ref_no;
+            $booking_log->qoute_id              =  $booking->qoute_id;
+            $booking_log->quotation_no          =  $booking->quotation_no;
+            $booking_log->dinning_preferences   =  $booking->dinning_preferences;
+            $booking_log->lead_passenger_name   =  $booking->lead_passenger_name;
+            $booking_log->brand_name            =  $booking->brand_name;
+            $booking_log->type_of_holidays      =  $booking->type_of_holidays;
+            $booking_log->sale_person           =  $booking->sale_person;
+            $booking_log->season_id             =  $booking->season_id;
+            $booking_log->agency_booking        =  $booking->agency_booking;
+            $booking_log->agency_name           =  $booking->agency_name;
+            $booking_log->agency_contact_no     =  $booking->agency_contact_no;
+            $booking_log->currency              =  $booking->currency;
+            $booking_log->convert_currency      =  $booking->convert_currency;
+            $booking_log->group_no              =  $booking->group_no;
+            $booking_log->net_price             =  $booking->net_price;
+            $booking_log->markup_amount         =  $booking->markup_amount;
+            $booking_log->selling               =  $booking->selling;
+            $booking_log->gross_profit          =  $booking->gross_profit;
+            $booking_log->markup_percent        =  $booking->markup_percent;
+            $booking_log->show_convert_currency =  $booking->show_convert_currency;
+            $booking_log->per_person            =  $booking->per_person;
+            $booking_log->created_date          =  date("Y-m-d");
+            $booking_log->user_id               =  Auth::user()->id;
+            $booking_log->save(); 
+
+
+            $booking = Booking::updateOrCreate(
+                [ 'quotation_no' => $request->quotation_no ],
+
+                [
+                    'ref_no'           =>  $request->ref_no,
+                    'reference_name'   => $request->reference,
+                    'qoute_id'          => $request->qoute_id,
+                    'quotation_no'     =>  $request->quotation_no,
+                    'dinning_preferences'   => $request->dinning_preferences,
+                    'lead_passenger_name'=>  $request->lead_passenger_name,
+                    'brand_name'       =>  $request->brand_name,
+                    'type_of_holidays' =>  $request->type_of_holidays,
+                    'sale_person'      =>  $request->sale_person,
+                    'season_id'        =>  $request->season_id,
+                    'agency_booking'   =>  $request->agency_booking,
+                    'agency_name'       =>  $request->agency_name,
+                    'agency_contact_no' =>  $request->agency_contact_no,
+                    'currency'          =>  $request->currency,
+                    'convert_currency'  =>  $request->convert_currency,
+                    'group_no'          =>  $request->group_no,
+                    'net_price'         =>  $request->net_price,
+                    'markup_amount'     =>  $request->markup_amount,
+                    'selling'           =>  $request->selling,
+                    'gross_profit'      =>  $request->gross_profit,
+                    'markup_percent'    =>  $request->markup_percent,
+                    'show_convert_currency' =>  $request->show_convert_currency,
+                    'per_person'       =>  $request->per_person,
+
+                ]
+            );
+
+
+            $bookingDetails = BookingDetail::where('booking_id',$booking->id)->get();
+
+            foreach($bookingDetails as $key => $bookingDetail){
+                
+                $bookingDetailLog = new BookingDetailLog;
+                $bookingDetailLog->booking_id          = $booking->id;
+                $bookingDetailLog->log_no              =  $bookingDetailLogNumber;
+                $bookingDetailLog->qoute_id            = $bookingDetail->qoute_id;
+                $bookingDetailLog->quotation_no        = $bookingDetail->quotation_no;
+                $bookingDetailLog->row                 = $key+1;
+                $bookingDetailLog->date_of_service     = $bookingDetail->date_of_service ? Carbon::parse(str_replace('/', '-', $bookingDetail->date_of_service))->format('Y-m-d') : null;
+                $bookingDetailLog->service_details     = $bookingDetail->service_details;
+                $bookingDetailLog->category_id         = $bookingDetail->category;
+                $bookingDetailLog->supplier            = $bookingDetail->supplier;
+                $bookingDetailLog->booking_date        = $bookingDetail->booking_date ? Carbon::parse(str_replace('/', '-', $bookingDetail->booking_date))->format('Y-m-d') : null;
+                $bookingDetailLog->booking_due_date    = $bookingDetail->booking_due_date ? Carbon::parse(str_replace('/', '-', $bookingDetail->booking_due_date))->format('Y-m-d') : null;
+                $bookingDetailLog->booked_by           = $bookingDetail->booked_by;
+                $bookingDetailLog->booking_refrence    = $bookingDetail->booking_refrence;
+                $bookingDetailLog->booking_type        = $bookingDetail->booking_type;
+                $bookingDetailLog->comments            = $bookingDetail->comments;
+                $bookingDetailLog->supplier_currency   = $bookingDetail->supplier_currency;
+                $bookingDetailLog->cost                = $bookingDetail->cost[$key];
+                $bookingDetailLog->actual_cost         = $bookingDetail->actual_cost[$key];
+                $bookingDetailLog->supervisor_id       = $bookingDetail->supervisor[$key];
+                $bookingDetailLog->added_in_sage       = $bookingDetail->added_in_sage[$key];
+                $bookingDetailLog->qoute_base_currency = $bookingDetail->qoute_base_currency[$key];
+                $bookingDetailLog->qoute_invoice       = $bookingDetail->qoute_invoice;
+                $bookingDetailLog->save(); 
+
+
+                $financebookingDetails = FinanceBookingDetail::where('booking_detail_id',$bookingDetail->id)->get();
+
+                // dd($financebookingDetails);
+                
+                foreach($financebookingDetails as $financebookingDetail){
+                    
+                    $financeBookingDetailLog = new FinanceBookingDetailLog;
+
+                    $financeBookingDetailLog->booking_detail_id  =  $bookingDetailLog->id;
+                    $financeBookingDetailLog->log_no             =  $bookingDetailLogNumber;
+                    $financeBookingDetailLog->row                =  $key+1;
+                    $financeBookingDetailLog->deposit_amount     =  !empty($financebookingDetail->deposit_amount) ? $financebookingDetail->deposit_amount : null;
+                    $financeBookingDetailLog->deposit_due_date   =  $financebookingDetail->deposit_due_date ? Carbon::parse(str_replace('/', '-', $financebookingDetail->deposit_due_date))->format('Y-m-d') : null;
+                    $financeBookingDetailLog->paid_date          =  $financebookingDetail->paid_date ? Carbon::parse(str_replace('/', '-', $financebookingDetail->deposit_due_date))->format('Y-m-d') : null;
+                    $financeBookingDetailLog->payment_method     =  $financebookingDetail->payment_method ?? NULL;
+                    $financeBookingDetailLog->upload_to_calender =  $financebookingDetail->upload_calender;
+                    $financeBookingDetailLog->save();
+
+                }
             }
 
-            if ($request->app_login_date == '0000-00-00') {
-                $app_login_date = NULL;
-            } elseif ($request->app_login_date == '') {
-                $app_login_date = NULL;
-            } else {
-                $app_login_date = $request->app_login_date;
+
+            if(!empty($request->actual_cost)){
+                foreach($request->actual_cost as $key => $cost){
+
+                    if(!is_null($request->qoute_invoice)){
+
+                        if(array_key_exists($key,$request->qoute_invoice))
+                        {
+
+                            $oldFileName = $request->qoute_invoice_record[$key];
+
+                            $file       = $request->qoute_invoice[$key];
+                            $newFile    = $request->qoute_invoice[$key]->getClientOriginalName();
+                            $name       =  pathinfo($newFile, PATHINFO_FILENAME);
+                            $extension  =  pathinfo($newFile, PATHINFO_EXTENSION);
+                            $filename   =  $name.'-'.rand(pow(10, 4-1), pow(10, 4)-1).'.'.$extension;
+
+                            $folder = public_path('booking/' . $request->qoute_id );
+
+                            if (!File::exists($folder)) {
+                                File::makeDirectory($folder, 0775, true, true);
+                            }
+
+                            // $destinationPath = public_path('booking/'. $request->qoute_id .'/'.  $oldFileName);
+                            // File::delete($destinationPath);
+
+                            $file->move(public_path('booking/' . $request->qoute_id ), $filename);
+
+                        }
+
+                        else{
+                            $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
+                        }
+                    }
+                    else{
+
+                        $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
+                    }
+
+                    $bookingDetail = BookingDetail::updateOrCreate(
+                        [
+                            'quotation_no' => $request->quotation_no,
+                            'row' => $key+1,
+                        ],
+
+                        [
+                            'qoute_id'          => $request->qoute_id,
+                            'booking_id'        => $booking->id,
+                            'quotation_no'      => $request->quotation_no,
+                            'row'               => $key+1,
+                            'date_of_service'   => $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null,
+                            'service_details'   => $request->service_details[$key],
+                            'category_id'       => $request->category[$key],
+                            'supplier'          => $request->supplier[$key],
+                            'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
+                            'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
+                            // 'booking_method'    => $request->booking_method[$key],
+                            'booked_by'         => $request->booked_by[$key],
+                            'booking_refrence'  => $request->booking_refrence[$key],
+                            'booking_type'      => $request->booking_type[$key],
+                            'comments'          => $request->comments[$key],
+                            'supplier_currency' => $request->supplier_currency[$key],
+                            'cost'              => $request->cost[$key],
+                            'actual_cost'       => $request->actual_cost[$key],
+                            'supervisor_id'     => $request->supervisor[$key],
+                            'added_in_sage'     => $request->added_in_sage[$key],
+                            'qoute_base_currency' => $request->qoute_base_currency[$key],
+                            'qoute_invoice'     => $filename,
+                        ]
+                    );
+
+                    foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
+
+                        if($request->upload_calender[$key][$ikey]  == true && $deposit_due_date != NULL){
+                            $event = new Event;
+                            $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$request->supplier_currency[$key]." to Supplier";
+                            $event->description = 'Event description';
+                            $event->startDate   = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay(): NULL;
+                            $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
+                            // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
+                            // $event->save();
+
+                        }
+
+                        FinanceBookingDetail::updateOrCreate(
+                            [
+                                'booking_detail_id' => $bookingDetail->id,
+                                'row' => $ikey+1,
+                            ],
+                            [
+                                'upload_to_calender' => $request->upload_calender[$key][$ikey],
+                                'deposit_amount'     =>  !empty($request->deposit_amount[$key][$ikey]) ? $request->deposit_amount[$key][$ikey] : null,
+                                'deposit_due_date'   =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
+                                'paid_date'          =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
+                                'payment_method'     =>  $request->payment_method[$key][$ikey]??NULL,
+                            ]
+
+                        );
+
+                    }
+
+                }
             }
 
-            booking::where('id', '=', $id)->update(array(
-                'ref_no'                      => $request->ref_no,
-                'brand_name'                  => $request->brand_name,
-                'season_id'                   => $request->season_id,
-                'agency_booking'              => $request->agency_booking,
-                'pax_no'                      => $request->pax_no,
-                'date_of_travel'              => Carbon::parse($request->date_of_travel)->format('Y-m-d'),
-                'flight_booked'               => $request->flight_booked,
-                'flight_booking_details'      => $request->flight_booking_details,
-                'asked_for_transfer_details'  => $request->asked_for_transfer_details,
-                'transfer_details'            => $request->transfer_details,
-                'form_sent_on'                => Carbon::parse($request->form_sent_on)->format('Y-m-d'),
-                'form_received_on'            => $form_received_on,
-                'app_login_date'              => $app_login_date,
-                'transfer_info_received'      => $request->transfer_info_received,
-                'transfer_info_details'       => $request->transfer_info_details,
-                'itinerary_finalised'         => $request->itinerary_finalised,
-                'itinerary_finalised_details' => $request->itinerary_finalised_details,
-                'documents_sent'              => $request->documents_sent,
-                'documents_sent_details'      => $request->documents_sent_details,
-                'electronic_copy_sent'        => $request->electronic_copy_sent,
-                'electronic_copy_details'     => $request->electronic_copy_details,
-                'transfer_organised'          => $request->transfer_organised,
-                'transfer_organised_details'  => $request->transfer_organised_details,
-                'type_of_holidays'            => $request->type_of_holidays,
-                'sale_person'                 => $request->sale_person,
-                'deposit_received'            => $request->deposit_received == '' ? 0 : $request->deposit_received,
-                'remaining_amount_received'   => $request->remaining_amount_received == '' ? 0 : $request->remaining_amount_received,
-                'finance_detail'              => $request->finance_detail,
-                'destination'                 => $request->destination
-            ));
-            return Redirect::route('update-booking', $id)->with('success_message', 'Updated Successfully');
+            return response()->json(['success_message' => 'Booking Updated Successfully']);
+
+            // return Redirect::route('update-booking', $id)->with('success_message', 'Updated Successfully');
         } else {
-
-            $get_ref = Cache::remember('get_ref', 60, function () {
-                // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_ref';
-                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_ref';
-                $output =  $this->curl_data($url);
-                return json_decode($output)->data;
-            });
 
 
             $get_user_branches = Cache::remember('get_user_branches', 60, function () {
-                // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+                // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
-            $booking_email = booking_email::where('booking_id', '=', $id)->get();
 
-            return view('booking.update_booking')->with(['booking_email' => $booking_email, 'persons' => user::all(), 'seasons' => season::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'record' => old_booking::where('id', '=', $id)->get()->first(), 'id' => $id]);
+            $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+                // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+                $output =  $this->curl_data($url);
+                return json_decode($output);
+            });
+
+            // $get_ref = Cache::remember('get_ref', 60, function () {
+            //     // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_ref';
+            //     $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_ref';
+            //     $output =  $this->curl_data($url);
+            //     return json_decode($output)->data;
+            // });
+
+
+            // $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            //     // $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
+            //     $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            //     $output =  $this->curl_data($url);
+            //     return json_decode($output);
+            // });
+
+            // $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            //     $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            //     // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            //     $output =  $this->curl_data($url);
+            //     return json_decode($output);
+            // });
+ 
+            return view('booking.update_booking')->with([
+
+                'booking'           =>  Booking::where('id', '=', $id)->first(),
+                'booking_email'     =>  booking_email::where('booking_id', '=', $id)->get(),
+                'persons'           =>  user::all(),
+                'seasons'           =>  season::all(),
+                // 'get_refs'          => $get_ref,
+                'get_user_branches' =>  $get_user_branches,
+                'record'            =>  old_booking::where('id', '=', $id)->get()->first(),
+                'currencies'        =>  Currency::all()->sortBy('name'),
+                'get_holiday_type'  =>  $get_holiday_type,
+                'booking_details'   =>  BookingDetail::where('booking_id',$id)->get(),
+                'categories'        =>  Category::all()->sortBy('name'),
+                'suppliers'         =>  Supplier::all()->sortBy('name'),
+                'users'             =>  User::all()->sortBy('name'),
+                'booking_methods'   =>  BookingMethod::all()->sortBy('id'),
+                'supervisors'       =>  User::where('role_id',5)->orderBy('name','ASC')->get(),
+                'payment_method'    =>  payment::all()->sortBy('name'),
+                'id'                =>  $id,
+                'booking_logs'      =>  BookingLog::where('booking_id',$id)->get(),
+            ]);
         }
     }
+
+    public function view_booking_version($booking_id,$log_no){
+        
+        $booking_log         = BookingLog::where('booking_id',$booking_id)->where('log_no',$log_no)->first();
+        $booking_detail_logs = BookingDetailLog::where('booking_id',$booking_id)->where('log_no',$log_no)->get();
+
+        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        return view('booking.view-booking-version')->with([
+            'booking_log'         => $booking_log,
+            'booking_detail_logs' => $booking_detail_logs,
+            'seasons'             => season::all(),
+            'currencies'          => Currency::all()->sortBy('name'),
+            'categories'          => Category::all()->sortBy('name'),
+            'suppliers'           => Supplier::all()->sortBy('name'),
+            'booking_methods'     => BookingMethod::all()->sortBy('id'),
+            'users'               => User::all()->sortBy('name'),
+            'supervisors'         => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'get_user_branches'   => $get_user_branches,
+            'get_holiday_type'    => $get_holiday_type,
+            'payment_method'      => payment::all()->sortBy('name'),
+        ]);
+    
+    }
+
+    public function view_quotation($id){
+
+        return view('booking.view-quotation')->with([
+
+            'qoute'           => Qoute::findOrFail($id),
+            'qoute_details'   => QouteDetail::where('qoute_id',$id)->get(),
+            'seasons'         => season::all(),
+            'currencies'      => Currency::all()->sortBy('name'),
+            'categories'      => Category::all()->sortBy('name'),
+            'suppliers'       => Supplier::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
+            'users'           => User::all()->sortBy('name'),
+            'supervisors'     => User::where('role_id',5)->orderBy('name','ASC')->get(),
+        ]);
+    }
+
     public function delete_multi_booking(Request $request, $id)
     {
         $customMessages = ['required' => 'Please select at least one checkbox'];
@@ -1024,7 +1506,7 @@ class AdminController extends Controller
         if ($request->isMethod('post')) {
 
             $validator = Validator::make($request->all(), ['name'  => 'required'], ['required' => 'Name is required.']);
-            
+
             if ($validator->fails()) {
                 return back()
                     ->withErrors($validator)
@@ -1176,9 +1658,9 @@ class AdminController extends Controller
         }
         return view('category.update_category')->with(['data' => Category::find($id)]);
     }
-    
+
     public function details_supplier($id) {
-        
+
         $supplier = Supplier::findOrFail(decrypt($id));
         $data = [
             'name'      => $supplier->name,
@@ -1186,7 +1668,7 @@ class AdminController extends Controller
             'phone'     => $supplier->phone,
             'currency'  => $supplier->currency->name,
         ];
-        
+
         $category = [];
         foreach ($supplier->categories as $categoires) {
             $c = [
@@ -1194,7 +1676,7 @@ class AdminController extends Controller
             ];
             array_push($category, $c);
         }
-        
+
         $product = [];
         foreach ($supplier->products as $pro) {
             $p = [
@@ -1202,10 +1684,10 @@ class AdminController extends Controller
             ];
             array_push($product, $p);
         }
-        
+
         $data['category'] = $category;
         $data['product']  = $product;
-        
+
         return view('supplier.detail_supplier', $data);
     }
 
@@ -1264,7 +1746,7 @@ class AdminController extends Controller
     {
         $suppliers = Supplier::all();
         return view('supplier.view_suppliers')->with('suppliers',$suppliers);
- 
+
         // $set = [];
         // $cat = DB::select('select suppliers.* , categories.name as category from supplier_categories INNER JOIN suppliers ON suppliers.id = supplier_categories.supplier_id INNER JOIN categories ON supplier_categories.category_id = categories.id');
         // // var_dump($cat);
@@ -1295,7 +1777,7 @@ class AdminController extends Controller
         ->leftJoin('products','products.id','=','supplier_products.product_id')
         ->select('suppliers.id as supplier_id','suppliers.name as supplier_name','products.id as product_id','products.code','products.name','products.description')
         ->get();
-  
+
         return view('supplier.view_supplier_product')->with('supplier_products',$supplier_products);
     }
 
@@ -1305,7 +1787,7 @@ class AdminController extends Controller
         ->leftJoin('categories','categories.id','=','supplier_categories.category_id')
         ->select('suppliers.id as supplier_id','suppliers.name as supplier_name','categories.id as category_id','categories.name as category_name')
         ->get();
-  
+
         return view('supplier.view_supplier_category')->with('supplier_categories',$supplier_categories);
     }
 
@@ -1326,7 +1808,7 @@ class AdminController extends Controller
             // $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ], ['required' => 'Phone Number is required']);
             $this->validate($request, ['categories' => 'required'], ['required' => 'Product is required']);
             // $this->validate($request, ['products' => 'required'], ['required' => 'Currency is required']);
-    
+
             $supplier = Supplier::findOrFail($id);
             $supplier->name = $request->username;
             $supplier->email = $request->email;
@@ -1454,7 +1936,7 @@ class AdminController extends Controller
             $this->validate($request, ['pax_no'                     => 'required'], ['required' => 'Please select PAX No']);
             $this->validate($request, ['supplier'                 => 'required'], ['required' => 'Please select Supplier']);
             $this->validate($request, ['date_of_travel'  => 'required'], ['required' => 'Please select date of travel']);
-         
+
             if($request->date_of_travel){
                 if($request->date_of_travel < $start_date || $request->date_of_travel > $end_date ){
                     throw \Illuminate\Validation\ValidationException::withMessages([
@@ -1474,7 +1956,7 @@ class AdminController extends Controller
 
             // $this->validate($request, ['flight_booking_details'     => 'required_if:flight_booked,yes'], ['required_if' => 'Please enter flight booking details']);
             // //
-            // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']); 
+            // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']);
             // $this->validate($request, ['fb_last_date'               => 'required_if:flight_booked,no'], ['required_if' => 'Plesse enter flight booking date']);
             // //
             // // $this->validate($request, ['aft_person'                 => 'required_if:asked_for_transfer_details,no'],['required_if' => 'Please select asked for transfer person']);
@@ -1483,12 +1965,12 @@ class AdminController extends Controller
             // $this->validate($request, ['ds_last_date'              => 'required_if:documents_sent,no'], ['required_if' => 'Plesse enter document sent date']);
             // // $this->validate($request, ['to_person'                 => 'required_if:transfer_organised,no'],['required_if' => 'Please select document person']);
             // $this->validate($request, ['to_last_date'              => 'required_if:transfer_organised,no'], ['required_if' => 'Plesse enter document sent date']);
-            // // 
+            // //
             // $this->validate($request, ['asked_for_transfer_details' => 'required'], ['required' => 'Please select asked for transfer detail box']);
             // $this->validate($request, ['transfer_details'           => 'required_if:asked_for_transfer_details,yes'], ['required_if' => 'Please transfer detail']);
             // $this->validate($request, ['form_sent_on'               => 'required'], ['required' => 'Please select form sent on']);
             // // $this->validate($request, ['transfer_info_received'     => 'required'],['required' => 'Please select transfer info received']);
-            // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']); 
+            // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']);
 
             // $this->validate($request, ['itinerary_finalised'        => 'required'], ['required' => 'Please select itinerary finalised']);
             // $this->validate($request, ['itinerary_finalised_details' => 'required_if:itinerary_finalised,yes'], ['required_if' => 'Please enter itinerary finalised details']);
@@ -1504,7 +1986,7 @@ class AdminController extends Controller
 
             // $this->validate($request, ['transfer_organised'         => 'required'], ['required' => 'Please select transfer organised']);
             // $this->validate($request, ['transfer_organised_details' => 'required_if:transfer_organised,yes'], ['required_if' => 'Please enter transfer organised details']);
-            
+
             // $this->validate($request, ['sale_person'                => 'required'], ['required' => 'Please select type of sale person']);
             // $this->validate($request, ['tdp_current_date'              => 'required_if:document_prepare,yes'], ['required_if' => 'Plesse enter Travel Document Prepared Date']);
 
@@ -1685,32 +2167,32 @@ class AdminController extends Controller
                 $output =  $this->curl_data($url);
                 //   return json_decode($output)->data;
             });
-    
+
             $get_user_branches = Cache::remember('get_user_branches', 60, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
-    
+
             $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
-    
+
             $booking_email = booking_email::where('booking_id', '=', 1)->get();
-            return view('code.create-code')->with(['get_holiday_type' => $get_holiday_type, 'seasons' => season::all(), 'persons' => user::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'booking_email' => $booking_email, 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all()]);   
+            return view('code.create-code')->with(['get_holiday_type' => $get_holiday_type, 'seasons' => season::all(), 'persons' => user::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'booking_email' => $booking_email, 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all()]);
         }
     }
 
     function checkInSession($date, $season) {
         $startDate = date('Y-m-d', strtotime($season->start_date));
         $endDate   = date('Y-m-d', strtotime($season->end_date));
-        if (($date >= $startDate) && ($date <= $endDate)){   
+        if (($date >= $startDate) && ($date <= $endDate)){
             return true;
-        }else{    
+        }else{
            return false;
         }
     }
@@ -1720,14 +2202,78 @@ class AdminController extends Controller
         $qoute = Qoute::findOrFail(decrypt($id));
         $qoute->delete();
         return Redirect::route('view-quote')->with('success_message', 'Supplier Successfully Updated!!');
-        
+
+    }
+
+    public function convert_quote_to_booking($id){
+
+        $qoute = Qoute::find($id);
+        $qoute->qoute_to_booking_status = 1;
+        $qoute->qoute_to_booking_date   = date('Y-m-d');
+        $qoute->save();
+
+        $booking = new Booking;
+        $booking->reference_name        =  $qoute->reference_name;
+        $booking->ref_no                =  $qoute->ref_no;
+        $booking->qoute_id              =  $id;
+        $booking->quotation_no          =  $qoute->quotation_no;
+        $booking->dinning_preferences   =  $qoute->dinning_preferences;
+        $booking->lead_passenger_name   =  $qoute->lead_passenger_name;
+        $booking->brand_name            =  $qoute->brand_name;
+        $booking->type_of_holidays      =  $qoute->type_of_holidays;
+        $booking->sale_person           =  $qoute->sale_person;
+        $booking->season_id             =  $qoute->season_id;
+        $booking->agency_booking        =  $qoute->agency_booking;
+        $booking->agency_name           =  $qoute->agency_name;
+        $booking->agency_contact_no     =  $qoute->agency_contact_no;
+        $booking->currency              =  $qoute->currency;
+        $booking->convert_currency      =  $qoute->convert_currency;
+        $booking->group_no              =  $qoute->group_no;
+        $booking->net_price             =  $qoute->net_price;
+        $booking->markup_amount         =  $qoute->markup_amount;
+        $booking->selling               =  $qoute->selling;
+        $booking->gross_profit          =  $qoute->gross_profit;
+        $booking->markup_percent        =  $qoute->markup_percent;
+        $booking->show_convert_currency =  $qoute->show_convert_currency;
+        $booking->per_person            =  $qoute->per_person;
+        $booking->port_tax              =  $qoute->port_tax;
+        $booking->total_per_person      =  $qoute->total_per_person;
+        $booking->qoute_to_booking_date = date('Y-m-d');
+        $booking->save();
+
+        $qouteDetails = QouteDetail::where('qoute_id',$id)->get();
+        foreach($qouteDetails as $key => $qouteDetail){
+
+            $bookingDetail = new BookingDetail;
+            $bookingDetail->qoute_id            = $id;
+            $bookingDetail->booking_id          = $booking->id;
+            $bookingDetail->quotation_no        = $qoute->quotation_no;
+            $bookingDetail->row                 = $key+1;
+            $bookingDetail->date_of_service     = $qouteDetail->date_of_service ? Carbon::parse(str_replace('/', '-', $qouteDetail->date_of_service))->format('Y-m-d') : null;
+            $bookingDetail->service_details     = $qouteDetail->service_details;
+            $bookingDetail->category_id         = $qouteDetail->category;
+            $bookingDetail->supplier            = $qouteDetail->supplier;
+            $bookingDetail->booking_date        = $qouteDetail->booking_date ? Carbon::parse(str_replace('/', '-', $qouteDetail->booking_date))->format('Y-m-d') : null;
+            $bookingDetail->booking_due_date    = $qouteDetail->booking_due_date ? Carbon::parse(str_replace('/', '-', $qouteDetail->booking_due_date))->format('Y-m-d') : null;
+            $bookingDetail->booked_by           = $qouteDetail->booked_by;
+            $bookingDetail->booking_refrence    = $qouteDetail->booking_refrence;
+            $bookingDetail->booking_type        = $qouteDetail->booking_type;
+            $bookingDetail->comments            = $qouteDetail->comments;
+            $bookingDetail->supplier_currency   = $qouteDetail->supplier_currency;
+            $bookingDetail->cost                = $qouteDetail->cost;
+            $bookingDetail->actual_cost         = $qouteDetail->actual_cost;
+            $bookingDetail->supervisor_id       = $qouteDetail->supervisor;
+            $bookingDetail->added_in_sage       = $qouteDetail->added_in_sage;
+            $bookingDetail->qoute_base_currency = $qouteDetail->qoute_base_currency;
+            $bookingDetail->save();
+        }
+
+        return Redirect::route('view-quote')->with('success_message', 'Quotation Converted Successfully. ');
     }
 
     public function create_quote(Request $request){
 
         if($request->isMethod('post')){
-
-            // dd($request->all());
 
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
@@ -1833,48 +2379,47 @@ class AdminController extends Controller
                 $dueresult = false;
                 $dofresult = false;
                 $bookresult = false;
-                
+
                 if($this->checkInSession($duedate, $season) == false){
-                    $a[$key+1] = 'Due Date should be season date range.';    
+                    $a[$key+1] = 'Due Date should be season date range.';
                 }else{
                     $dueresult = true;
                 }
                 if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
-                    $b[$key+1]  = 'Booking Date should be season date range.';      
+                    $b[$key+1]  = 'Booking Date should be season date range.';
                 }else{
                     $bookresult = true;
                 }
                 if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
-                    $c[$key+1]  = 'Date of service should be season date range.';   
+                    $c[$key+1]  = 'Date of service should be season date range.';
                 }else{
                     $dofresult = true;
                 }
-                
+
                 if($dateofservice != NULL && $bookingdate  == NULL){
-                    $b[$key+1]  = 'Booking Date field is required before the date of service.';    
+                    $b[$key+1]  = 'Booking Date field is required before the date of service.';
                     $bookresult = false;
                 }
-                
+
                 if($bookresult == true){
                     if($bookingdate != null && $bookingdate < $duedate){
-                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';    
+                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';
                     }
                 }
-                       
+
                 if($dofresult == true){
                     if ($bookingdate != null && $bookingdate > $dateofservice) {
-                        $c[$key+1]  = 'Date of service should be smaller than booking date.';   
+                        $c[$key+1]  = 'Date of service should be smaller than booking date.';
                     }
                 }
-                
-                
+
                 $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
                 $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
                 $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
-            
+
                 $errors = $error;
             }
-            
+
             if(count($errors) > 0){
               if($error['date_of_service'] != NULL || $error['date_of_service'] != NULL || $error['date_of_service'] != NULL){
                 throw \Illuminate\Validation\ValidationException::withMessages($errors);
@@ -1932,17 +2477,17 @@ class AdminController extends Controller
             }
 
             return response()->json(['success_message'=>'Quote Successfully Created!!']);
-  
+
         }
 
-        $get_user_branche = Cache::remember('get_user_branche', 2, function () {
+        $get_user_branche = Cache::remember('get_user_branche', 900, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output, true);
         });
-        
-        $get_holiday_type = Cache::remember('get_holiday_type', 2, function () {
+
+        $get_holiday_type = Cache::remember('get_holiday_type', 900, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
@@ -1987,7 +2532,7 @@ class AdminController extends Controller
         return view('qoute.view')->with(['quotes' => $results = Qoute::orderBy('created_at', 'desc')->get() ]);
     }
 
-    
+
     public function booking(Request $request,$id){
 
         if($request->isMethod('post')){
@@ -2008,11 +2553,11 @@ class AdminController extends Controller
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
 
             $season = season::find($request->season_id);
-            
+
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
             //     foreach($request->date_of_service as $key => $date){
-        
+
             //         $start = date('Y-m-d', strtotime($season->start_date));
             //         $end   = date('Y-m-d', strtotime($season->end_date));
 
@@ -2027,7 +2572,7 @@ class AdminController extends Controller
             //                 $error_array[$key+1] = "Date of service should be season date range.";
             //             }
             //         }
-         
+
             //     }
             // }
 
@@ -2084,7 +2629,7 @@ class AdminController extends Controller
             $errors = [];
             foreach ($request->booking_due_date as $key => $duedate) {
                 $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
-                
+
                 $startDate = date('Y-m-d', strtotime($season->start_date));
                 $endDate   = date('Y-m-d', strtotime($season->end_date));
 
@@ -2100,48 +2645,48 @@ class AdminController extends Controller
                 $dueresult = false;
                 $dofresult = false;
                 $bookresult = false;
-                
+
                 if($this->checkInSession($duedate, $season) == false){
-                    $a[$key+1] = 'Due Date should be season date range.';    
+                    $a[$key+1] = 'Due Date should be season date range.';
                 }else{
                     $dueresult = true;
                 }
                 if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
-                    $b[$key+1]  = 'Booking Date should be season date range.';      
+                    $b[$key+1]  = 'Booking Date should be season date range.';
                 }else{
                     $bookresult = true;
                 }
                 if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
-                    $c[$key+1]  = 'Date of service should be season date range.';   
+                    $c[$key+1]  = 'Date of service should be season date range.';
                 }else{
                     $dofresult = true;
                 }
-                
+
                 if($dateofservice != NULL && $bookingdate  == NULL){
-                    $b[$key+1]  = 'Booking Date field is required before the date of service.';    
+                    $b[$key+1]  = 'Booking Date field is required before the date of service.';
                     $bookresult = false;
                 }
-                
+
                 if($bookresult == true){
                     if($bookingdate != null && $bookingdate < $duedate){
-                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';    
+                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';
                     }
                 }
-                       
+
                 if($dofresult == true){
                     if ($bookingdate != null && $bookingdate > $dateofservice) {
-                        $c[$key+1]  = 'Date of service should be smaller than booking date.';   
+                        $c[$key+1]  = 'Date of service should be smaller than booking date.';
                     }
                 }
-                
-                
+
+
                 $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
                 $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
                 $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
-            
+
                 $errors = $error;
             }
-            
+
             if(count($errors) > 0){
               if($error['date_of_service'] != NULL || $error['date_of_service'] != NULL || $error['date_of_service'] != NULL){
                 throw \Illuminate\Validation\ValidationException::withMessages($errors);
@@ -2178,7 +2723,7 @@ class AdminController extends Controller
 
                 ]
             );
-            
+
             if(!empty($request->actual_cost)){
                 foreach($request->actual_cost as $key => $cost){
 
@@ -2201,21 +2746,21 @@ class AdminController extends Controller
 
                             $destinationPath = public_path('booking/'. $request->qoute_id .'/'.  $oldFileName);
                             File::delete($destinationPath);
-    
+
                             $newFile->move(public_path('booking/' . $request->qoute_id ), $filename);
-        
+
                         }
                         else{
-                            $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                            $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
                         }
                     }
                     else{
 
-                        $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                        $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
                     }
 
                     $bookingDetail = BookingDetail::updateOrCreate(
-                        [ 
+                        [
                             'quotation_no' => $request->quotation_no,
                             'row' => $key+1,
                         ],
@@ -2247,7 +2792,7 @@ class AdminController extends Controller
                     );
 
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
-                        
+
                         if($request->upload_calender[$key][$ikey]  == true && $deposit_due_date != NULL){
                             $event = new Event;
                             $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$request->supplier_currency[$key]." to Supplier";
@@ -2256,10 +2801,10 @@ class AdminController extends Controller
                             $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
                             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
                             $event->save();
-                         
+
                         }
                         FinanceBookingDetail::updateOrCreate(
-                            [ 
+                            [
                                 'booking_detail_id' => $bookingDetail->id,
                                 'row' => $ikey+1,
                             ],
@@ -2270,7 +2815,7 @@ class AdminController extends Controller
                                 'paid_date'        =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'payment_method'   =>  $request->payment_method[$key][$ikey]??NULL,
                             ]
-    
+
                         );
 
                     }
@@ -2347,7 +2892,7 @@ class AdminController extends Controller
             // $booking->show_convert_currency =  $request->show_convert_currency;
             // $booking->per_person       =  $request->per_person;
             // $booking->save();
-           
+
             // $bookingDetail = BookingDetail::where('qoute_id', $id)->get();
 
             // $qouteDetailLog = new QouteDetailLog;
@@ -2374,7 +2919,7 @@ class AdminController extends Controller
             //     $QouteDetailLog->log_no = $qouteDetailLogNumber;
             //     $QouteDetailLog->save();
             // }
-        
+
             // Delete old qoute
             // QouteDetail::where('qoute_id',$id)->delete();
 
@@ -2417,22 +2962,22 @@ class AdminController extends Controller
 
             //         //         $destinationPath = public_path('quote/'. $id .'/'.  $filename  );
             //         //         File::delete($destinationPath);
-    
+
             //         //         $file->move(public_path('quote/' . $qoute->id ), $filename);
-        
-            //         //         $qouteDetail->qoute_invoice  = $filename ? $filename : null; 
-    
+
+            //         //         $qouteDetail->qoute_invoice  = $filename ? $filename : null;
+
             //         //     }
             //         //     else{
-            //         //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+            //         //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
             //         //     }
             //         // }else{
 
-            //         //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+            //         //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
             //         // }
-                 
+
             //         $qouteDetail->save();
-                
+
             //     }
             // }
 
@@ -2456,22 +3001,22 @@ class AdminController extends Controller
     public function upload_to_calendar(Request $request){
 
         if($request->isMethod('post')){
-        
+
             // dd($request->all());
-            
+
             // $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
-            
+
             // $dynamic_text_area = "$request->details";
-            
+
             // $calendar_start_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
             // $calendar_end_date = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->format('Ymd');
-            
+
             // $location = "";
             // $description = "test";
             // // $guests = "kashan.mehmood13@gmail.com";
             // $message_url ="https://www.google.com/calendar/render?action=TEMPLATE&text=".$title."&dates=".$calendar_start_date."/".$calendar_end_date."&details=".$dynamic_text_area."&location=".$location."&sf=true&output=xml";
             // return $message_url;
-            
+
             $event = new Event;
             $event->name = "To Pay $request->depositAmount $request->supplier_currency to Supplier";
             $event->description = 'Event description';
@@ -2479,10 +3024,10 @@ class AdminController extends Controller
             $event->endDate = Carbon::parse(str_replace('/', '-', $request->deposit_due_date))->endOfDay();
             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
             $event->save();
-            
+
             dd($request->all());
         }
-        
+
     }
 
 
@@ -2505,11 +3050,11 @@ class AdminController extends Controller
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
             $season = season::findOrFail($request->season_id);
-            
+
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
             //     foreach($request->date_of_service as $key => $date){
-        
+
             //         $start = date('Y-m-d', strtotime($season->start_date));
             //         $end   = date('Y-m-d', strtotime($season->end_date));
 
@@ -2524,7 +3069,7 @@ class AdminController extends Controller
             //                 $error_array[$key+1] = "Date of service should be season date range.";
             //             }
             //         }
-         
+
             //     }
             // }
 
@@ -2597,55 +3142,55 @@ class AdminController extends Controller
                 $dueresult = false;
                 $dofresult = false;
                 $bookresult = false;
-                
+
                 if($this->checkInSession($duedate, $season) == false){
-                    $a[$key+1] = 'Due Date should be season date range.';    
+                    $a[$key+1] = 'Due Date should be season date range.';
                 }else{
                     $dueresult = true;
                 }
                 if($bookingdate != NULL && $this->checkInSession($bookingdate, $season) == false){
-                    $b[$key+1]  = 'Booking Date should be season date range.';      
+                    $b[$key+1]  = 'Booking Date should be season date range.';
                 }else{
                     $bookresult = true;
                 }
                 if($dateofservice != NULL && $this->checkInSession($dateofservice, $season) == false){
-                    $c[$key+1]  = 'Date of service should be season date range.';   
+                    $c[$key+1]  = 'Date of service should be season date range.';
                 }else{
                     $dofresult = true;
                 }
-                
+
                 if($dateofservice != NULL && $bookingdate  == NULL){
-                    $b[$key+1]  = 'Booking Date field is required before the date of service.';    
+                    $b[$key+1]  = 'Booking Date field is required before the date of service.';
                     $bookresult = false;
                 }
-                
+
                 if($bookresult == true){
                     if($bookingdate != null && $bookingdate < $duedate){
-                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';    
+                        $b[$key+1]  = 'Booking Date should be smaller than booking due date.';
                     }
                 }
-                       
+
                 if($dofresult == true){
                     if ($bookingdate != null && $bookingdate > $dateofservice) {
-                        $c[$key+1]  = 'Date of service should be smaller than booking date.';   
+                        $c[$key+1]  = 'Date of service should be smaller than booking date.';
                     }
                 }
-                
-                
+
+
                 $error['date_of_service'] = (isset($c) && count($c) >0 )? (object) $c : NULL;
                 $error['booking_date'] = (isset($b) && count($b) >0 )? (object) $b : NULL;
                 $error['booking_due_date'] = (isset($a) && count($a) >0 )? (object) $a : NULL;
-            
+
                 $errors = $error;
             }
-            
+
             if(count($errors) > 0){
               if($error['date_of_service'] != NULL || $error['date_of_service'] != NULL || $error['date_of_service'] != NULL){
                 throw \Illuminate\Validation\ValidationException::withMessages($errors);
                 }
             }
 
-        
+
             $qoute = Qoute::findOrFail($id);
 
             $qoute_log = new QouteLog;
@@ -2679,7 +3224,7 @@ class AdminController extends Controller
             $qoute_log->user_id           =  Auth::user()->id;
             $qoute_log->save();
 
-  
+
             $qoute->ref_no           =  $request->ref_no;
             $qoute->quotation_no     =  $request->quotation_no;
             $qoute->reference_name    =  $request->reference;
@@ -2704,7 +3249,7 @@ class AdminController extends Controller
             $qoute->per_person       =  $request->per_person;
             $qoute->save();
 
-           
+
             $qouteDetails = QouteDetail::where('qoute_id', $id)->get();
 
             $qouteDetailLog = new QouteDetailLog;
@@ -2732,7 +3277,7 @@ class AdminController extends Controller
                 $QouteDetailLog->log_no = $qouteDetailLogNumber;
                 $QouteDetailLog->save();
             }
-        
+
             // Delete old qoute
             QouteDetail::where('qoute_id',$id)->delete();
 
@@ -2775,22 +3320,22 @@ class AdminController extends Controller
 
                     //         $destinationPath = public_path('quote/'. $id .'/'.  $filename  );
                     //         File::delete($destinationPath);
-    
+
                     //         $file->move(public_path('quote/' . $qoute->id ), $filename);
-        
-                    //         $qouteDetail->qoute_invoice  = $filename ? $filename : null; 
-    
+
+                    //         $qouteDetail->qoute_invoice  = $filename ? $filename : null;
+
                     //     }
                     //     else{
-                    //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                    //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
                     //     }
                     // }else{
 
-                    //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null; 
+                    //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
                     // }
-                 
+
                     $qouteDetail->save();
-                
+
                 }
             }
 
@@ -2827,7 +3372,7 @@ class AdminController extends Controller
             'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
         ]);
     }
-    
+
 
     public function view_version($quote_id, $log_no){
         // $qoute_log = QouteLog::where('qoute_id',$quote_id)->where('log_no',$log_no)->get();
@@ -2844,7 +3389,7 @@ class AdminController extends Controller
         ->get();
 
 
-        
+
         $get_user_branches = Cache::remember('get_user_branches', 60, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
@@ -2862,7 +3407,7 @@ class AdminController extends Controller
         return view('qoute.view-version')->with([
             'qoute_log' => $qoute_log,
             'qoute_detail_logs' => $qoute_detail_logs,
-            'seasons' =>  season::all(), 
+            'seasons' =>  season::all(),
             'currencies' => Currency::all()->sortBy('name'),
 
             'categories' => Category::all()->sortBy('name'),
@@ -2923,7 +3468,7 @@ class AdminController extends Controller
 
     public function get_log_no($table,$qoute_id)  {
 
-        $modelName = "App\\$table"; 
+        $modelName = "App\\$table";
         $qoute_log =  $modelName::where('qoute_id',$qoute_id)->orderBy('created_at','DESC')->first();
 
         if(is_null($qoute_log)){
@@ -2937,7 +3482,7 @@ class AdminController extends Controller
     public function increment_log_no($number)  {
         return  $number =  $number + 1;
     }
-    
+
     // public function view_code()
     // {
     //     return view('code.view-code')->with(['codes' => code::all()]);
@@ -2946,10 +3491,10 @@ class AdminController extends Controller
     public function booking_method(Request $request){
 
         if($request->isMethod('post')){
-            
+
             $this->validate($request, ['booking_method_name'  => 'required'], ['required' => 'Booking Method is required']);
 
-            $booking_method = new BookingMethod; 
+            $booking_method = new BookingMethod;
             $booking_method->name = $request->booking_method_name;
             $booking_method->save();
 
@@ -2971,8 +3516,8 @@ class AdminController extends Controller
         if($request->isMethod('post')){
 
             $this->validate($request, ['booking_method_name'  => 'required'], ['required' => 'Booking Method is required']);
-           
-            $booking_method = BookingMethod::find($id); 
+
+            $booking_method = BookingMethod::find($id);
             $booking_method->name = $request->booking_method_name;
             $booking_method->save();
 
@@ -3003,10 +3548,10 @@ class AdminController extends Controller
         $this->validate($request, ['agency_booking'             => 'required'], ['required' => 'Please select Agency']);
         $this->validate($request, ['pax_no'                     => 'required'], ['required' => 'Please select PAX No']);
         $this->validate($request, ['date_of_travel'             => 'required'], ['required' => 'Please select date of travel']);
-       
+
         $this->validate($request, ['supplier'                 => 'required'], ['required' => 'Please select Supplier']);
-       
-       
+
+
         // $this->validate($request, ['flight_booked'              => 'required'], ['required' => 'Please select flight booked']);
 
         // $this->validate($request, ['fb_airline_name_id'         => 'required_if:flight_booked,yes'], ['required_if' => 'Please select flight airline name']);
@@ -3019,23 +3564,23 @@ class AdminController extends Controller
 
         // $this->validate($request, ['flight_booking_details'     => 'required_if:flight_booked,yes'], ['required_if' => 'Please enter flight booking details']);
         // //
-        // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']); 
+        // // $this->validate($request, ['fb_person'                  => 'required_if:flight_booked,no'],['required_if' => 'Please select booked person']);
         // $this->validate($request, ['fb_last_date'               => 'required_if:flight_booked,no'], ['required_if' => 'Plesse enter flight booking date']);
-        
+
         // // $this->validate($request, ['aft_person'                 => 'required_if:asked_for_transfer_details,no'],['required_if' => 'Please select asked for transfer person']);
         // $this->validate($request, ['aft_last_date'              => 'required_if:asked_for_transfer_details,no'], ['required_if' => 'Plesse enter transfer date']);
         // // $this->validate($request, ['ds_person'                 => 'required_if:documents_sent,no'],['required_if' => 'Please select document person']);
         // $this->validate($request, ['ds_last_date'              => 'required_if:documents_sent,no'], ['required_if' => 'Plesse enter document sent date']);
         // // $this->validate($request, ['to_person'                 => 'required_if:transfer_organised,no'],['required_if' => 'Please select document person']);
         // $this->validate($request, ['to_last_date'              => 'required_if:transfer_organised,no'], ['required_if' => 'Plesse enter document sent date']);
-        // // 
+        // //
         // // $this->validate($request, ['asked_for_transfer_details' => 'required'], ['required' => 'Please select asked for transfer detail box']);
         // $this->validate($request, ['transfer_details'           => 'required_if:asked_for_transfer_details,yes'], ['required_if' => 'Please transfer detail']);
         // $this->validate($request, ['form_sent_on'               => 'required'], ['required' => 'Please select form sent on']);
-        
-        
+
+
         // // $this->validate($request, ['transfer_info_received'     => 'required'],['required' => 'Please select transfer info received']);
-        // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']); 
+        // // $this->validate($request, ['transfer_info_details'      => 'required_if:transfer_info_received,yes'],['required_if' => 'Please transfer info detail']);
 
         // $this->validate($request, ['itinerary_finalised'        => 'required'], ['required' => 'Please select itinerary finalised']);
         // $this->validate($request, ['itinerary_finalised_details' => 'required_if:itinerary_finalised,yes'], ['required_if' => 'Please enter itinerary finalised details']);
@@ -3071,7 +3616,7 @@ class AdminController extends Controller
 }
 
 
-        $product = code::where('id', $id)->update(array( 
+        $product = code::where('id', $id)->update(array(
             'ref_no' => $request->ref_no,
             'brand_name'                  => $request->brand_name,
             'season_id'                   => $request->season_id,
@@ -3139,7 +3684,7 @@ class AdminController extends Controller
 
 
 
-        // $code = code::find($id); 
+        // $code = code::find($id);
         // $code->ref_no =  $request->ref_no;
         // $code->brand_name =  $request->brand_name;
         // $code->season_id         = $request->season_id;
@@ -3246,7 +3791,7 @@ class AdminController extends Controller
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
-        
+
         $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -3259,7 +3804,7 @@ class AdminController extends Controller
             //   return json_decode($output)->data;
         });
 
-        // return view('code.create-code')->with(['get_holiday_type' => $get_holiday_type, 'seasons' => season::all(), 'persons' => user::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'booking_email' => $booking_email, 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all()]);  
+        // return view('code.create-code')->with(['get_holiday_type' => $get_holiday_type, 'seasons' => season::all(), 'persons' => user::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'booking_email' => $booking_email, 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all()]);
         $booking_email = booking_email::where('booking_id', '=', 1)->get();
 
         return view('code.edit-code')->with([ 'code' => $code, 'get_user_branches' => $get_user_branches,  'get_holiday_type' => $get_holiday_type, 'get_user_branches' => $get_user_branches, 'codes' => $code, 'seasons' => season::all(), 'persons' => user::all(), 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all(), 'booking_email' => $booking_email,  ]);
@@ -3268,14 +3813,14 @@ class AdminController extends Controller
     public function get_supplier(Request $request){
 
         $supplier_category = supplier_category::where('category_id',$request->category_id)
-        ->select('suppliers.id','suppliers.name') 
-        ->leftJoin('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id') 
+        ->select('suppliers.id','suppliers.name')
+        ->leftJoin('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id')
         ->get();
 
         return $supplier_category;
     }
 
-    
+
     public function get_supplier_currency(Request $request){
 
         $supplier_currency = Supplier::leftJoin('currencies', 'currencies.id', '=', 'suppliers.currency_id')
@@ -3284,7 +3829,7 @@ class AdminController extends Controller
 
         return $supplier_currency;
     }
-    
+
     public function get_saleagent_supervisor(Request $request){
 
         $saleagent_supervisor = User::where('id',$request->booked_by)->first();
@@ -3294,7 +3839,7 @@ class AdminController extends Controller
     public function get_currency(Request $request){
 
         $test = CurrencyConversions::where('to',$request->to)->get(['from','value']);
-        
+
         $arr = [];
         foreach($test as $test){
             $arr[$test->from] = $test->value;
