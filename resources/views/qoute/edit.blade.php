@@ -381,11 +381,11 @@ td.day{
                             </div>
     
                             <div class="col-sm-5 mb-2">
-                                <label class="">Sales Person</label> <span style="color:red">*</span>
+                                <label class="">Sales Person {{ $quote->sale_person  }}</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person" >
                                     <option value="">Select Person</option>
-                                    @foreach ($get_user_branches->users as $user)
-                                    <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->email }}</option>
+                                    @foreach ($users as $user)
+                                    <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->name }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
