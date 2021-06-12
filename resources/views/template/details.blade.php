@@ -75,7 +75,7 @@
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="">Date of Service</label> 
                                                     <div class="input-group">
-                                                        <input type="text" disabled value="{{ $detail->date_of_service }}" name="quote[0][date_of_service]"  class="form-control datepicker checkDates bookingDateOfService" autocomplete="off" placeholder="Date of Service"  >
+                                                        <input type="text" disabled value="{{ !empty($detail->date_of_service) ? date('d/m/Y', strtotime($detail->date_of_service)) : "" }}" name="quote[0][date_of_service]"  class="form-control datepicker checkDates bookingDateOfService" autocomplete="off" placeholder="Date of Service"  >
                                                     </div>
                                                 </div>
                     
@@ -96,12 +96,12 @@
                     
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="test222">Booking Date</label>
-                                                    <input type="text"disabled value="{{ $detail->booking_date }}" name="quote[0][booking_date]" value="" class="form-control datepicker bookingDate" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
+                                                    <input type="text"disabled value="{{ !empty($detail->booking_date) ? date('d/m/Y', strtotime($detail->booking_date)) : "" }}" name="quote[0][booking_date]" value="" class="form-control datepicker bookingDate" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
                                                 </div>
                     
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
-                                                    <input type="text" disabled value="{{ $detail->booking_due_date }}"    class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
+                                                    <input type="text" disabled value="{{ !empty($detail->booking_due_date) ? date('d/m/Y', strtotime($detail->booking_due_date)) : "" }}"    class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top: 15px">

@@ -71,7 +71,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="bookingSeason" > Booking Season <span class="text-danger">*</span></label>
-                                        <select class="form-control dropdown_value"  name="season_id" id="bookingSeason"  >
+                                         <select class="form-control dropdown_value"  name="season_id" id="bookingSeason"  >
                                             <option value="">Select Season</option>
                                             @foreach ($seasons as $sess)
                                                 <option value="{{ $sess->id }}"  {{ (old('season_id') == $sess->id)? 'selected' :(($sess->default_season == 1 )? 'selected': NULL) }} >{{ $sess->name }}</option>
@@ -100,7 +100,7 @@
                 
                                             <div class="col-sm-2">
                                                 <label class="">Select Category</label> 
-                                                <select class="form-control category-select2" id="category-select2"  name="quote[0][category_id]" >
+                                                <select class="form-control category-select2 select2"  name="quote[0][category_id]" >
                                                     <option value="">Select Category</option>
                                                     @foreach ($categories as $category)
                                                         <option value="{{ $category->id }}" {{ old('category') == $category->id  ? "selected" : "" }}> {{ $category->name }} </option>
@@ -111,7 +111,7 @@
                 
                                             <div class="col-sm-2">
                                                 <label class="test">Select Supplier</label> 
-                                                <select class="form-control supplier-select2"  id="supplier-select2" name="quote[0][supplier_id]" >
+                                                <select class="form-control supplier-select2 select2"  name="quote[0][supplier_id]" >
                                                     <option value="">Select Supplier</option>
                                                     @foreach ($suppliers as $supplier)
                                                         <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
@@ -141,7 +141,7 @@
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booking Method</label>
                                                 <div class="input-group">
-                                                    <select class="form-control"  name="quote[0][booking_method_id]" id="booking-method-select2" class="form-control" >
+                                                    <select class="form-control select2"  name="quote[0][booking_method_id]" >
                                                         <option value="">Select Booking Method</option>
                                                         @foreach ($booking_methods as $booking_method)
                                                         <option value="{{$booking_method->id}}" {{ $booking_method->name == 'Supplier Own' ? 'selected' : '' }}>{{$booking_method->name}}</option>
@@ -154,7 +154,7 @@
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booked By </label>
                                                 <div class="input-group">
-                                                    <select class="form-control"  name="quote[0][booked_by_id]" id="booked-by-select2" class="form-control" >
+                                                    <select class="form-control select2"  name="quote[0][booked_by_id]">
                                                         <option value="">Select Person</option>
                                                         @foreach ($users as $user)
                                                             <option value="{{$user->id}}" {{ !empty(Auth::user()->id) && Auth::user()->id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
@@ -175,7 +175,7 @@
                                             <div class="col-sm-2 " style="margin-bottom: 15px;">
                                                 <label for="inputEmail3" class="">Booking Type</label> 
                                                 <div class="input-group">
-                                                    <select class="form-control" id="booking-type-select2" name="quote[0][booking_type]" >
+                                                    <select class="form-control select2"  name="quote[0][booking_type]" >
                                                         <option value="">Select Booking Type</option>
                                                         <option value="refundable">Refundable</option>
                                                         <option value="non_refundable">Non-Refundable</option>
@@ -192,7 +192,7 @@
                 
                                             <div class="col-sm-2">
                                                 <label>Select Supplier Currency</label> 
-                                                <select class="form-control supplier-currency"  name="quote[0][currency_id]" >
+                                                <select class="form-control supplier-currency select2"  name="quote[0][currency_id]" >
                                                     <option value="">Select Currency</option>
                                                     @foreach ($currencies as $currency)
                                                         <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
@@ -229,7 +229,7 @@
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Supervisor</label>
                                                 <div class="input-group">
-                                                    <select class="form-control supervisor-select2"  name="quote[0][supervisor_id]" id="supervisor-select2" class="form-control" >
+                                                    <select class="form-control supervisor-select2 select2"  name="quote[0][supervisor_id]"  class="form-control" >
                                                         <option value="">Select Supervisor</option>
                                                         @foreach ($supervisors as $supervisor)
                                                             <option value="{{$supervisor->id}}" {{ (isset(Auth::user()->getSupervisor))? ((Auth::user()->getSupervisor->id == $supervisor->id)? 'selected': NULL) : NULL }} >{{$supervisor->name}}</option>
@@ -269,6 +269,8 @@
 <!-- SlimScroll -->
 {!! HTML::script('plugins/slimScroll/jquery.slimscroll.min.js') !!}
 <!-- FastClick -->
+{!! HTML::script('plugins/select2/select2.full.min.js') !!}
+
 {!! HTML::script('plugins/fastclick/fastclick.js') !!}
 <!-- AdminLTE App -->
 {!! HTML::script('dist/js/app.min.js') !!}
@@ -279,6 +281,8 @@
     $(document).ready(function(){
         $(function(){
             datePickerSetDate();
+         $('.select2').select2();
+            
         });
         
         $('body').on('click', '#createNEw', function (e) {
@@ -301,6 +305,9 @@
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
+                    $('.select2').removeClass('select2-hidden-accessible').next().remove()
+                $('.select2').select2();
+                    
                     $('.removeButton:last').append("<button type='button' class='remove btn btn-link pull-right'><i class='fa fa-times'  style='color:red' ></i></button>");   
                     datePickerSetDate();
         });
@@ -372,7 +379,34 @@
                 $('.datepicker').val("");
                 datePickerSetDate();
         })
+        
+        $(document).on('change', '.category-select2',function(){
+            
+            var $selector = $(this);
+            var category_id = $(this).val();
+            
+            var options = '';
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'category_id': category_id
+                },
+                success: function(response) {
+                    options += '<option value="">Select Supplier</option>';
+                    $.each(response,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                }
+            })
+        });
+        
+
+
     });
+        
         function datePickerSetDate(y = 1) {
             var season_id  = $('#bookingSeason').val();      
             var season  = {!! json_encode($seasons->toArray()) !!};

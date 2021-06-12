@@ -227,7 +227,7 @@ td.day{
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Currency Conversion</label>
                     <label class="currency"></label>  
-                    <input type="text" class="base-currency" name="qoute_base_currency[]" value="0.00" readonly><br>
+                    <input type="text" class="base-currency" name="qoute_base_currency[]" readonly><br>
                 </div>
       
                 <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -579,7 +579,7 @@ td.day{
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Currency Conversion</label>
                                         <label class="currency"></label>  
-                                        <input type="text" class="base-currency" name="qoute_base_currency[]" value="0.00" readonly><br>
+                                        <input type="text" class="base-currency" name="qoute_base_currency[]" readonly><br>
                                     </div>
 
                                     <div class="col-sm-2 mb-3">
@@ -640,25 +640,25 @@ td.day{
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="0.00">
+                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="0">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="0.00">
+                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="0">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling" value="0.00">
+                                        <input type="number" class="selling hide-arrows" min="0" step="any" name="selling" value="0">
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" ></label>
-                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="0.00">
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="0">
                                         <span>%</span> 
                                     </label>
                                 </div>
@@ -710,7 +710,7 @@ td.day{
 
                             <div class="col-sm-2 mb-2">
                                 <label class="convert-currency"></label>
-                                    <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0.00">
+                                    <input type="number" name="show_convert_currency" min="0" step="any" class="show-convert-currency hide-arrows" value="0">
                                 </label>
                             </div>
                         </div>
@@ -724,7 +724,7 @@ td.day{
 
                             <div class="col-sm-2 mb-2">
                                 <label class="convert-currency"></label>
-                                <input type="number" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0.00">
+                                <input type="number" class="per-person hide-arrows" step="any" min="0" name="per_person" value="0">
                             </div>
                         </div>
 
@@ -1269,30 +1269,25 @@ td.day{
                 success: function(response) {
 
                     qoute_currency = currentCost * response[selected_currency_code];
-                    // $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
-                    $selector.closest(".qoute").find('[class*="base-currency"]').val((!isNaN(parseFloat(qoute_currency)) ? parseFloat(qoute_currency).toFixed(2) : parseFloat(0).toFixed(2) ));
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
            
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    // $('.net_price').val(final.toFixed(2));
-                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
+                    $('.net_price').val(final.toFixed(2));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    // $('.markup-amount').val(markupAmount.toFixed(2));
-                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    // $('.selling').val(sellingPrice.toFixed(2));
-                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
+                    $('.selling').val(sellingPrice.toFixed(2));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
-                    // $('.gross-profit').val(grossProfit.toFixed(2));
+                    $('.gross-profit').val(grossProfit.toFixed(2));
 
                 }
             });
@@ -1338,31 +1333,26 @@ td.day{
                 success: function(response) {
 
                     qoute_currency = $selector.val() * response[$selector.attr("data-code")];
-                    $selector.closest(".qoute").find('[class*="base-currency"]').val((!isNaN(parseFloat(qoute_currency)) ? parseFloat(qoute_currency.toFixed(2)) : parseFloat(0).toFixed(2) ));
+                    $selector.closest(".qoute").find('[class*="base-currency"]').val((qoute_currency.toFixed(2)));
         
                     for(i=0 ; i < currencyArray.length; i++){
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    // $('.net_price').val(final.toFixed(2));
-                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
+                    $('.net_price').val(final.toFixed(2));
 
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    // $('.markup-amount').val(markupAmount.toFixed(2));
-                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    // $('.selling').val(sellingPrice.toFixed(2));
-                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
+                    $('.selling').val(sellingPrice.toFixed(2));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    // $('.gross-profit').val(grossProfit.toFixed(2));
-                    
-                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
+                    $('.gross-profit').val(grossProfit.toFixed(2));
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1448,31 +1438,23 @@ td.day{
                 success: function(response) {
 
                     for(i=0 ; i < currencyArray.length; i++){
-
-                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-
-
-                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                        $(".base-currency").eq(i+1).val((costArray[i] * response[currencyArray[i]]).toFixed(2));
                         final += (costArray[i] * response[currencyArray[i]]);
                     }
 
-                    // $('.net_price').val(final.toFixed(2));
-                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
+                    $('.net_price').val(final.toFixed(2));
 
                     var net_price = parseFloat($('.net_price').val());
                     var markup_percent = parseFloat($('.markup-percent').val());
                     var markup_amount = parseFloat($('.markup-amount').val());
                     markupAmount = (net_price / 100) * markup_percent;
-                    // $('.markup-amount').val(markupAmount.toFixed(2));
-                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
+                    $('.markup-amount').val(markupAmount.toFixed(2));
 
                     var sellingPrice = (markupAmount + net_price);
-                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
-                    // $('.selling').val(sellingPrice.toFixed(2));
+                    $('.selling').val(sellingPrice.toFixed(2));
 
                     var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
-                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
-                    // $('.gross-profit').val(grossProfit.toFixed(2));
+                    $('.gross-profit').val(grossProfit.toFixed(2));
 
                     // console.log(last_convert_currency);
                     // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
@@ -1581,6 +1563,7 @@ td.day{
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
+
                    window.location.href = "{{ route('view-quote')}}";
                 },
                 error: function (reject) {

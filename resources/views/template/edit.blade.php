@@ -147,7 +147,7 @@
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booking Method</label>
                                                 <div class="input-group">
-                                                    <select class="form-control"  name="quote[{{ $key }}][booking_method_id]" id="booking-method-select2" class="form-control" >
+                                                    <select class="form-control select2"  name="quote[{{ $key }}][booking_method_id]" id="booking-method-select2" class="form-control" >
                                                         <option value="">Select Booking Method</option>
                                                         @foreach ($booking_methods as $booking_method)
                                                         <option value="{{ $booking_method->id }}" {{ ($detail->booking_method == $booking_method->id)? 'selected':($booking_method->name == 'Supplier Own' ? 'selected' : '') }}>{{$booking_method->name}}</option>
@@ -160,7 +160,7 @@
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booked By </label>
                                                 <div class="input-group">
-                                                    <select class="form-control"  name="quote[{{ $key }}][booked_by_id]" id="booked-by-select2" class="form-control" >
+                                                    <select class="form-control select2"  name="quote[{{ $key }}][booked_by_id]" id="booked-by-select2" class="form-control" >
                                                         <option value="">Select Person</option>
                                                         @foreach ($users as $user)
                                                             <option value="{{$user->id}}" {{ ($detail->booked_by == $user->id)? 'selected' :((!empty(Auth::user()->id) && Auth::user()->id == $user->id) ? 'selected' : '') }}>{{$user->name}}</option>
@@ -181,7 +181,7 @@
                                             <div class="col-sm-2 " style="margin-bottom: 15px;">
                                                 <label for="inputEmail3" class="">Booking Type</label> 
                                                 <div class="input-group">
-                                                    <select class="form-control" id="booking-type-select2" name="quote[{{ $key }}][booking_type]" >
+                                                    <select class="form-control select2" name="quote[{{ $key }}][booking_type]" >
                                                         <option value="">Select Booking Type</option>
                                                         <option {{ ($detail->booking_type == 'refundable')? 'selected': NULL }} value="refundable">Refundable</option>
                                                         <option {{ ($detail->booking_type == 'non_refundable')? 'selected': NULL }} value="non_refundable">Non-Refundable</option>
@@ -274,6 +274,7 @@
 {!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
 <!-- SlimScroll -->
 {!! HTML::script('plugins/slimScroll/jquery.slimscroll.min.js') !!}
+{!! HTML::script('plugins/select2/select2.full.min.js') !!}
 <!-- FastClick -->
 {!! HTML::script('plugins/fastclick/fastclick.js') !!}
 <!-- AdminLTE App -->
@@ -307,6 +308,8 @@ function convertDate(date) {
         $(function(){
             datePickerSetDate();
         });
+        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+        
         
         $('body').on('click', '#createNEw', function (e) {
             
@@ -328,8 +331,12 @@ function convertDate(date) {
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
+                    $(".select2, .supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+                    $(".select2, .supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();
                     $('.removeButton:last').append("<button type='button' class='remove btn btn-link pull-right'><i class='fa fa-times'  style='color:red' ></i></button>");   
                     datePickerSetDate();
+                    
+
         });
         
         $(document).on("click", ".remove", function() {
