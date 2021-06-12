@@ -1201,10 +1201,10 @@ class AdminController extends Controller
             $bookingDetails = BookingDetail::where('booking_id',$booking->id)->get();
 
             foreach($bookingDetails as $key => $bookingDetail){
-                
+
                 $bookingDetailLog = new BookingDetailLog;
                 $bookingDetailLog->booking_id          = $booking->id;
-                $bookingDetailLog->log_no              =  $bookingDetailLogNumber;
+                $bookingDetailLog->log_no              = $bookingDetailLogNumber;
                 $bookingDetailLog->qoute_id            = $bookingDetail->qoute_id;
                 $bookingDetailLog->quotation_no        = $bookingDetail->quotation_no;
                 $bookingDetailLog->row                 = $key+1;
@@ -1219,11 +1219,11 @@ class AdminController extends Controller
                 $bookingDetailLog->booking_type        = $bookingDetail->booking_type;
                 $bookingDetailLog->comments            = $bookingDetail->comments;
                 $bookingDetailLog->supplier_currency   = $bookingDetail->supplier_currency;
-                $bookingDetailLog->cost                = $bookingDetail->cost[$key];
-                $bookingDetailLog->actual_cost         = $bookingDetail->actual_cost[$key];
-                $bookingDetailLog->supervisor_id       = $bookingDetail->supervisor[$key];
-                $bookingDetailLog->added_in_sage       = $bookingDetail->added_in_sage[$key];
-                $bookingDetailLog->qoute_base_currency = $bookingDetail->qoute_base_currency[$key];
+                $bookingDetailLog->cost                = $bookingDetail->cost;
+                $bookingDetailLog->actual_cost         = $bookingDetail->actual_cost;
+                $bookingDetailLog->supervisor_id       = $bookingDetail->supervisor;
+                $bookingDetailLog->added_in_sage       = $bookingDetail->added_in_sage;
+                $bookingDetailLog->qoute_base_currency = $bookingDetail->qoute_base_currency;
                 $bookingDetailLog->qoute_invoice       = $bookingDetail->qoute_invoice;
                 $bookingDetailLog->save(); 
 
