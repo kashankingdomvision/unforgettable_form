@@ -10,7 +10,7 @@ use App\User;
 use App\Supplier;
 use App\BookingMethod;
 use App\Currency;
-use App\Season;
+use App\season;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
@@ -56,8 +56,8 @@ class TemplateController extends Controller
     
     public function index()
     {
-        $data['templates'] = Template::paginate($this->pagination);
-        return view('template.listing', $data);
+      $data['templates'] = Template::paginate($this->pagination);
+      return view('template.listing', $data);
     }
     
     public function create()
