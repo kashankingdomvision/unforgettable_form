@@ -2,6 +2,20 @@
 
 @section('content')
 <style type="text/css">
+
+td.day{
+  position:relative;  
+}
+td.day.disabled:read-only {
+    color: gray;
+}
+
+td.day{
+    color: #000;
+    font-weight: 700;
+}
+
+
     .row.box-cus {
         width: 83%;
         border: solid 1px #000;
@@ -84,7 +98,7 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Date of Service</label> 
                     <div class="input-group">
-                        <input type="text" name="date_of_service[]" autocomplete="off" class="form-control datepicker" placeholder="Date of Service" autocomplete="off" >
+                        <input type="text" name="date_of_service[]" autocomplete="off" class="form-control datepicker bookingDateOfService" placeholder="Date of Service" autocomplete="off" >
                     </div>
                     <div class="alert-danger date_of_service" style="text-align:center"></div>
                 </div>
@@ -119,7 +133,7 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Date</label>
                     <div class="input-group">
-                        <input type="text" name="booking_date[]" value="" class="form-control datepicker" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
+                        <input type="text" name="booking_date[]" value="" class="form-control datepicker bookingDate" placeholder="Booking Date" autocomplete="off" value="{{old('booking_date')}}" >
                     </div>
                     <div class="alert-danger booking_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                 </div>
@@ -127,9 +141,9 @@
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                     <div class="input-group">
-                        <input type="text" name="booking_due_date[]" value="" class="form-control datepicker" placeholder="Booking Due Date" autocomplete="off" required>
+                        <input type="text" name="booking_due_date[]" value="" class="form-control datepicker bookingDueDate" placeholder="Booking Due Date" autocomplete="off" required>
                     </div>
-                    <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"> {{ $errors->first('booking_date') }} </div>
+                    <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"> {{ $errors->first('booking_due_date') }} </div>
                 </div>
 
 
@@ -383,7 +397,7 @@
                                 <label class="">Booking Season</label> 
                                 <span style="color:red">*</span>
                                 {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
-                                <select class="form-control dropdown_value" name="season_id" >
+                                <select class="form-control dropdown_value" id="bookingSeason" name="season_id" >
                                     <option value="">Select Season</option>
                                     @foreach ($seasons as $sess)
                                     <option value="{{ $sess->id }}" {{ $quote->season_id == $sess->id ? 'selected' : ''}} >{{ $sess->name }}</option>
@@ -466,7 +480,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Date of Service</label> 
                                         <div class="input-group">
-                                            <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($quote_detail->date_of_service) ? date('d/m/Y', strtotime($quote_detail->date_of_service)) : "" }}"  class="form-control datepicker" placeholder="Date of Service"  >
+                                            <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($quote_detail->date_of_service) ? date('d/m/Y', strtotime($quote_detail->date_of_service)) : "" }}"  class="form-control datepicker bookingDateOfService" placeholder="Date of Service"  >
                                         </div>
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
@@ -502,7 +516,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Date</label>
                                         <div class="input-group">
-                                            <input type="text" name="booking_date[]" value="{{ !empty($quote_detail->booking_date) ? date('d/m/Y', strtotime($quote_detail->booking_date)) : "" }}" class="form-control datepicker" autocomplete="off" placeholder="Booking Date" >
+                                            <input type="text" name="booking_date[]" value="{{ !empty($quote_detail->booking_date) ? date('d/m/Y', strtotime($quote_detail->booking_date)) : "" }}" class="form-control datepicker bookingDate" autocomplete="off" placeholder="Booking Date" >
                                         </div>
                                         <div class="alert-danger booking_date" style="text-align:center"> {{ $errors->first('booking_date') }} </div>
                                     </div>
@@ -510,7 +524,7 @@
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                                         <div class="input-group">
-                                            <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker" placeholder="Booking Date" required>
+                                            <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker bookingDueDate" placeholder="Booking Date" required>
                                         </div>
                                         <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                                     </div>
@@ -1013,12 +1027,94 @@
 
 <script type="text/javascript">
 
-    $(function(){
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
-    });
+        function datePickerSetDate(y = 1) {
+            var season_id  = $('#bookingSeason').val();
+            var season  = {!! json_encode($seasons->toArray()) !!};
+            var item = season.filter(function(a){ return a.id == season_id })[0];
+            var startdate = new Date(item.start_date);
+            var enddate = new Date(item.end_date);
+            if(y != 1){
+        // format: 'yyyy-mm-dd',
+                $('.bookingDate:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
+                $('.bookingDateOfService:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
+                $('.bookingDueDate:last').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
+                console.log('reinitializedDynamicFeilds');
+            }else{
+                console.log('now'); 
+                $('.datepicker').datepicker('remove').datepicker({  autoclose: true,   startDate: startdate, endDate: enddate });
+            }
+        }
+
+            $(function(){
+                datePickerSetDate();
+                // var startdate = new Date("2021-04-13");
+                // $( ".datepicker" ).datepicker({  startDate: startdate, endDate: '4-27-2021' });
+                // $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd-mm-yyyy' });
+            });
+
 
     $(document).ready(function() {
 
+
+        $(document).on('change', '.datepicker', function () {
+            
+            // $('.datepicker').datepicker()
+            //     .on('changeDate', function(e) {
+                    
+                    var season_id  = $('#bookingSeason').val();
+                    var season  = {!! json_encode($seasons->toArray()) !!};
+                    var item = season.filter(function(a){ return a.id == season_id })[0];
+                    var startdate = new Date(item.start_date);
+                    var enddate = new Date(item.end_date);
+                    
+                    
+                    var val  = $(this).val();
+                    var date = new Date(val);
+                    var name = $(this).attr("name");
+                    var $selector = $(this);
+                    switch (name) {
+                        case 'date_of_service[]':
+                                //booking due date 
+                                
+                                var bdu = $selector.closest(".qoute").find('[class*="bookingDueDate"]').val();
+                                var bookingDueDate = (bdu != '')? new Date(bdu): startdate;
+                                
+                                var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                                var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;
+    
+                                var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
+                                var dateoserve    = (dateoserve != '')? new Date(dateoserve): startdate;
+                                
+                                $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDueDate, endDate: dateoserve});
+                                $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
+                            
+                            break;
+                            
+                        case 'booking_date[]':
+                            var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                            var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
+                            
+                            $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
+                            $selector.closest(".qoute").find('[class*="bookingDueDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: startdate, endDate: bookingDate});
+                            
+                            break;
+                            
+                        case 'booking_due_date[]':
+                        
+                          
+                            var bookingDate    = $selector.closest(".qoute").find("input[name='booking_date[]']").val();
+                            var bookingDate    = (bookingDate != '')? new Date(bookingDate): date;  
+    
+                            var dateoserve    = $selector.closest(".qoute").find('[class*="bookingDateOfService"]').val();
+                            var dateoserve    = (dateoserve != '')? new Date(dateoserve): enddate;
+                            
+                            $selector.closest(".qoute").find('[class*="bookingDate"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: dateoserve});
+                            $selector.closest(".qoute").find('[class*="bookingDateOfService"]').datepicker('remove').datepicker({ autoclose: true, startDate: bookingDate, endDate: enddate});
+                            break;
+                    }
+                // });
+            });
+        
         $('.currency').html($('select[name="currency"]').val());
         $('.convert-currency').html($('select[name="convert_currency"]').val());
 
@@ -1105,14 +1201,16 @@
 
         // Initialize all Select2 
         $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        // $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        datePickerSetDate();
         
         function reinitializedDynamicFeilds(){
 
             $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
             $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();
 
-            $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
+            // $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
+            datePickerSetDate('reinitializedDynamicFeilds');
         }
 
         $(document).on('change', 'select[name="category[]"]',function(){

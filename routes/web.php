@@ -5,7 +5,7 @@ header( 'Access-Control-Allow-Headers: Authorization, Content-Type');
 header( 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 
 use Spatie\GoogleCalendar\Event;
-
+use App\Controllers\TemplateController;
     Route::get('/test', function () {
         // return view('welcome');
         // $events = Event::get();
@@ -223,6 +223,33 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('update-payment/{id}',array('before'=>'csrf','as'=>'update-payment','uses'=>'AdminController@update_payment'));
 	Route::get('update-payment/{id}',array('as'=>'update-payment','uses'=>'AdminController@update_payment'));
 	Route::get('del-payment/{id}',array('as'=>'del-payment','uses'=>'AdminController@delete_payment'));
+	
+	
+	Route::group([
+			'prefix' => 'template',
+			'as' 	 => 'template.'
+		],function (){
+			
+			Route::get('index', ['as' => 'index', 'uses' => 'TemplateController@index']);
+			Route::get('create', ['as' => 'create', 'uses' => 'TemplateController@create']);
+			Route::post('store', ['as' => 'store', 'uses' => 'TemplateController@store']);
+			Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'TemplateController@detail']);
+			Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'TemplateController@destroy']);
+			Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'TemplateController@edit']);
+			Route::post('update/{id}', ['as' => 'update', 'uses' => 'TemplateController@update']);
+			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'TemplateController@call_template']);
+			
+			
+			
+			
+			
+			
+			
+			// Route::get('template/create',['as'=> 'create', 'uses' => 'TemplateController@create']);
+			// Route::get('template/{slug}/edit', ['as' => 'edit', 'uses' => 'TemplateController@edit']);
+			
+			// Route::get('template/edit', [TemplateController::class, 'index'])-name('edit')
+	});
 
 });
 

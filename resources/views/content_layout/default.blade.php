@@ -105,6 +105,18 @@ thead.border_thead {
   .zindex{
     z-index: 10;
   }
+  .text-danger{
+    color: red;
+  }
+  .badge-success{
+    background-color: green;
+  }
+  .text-light{
+    color: white;
+  }
+  .bg-danger{
+    background-color: red;
+  }
   </style>
 </head>
 
@@ -476,7 +488,7 @@ thead.border_thead {
         ?>
         <li class="treeview @if ( Request::is('create-booking') ||   Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif  ">
           <a href="#">
-            <i class="fa fa-user"></i> <span>Booking</span>
+            <i class="fa fa-book"></i> <span>Booking</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -493,7 +505,7 @@ thead.border_thead {
         ?>
         <li class="treeview {{ $route == 'creat-quote' || $route =='view-quote'  || $route =='edit-quote' ? 'active' : ''}}" >
           <a href="#">
-            <i class="fa fa-cloud"></i> <span>Quote Management</span>
+            <i class="fa fa-file"></i> <span>Quote Management</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -507,6 +519,21 @@ thead.border_thead {
           </ul>
 
         </li>
+        
+        <li class="treeview {{ $route == 'template/index'  || $route == 'template/create'? 'active' : ''  }}">
+          <a href="#">
+            <i class="fa fa-clone  "></i> <span>Template Mangment</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{ $route == 'template/create' ? 'active' : ''}}"><a href="{{ route('template.create')}}"><i class="fa fa-plus"></i>Create Template</a></li>
+            <li class="{{ $route == 'template/index' ? 'active' : ''}}"><a href="{{ route('template.index')}}"><i class="fa fa-eye"></i>View Template</a></li>
+          </ul>
+        </li> 
+        
+        
         <li class="treeview  @if (Request::is('creat-season') || Request::is('view-season') || Request::is('update-season/'.$id)) active @endif">
           <a href="#">
             <i class="fa fa-cloud"></i> <span>Season Management</span>
@@ -536,7 +563,7 @@ thead.border_thead {
         </li>
         <li class="treeview {{ $route == 'add-category' || $route == 'view-category' || $route == 'update-category' ||  $route == 'add-product' ||  $route == 'update-product' || $route == 'view-product' ||  $route == 'add-supplier' || $route == 'view-supplier' || $route ==  'update-supplier' || $route == 'details-supplier' ? 'active' : ''  }}">
           <a href="#">
-            <i class="fa fa-user"></i> <span>Suppliers</span>
+            <i class="fa fa-group"></i> <span>Suppliers</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -552,12 +579,16 @@ thead.border_thead {
           {{-- <li class="{{ $route == 'view-supplier-categories' ? 'active' : ''}}"><a href="{{ route('view-supplier-categories')}}"><i class="fa fa-eye"></i> Suppliers Categories</a></li> --}}
           </ul>
         </li> 
+        
+        
+        
+       
 
         {{-- @if (Request::is('creat-airline') || Request::is('view-airline') || Request::is('creat-payment') || Request::is('view-payment') || Request::is('creat-booking-method') ||  Request::is('view-booking-method') )  active @endif --}}
 
         <li class="treeview {{ $route == 'creat-airline' || $route == 'view-airline' || $route == 'update-airline' || $route == 'creat-payment' || $route == 'view-payment' || $route == 'update-payment' || $route == 'creat-booking-method' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'view-booking-method' ? 'active' : '' }}">
             <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-gear"></i>
                 <span>Setting</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
