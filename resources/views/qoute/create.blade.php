@@ -118,7 +118,7 @@ td.day{
 
                 <div class="col-sm-2" style="margin-bottom:15px">
                     <label class="">Select Supplier</label> 
-                    <select class="form-control supplier-select2" name="supplier[]" >
+                    <select class="form-control supplier-select2 " name="supplier[]" >
                         <option value="">Select Supplier</option>
                         @foreach ($suppliers as $supplier)
                             <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
@@ -149,7 +149,7 @@ td.day{
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Method</label> 
                     <div class="input-group">
-                        <select class="form-control booking-method-select2"  name="booking_method[]" >
+                        <select class="form-control  booking-method-select2"  name="booking_method[]" >
                             <option value="">Select Booking Method</option>
                             @foreach ($booking_methods as $booking_method)
                                 <option value="{{$booking_method->id}}" {{ $booking_method->name == 'Supplier Own' ? 'selected' : '' }}>{{$booking_method->name}}</option>
@@ -425,10 +425,24 @@ td.day{
 
                         <br><br>
 
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-10 col-sm-offset-1 mb-2">
+                                    <div class="pull-right">
+                                        <select class="form-control" id="template" >
+                                            <option  selected >Select Any Template</option>
+                                            @foreach ($templates as $temp)
+                                            <option value="{{ $temp->id }}">{{ $temp->title }}</option>
+                                                
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="parent" id="parent">
                             <div class="qoute">
                                 <div class="row mt-3">
-
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Date of Service</label> 
                                         <div class="input-group">
@@ -445,7 +459,7 @@ td.day{
 
                                     <div class="col-sm-2 mb-3">
                                         <label class="">Select Category</label> 
-                                        <select class="form-control category-select2" id="category-select2"  name="category[]" >
+                                        <select class="form-control category-select2"  name="category[]" >
                                             <option value="">Select Category</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}" {{ old('category') == $category->id  ? "selected" : "" }}> {{ $category->name }} </option>
@@ -456,7 +470,7 @@ td.day{
         
                                     <div class="col-sm-2 mb-3">
                                         <label class="test">Select Supplier</label> 
-                                        <select class="form-control supplier-select2"  id="supplier-select2" name="supplier[]" >
+                                        <select class="form-control supplier-select2"  name="supplier[]" >
                                             <option value="">Select Supplier</option>
                                             @foreach ($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
@@ -488,7 +502,7 @@ td.day{
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
-                                            <select class="form-control"  name="booking_method[]" id="booking-method-select2" class="form-control" >
+                                            <select class="form-control  booking-method-select2"  name="booking_method[]" class="form-control" >
                                                 <option value="">Select Booking Method</option>
                                                 @foreach ($booking_methods as $booking_method)
                                                 <option value="{{$booking_method->id}}" {{ $booking_method->name == 'Supplier Own' ? 'selected' : '' }}>{{$booking_method->name}}</option>
@@ -501,7 +515,7 @@ td.day{
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booked By </label>
                                         <div class="input-group">
-                                            <select class="form-control"  name="booked_by[]" id="booked-by-select2" class="form-control" >
+                                            <select class="form-control booked-by-select2"  name="booked_by[]"  class="form-control" >
                                                 <option value="">Select Person</option>
                                                 @foreach ($users as $user)
                                                     <option value="{{$user->id}}" {{ !empty(Auth::user()->id) && Auth::user()->id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
@@ -522,7 +536,7 @@ td.day{
                                     <div class="col-sm-2 " style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Type</label> 
                                         <div class="input-group">
-                                            <select class="form-control" id="booking-type-select2" name="booking_type[]" >
+                                            <select class="form-control booking-type-select2"  name="booking_type[]" >
                                                 <option value="">Select Booking Type</option>
                                                 <option value="refundable">Refundable</option>
                                                 <option value="non_refundable">Non-Refundable</option>
@@ -539,7 +553,7 @@ td.day{
 
                                     <div class="col-sm-2 mb-3">
                                         <label>Select Supplier Currency</label> 
-                                        <select class="form-control supplier-currency" id="supplier-currency" name="supplier_currency[]" >
+                                        <select class="form-control supplier-currency" name="supplier_currency[]" >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
                                                 <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
@@ -579,7 +593,7 @@ td.day{
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Supervisor</label>
                                         <div class="input-group">
-                                            <select class="form-control supervisor-select2"  name="supervisor[]" id="supervisor-select2" class="form-control" >
+                                            <select class="form-control supervisor-select2"  name="supervisor[]" class="form-control" >
                                                 <option value="">Select Supervisor</option>
                                                 @foreach ($supervisors as $supervisor)
                                                     <option value="{{$supervisor->id}}" {{ (isset(Auth::user()->getSupervisor))? ((Auth::user()->getSupervisor->id == $supervisor->id)? 'selected': NULL) : NULL }} >{{$supervisor->name}}</option>
@@ -996,6 +1010,35 @@ td.day{
 
     $(document).ready(function() {
         
+        $(document).on('change', '#template', function(e) {
+            e.preventDefault();
+            var id = $(this).val();
+            if(id != null){
+            
+                var url = '{{ route("template.partial", ":id") }}';
+                url = url.replace(':id', id);
+                token = $('input[name=_token]').val();
+                data = {id: id};
+                $.ajax({
+                    url: url,
+                    headers: {'X-CSRF-TOKEN': token},
+                    data : data,
+                    type: 'get',
+                    // dataType: "json",
+                    success:function(data) {
+                        console.log(data);
+                        $('#parent').children( ".qoute" ).remove();
+                        // $('.qoute').remove();
+                        $('#parent').append(data.template_view);
+                        // $('.select2').select2();
+                        reinitializedDynamicFeilds()
+                        datePickerSetDate();
+                        $('#bookingSeason').val(data.template.season_id).trigger('change'); 
+                    } //end success
+                });
+            }
+        })
+        
         $(document).on('change', '.datepicker', function (event) {
                 
                 var season_id   = $('#bookingSeason').val();
@@ -1123,14 +1166,16 @@ td.day{
             }
         }
 
-        $('.select2').select2();
-        $('#category-select2').select2();
-        $('#supplier-select2').select2();
-        $('#booking-method-select2').select2();
-        $('#booked-by-select2').select2();
-        $('#supplier-currency').select2();
-        $('#supervisor-select2').select2();
-        $('#booking-type-select2').select2();
+        // $('.select2').select2();
+        // $('#category-select2').select2();
+        // $('#supplier-select2').select2();
+        // $('#booking-method-select2').select2();
+        // $('#booked-by-select2').select2();
+        // $('#supplier-currency').select2();
+        // $('#supervisor-select2').select2();
+        // $('#booking-type-select2').select2();
+        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+        
         // $('#convert-currency').select2();
  
         $('body').on('click', '#new', function (e) {
@@ -1140,15 +1185,15 @@ td.day{
         });
 
         function reinitializedDynamicFeilds(){
-            $(".category-select2:last").select2();
-            $(".supplier-select2:last").select2();
-            $(".booking-method-select2:last").select2();
-            $(".booked-by-select2:last").select2();
-            $('.supplier-currency:last').select2();
-            $('.supervisor-select2:last').select2();
-            $('.booking-type-select2').select2();
-            
-        
+            // $(".category-select2:last").select2();
+            // $(".supplier-select2:last").select2();
+            // $(".booking-method-select2:last").select2();
+            // $(".booked-by-select2:last").select2();
+            // $('.supplier-currency:last').select2();
+            // $('.supervisor-select2:last').select2();
+            // $('.booking-type-select2').select2();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();        
             // $(".datepicker").datepicker({ autoclose: true, format: 'dd-mm-yyyy'  });
             datePickerSetDate('reinitializedDynamicFeilds');
         }
@@ -1536,8 +1581,7 @@ td.day{
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
-
-                    // window.location.href = "{{ route('view-quote')}}";
+                   window.location.href = "{{ route('view-quote')}}";
                 },
                 error: function (reject) {
 

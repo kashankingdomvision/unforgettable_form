@@ -53,6 +53,7 @@ use App\BookingLog;
 use App\BookingDetailLog;
 use App\FinanceBookingDetailLog;
 
+use App\Template;
 class AdminController extends Controller
 {
     public function __construct(Request $request)
@@ -2291,19 +2292,88 @@ class AdminController extends Controller
 
             $season = season::find($request->season_id);
 
+            // if(!empty($request->date_of_service)){
+            //     $error_array = [];
+            //     foreach($request->date_of_service as $key => $date){
+        
+            //         $start = date('Y-m-d', strtotime($season->start_date));
+            //         $end   = date('Y-m-d', strtotime($season->end_date));
+
+            //         if(!is_null($date)){
+            //             $date  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
+            //         }else{
+            //             $date  = null;
+            //         }
+
+            //         if(!is_null($date) && !is_null($start)  && !is_null($end)){
+            //             if( !(($date >= $start) && ($date <= $end)) ){
+            //                 $error_array[$key+1] = "Date of service should be season date range.";
+            //             }
+            //         }
+         
+            //     }
+            // }
+
+            // if(!empty($error_array)){
+            //     throw \Illuminate\Validation\ValidationException::withMessages([
+            //         'date_of_service' =>  (object) $error_array
+            //     ]);
+            // }
+
+            // $booking_error = [];
+            // if(!empty($request->booking_date)){
+            //     foreach($request->booking_date as $key => $date){
+
+            //         if(!is_null($date)){
+            //             $date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $date))->format('Y-m-d')));
+            //         }else{
+            //             $date  = null;
+            //         }
+
+            //         if(!is_null($request->booking_due_date[$key])){
+            //             $booking_due_date = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d')));
+            //         }else{
+            //             $booking_due_date  = null;
+            //         }
+
+            //         if(!is_null($request->date_of_service[$key])){
+            //             $date_of_service  = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d')));
+            //         }else{
+            //             $date_of_service  = null;
+            //         }
+
+            //         if(is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+            //             if( ($date > $booking_due_date ) ){
+            //                 $booking_error[$key+1] = "Booking Date should be smaller than due date";
+            //             }
+            //         }
+
+            //         if(!is_null($date_of_service) && !is_null($date) && !is_null($booking_due_date) ){
+            //             if( !(($date >= $date_of_service) && ($date <= $booking_due_date)) ){
+            //                 $booking_error[$key+1] = "Booking Date should be greater Date of service and smaller than Booking Due Date";
+            //             }
+            //         }
+
+            //     }
+            // }
+
+            // if(!empty($booking_error)){
+            //     throw \Illuminate\Validation\ValidationException::withMessages([
+            //         'booking_date' => (object) $booking_error
+            //     ]);
             $errors = [];
             foreach ($request->booking_due_date as $key => $duedate) {
-                $duedate   = date('Y-m-d', strtotime(Carbon::parse($duedate)));
-
-                $startDate = date('Y-m-d', strtotime(Carbon::parse($season->start_date)));
-                $endDate   = date('Y-m-d', strtotime(Carbon::parse($season->end_date)));
+                $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
+                
+                $startDate = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $season->start_date))->format('Y-m-d')));
+                $endDate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $season->end_date))->format('Y-m-d')));
                 $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
                 if($bookingdate != NULL){
-                    $bookingdate   = date('Y-m-d', strtotime(Carbon::parse($bookingdate)));
+                    $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
                 }
                 $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
                 if ($dateofservice != null) {
-                    $dateofservice   = date('Y-m-d', strtotime(Carbon::parse($dateofservice)));
+                    $dateofservice   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $dateofservice))->format('Y-m-d')));
                 }
                 $error = [];
                 $dueresult = false;
@@ -2386,12 +2456,12 @@ class AdminController extends Controller
 
                     $qouteDetail = new QouteDetail;
                     $qouteDetail->qoute_id = $qoute->id;
-                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ?date('Y-m-d', strtotime(Carbon::parse($request->date_of_service[$key]))) : null;
+                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ?date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d'))) : null;
                     $qouteDetail->service_details   = $request->service_details[$key];
                     $qouteDetail->category_id       = $request->category[$key];
                     $qouteDetail->supplier          = $request->supplier[$key];
-                    $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse($request->booking_date[$key]))) : null;
-                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse($request->booking_due_date[$key]))): null;
+                    $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d'))) : null;
+                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d'))): null;
                     $qouteDetail->booking_method    = $request->booking_method[$key];
                     $qouteDetail->booked_by         = $request->booked_by[$key];
                     $qouteDetail->booking_refrence  = $request->booking_refrence[$key];
@@ -2400,7 +2470,7 @@ class AdminController extends Controller
                     $qouteDetail->supplier_currency = $request->supplier_currency[$key];
                     $qouteDetail->cost              = $request->cost[$key];
                     $qouteDetail->supervisor_id     = $request->supervisor[$key];
-                    $qouteDetail->added_in_sage     = $request->added_in_sage[$key];
+                    $qouteDetail->added_in_sage     = ($request->has('added_in_sage') && isset($request->added_in_sage[$key]))? $request->added_in_sage[$key] : NULL;
                     $qouteDetail->qoute_base_currency     = $request->qoute_base_currency[$key];
                     $qouteDetail->save();
                 }
@@ -2426,14 +2496,14 @@ class AdminController extends Controller
         return view('qoute.create')->with([
             'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,
-            'categories'       => Category::all()->sortBy('name'),
-            'seasons'          => season::all(),
-            'users'            => User::all()->sortBy('name'),
-            'supervisors'      => User::where('role_id',5)->orderBy('name','ASC')->get(),
-            'suppliers'        => Supplier::all()->sortBy('name'),
-            'booking_methods'  => BookingMethod::all()->sortBy('id'),
-            'currencies'       => Currency::all()->sortBy('name'),
-            // 'sale_agents'      => User::where('role_id',2)->orderBy('name','ASC')->get(),
+            'categories' => Category::all()->sortBy('name'),
+            'seasons' => season::all(),
+            'users' => User::all()->sortBy('name'),
+            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'suppliers' => Supplier::all()->sortBy('name'),
+            'booking_methods' => BookingMethod::all()->sortBy('id'),
+            'currencies' => Currency::all()->sortBy('name'),
+            'templates' => Template::all()->sortBy('name'),
         ]);
     }
 
@@ -3055,13 +3125,14 @@ class AdminController extends Controller
             $errors = [];
             foreach ($request->booking_due_date as $key => $duedate) {
                 $duedate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $duedate))->format('Y-m-d')));
-
-                $startDate = date('Y-m-d', strtotime($season->start_date));
-                $endDate   = date('Y-m-d', strtotime($season->end_date));
+                
+                $startDate =  date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $season->start_date))->format('Y-m-d')));
+                $endDate   =  date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $season->end_date))->format('Y-m-d')));
 
                 $bookingdate     = (isset($request->booking_date) && !empty($request->booking_date[$key]))? $request->booking_date[$key] : NULL;
                 if($bookingdate != NULL){
                     $bookingdate   = date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
+                    // date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $bookingdate))->format('Y-m-d')));
                 }
                 $dateofservice   = (isset($request->date_of_service) && !empty($request->date_of_service[$key]))? $request->date_of_service[$key] : NULL;
                 if ($dateofservice != null) {
@@ -3214,12 +3285,12 @@ class AdminController extends Controller
                 foreach($request->cost as $key => $cost){
                     $qouteDetail = new QouteDetail;
                     $qouteDetail->qoute_id = $qoute->id;
-                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null;
+                    $qouteDetail->date_of_service   = $request->date_of_service[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d'))) : null;
                     $qouteDetail->service_details   = $request->service_details[$key];
                     $qouteDetail->category_id       = $request->category[$key];
                     $qouteDetail->supplier          = $request->supplier[$key];
-                    $qouteDetail->booking_date      = $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null;
-                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null;
+                    $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d'))) : null;
+                    $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d'))): null;
                     $qouteDetail->booking_method    = $request->booking_method[$key];
                     $qouteDetail->booked_by         = $request->booked_by[$key];
                     $qouteDetail->booking_refrence  = $request->booking_refrence[$key];

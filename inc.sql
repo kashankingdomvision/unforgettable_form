@@ -309,3 +309,46 @@ CREATE TABLE `lara_unforge`.`finance_booking_detail_logs` ( `id` INT NOT NULL AU
 
 ALTER TABLE `finance_booking_detail_logs` ADD `log_no` INT(10) NOT NULL DEFAULT '0' AFTER `booking_detail_id`;
 
+-- //templates
+CREATE TABLE `lara_unforge`.`templates` ( `id` INT NOT NULL AUTO_INCREMENT , `user_id` INT NOT NULL , `title` VARCHAR(255) NOT NULL , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `templates` CHANGE `user_id` `user_id` INT(11) UNSIGNED NULL;
+ALTER TABLE `templates` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+
+CREATE TABLE `template_details` (
+  `id` int(11) NOT NULL,
+  `template_id` int(10) UNSIGNED NOT NULL,
+  `category_id` int(10) UNSIGNED DEFAULT NULL,
+  `supplier_id` int(10) UNSIGNED DEFAULT NULL,
+  `booking_method_id` int(10) UNSIGNED DEFAULT NULL,
+  `booked_by_id` int(10) UNSIGNED DEFAULT NULL,
+  `booking_reference` varchar(255) DEFAULT NULL,
+  `booking_type` enum('refundable','nonrefundable') DEFAULT 'refundable',
+  `comments` varchar(255) DEFAULT NULL,
+  `currency_id` int(10) UNSIGNED DEFAULT NULL,
+  `estimated_cost` double DEFAULT NULL,
+  `currency_conversion` double DEFAULT NULL,
+  `sage` enum('0','1') DEFAULT '0',
+  `supervisor_id` int(10) UNSIGNED DEFAULT NULL,
+  `service_details` varchar(255) DEFAULT NULL,
+  `date_of_service` date DEFAULT NULL,
+  `booking_date` date DEFAULT NULL,
+  `booking_due_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `template_details`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `template_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `template_details` CHANGE `template_id` `template_id` INT(10) NOT NULL;
+ALTER TABLE `template_details` ADD `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `booking_due_date`, ADD `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `created_at`;
+ALTER TABLE `templates` ADD `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `created_at`;
+ALTER TABLE `templates` ADD `status` ENUM('active','inactive') NULL DEFAULT 'active' AFTER `title`;
+
+ALTER TABLE `templates` ADD `season_id` INT UNSIGNED NOT NULL AFTER `user_id`;
+ALTER TABLE `templates` ADD FOREIGN KEY (`season_id`) REFERENCES `seasons`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
