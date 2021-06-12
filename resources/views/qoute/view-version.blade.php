@@ -88,7 +88,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"> Quote</h3>
                         <div class="pull-right">
-                            <a onclick="return confirm('Are you sure want to recall this quote');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
+                            <a onclick="return confirm('Are you sure you want to recall this quote?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
                                 <button class="btn btn-info pull-right"> Recall Quote</button>
                             </a>
                         </div>
@@ -390,7 +390,7 @@
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Converted into Base Currency</label>
                                         <label class="currency"></label>  
-                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ $quote_detail->qoute_base_currency }}" readonly disabled><br>
+                                        <input type="text" class="base-currency"  name="qoute_base_currency[]" value="{{ number_format($quote_detail->qoute_base_currency, 2, '.', '') }}" readonly disabled><br>
                                     </div>
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -450,25 +450,25 @@
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
-                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{$qoute_log->net_price}}" disabled>
+                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{ number_format($qoute_log->net_price, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
-                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{$qoute_log->markup_amount}}" disabled>
+                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{ number_format($qoute_log->markup_amount, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
-                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{$qoute_log->selling}}" disabled>
+                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{ number_format($qoute_log->selling, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
                                         <label class="currency" > {{ $qoute_log->currency }} </label>
-                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit"  value="{{$qoute_log->gross_profit}}" disabled>
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="{{ number_format($qoute_log->gross_profit, 2, '.', '') }}" disabled>
                                         <span>%</span> 
                                     </label>
                                 </div>
@@ -510,7 +510,7 @@
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency">{{$qoute_log->convert_currency}}</label>
-                                    <input type="number" name="show_convert_currency" min="0" value="{{$qoute_log->show_convert_currency}}" step="any" class="show-convert-currency hide-arrows" value="0" disabled>
+                                    <input type="number" name="show_convert_currency" min="0" value="{{ number_format($qoute_log->show_convert_currency, 2, '.', '') }}" step="any" class="show-convert-currency hide-arrows" value="0" disabled>
                                 </label>
                             </div>
                         </div>
@@ -524,7 +524,7 @@
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
                                 <label class="convert-currency">{{$qoute_log->convert_currency}}</label>
-                                <input type="number" class="per-person hide-arrows" min="0" value="{{$qoute_log->per_person}}" step="any" name="per_person" value="0" disabled>
+                                <input type="number" class="per-person hide-arrows" min="0" value="{{ number_format($qoute_log->per_person, 2, '.', '') }}" step="any" name="per_person" value="0" disabled>
                             </div>
                         </div>
 
