@@ -56,22 +56,17 @@ use App\FinanceBookingDetailLog;
 use App\Template;
 class AdminController extends Controller
 {
+    public $cacheTimeOut;
     public function __construct(Request $request)
     {
-        // $this->middleware('auth');
-        /*Session::set('curr_route', explode('/', Route::getFacadeRoot()->current()->uri())[0]);
-      echo Session::get('id');die();
-      if(explode('/', Route::getFacadeRoot()->current()->uri())[0] != 'logout' ){
-        if(!$request->isMethod('post')){
-          Redirect::to('permission')->send();
-        }
-      }*/
-        // return Redirect::route('user-permission')->with('curr_route',explode('/', Route::getFacadeRoot()->current()->uri())[0]);
+        $this->cacheTimeOut = 1800;
     }
+    
     public function index()
     {
         return view('admin.index');
     }
+    
     public function logout()
     {
         if (Auth::check()) {
@@ -543,19 +538,19 @@ class AdminController extends Controller
             return Redirect::route('create-booking')->with('success_message', 'Created Successfully');
         } else {
 
-            $get_ref = Cache::remember('get_ref', 60, function () {
+            $get_ref = Cache::remember('get_ref', $this->cacheTimeOut, function () {
                 $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_ref';
                 $output =  $this->curl_data($url);
                 //   return json_decode($output)->data;
             });
 
-            $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
 
-            $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
                 $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_holiday_type';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
@@ -581,23 +576,23 @@ class AdminController extends Controller
     public function view_booking(Request $request, $id)
     {
         //
-        $staff = Cache::remember('staff', 1140, function () {
+        $staff = Cache::remember('staff', $this->cacheTimeOut, function () {
             return User::orderBy('id', 'DESC')->get();
         });
         //
-        $get_ref = Cache::remember('get_ref', 60, function () {
+        $get_ref = Cache::remember('get_ref', $this->cacheTimeOut, function () {
             $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_ref';
             $output =  $this->curl_data($url);
             return json_decode($output)->data;
         });
         //
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
         //
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'https://unforgettabletravelcompany.com/staging/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
@@ -1359,14 +1354,14 @@ class AdminController extends Controller
         } else {
 
 
-            $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
 
-            $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
                 $output =  $this->curl_data($url);
@@ -1424,14 +1419,14 @@ class AdminController extends Controller
         $booking_log         = BookingLog::where('booking_id',$booking_id)->where('log_no',$log_no)->first();
         $booking_detail_logs = BookingDetailLog::where('booking_id',$booking_id)->where('log_no',$log_no)->get();
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -2161,21 +2156,21 @@ class AdminController extends Controller
 
             return Redirect::route('creat-code')->with('success_message', 'Created Successfully');
         } else{
-            $get_ref = Cache::remember('get_ref', 60, function () {
+            $get_ref = Cache::remember('get_ref', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_ref';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_ref';
                 $output =  $this->curl_data($url);
                 //   return json_decode($output)->data;
             });
 
-            $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+            $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
                 return json_decode($output);
             });
 
-            $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+            $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
                 $output =  $this->curl_data($url);
@@ -2480,14 +2475,14 @@ class AdminController extends Controller
 
         }
 
-        $get_user_branche = Cache::remember('get_user_branche', 900, function () {
+        $get_user_branche = Cache::remember('get_user_branche', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output, true);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 900, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
@@ -2510,17 +2505,18 @@ class AdminController extends Controller
 
     // get specific data from api
     public function getUserBranches($anyOne = NULL) {
-        $data  = Cache::remember('get_user_branches', 60, function () {
+        $data  = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output =  $this->curl_data($url);
+                
                 return json_decode($output, true);
             });
         switch ($anyOne) {
             case 'brands':
-                return    $data['branches'];
+                return    isset($data['branches'])? $data['branches']: NULL;
                 break;
             case 'users':
-                return    $data['users'];
+                return    isset($data['users'])? $data['users']: NULL;
                 break;
             default:
                 return    $data;
@@ -2827,14 +2823,14 @@ class AdminController extends Controller
             return response()->json(['success_message' => 'Successfully Converted To Booked']);
         }
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -2982,14 +2978,14 @@ class AdminController extends Controller
             //     }
             // }
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -3343,14 +3339,14 @@ class AdminController extends Controller
             return response()->json(['success_message'=>'Quote Successfully Updated!!']);
         }
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -3391,14 +3387,14 @@ class AdminController extends Controller
 
 
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -3434,14 +3430,14 @@ class AdminController extends Controller
         ->where('log_no',$log_no)
         ->get();
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
@@ -3787,19 +3783,19 @@ class AdminController extends Controller
 
         $code = code::find($id);
 
-        $get_user_branches = Cache::remember('get_user_branches', 60, function () {
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_holiday_type = Cache::remember('get_holiday_type', 60, function () {
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
             $output =  $this->curl_data($url);
             return json_decode($output);
         });
 
-        $get_ref = Cache::remember('get_ref', 60, function () {
+        $get_ref = Cache::remember('get_ref', $this->cacheTimeOut, function () {
             $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_ref';
             $output =  $this->curl_data($url);
             //   return json_decode($output)->data;
