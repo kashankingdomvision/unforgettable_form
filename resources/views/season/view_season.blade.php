@@ -57,7 +57,7 @@
                     <td>{{\Carbon\Carbon::parse(str_replace('-', '/', $value->end_date))->format('d/m/Y')}}</td>
                     <td>
                         <a href="{{ URL::to('update-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                        <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-season/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                        <a onclick="return confirm('Are you sure want to this');" href="{{ URL::to('del-season/'.$value->id)}}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>
                     </td>
                 </tr>
                 @endforeach

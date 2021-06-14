@@ -50,7 +50,7 @@
          
                   <td>
                     <a href="{{ URL::to('update-payment/'.$value->id)}}" class="btn btn-primary btn-xs" ><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to delete this record ?');" href="{{ URL::to('del-payment/'.$value->id)}}" class="btn btn-primary btn-xs" ><span class="fa fa-remove"></span></a>
+                    <a onclick="return confirm('Are you sure want to delete this record ?');" href="{{ URL::to('del-payment/'.$value->id)}}" class="btn btn-danger btn-xs" ><span class="fa fa-trash"></span></a>
                   </td>
                 </tr>
               

@@ -57,7 +57,7 @@
                     <td>
                         <a href="{{ URL::to('update-supplier/'.$supplier->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                         <a href="{{ route('details-supplier', encrypt($supplier->id)) }}" class="btn btn-primary btn-xs" data-title="Details" data-target="#details"><span class="fa fa-eye"></span></a>
-                        <a onclick="return confirm('Are you sure want to Delete {{ $supplier->name }}');" href="{{ route('delete-supplier', encrypt($supplier->id)) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-remove"></span></a>
+                        <a onclick="return confirm('Are you sure want to Delete {{ $supplier->name }}');" href="{{ route('delete-supplier', encrypt($supplier->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
                         
                     </td>
                     {{-- <td>

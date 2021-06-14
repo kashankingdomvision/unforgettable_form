@@ -52,7 +52,7 @@
                   <td id="descript_{{$value->id}}">{{ \Illuminate\Support\Str::limit($value->description, 100, '...')}} @if(Str::length($value->description) > 100)<button data-value="{{ $value->description }}" data-id="#descript_{{$value->id}}" class="readmore text-dark btn-link">read more</button> @endif</td>
                   <td>
                     <a href="{{ URL::to('update-product/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to Delete {{ $value->name }}');" href="{{ URL::to('delete-product/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    <a onclick="return confirm('Are you sure want to Delete {{ $value->name }}');" href="{{ URL::to('delete-product/'.$value->id)}}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>
                   </td>
                 </tr>
                 @endforeach
