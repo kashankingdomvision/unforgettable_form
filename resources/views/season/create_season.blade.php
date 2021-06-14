@@ -44,7 +44,7 @@
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
                         {{-- <input type="text" name="name" id="seasons" class="form-control" maxlength="9" autocomplete="off" pattern="^\d{4}-\d{4}$" placeholder="YYYY-YYYY" value="{{ old('name') }}" required> --}}
-                        <input type="text" name="name" id="seasons" class="form-control" maxlength="9" autocomplete="off" pattern="^-?\d{4}-\d{4}$" placeholder="YYYY-YYYY" value="{{ old('name') }}" required>
+                        <input type="text" name="name" id="seasons" class="form-control" maxlength="9" autocomplete="off" pattern="^-?\d{4}-\d{4}$" placeholder="Enter the season name into years (2021-2023)" value="{{ old('name') }}" required>
                         {{-- {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'YYYY-YYYY','required'=>'true']) !!} --}}
                       </div>
                       <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
