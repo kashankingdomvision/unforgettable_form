@@ -1666,7 +1666,7 @@ class AdminController extends Controller
             'name'      => $supplier->name,
             'email'     => $supplier->email,
             'phone'     => $supplier->phone,
-            'currency'  => $supplier->currency->name,
+            'currency'  => $supplier->currency->name??NULL,
         ];
 
         $category = [];

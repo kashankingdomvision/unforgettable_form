@@ -10,7 +10,7 @@ use App\User;
 use App\Supplier;
 use App\BookingMethod;
 use App\Currency;
-use App\season;
+use App\Season;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
