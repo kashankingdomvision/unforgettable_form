@@ -3355,7 +3355,7 @@ class AdminController extends Controller
 
         return view('qoute.edit')->with([
             'quote' => Qoute::find($id),
-            'quote_details' => QouteDetail::where('qoute_id',$id)->get(),
+            'quote_details' => QouteDetail::where('qoute_id',$id)->orderBy('date_of_service', 'ASC')->get(),
             'get_user_branches' => $get_user_branches,
             'get_holiday_type' => $get_holiday_type,
             'categories' => Category::all()->sortBy('name'),
