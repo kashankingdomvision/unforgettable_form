@@ -117,10 +117,18 @@ class AdminController extends Controller
             return Redirect::route('view-user')->with('success_message', 'Created Successfully');
 
         } else {
+            
+            $branch  = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+                $output =  $this->curl_data($url);
+                
+                return json_decode($output);
+            });
+            
             $data['roles']          = role::all();
             $data['supervisors']    = User::where('role_id',5)->orderBy('name','ASC')->get();
             $data['currencies']     = Currency::get();
-            $data['brands']         = $this->getUserBranches('brands');
+            $data['brands']         = $branch;
             return view('user.create_user', $data);
             // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get() ]);
         }
@@ -163,11 +171,16 @@ class AdminController extends Controller
             return Redirect::route('view-user')->with('success_message', 'Update Successfully');
 
         } else {
+            $branch  = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
+                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+                $output =  $this->curl_data($url);
+                return json_decode($output);
+            });
             $data['data']           = $user;
             $data['roles']          = role::all();
             $data['supervisors']    = User::where('role_id',5)->orderBy('name','ASC')->get();
             $data['currencies']     = Currency::get();
-            $data['brands']         = $this->getUserBranches('brands');
+            $data['brands']         = $branch;
 
             return view('user.update_user', $data);
         }
@@ -2503,27 +2516,7 @@ class AdminController extends Controller
         ]);
     }
 
-    // get specific data from api
-    public function getUserBranches($anyOne = NULL) {
-        $data  = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
-                $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
-                $output =  $this->curl_data($url);
-                
-                return json_decode($output, true);
-            });
-        switch ($anyOne) {
-            case 'brands':
-                return    isset($data['branches'])? $data['branches']: NULL;
-                break;
-            case 'users':
-                return    isset($data['users'])? $data['users']: NULL;
-                break;
-            default:
-                return    $data;
-        }
-            return false;
-    }
-
+  
     public function view_quote(){
 
         return view('qoute.view')->with(['quotes' => $results = Qoute::orderBy('created_at', 'desc')->get() ]);
