@@ -187,10 +187,10 @@ ALTER TABLE `users` ADD `currency_id` INT(10) NULL AFTER `is_login`, ADD `brand_
 -- // Add Flight ON Category
 INSERT INTO `categories` (`name`, `updated_at`, `created_at`) VALUES ('Flights', '2021-06-04', '2021-06-04')
 
--- Add suppliers for flights Easyjet, Jet2 , British Airways			
+-- Add suppliers for flights Easyjet, Jet2 , British Airways
 INSERT INTO `suppliers` (`id`, `name`, `email`, `phone`, `currency_id`, `updated_at`, `created_at`) VALUES (NULL, ' Easyjet', '', '', '', '2021-06-04', '2021-06-04'), (NULL, 'Jet2', '', '', '', '2021-06-04', '2021-06-04'), (NULL, 'British Airways', '', '', '', '2021-06-04', '2021-06-04')
 
--- //change Supplier Column 
+-- //change Supplier Column
 ALTER TABLE `suppliers` CHANGE `email` `email` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;
 ALTER TABLE `suppliers` CHANGE `phone` `phone` INT(20) NULL;
 ALTER TABLE `suppliers` CHANGE `currency_id` `currency_id` INT(11) NULL;
@@ -352,3 +352,25 @@ ALTER TABLE `templates` ADD `status` ENUM('active','inactive') NULL DEFAULT 'act
 
 ALTER TABLE `templates` ADD `season_id` INT UNSIGNED NOT NULL AFTER `user_id`;
 ALTER TABLE `templates` ADD FOREIGN KEY (`season_id`) REFERENCES `seasons`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Flight Booked (booking table)
+ALTER TABLE `bookings` ADD `flight_booked` VARCHAR(255) NULL AFTER `updated_at`;
+ALTER TABLE `bookings` ADD `fb_person` INT(10) NULL AFTER `flight_booked`, ADD `fb_last_date` DATE NULL AFTER `fb_person`, ADD `fb_airline_name_id` INT(10) NULL AFTER `fb_last_date`, ADD `fb_payment_method_id` INT(10) NULL AFTER `fb_airline_name_id`, ADD `fb_booking_date` DATE NULL AFTER `fb_payment_method_id`, ADD `fb_airline_ref_no` VARCHAR(255) NULL AFTER `fb_booking_date`, ADD `flight_booking_details` TEXT NULL AFTER `fb_airline_ref_no`;
+
+-- Transfer Info (booking table)
+ALTER TABLE `bookings` ADD `asked_for_transfer_details` VARCHAR(5) NULL AFTER `flight_booking_details`, ADD `aft_person` INT(10) NULL AFTER `asked_for_transfer_details`, ADD `aft_last_date` DATE NULL AFTER `aft_person`, ADD `transfer_details` TEXT NULL AFTER `aft_last_date`;
+
+-- Transfers Organised (booking table)
+ALTER TABLE `bookings` ADD `transfer_organised` VARCHAR(5) NULL AFTER `transfer_details`, ADD `to_person` INT(10) NULL AFTER `transfer_organised`, ADD `to_last_date` DATE NULL AFTER `to_person`, ADD `transfer_organised_details` TEXT NULL AFTER `to_last_date`;
+
+-- Itinerary Finalised (booking table)
+ALTER TABLE `bookings` ADD `itinerary_finalised` VARCHAR(5) NULL AFTER `transfer_organised_details`, ADD `itf_person` INT(10) NULL AFTER `itinerary_finalised`, ADD `itf_last_date` DATE NULL AFTER `itf_person`, ADD `itinerary_finalised_details` TEXT NULL AFTER `itf_last_date`, ADD `itf_current_date` DATE NULL AFTER `itinerary_finalised_details`;
+
+-- Travel Document Prepared (booking table)
+ALTER TABLE `bookings` ADD `document_prepare` VARCHAR(5) NULL AFTER `itf_current_date`, ADD `dp_person` INT(10) NULL AFTER `document_prepare`, ADD `dp_last_date` DATE NULL AFTER `dp_person`, ADD `tdp_current_date` DATE NULL AFTER `dp_last_date`;
+
+-- Travel Document Sent (booking table)
+ALTER TABLE `bookings` ADD `documents_sent` VARCHAR(5) NULL AFTER `tdp_current_date`, ADD `ds_person` INT(10) NULL AFTER `documents_sent`, ADD `ds_last_date` DATE NULL AFTER `ds_person`, ADD `documents_sent_details` TEXT NULL AFTER `ds_last_date`, ADD `tds_current_date` DATE NULL AFTER `documents_sent_details`;
+
+-- App login Sent (booking table)
+ALTER TABLE `bookings` ADD `electronic_copy_sent` VARCHAR(5) NULL AFTER `tds_current_date`, ADD `aps_person` INT(10) NULL AFTER `electronic_copy_sent`, ADD `aps_last_date` DATE NULL AFTER `aps_person`, ADD `electronic_copy_details` TEXT NULL AFTER `aps_last_date`;
