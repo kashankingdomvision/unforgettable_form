@@ -998,8 +998,21 @@ td.day{
                         $('#sendReference').text('Search');
                         $("#divLoading").removeClass('show');
                         $('#sendReference').removeAttr('disabled');
-                    } //end success
-                });
+                    }, //end success
+                    error: function (reject) {
+                        
+                            if( reject.status === 422 ) {
+                                var errors = $.parseJSON(reject.responseText);
+                                jQuery.each(errors.errors, function( index, value ) {
+                                    $('#error_ref_no').html(value);
+            
+                                });
+                                $('#sendReference').text('Search');
+                                $("#divLoading").removeClass('show');
+                                $('#sendReference').removeAttr('disabled');
+                            }
+                        }
+                    });
             }
         }
         // $('.select2').select2();
