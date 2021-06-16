@@ -43,7 +43,8 @@
                     <label for="inputEmail3" class=""> Season Name <span style="color:red">*</span></label>
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-cloud"></i></span>
-                        <input type="text" name="name" id="" class="form-control" autocomplete="off" placeholder="YYYY-YYYY" value="{{ old('name') }}" required>
+                        {{-- <input type="text" name="name" id="seasons" class="form-control" maxlength="9" autocomplete="off" pattern="^\d{4}-\d{4}$" placeholder="YYYY-YYYY" value="{{ old('name') }}" required> --}}
+                        <input type="text" name="name" id="seasons" class="form-control" maxlength="9" autocomplete="off" pattern="^-?\d{4}-\d{4}$" placeholder="Enter the season name into years (2021-2023)" value="{{ old('name') }}" required>
                         {{-- {!! Form::text('name',null,['class'=>'form-control','placeholder'=>'YYYY-YYYY','required'=>'true']) !!} --}}
                       </div>
                       <div class="alert-danger" style="text-align:center">{{$errors->first('name')}}</div>
@@ -338,6 +339,13 @@
         $(function(){
             $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
         });
+        
+        $('#seasons').keyup( function () {
+          var val = $(this).val();
+          if(val.length == 4){
+            $(this).val(val+'-');
+          }
+        })
     });
 
 

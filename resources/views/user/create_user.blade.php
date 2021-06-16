@@ -129,8 +129,9 @@
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <select class="form-control select2" name="brand">
                         <option selected value="">Select Brands</option>
-                        @foreach($brands as $brand)
-                            <option value="{{ $brand['name'] }}" {{ (old('brand') == $brand['name'])? 'selected' : NULL }} >{{$brand['name']}}</option>
+                      
+                        @foreach($brands->branches as $brand)
+                            <option value="{{ $brand->name }}" {{ (old('brand') == $brand->name)? 'selected' : NULL }} >{{$brand->name}}</option>
                         @endforeach
                     </select>
                   </div>

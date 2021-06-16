@@ -870,28 +870,31 @@ td.day{
         $(document).on('change', '#template', function(e) {
             e.preventDefault();
             var id = $(this).val();
-            if(id != null){
-                var url = '{{ route("template.partial", ":id") }}';
-                url = url.replace(':id', id);
-                token = $('input[name=_token]').val();
-                data = {id: id};
-                $.ajax({
-                    url: url,
-                    headers: {'X-CSRF-TOKEN': token},
-                    data : data,
-                    type: 'get',
-                    // dataType: "json",
-                    success:function(data) {
-                        console.log(data);
-                        $('#parent').children( ".qoute" ).remove();
-                        // $('.qoute').remove();
-                        $('#parent').append(data.template_view);
-                        // $('.select2').select2();
-                        reinitializedDynamicFeilds()
-                        datePickerSetDate();
-                        $('#bookingSeason').val(data.template.season_id).trigger('change'); 
-                    } //end success
-                });
+            
+            if (confirm('Are you sure you want to lose your data into the template??' ,'yes')) {
+                if(id != null){
+                    var url = '{{ route("template.partial", ":id") }}';
+                    url = url.replace(':id', id);
+                    token = $('input[name=_token]').val();
+                    data = {id: id};
+                    $.ajax({
+                        url: url,
+                        headers: {'X-CSRF-TOKEN': token},
+                        data : data,
+                        type: 'get',
+                        // dataType: "json",
+                        success:function(data) {
+                            console.log(data);
+                            $('#parent').children( ".qoute" ).remove();
+                            // $('.qoute').remove();
+                            $('#parent').append(data.template_view);
+                            // $('.select2').select2();
+                            reinitializedDynamicFeilds()
+                            datePickerSetDate();
+                            $('#bookingSeason').val(data.template.season_id).trigger('change'); 
+                        } //end success
+                    });
+                }
             }
         })
         $(document).on('change', '.datepicker', function (event) {

@@ -48,7 +48,7 @@
                   <td style="text-transform: capitalize;">{{ $value->name }}</td>
                   <td>
                     <a href="{{ URL::to('update-category/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to Delete {{ $value->name }}');" href="{{ URL::to('delete-category/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    <a onclick="return confirm('Are you sure want to Delete {{ $value->name }}');" href="{{ URL::to('delete-category/'.$value->id)}}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>
                   </td>
                 </tr>
                 @endforeach

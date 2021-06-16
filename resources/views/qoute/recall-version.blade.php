@@ -365,7 +365,7 @@
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="sales_person" name="sale_person" >
                                     <option value="">Select Person</option>
-                                    @foreach ($get_user_branches->users as $user)
+                                    @foreach ($users as $user)
                                     <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->email }}</option>
                                     @endforeach
                                 </select>
@@ -1485,7 +1485,7 @@
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
                     // $("#version").load();
-
+                    window.location.href = "{{ route('view-quote')}}";
                     $("#version").load(location.href + " #version");
                 },
                 error: function (reject) {

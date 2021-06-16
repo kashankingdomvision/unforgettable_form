@@ -69,7 +69,7 @@
                   {{-- <td>{{ $value->id }}</td> --}}
                   <td><a href="{{ route('view-booking',$value->id) }}" class="btn btn-primary btn-xs" data-title="View" data-target="#edit">{{ $value->name }}</a></td>
                   <td>
-                    <a onclick="return myConfirm('{{ route('del-booking-season',$value->id)}}');" href="{{ route('del-booking-season',$value->id)}}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    <a onclick="return myConfirm('{{ route('del-booking-season',$value->id)}}');" href="{{ route('del-booking-season',$value->id)}}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>
                   </td>
                 </tr>
                 @endforeach
