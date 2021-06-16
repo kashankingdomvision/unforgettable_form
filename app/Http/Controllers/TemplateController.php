@@ -114,10 +114,14 @@ class TemplateController extends Controller
         ]);
         
         foreach ($request->quote as $quote) {
-            $data = $this->getArrayTemplateDetails($quote);
-            $data['template_id'] = $template->id;
-            $key = (isset($quote['key']))? decrypt($quote['key']) : 0;
-            $template->getTemplateDetails()->updateOrCreate(['id' => $key],$data);
+            if(!isset($quote['booking_due_date'])){
+              $template->getTemplateDetails()->where('id', decrypt($quote['key']))->delete();
+            }else{
+              $data = $this->getArrayTemplateDetails($quote);
+              $data['template_id'] = $template->id;
+              $key = (isset($quote['key']))? decrypt($quote['key']) : 0;
+              $template->getTemplateDetails()->updateOrCreate(['id' => $key],$data);
+            }
         }
         
       return redirect()->route('template.index')->with('success_message', 'template deleted successfully');
