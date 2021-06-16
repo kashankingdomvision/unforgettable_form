@@ -74,7 +74,10 @@
 
 <div class="content-wrapper">
 
+
+
     <section class="content-header">
+        <h1>  </h1>
     </section>
 
     <section class="content">
@@ -84,10 +87,14 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            Final Quotation for Booking Reference # &nbsp;{{ $qoute->ref_no }}
+                            Booking Reference # &nbsp;{{ $qoute_log->ref_no }}
                         </h3>
-                        <div class="pull-right"></div>
+                        <h3 class="box-title pull-right">
+                            Quotation Version {{ $qoute_log->log_no }}  : {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}}  By {{\App\User::findOrFail($qoute_log->user_id)->name}}
+                        </h3>
                     </div>
+
+                    
                     
                     <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
                         @if (Session::has('success_message'))
@@ -104,14 +111,15 @@
                             <div class="row">
                                 <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
-                                    <label class="radio-inline"><input type="radio" name="reference" value="zoho" disabled {{ ($qoute->reference_name == 'zoho')? 'checked': NULL }}>Zoho Reference</label>
+                                    <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'zoho')? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
+                                    {{-- <label class="radio-inline"><input type="radio" disabled {{ ($qoute_log->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label> --}}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                    <label for="inputEmail3" id="referencename">{{ ($qoute->reference_name == 'zoho')? 'Zoho': "TAS" }} Reference</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" id="referencename">{{ ($qoute_log->reference_name == 'zoho') ? 'Zoho': "TAS" }} Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="ref_no" disabled value="{{ $qoute->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
+                                        <input type="text" name="ref_no" disabled value="{{ $qoute_log->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
                                         </span>
                                         <span class="input-group-addon">
@@ -124,7 +132,7 @@
                                 <div class="col-sm-5" style="margin-bottom:15px;">
                                     <label for="inputEmail3" class="">Quotation Number</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="quotation_no"  class="form-control" value="{{ $qoute->quotation_no }}" disabled>
+                                        <input type="text" name="quotation_no"  class="form-control" value="{{ $qoute_log->quotation_no }}" disabled>
                                         <span class="input-group-addon"></span>
                                     </div>
                                     <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
@@ -135,7 +143,7 @@
                             <div class="col-sm-5 mb-2 col-sm-offset-1 mb-2">
                                 <label for="inputEmail3" class="">Lead Passenger Name</label> <span style="color:red">*</span>
                                 <div class="input-group">
-                                    <input type="text" name="lead_passenger_name" class="form-control" value="{{ $qoute->lead_passenger_name }}" disabled>
+                                    <input type="text" name="lead_passenger_name" class="form-control" value="{{ $qoute_log->lead_passenger_name }}" disabled>
                                     <span class="input-group-addon"></span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
@@ -143,7 +151,7 @@
 
                             <div class="col-sm-5" style="margin-bottom:15px;">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <input type="text" name="brand_name" value="{{ $qoute->brand_name }}" class="form-control"  disabled>
+                                <input type="text" name="brand_name" value="{{ $qoute_log->brand_name }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
                             </div>
                         </div>
@@ -151,14 +159,14 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
-                                <input type="text" name="type_of_holidays" value="{{ $qoute->type_of_holidays }}" class="form-control"  disabled>
+                                <input type="text" name="type_of_holidays" value="{{ $qoute_log->type_of_holidays }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
                             </div>
     
                             <div class="col-sm-5" style="margin-bottom:15px;">
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
 
-                                <input type="text" name="sale_person" value="{{ $qoute->sale_person }}" class="form-control"  disabled>
+                                <input type="text" name="sale_person" value="{{ $qoute_log->sale_person }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
                             </div>
                         </div>
@@ -170,7 +178,7 @@
                                 <select class="form-control dropdown_value" name="season_id" disabled>
                                     <option value="">Select Season</option>
                                     @foreach ($seasons as $sess)
-                                    <option value="{{ $sess->id }}" {{ $qoute->season_id == $sess->id ? 'selected' : ''}} >{{ $sess->name }}</option>
+                                    <option value="{{ $sess->id }}" {{ $qoute_log->season_id == $sess->id ? 'selected' : ''}} >{{ $sess->name }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
@@ -178,21 +186,21 @@
 
                             <div class="col-sm-1" style="margin-bottom: 35px; width:145px;">
                                 <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red"> *</span><br>
-                                <input type="radio" name="agency_booking"  value="2" id="ab_yes" {{ $qoute->agency_booking == "2" ? 'checked' : ''}} disabled> <label for="ab_yes"> Yes</label>
-                                <input type="radio" name="agency_booking"  value="1"  id="ab_no" {{ $qoute->agency_booking == "1" ? 'checked' : ''}}  disabled> <label for="ab_no"> No</label>
+                                <input type="radio" name="agency_booking"  value="2" id="ab_yes" {{ $qoute_log->agency_booking == "2" ? 'checked' : ''}} disabled> <label for="ab_yes"> Yes</label>
+                                <input type="radio" name="agency_booking"  value="1"  id="ab_no" {{ $qoute_log->agency_booking == "1" ? 'checked' : ''}}  disabled> <label for="ab_no"> No</label>
                                 <div class="alert-danger" style="text-align:center" > </div>
                             </div>
 
-                            <div class="row" style="{{ $qoute->agency_booking == 2 ? 'display:block' : 'display:none' }}" id="agency-detail">
+                            <div class="row" style="{{ $qoute_log->agency_booking == 2 ? 'display:block' : 'display:none' }}" id="agency-detail">
                                 <div class="col-sm-2" style="width:175px;">
                                     <label for="inputEmail3" class="">Agency Name</label> <span style="color:red"> *</span>
-                                    <input type="text" name="agency_name" value="{{ $qoute->agency_name }}"  class="form-control">
+                                    <input type="text" name="agency_name" value="{{ $qoute_log->agency_name }}"  class="form-control">
                                     <div class="alert-danger" style="text-align:center" id="error_agency_name"> </div>
                                 </div>
 
                                 <div class="col-sm-2">
                                     <label for="inputEmail3" class="">Agency Contact No.</label> <span style="color:red"> *</span>
-                                    <input type="text" name="agency_contact_no" value="{{ $qoute->agency_contact_no }}" class="form-control">
+                                    <input type="text" name="agency_contact_no" value="{{ $qoute_log->agency_contact_no }}" class="form-control">
                                     <div class="alert-danger" style="text-align:center" id="error_agency_contact_no"> </div>
                                 </div>
                             </div>
@@ -206,7 +214,7 @@
                                 <select name="currency" class="form-control select2 " disabled>
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" {{ $qoute->currency == $currency->code ? 'selected' : ''}} > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option value="{{ $currency->code }}" {{ $qoute_log->currency == $currency->code ? 'selected' : ''}} > {{ $currency->name }} ({{ $currency->symbol }}) </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
@@ -216,7 +224,7 @@
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
                                   <select class="form-control dropdown_value select2" name="group_no" disabled>
                                     @for($i=1;$i<=30;$i++)
-                                    <option value={{$i}} {{ $qoute->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
+                                    <option value={{$i}} {{ $qoute_log->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
                                     @endfor
                                   </select>
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
@@ -226,7 +234,7 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" value="{{ $qoute->dinning_preferences }}" class="form-control" disabled>
+                                <input type="text" name="dinning_preferences" value="{{ $qoute_log->dinning_preferences }}" class="form-control" disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
                             </div>
                         </div>
@@ -234,9 +242,15 @@
                         <br><br>
 
                         <div class="parent" id="parent">
-                            @foreach ($qoute_details as $key => $quote_detail)
+                            @foreach ($qoute_detail_logs as $key => $quote_detail)
                                 
                             <div class="qoute">
+                                <div class="row">
+                                    <div class="col-sm-12" >
+                                        <button type="button" class="btn  pull-right close"> x </button>
+                                    </div>
+                                </div>
+                                <br>
                                 <div class="row">
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Date of Service</label> 
@@ -400,15 +414,14 @@
                                         <div class="alert-danger" style="text-align:center"> </div>
                                     </div>
 
-                                    {{-- <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
-                                        <a  target="_blank" href="{{ asset("quote/".$qoute->id."/".$quote_detail->qoute_invoice) }}" style="">  {{ $quote_detail->qoute_invoice }}</a>
-                                    </div> --}}
+                                    <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
+                                        <a  target="_blank" href="{{ asset("quote/".$qoute_log->id."/".$quote_detail->qoute_invoice) }}" style="">  {{ $quote_detail->qoute_invoice }}</a>
+                                    </div>
                                 </div>
                             </div>
                             @endforeach
                         </div>
 
-                        <br><br>
 
                         <div class="row">
                             <div class="col-sm-2 col-sm-offset-1">
@@ -436,26 +449,26 @@
                             <div class="col-sm-2">
                                 <div class="row">
                                     <label class="">
-                                        <label class="currency" > {{ $qoute->currency }} </label>
-                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{ number_format($qoute->net_price, 2, '.', '') }}" disabled>
+                                        <label class="currency" > {{ $qoute_log->currency }} </label>
+                                        <input type="number" name="net_price" step="any" min="0" class="net_price hide-arrows" value="{{ number_format($qoute_log->net_price, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
-                                        <label class="currency" > {{ $qoute->currency }} </label>
-                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{ number_format($qoute->markup_amount, 2, '.', '') }}" disabled>
+                                        <label class="currency" > {{ $qoute_log->currency }} </label>
+                                        <input type="number" class="markup-amount" step="any" min="0" name="markup_amount" value="{{ number_format($qoute_log->markup_amount, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
-                                        <label class="currency" > {{ $qoute->currency }} </label>
-                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{ number_format($qoute->selling, 2, '.', '') }}" disabled>
+                                        <label class="currency" > {{ $qoute_log->currency }} </label>
+                                        <input type="number" class="selling hide-arrows" min="0"  step="any" name="selling" value="{{ number_format($qoute_log->selling, 2, '.', '') }}" disabled>
                                     </label>
                                 </div>
                                 <div class="row">
                                     <label class="">
-                                        <label class="currency" > {{ $qoute->currency }} </label>
-                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="{{ number_format($qoute->gross_profit, 2, '.', '') }}" disabled>
+                                        <label class="currency" > {{ $qoute_log->currency }} </label>
+                                        <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="{{ number_format($qoute_log->gross_profit, 2, '.', '') }}" disabled>
                                         <span>%</span> 
                                     </label>
                                 </div>
@@ -467,7 +480,7 @@
                                 <br>
                                 <div class="row">
                                     <label class="">
-                                        <input type="number" class="markup-percent" name="markup_percent" min="0" value="{{$qoute->markup_percent}}" style="width:70px;" disabled>
+                                        <input type="number" class="markup-percent" name="markup_percent" min="0" value="{{$qoute_log->markup_percent}}" style="width:70px;" disabled>
                                         <span>%</span> 
                                     </label>
                                 </div>
@@ -485,7 +498,7 @@
 
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                <label class="convert-currency">Total Selling in {{$qoute->convert_currency}}</label>
+                                <label class="convert-currency">Total Selling in {{$qoute_log->convert_currency}}</label>
                                 </label>
                                 {{-- <select class="form-control select2" id="convert-currency" name="convert_currency">
                                     <option value="">Select Currency</option>
@@ -496,8 +509,8 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="convert-currency">{{$qoute->convert_currency}}</label>
-                                    <input type="number" name="show_convert_currency" min="0" value="{{ number_format($qoute->show_convert_currency, 2, '.', '') }}" step="any" class="show-convert-currency hide-arrows" value="0" disabled>
+                                <label class="convert-currency">{{$qoute_log->convert_currency}}</label>
+                                    <input type="number" name="show_convert_currency" min="0" value="{{ number_format($qoute_log->show_convert_currency, 2, '.', '') }}" step="any" class="show-convert-currency hide-arrows" value="0" disabled>
                                 </label>
                             </div>
                         </div>
@@ -510,8 +523,8 @@
                             </div>
 
                             <div class="col-sm-2" style="margin-bottom:15px;">
-                                <label class="convert-currency">{{$qoute->convert_currency}}</label>
-                                <input type="number" class="per-person hide-arrows" min="0" value="{{ number_format($qoute->per_person, 2, '.', '') }}" step="any" name="per_person" value="0" disabled>
+                                <label class="convert-currency">{{$qoute_log->convert_currency}}</label>
+                                <input type="number" class="per-person hide-arrows" min="0" value="{{ number_format($qoute_log->per_person, 2, '.', '') }}" step="any" name="per_person" value="0" disabled>
                             </div>
                         </div>
 

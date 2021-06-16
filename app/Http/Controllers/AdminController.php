@@ -1173,7 +1173,7 @@ class AdminController extends Controller
             $bookingDetailLogNumber             = $this->increment_log_no($this->get_log_no('BookingLog',$id));
             $booking_log->booking_id            =  $booking->id;
             $booking_log->log_no                =  $bookingDetailLogNumber;
-            $booking_log->reference_name        =  $booking->reference;
+            $booking_log->reference_name        =  $booking->reference_name;
             $booking_log->ref_no                =  $booking->ref_no;
             $booking_log->qoute_id              =  $booking->qoute_id;
             $booking_log->quotation_no          =  $booking->quotation_no;
@@ -1530,6 +1530,42 @@ class AdminController extends Controller
             'payment_method'      => payment::all()->sortBy('name'),
         ]);
     
+    }
+
+    // view quotation version in update booking
+    public function view_quotation_version($quote_id,$log_no){
+
+        $qoute_log = QouteLog::where('qoute_id',$quote_id)->where('log_no',$log_no)->first();
+
+        $qoute_detail_logs = QouteDetailLog::where('qoute_id',$quote_id)->where('log_no',$log_no)->get();
+
+        $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        $get_holiday_type = Cache::remember('get_holiday_type', $this->cacheTimeOut, function () {
+            $url    = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_holiday_type';
+            // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_holiday_type';
+            $output =  $this->curl_data($url);
+            return json_decode($output);
+        });
+
+        return view('booking.view-booking-quotation-version')->with([
+            'qoute_log'          => $qoute_log,
+            'qoute_detail_logs'  => $qoute_detail_logs,
+            'seasons'            => season::all(),
+            'currencies'         => Currency::all()->sortBy('name'),
+            'categories'         => Category::all()->sortBy('name'),
+            'suppliers'          => Supplier::all()->sortBy('name'),
+            'booking_methods'    => BookingMethod::all()->sortBy('id'),
+            'users'              => User::all()->sortBy('name'),
+            'supervisors'        => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'get_user_branches'  => $get_user_branches,
+            'get_holiday_type'   => $get_holiday_type
+        ]);
     }
 
     public function view_quotation($id){
@@ -3434,8 +3470,6 @@ class AdminController extends Controller
 
 
     public function view_version($quote_id, $log_no){
-        // $qoute_log = QouteLog::where('qoute_id',$quote_id)->where('log_no',$log_no)->get();
-        // return $qoute_log;
 
         $qoute_log = QouteLog::where('qoute_id',$quote_id)
         ->where('log_no',$log_no)

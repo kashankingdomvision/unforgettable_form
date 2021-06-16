@@ -106,7 +106,7 @@
                         @if(count($quote_logs))
                             @foreach ($quote_logs as $key => $qoute_log)
                                 <p> 
-                                    <a href="{{ route('view-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
+                                    <a href="{{ route('view-quotation-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
                                         Quotation Version {{ $qoute_log->log_no }}: {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}} {{ isset(\App\User::find($booking_log->user_id)->name) ? "By ".\App\User::find($qoute_log->user_id)->name : ""}}
                                     </a>
                                 </p>
