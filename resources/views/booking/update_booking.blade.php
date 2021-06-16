@@ -39,6 +39,15 @@
         border-radius: 10px;
     }
 
+    .outline{
+        width: 83%;
+        border: solid 1px #000;
+        padding: 20px;
+        margin: 0 auto 15px;
+        float: none;
+        border-radius: 10px;
+    }
+
     .mb-2 {
         margin-bottom: 1.5rem;
     }
@@ -129,7 +138,10 @@
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
-                        {!! Form::open(['route' => ['update-booking', $id], 'class' => 'form-horizontal', 'id' => 'user_form']) !!}
+                        {{-- {!! Form::open(['route' => ['update-booking', $id], 'class' => 'form-horizontal', 'id' => 'user_form']) !!} --}}
+
+                        <form method="POST" action="{{ route('update-booking', $id) }}" accept-charset="UTF-8" class="form-horizontal" id="user_form" >
+                            @csrf
                         <input type="hidden" value="{{$booking->qoute_id}}" name="qoute_id">
                         <div class="box-body">
 
@@ -809,7 +821,7 @@
                                                                 {{ $errors->first('payment_method') }} </div>
                                                         </div>
 
-                        
+
                                                         <div class="col-sm-2" style="margin-bottom: 15px; ">
                                                             <label for="inputEmail3" class=""> Upload to Calender</label>
                                                             <div class="form-check">
@@ -833,447 +845,524 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                
-                                <div class="col-sm-12" style="margin-bottom:10px;">
+
+                                <br><br>
+
+                                <div>
                                     <h2 class="col-sm-offset-1">Flight Booked</h2>
-                                    <div class="row box-cus">
-                                        <div class="col-sm-3">
-                                            <label for="inputEmail3" class="">Flight Booked</label><br>
-                                            {!! Form::radio('flight_booked', 'yes', $record->flight_booked == 'yes' ? true : null, ['id' => 'fb_yes']) !!}&nbsp<label for="fb_yes">Yes</label>
-                                            {!! Form::radio('flight_booked', 'no', $record->flight_booked == 'no' ? true : null, ['id' => 'fb_no']) !!}&nbsp<label for="fb_no">No</label>
-                                            {!! Form::radio('flight_booked', 'NA', $record->flight_booked == 'NA' ? true : null, ['id' => 'fb_NA']) !!}&nbsp<label for="fb_NA">NA</label>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('flight_booked') }}</div>
-                                        </div>
-                                        <div class="col-sm-3 fb_depend">
-                                            <input class="responsible_person_counter" type="hidden"
-                                                name="responsible_person_counter" value="0">
-                                            <label class="">Responsible Person</label>
-                                            <select class="form-control responsible_person" name="fb_person">
-                                                <option value="">Select Person</option>
-                                                @foreach ($persons as $person)
-                                                    @if (Auth::user()->id != $person->id)
-                                                        @if ($person->id != 1)
-                                                            <option value="{{ $person->id }}" @if ($person->id == $record->fb_person) {{ 'selected' }} @endif>
-                                                                {{ $person->name }}</option>
+                                    <div class="outline">
+                                        <div class="row">
+                                            <div class="col-sm-3"> 
+                                                <label for="inputEmail3" class="">Flight Booked</label><br>
+                                                <input id="fb_yes" name="flight_booked" type="radio" value="yes" {{ $booking->flight_booked == 'yes' ? 'checked' : '' }}>&nbsp;
+                                                <label for="fb_yes">Yes</label>
+
+                                                <input id="fb_no"  name="flight_booked" type="radio" value="no" {{ $booking->flight_booked == 'no' ? 'checked' : '' }}>&nbsp;
+                                                <label for="fb_no">No</label>
+
+                                                <input id="fb_NA" name="flight_booked" type="radio" value="NA" {{ $booking->flight_booked == 'NA' ? 'checked' : '' }}>&nbsp;
+                                                <label for="fb_NA">NA</label>
+
+                                                <div class="alert-danger" id="error_flight_booked" style="text-align:center"></div>
+                                            </div>
+
+                                            <div class="col-sm-4 fb_depend" style="display: {{ $booking->flight_booked == 'NA' ? 'none' : 'block' }};">
+                                                <label class="">Responsible Person</label>
+                                                   <select class="form-control responsible_person fb_select2" name="fb_person">
+                                                    <option value="">Select Person</option>
+                                                    @foreach($users as $user)
+                                                        @if(Auth::user()->id != $user->id)
+                                                            @if($user->id != 1)
+                                                                <option value="{{ $user->id }}" {{ !empty($booking->fb_person) && $booking->flight_booked != 'NA' && $booking->fb_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                            @endif
                                                         @endif
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('fb_person') }}</div>
+                                                    @endforeach
+                                                   </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('fb_person')}}</div>
+                                            </div>
+
+                                            <div class="col-sm-4 fb_depend" style="display: {{ $booking->flight_booked == 'NA' ? 'none' : 'block' }};">
+                                                <label for="inputEmail3" class="">Last Date Of Flight Booking</label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker"  placeholder="Last Date Of Flight Booking" name="fb_last_date" type="text" value="{{ !empty($booking->fb_last_date) && $booking->flight_booked != 'NA' ? date('d/m/Y', strtotime($booking->fb_last_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('fb_last_date')}}</div>
+                                            </div>
                                         </div>
 
-                                        <div class="col-sm-3 fb_depend">
-                                            <label for="inputEmail3" class="">Last Date Of Flight Booking</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"></span>
-                                                {!! Form::text('fb_last_date', \Carbon\Carbon::parse($record->fb_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker3', 'placeholder' => 'Last Date Of Flight Booking']) !!}
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('fb_last_date') }}</div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="">Email finance to enter flight purchase details
-                                                <input <?php if ($record->email_finance == 1) {
-                                                echo 'checked';
-                                                } ?> type='checkbox' name="email_finance" value="1"
-                                                style="margin:5px"/>
-                                            </label>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('email_finance') }}</div>
-                                        </div>
-                                        <div class="col-sm-10 col-sm-offset-1">
-                                            <div class="flight_booking_details" style="display: none;">
-                                                <label for="inputEmail3" class="">Flight Booking Details</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::textarea('flight_booking_details', $record->flight_booking_details, ['class' => 'form-control', 'placeholder' => 'Flight Booking Detail', 'style' => 'height: 60px;width: 450px']) !!}
+                                        <div class="row" id="airline">
+                                            <div class="col-sm-4" style="margin-bottom:15px">
+                                                <div class="fb_airline_name_id" style="display: none;">
+                                                    <label class="">Select Airline </label><span style="color:red"> * </span>
+                                                    <select class="form-control fb_select2" name="fb_airline_name_id" >
+                                                        <option value="">Select Airline</option>
+                                                        @foreach($airlines as $airline)
+                                                            <option value="{{ $airline->id }}" {{ !empty($booking->fb_airline_name_id) && $booking->flight_booked == 'yes' && $booking->fb_airline_name_id == $airline->id ? 'selected' : '' }}>{{ $airline->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="alert-danger" id="error_fb_airline_name_id" style="text-align:center">{{$errors->first('fb_airline_name_id')}}</div>
                                                 </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('flight_booking_details') }}</div>
+                                            </div>
+
+                                            <div class="col-sm-4" style="margin-bottom:15px;">
+                                                <div class="fb_payment_method_id" style="display: none;">
+                                                    <label class="">Select Payment</label><span style="color:red"> * </span>
+                                                    <select class="form-control fb_select2" name="fb_payment_method_id" >
+                                                        <option value="">Select Payment</option>
+                                                        @foreach($payments as $payment)
+                                                            <option value="{{ $payment->id }}" {{ !empty($booking->fb_payment_method_id) && $booking->flight_booked == 'yes' && $booking->fb_payment_method_id == $payment->id ? 'selected' : '' }}>{{ $payment->name }}</option>
+                                                        @endforeach
+                                                  </select>
+                                                <div class="alert-danger" id="error_fb_payment_method_id" style="text-align:center">{{$errors->first('fb_payment_method_id')}}</div>
+                                              </div>
+                                            </div>
+
+                                            <div class="col-sm-4" style="margin-bottom:15px">
+                                                <div class="fb_booking_date" style="display: none;">
+                                                    <label class="">Booking Date</label><span style="color:red"> * </span>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"></span>
+                                                        <input autocomplete="off" class="form-control datepicker" placeholder="Last Date Of Flight Booking" name="fb_booking_date" type="text" value="{{ !empty($booking->fb_booking_date) && $booking->flight_booked == 'yes' ? date('d/m/Y', strtotime($booking->fb_booking_date)) : "" }}" >
+                                                    </div>
+                                                    <div class="alert-danger" id="error_fb_booking_date" style="text-align:center">{{$errors->first('fb_booking_date')}}</div>
+                                              </div>
+                                            </div> 
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-3" style="margin-bottom: 15px">
+                                                <div class="fb_airline_ref_no" style="display: none;">
+                                                    <label class="">Airline Ref No</label><span style="color:red"> * </span>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"></span>
+                                                        <input autocomplete="off" class="form-control"  placeholder="Airline Ref No" name="fb_airline_ref_no" type="text" value="{{ !empty($booking->fb_airline_ref_no) && $booking->flight_booked == 'yes' ? $booking->fb_airline_ref_no : ''}}" >
+                                                    </div>
+                                                    <div class="alert-danger" id="error_fb_airline_ref_no" style="text-align:center">{{$errors->first('fb_airline_ref_no')}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-5">
+                                                <div class="flight_booking_details" style="display: none;">
+                                                    <label for="inputEmail3" class="">Flight Booking Details</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"></span>
+                                                        <textarea class="form-control" placeholder="Flight Booking Detail" style="height: 60px;width: 450px" name="flight_booking_details" cols="50" rows="10" >{{ !empty($booking->flight_booking_details) && $booking->flight_booked == 'yes' ? $booking->flight_booking_details : ''}}</textarea>
+                                                        <div class="alert-danger" id="error_flight_booking_details" style="text-align:center">{{$errors->first('flight_booking_details')}}</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12">
+
+                                <div>
                                     <h2 class="col-sm-offset-1">Transfer Info</h2>
-                                    <div class="row box-cus">
-                                        <!--  <div class="col-sm-5 col-sm-offset-1" >
-                                     <label for="inputEmail3" class="">Transfer Info Received</label><br>
-                                     {!! Form::radio('transfer_info_received', 'yes', null, ['id' => 'tir_yes']) !!}&nbsp<label for="tir_yes">Yes</label>
-                                     {!! Form::radio('transfer_info_received', 'no', true, ['id' => 'tir_no']) !!}&nbsp<label for="tir_no">No</label>
-                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('transfer_info_received') }}</div>
-                                 
-                                     <div class="transfer_info_details" style="display: none;">
-                                       <label for="inputEmail3" class="">Transfer Info Details</label>
-                                       <div class="input-group">
-                                          <span class="input-group-addon"></span>
-                                          {!! Form::textarea('transfer_info_details', null, ['class' => 'form-control', 'placeholder' => 'Transfer Info Details', 'style' => 'height: 60px;']) !!}
-                                       </div>
-                                       <div class="alert-danger" style="text-align:center">{{ $errors->first('transfer_info_details') }}</div>
-                                     </div>
-                                 </div> -->
-                                        <div class="col-sm-7">
+                                    <div class="outline">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label for="inputEmail3" class="">Asked For Transfer</label><br>
+                                                <input id="td_yes" name="asked_for_transfer_details" type="radio" value="yes" {{ $booking->asked_for_transfer_details == 'yes' ? 'checked' : ''}}>&nbsp;
+                                                <label for="td_yes">Yes</label>
 
-                                            <div class="row">
+                                                <input id="td_no"  name="asked_for_transfer_details" type="radio" value="no" {{ $booking->asked_for_transfer_details == 'no' ? 'checked' : ''}}>&nbsp;
+                                                <label for="td_no">No</label>
 
-                                                <div class="col-sm-3">
-                                                    <label for="inputEmail3" class="">Asked For Transfer</label><br>
-                                                    {!! Form::radio('asked_for_transfer_details', 'yes', $record->asked_for_transfer_details == 'yes' ? true : null, ['id' => 'td_yes']) !!}&nbsp<label for="td_yes">Yes</label>
-                                                    {!! Form::radio('asked_for_transfer_details', 'no', $record->asked_for_transfer_details == 'no' ? true : null, ['id' => 'td_no']) !!}&nbsp<label for="td_no">No</label>
-                                                    {!! Form::radio('asked_for_transfer_details', 'NA', $record->asked_for_transfer_details == 'NA' ? true : null, ['id' => 'td_NA']) !!}&nbsp<label for="td_NA">NA</label>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('asked_for_transfer_details') }}</div>
-                                                    {{-- new fields add here --}}
-                                                </div>
+                                                <input id="td_NA" name="asked_for_transfer_details" type="radio" value="NA" {{ $booking->asked_for_transfer_details == 'NA' ? 'checked' : ''}}>&nbsp;
+                                                <label for="td_NA">NA</label>
 
-                                                <div class="col-sm-4 aft_depend">
-                                                    <label class="">Responsible Person</label>
-                                                    <select class="form-control responsible_person_depend"
-                                                        name="aft_person">
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+
+                                            <div class="col-sm-4 aft_depend" style="display: {{ $booking->asked_for_transfer_details == 'NA' ? 'none' : 'block' }};"> 
+                                                <label class="">Responsible Person</label>
+                                                   <select class="form-control responsible_person_depend" name="aft_person">
                                                         <option value="">Select Person</option>
-                                                        @foreach ($persons as $person)
-                                                            @if (Auth::user()->id != $person->id)
-                                                                @if ($person->id != 1)
-                                                                    <option value="{{ $person->id }}" @if ($person->id == $record->aft_person) {{ 'selected' }} @endif>
-                                                                        {{ $person->name }}</option>
+                                                        @foreach($users as $user)
+                                                            @if(Auth::user()->id != $user->id)
+                                                                @if($user->id != 1)
+                                                                    <option value="{{ $user->id }}" {{ !empty($booking->aft_person) && $booking->asked_for_transfer_details != 'NA' && $booking->aft_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                   </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('aft_person')}}</div>
+                                            </div>
+
+                                            
+                                            <div class="col-sm-5 aft_depend" style="display: {{ $booking->asked_for_transfer_details == 'NA' ? 'none' : 'block' }};"> 
+                                                <label for="inputEmail3" class="">Last Date</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"></span>
+                                                    <input autocomplete="off" class="form-control datepicker" placeholder="Last Date" name="aft_last_date" type="text" value="{{ !empty($booking->aft_last_date) && $booking->asked_for_transfer_details != 'NA' ? date('d/m/Y', strtotime($booking->aft_last_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('aft_last_date')}}</div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-4"> 
+                                                <div class="transfer_details" style="margin-bottom:25px;display: none;">
+                                                    <label for="inputEmail3" class="">Asked For Transfer Details <span style="color:red"> * </span></label>
+                                                    <div class="input-group">
+                                                       <span class="input-group-addon"></span>
+                                                       <textarea class="form-control" placeholder="Asked For Transfer Details" style="height:60px" name="transfer_details" cols="50" rows="10" required="">{{ !empty($booking->transfer_details) && $booking->asked_for_transfer_details == 'yes' ? $booking->transfer_details : ''}}</textarea>
+                                                       <div class="alert-danger" id="error_transfer_details" style="text-align:center">{{$errors->first('transfer_details')}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <h2 class="col-sm-offset-1">Transfers Organised</h2>
+                                    <div class="outline">
+
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label for="inputEmail3" class="">Transfers Organised</label><br>
+                                                <input id="tro_yes" name="transfer_organised" type="radio" value="yes" {{ $booking->transfer_organised == 'yes' ? 'checked' : ''}}>&nbsp;
+                                                <label for="tro_yes">Yes</label>
+
+                                                <input id="tro_no" name="transfer_organised" type="radio" value="no" {{ $booking->transfer_organised == 'no' ? 'checked' : ''}}>&nbsp;
+                                                <label for="tro_no">No</label>
+
+                                                <input id="tro_NA" name="transfer_organised" type="radio" value="NA" {{ $booking->transfer_organised == 'NA' ? 'checked' : ''}}>&nbsp;
+                                                <label for="tro_NA">NA</label>
+
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+
+
+                                            <div class="col-sm-4 to_depend" style="display: {{ $booking->transfer_organised == 'NA' ? 'none' : 'block' }};"> 
+                                                <label class="">Responsible Person</label>
+                                                <select class="form-control to_rp" name="to_person">
+                                                    <option value="">Select Person</option>
+                                                    @foreach($users as $user)
+                                                        @if(Auth::user()->id != $user->id)
+                                                            @if($user->id != 1)
+                                                                <option value="{{ $user->id }}" {{ !empty($booking->to_person) && $booking->transfer_organised != 'NA' && $booking->to_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                   </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('to_person')}}</div>
+                                            </div>
+
+                                            <div class="col-sm-5 to_depend" style="display: {{ $booking->transfer_organised == 'NA' ? 'none' : 'block' }};"> 
+                                                <label for="inputEmail3" class="">Last Date Of Transfer Organised</label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker"  placeholder="Last Date Of Transfer Organised" name="to_last_date" type="text" value="{{ !empty($booking->to_last_date) && $booking->transfer_organised != 'NA' ? date('d/m/Y', strtotime($booking->to_last_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger"  style="text-align:center"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="transfer_organised_details col-sm-4" style="display: {{ $booking->transfer_organised == 'yes' ? 'block' : 'none' }};"> 
+                                                <label for="inputEmail3" class="">Transfer Organised Details <span style="color:red"> * </span></label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <textarea class="form-control" placeholder="Transfer Organised Details" style="height:60px" name="transfer_organised_details" cols="50" rows="10">{{ !empty($booking->transfer_organised_details) && $booking->transfer_organised == 'yes' ? $booking->transfer_organised_details : ''}}</textarea>
+                                                </div>
+                                                <div class="alert-danger" id="error_transfer_organised_details" style="text-align:center"></div>
+                                            </div>
+                                        </div>
+                           
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h2 class="col-sm-offset-1">Itinerary Finalised</h2>
+                                    <div class="outline">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label for="inputEmail3" class="">Itinerary Finalised</label><br>
+                                                <input id="itf_yes" name="itinerary_finalised" type="radio" value="yes" {{ $booking->itinerary_finalised == 'yes' ? 'checked' : '' }}>&nbsp;
+                                                <label for="itf_yes">Yes</label>
+
+                                                <input id="itf_no"  name="itinerary_finalised" type="radio" value="no" {{ $booking->itinerary_finalised  == 'no' ? 'checked' : ''}}>&nbsp;
+                                                <label for="itf_no">No</label>
+
+                                                <input id="itf_NA"  name="itinerary_finalised" type="radio" value="NA" {{ $booking->itinerary_finalised  == 'NA' ? 'checked' : '' }}>&nbsp;
+                                                <label for="itf_NA">NA</label>
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+                            
+                                            <div class="col-sm-4 itf_depend" style="display: {{ $booking->itinerary_finalised == 'NA' ? 'none' : 'block' }};">  
+                                                <label class="">Responsible Person</label>
+                                                <select class="form-control if_rp" name="itf_person">
+                                                    <option value="">Select Person</option>
+                                                    @foreach($users as $user)
+                                                        @if(Auth::user()->id != $user->id)
+                                                            @if($user->id != 1)
+                                                            <option value="{{ $user->id }}" {{ !empty($booking->itf_person) && $booking->itinerary_finalised != 'NA' && $booking->itf_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('itf_person')}}</div>
+                                            </div>
+
+                                            <div class="col-sm-5 itf_depend" style="display: {{ $booking->itinerary_finalised == 'NA' ? 'none' : 'block' }};">  
+                                                <label for="inputEmail3" class="">Last Date Of Itinerary Finalised </label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker" placeholder="Last Date Of Itinerary Finalised" name="itf_last_date" type="text" value="{{ !empty($booking->itf_last_date) && $booking->itinerary_finalised != 'NA' ? date('d/m/Y', strtotime($booking->itf_last_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row itinerary_finalised_details" style="display: {{ $booking->itinerary_finalised == 'yes' ? 'block' : 'none' }};"> 
+                                            <div class=" col-sm-9">
+                                                <label for="inputEmail3" class="">Itinerary Finalised Details <span style="color:red"> * </span> </label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <textarea class="form-control" placeholder="Itinerary Finalised Details" style="height:60px" name="itinerary_finalised_details" cols="50" rows="10" >{{ !empty($booking->itinerary_finalised_details) && $booking->itinerary_finalised == 'yes' ? $booking->itinerary_finalised_details : ''}}</textarea>
+                                                   <div class="alert-danger" id="error_itinerary_finalised_details" style="text-align:center"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row itinerary_finalised_details" style="display: {{ $booking->itinerary_finalised == 'yes' ? 'block' : 'none' }};"> 
+                                            <div class="col-sm-5 " >
+                                                <label for="inputEmail3" class="">Itinerary Finalised Date <span style="color:red"> * </span></label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker" placeholder="Itinerary Finalised Date"  name="itf_current_date" type="text" value="{{ !empty($booking->itf_current_date) && $booking->itinerary_finalised == 'yes' ? date('d/m/Y', strtotime($booking->itf_current_date)) : ''}}">
+                                                   <div class="alert-danger" id="error_itf_current_date" style="text-align:center"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h2 class="col-sm-offset-1">Travel Document Prepared</h2>
+                                    <div class="outline">
+                                        <div class="row">
+
+                                            <div class="col-sm-3">
+                                                <label for="inputEmail3">Travel Document Prepared</label><br>
+                                                <input id="dp_yes" name="document_prepare" type="radio" value="yes" {{ $booking->document_prepare == 'yes' ? 'checked' : '' }}>&nbsp;
+                                                <label for="dp_yes">Yes</label>
+
+                                                <input id="dp_no" name="document_prepare" type="radio" value="no" {{ $booking->document_prepare == 'no' ? 'checked' : '' }}>&nbsp;
+                                                <label for="dp_no">No</label>
+
+                                                <input id="dp_NA" name="document_prepare" type="radio" value="NA" {{ $booking->document_prepare == 'NA' ? 'checked' : '' }}>&nbsp;
+                                                <label for="dp_NA">NA</label>
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+
+                                            <div class="col-sm-4 dp_depend" style="display: {{ $booking->document_prepare == 'NA' ? 'none' : 'block' }};"> 
+                                                <label class="">Responsible Person</label>
+                                                   <select class="form-control tdp_rp" name="dp_person">
+                                                        <option value="">Select Person</option>
+                                                        @foreach($users as $user)
+                                                            @if(Auth::user()->id != $user->id)
+                                                                @if($user->id != 1)
+                                                                    <option value="{{ $user->id }}" {{ !empty($booking->dp_person) && $booking->document_prepare != 'NA' && $booking->dp_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                   </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('dp_person')}}</div>
+                                            </div>
+
+                                            <div class="col-sm-5 dp_depend" style="display: {{ $booking->document_prepare == 'NA' ? 'none' : 'block' }};">
+                                                <label for="inputEmail3" class="">Last Date Of Document Prepared</label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker" placeholder="Last Date Of Document Prepared" name="dp_last_date" type="text" value="{{ !empty($booking->dp_last_date) && $booking->document_prepare != 'NA' ? date('d/m/Y', strtotime($booking->dp_last_date)) : "" }}">
+                                             
+                                                </div>
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row tdp_current_date" style="display: {{ $booking->document_prepare == 'yes' ?  'block' : 'none' }};">
+                                            <div class="col-sm-5 ">
+                                                <div >
+                                                    <label for="inputEmail3" class="">Travel Document Prepared Date <span style="color:red"> * </span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"></span>
+                                                        <input autocomplete="off" class="form-control datepicker" placeholder="Travel Document Prepared Date" name="tdp_current_date" type="text" value="{{ !empty($booking->tdp_current_date) && $booking->document_prepare == 'yes' ? date('d/m/Y', strtotime($booking->tdp_current_date)) : "" }}">
+                                                    </div>
+                                                    <div class="alert-danger" id="error_tdp_current_date" style="text-align:center"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h2 class="col-sm-offset-1">Travel Document Sent</h2>
+                                    <div class="outline">
+                                        <div class="row">
+
+                                            <div class="col-sm-3">
+                        
+                                                <label for="inputEmail3" class="">Travel Document Sent</label><br>
+                                                <input id="ds_yes" name="documents_sent" type="radio" value="yes" {{ $booking->documents_sent == 'yes' ? 'checked' : ''}}>&nbsp;
+                                                <label for="ds_yes">Yes</label>
+
+                                                <input id="ds_no" name="documents_sent" type="radio" value="no" {{ $booking->documents_sent == 'no' ? 'checked' : ''}}>&nbsp;
+                                                <label for="ds_no">No</label>
+
+                                                <input id="ds_NA" name="documents_sent" type="radio" value="NA" {{ $booking->documents_sent == 'NA' ? 'checked' : ''}}>&nbsp;
+                                                <label for="ds_NA">NA</label>
+
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+
+                                            <div class="col-sm-4 ds_depend" style="display: {{ $booking->documents_sent == 'NA' ? 'none' : 'block' }};"> 
+                                                <label class="">Responsible Person</label>
+                                                   <select class="form-control tds_rp" name="ds_person">
+                                                     <option value="">Select Person</option>
+                                                        @foreach($users as $user)
+                                                            @if(Auth::user()->id != $user->id)
+                                                                @if($user->id != 1)
+                                                                    <option value="{{ $user->id }}" 
+                                                                        {{ !empty($booking->ds_person) && $booking->documents_sent != 'NA' && $booking->ds_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                   </select>
+                                                <div class="alert-danger" style="text-align:center">{{$errors->first('dp_person')}}</div>
+                                            </div>
+
+                                            <div class="col-sm-5 ds_depend" style="display: {{ $booking->documents_sent == 'NA' ? 'none' : 'block' }};"> 
+                                                <label for="inputEmail3" class="">Last Date Of Document Prepared</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"></span>
+                                                    <input autocomplete="off" class="form-control datepicker" placeholder="Last Date Of Document Sent"  name="ds_last_date" type="text" 
+                                                    value="{{ !empty($booking->ds_last_date) && $booking->documents_sent != 'NA' ? date('d/m/Y', strtotime($booking->ds_last_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger"  style="text-align:center">{{$errors->first('dp_last_date')}}</div>
+                                            </div>
+                                            
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-4 documents_sent_details" style="display: none;">
+                                                <label for="inputEmail3" class="">Document Details <span style="color:red"> * </span></label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <textarea class="form-control" placeholder="Document Details" style="height:60px" name="documents_sent_details" cols="50" rows="10" >{{ !empty($booking->documents_sent_details) && $booking->documents_sent == 'yes' ? $booking->documents_sent_details : ''}}</textarea>
+                                                </div>
+                                                <div class="alert-danger" id="error_documents_sent_details" style="text-align:center">{{$errors->first('documents_sent_details')}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-5 tds_current_date" style="display: none;"> 
+                                                <label for="inputEmail3" class="">Travel Document Sent Date <span style="color:red"> * </span></label>
+                                                <div class="input-group">
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker"  placeholder="Travel Document Sent Date"  name="tds_current_date" type="text" 
+                                                   value="{{ !empty($booking->tds_current_date) && $booking->documents_sent == 'yes' ? date('d/m/Y', strtotime($booking->tds_current_date)) : "" }}">
+                                                </div>
+                                                <div class="alert-danger" id="error_tds_current_date" style="text-align:center"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <h2 class="col-sm-offset-1">App login Sent</h2>
+                                    <div class="outline">
+                                        <div class="row">
+
+                                            <div class="col-sm-3">
+                                                <label for="inputEmail3" class="">App login Sent</label><br>
+                                                <input id="ecs_yes" name="electronic_copy_sent" type="radio" value="yes"  {{ $booking->electronic_copy_sent == 'yes' ? 'checked' : ''}}>&nbsp;
+                                                <label for="ecs_yes">Yes</label>
+    
+                                                <input id="ecs_no"  name="electronic_copy_sent" type="radio" value="no"  {{ $booking->electronic_copy_sent == 'no' ? 'checked' : ''}}>&nbsp;
+                                                <label for="ecs_no">No</label>
+                                                <div class="alert-danger" style="text-align:center"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row electronic_copy_details" style="display: {{ $booking->electronic_copy_sent == 'yes' ? 'block' : 'none' }};">
+                                            <div class="col-sm-4 aps_depend"> 
+                                                <label class="">Responsible Person <span style="color:red"> * </span></label>
+                                                    <select class="form-control als_rp" name="aps_person">
+                                                        <option value="">Select Person</option>
+                                                        @foreach($users as $user)
+                                                            @if(Auth::user()->id != $user->id)
+                                                                @if($user->id != 1)
+                                                                    <option value="{{ $user->id }}" {{ !empty($booking->aps_person) && $booking->electronic_copy_sent == 'yes' && $booking->aps_person ==  $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                                                 @endif
                                                             @endif
                                                         @endforeach
                                                     </select>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('aft_person') }}</div>
-                                                </div>
-
-                                                <div class="col-sm-5 aft_depend">
-                                                    <label for="inputEmail3" class="">Last Date Of Transfer Detail</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"></span>
-                                                        {!! Form::text('aft_last_date', \Carbon\Carbon::parse($record->aft_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker4', 'placeholder' => 'Last Date Of Transfer Detail']) !!}
-                                                    </div>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('aft_last_date') }}</div>
-                                                </div>
+                                                <div class="alert-danger" id="error_aps_person" style="text-align:center">{{$errors->first('aps_person')}}</div>
                                             </div>
 
-
-
-
-
-                                            {{-- end new fields add here --}}
-                                            <div class="transfer_details" style="margin-bottom:25px;display: none;">
-                                                <label for="inputEmail3" class="">Asked For Transfer Details</label>
+                                            <div class="col-sm-5 electronic_copy_details" style="display: {{ $booking->electronic_copy_sent == 'yes' ? 'block' : 'none' }};">
+                                                <label for="inputEmail3" class="">Date <span style="color:red"> * </span></label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::textarea('transfer_details', $record->transfer_details, ['class' => 'form-control', 'placeholder' => 'Asked For Transfer Details', 'style' => 'height:60px']) !!}
+                                                   <span class="input-group-addon"></span>
+                                                   <input autocomplete="off" class="form-control datepicker" placeholder="Date" name="aps_last_date" type="text" value="{{ !empty($booking->aps_last_date) && $booking->electronic_copy_sent == 'yes' ? date('d/m/Y', strtotime($booking->aps_last_date)) : "" }}">
                                                 </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('transfer_details') }}</div>
+                                                <div class="alert-danger" id="error_aps_last_date" style="text-align:center"></div>
                                             </div>
-
-
                                         </div>
 
-
-                                        <div class="col-sm-5 col-sm-offset-1">
-                                            <label for="inputEmail3" class="">Form Sent On</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"></span>
-                                                {!! Form::text('form_sent_on', \Carbon\Carbon::parse($record->form_sent_on)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker2', 'placeholder' => 'Form Sent On', 'required' => 'true']) !!}
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('form_sent_on') }}</div><br>
-                                            <span id="form_received" style="color: #3c8dbc"></span>
-                                            <input id="form_received_on" type="hidden" name="form_received_on"
-                                                value="{{ $record->form_received_on }}">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12" style="margin-bottom:10px">
-                                    <h2 class="col-sm-offset-1">Transfer Organised</h2>
-                                    <div class="row box-cus">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <label for="inputEmail3" class="">Transfer Organised</label><br>
-                                                {!! Form::radio('transfer_organised', 'yes', $record->transfer_organised == 'yes' ? true : null, ['id' => 'tro_yes']) !!}&nbsp<label for="tro_yes">Yes</label>
-                                                {!! Form::radio('transfer_organised', 'no', $record->transfer_organised == 'no' ? true : null, ['id' => 'tro_no']) !!}&nbsp<label for="tro_no">No</label>
-                                                {!! Form::radio('transfer_organised', 'NA', $record->transfer_organised == 'NA' ? true : null, ['id' => 'tro_NA']) !!}&nbsp<label for="tro_NA">NA</label>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('transfer_organised') }}</div>
-                                            </div>
-                                            <div class="col-sm-4 to_depend">
-                                                <label class="">Responsible Person</label>
-                                                <select class="form-control responsible_person_depend" name="to_person">
-                                                    <option value="">Select Person</option>
-                                                    @foreach ($persons as $person)
-                                                        @if (Auth::user()->id != $person->id)
-                                                            @if ($person->id != 1)
-                                                                <option value="{{ $person->id }}" @if ($person->id == $record->to_person) {{ 'selected' }} @endif>
-                                                                    {{ $person->name }}</option>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('to_person') }}</div>
-                                            </div>
-
-                                            <div class="col-sm-5 to_depend">
-                                                <label for="inputEmail3" class="">Last Date Of Transfer Organised</label>
+                                        <div class="row electronic_copy_details" style="display: {{ $booking->electronic_copy_sent == 'yes' ? 'block' : 'none' }};">
+                                            <div class="col-sm-5" >
+                                                <label for="inputEmail3" class="">App Login Sent Details <span style="color:red"> * </span></label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::text('to_last_date', \Carbon\Carbon::parse($record->to_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker6', 'placeholder' => 'Last Date Of Transfer Organised']) !!}
+                                                   <span class="input-group-addon"></span>
+                                                   <textarea class="form-control" placeholder="App Login Sent Details" style="height:60px" name="electronic_copy_details" cols="50" rows="10" >{{ !empty($booking->electronic_copy_details) && $booking->electronic_copy_sent == 'yes' ? $booking->electronic_copy_details : ''}}</textarea>
                                                 </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('to_last_date') }}</div>
-                                            </div>
-                                            <div class="transfer_organised_details col-sm-12" style="display: none;">
-                                                <label for="inputEmail3" class="">Transfer Organised Details</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::textarea('transfer_organised_details', $record->transfer_organised_details, ['class' => 'form-control', 'placeholder' => 'Transfer Organised Details', 'style' => 'height:60px']) !!}
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('transfer_organised_details') }}</div>
+                                                <div class="alert-danger" id="error_electronic_copy_details" style="text-align:center"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12" style="margin-bottom:10px;">
-                                      <h2 class="col-sm-offset-1">Itinerary Finalised</h2>
-                                    <div class="row box-cus">
-
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <label for="inputEmail3" class="">Itinerary Finalised</label><br>
-                                                {!! Form::radio('itinerary_finalised', 'yes', $record->itinerary_finalised == 'yes' ? true : null, ['id' => 'itf_yes']) !!}&nbsp<label for="itf_yes">Yes</label>
-                                                {!! Form::radio('itinerary_finalised', 'no', $record->itinerary_finalised == 'no' ? true : null, ['id' => 'itf_no']) !!}&nbsp<label for="itf_no">No</label>
-                                                {!! Form::radio('itinerary_finalised', 'NA', $record->itinerary_finalised == 'NA' ? true : null, ['id' => 'itf_NA']) !!}&nbsp<label for="itf_NA">NA</label>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('itinerary_finalised') }}</div>
-
-                                            </div>
-                                            <div class="col-sm-4 itf_depend">
-                                                <label class="">Responsible Person</label>
-                                                <select class="form-control responsible_person_depend" name="itf_person">
-                                                    <option value="">Select Person</option>
-                                                    @foreach ($persons as $person)
-                                                        @if (Auth::user()->id != $person->id)
-                                                            @if ($person->id != 1)
-                                                                <option value="{{ $person->id }}" @if ($person->id == $record->itf_person) {{ 'selected' }} @endif>
-                                                                    {{ $person->name }}</option>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('itf_person') }}</div>
-                                            </div>
-                                            <div class="col-sm-5 itf_depend">
-                                                <label for="inputEmail3" class="">Last Date Of Itinerary Finalised</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::text('itf_last_date', \Carbon\Carbon::parse($record->itf_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker8', 'placeholder' => 'Last Date Of Itinerary Finalised']) !!}
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('itf_last_date') }}</div>
-                                            </div>
-
-                                            <div class="itinerary_finalised_details col-sm-9" style="display: none;">
-                                                <label for="inputEmail3" class="">Itinerary Finalised Details</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::textarea('itinerary_finalised_details', $record->itinerary_finalised_details, ['class' => 'form-control', 'placeholder' => 'Itinerary Finalised Details', 'style' => 'height:60px']) !!}
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('itinerary_finalised_details') }}</div>
-                                            </div>
-                                        </div>
-
-
-
-
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12" style="margin-bottom:10px">
-                                    <h2 class="col-sm-offset-1">Document Prepared</h2>
-                                    <div class="row box-cus">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <label for="inputEmail3" class="">Document Prepared</label><br>
-                                                {!! Form::radio('document_prepare', 'yes', $record->document_prepare == 'yes' ? true : null, ['id' => 'dp_yes']) !!}&nbsp<label for="dp_yes">Yes</label>
-                                                {!! Form::radio('document_prepare', 'no', $record->document_prepare == 'no' ? true : null, ['id' => 'dp_no']) !!}&nbsp<label for="dp_no">No</label>
-                                                {!! Form::radio('document_prepare', 'NA', $record->document_prepare == 'NA' ? true : null, ['id' => 'dp_NA']) !!}&nbsp<label for="dp_NA">NA</label>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('document_prepare') }}</div>
-                                            </div>
-                                            <div class="col-sm-4 dp_depend">
-                                                <label class="">Responsible Person</label>
-                                                <select class="form-control responsible_person_depend" name="dp_person">
-                                                    <option value="">Select Person</option>
-                                                    @foreach ($persons as $person)
-                                                        @if (Auth::user()->id != $person->id)
-                                                            @if ($person->id != 1)
-                                                                <option value="{{ $person->id }}" @if ($person->id == $record->dp_person) {{ 'selected' }} @endif>
-                                                                    {{ $person->name }}</option>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('dp_person') }}</div>
-                                            </div>
-
-                                            <div class="col-sm-5 dp_depend">
-                                                <label for="inputEmail3" class="">Last Date Of Document Prepared</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::text('dp_last_date', \Carbon\Carbon::parse($record->dp_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker7', 'placeholder' => 'Last Date Of Document Prepared']) !!}
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('dp_last_date') }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                   
-                                <div class="col-sm-12" style="margin-bottom:10px">
-                                    <h2 class="col-sm-offset-1">Document Sent</h2>
-                                    <div class="row box-cus">
-
-                                        <div class="row">
-
-                                            <div class="col-sm-3">
-
-                                                <label for="inputEmail3" class="">Document Sent</label><br>
-                                                {!! Form::radio('documents_sent', 'yes', $record->documents_sent == 'yes' ? true : null, ['id' => 'ds_yes']) !!}&nbsp<label for="ds_yes">Yes</label>
-                                                {!! Form::radio('documents_sent', 'no', $record->documents_sent == 'no' ? true : null, ['id' => 'ds_no']) !!}&nbsp<label for="ds_no">No</label>
-                                                {!! Form::radio('documents_sent', 'NA', $record->documents_sent == 'NA' ? true : null, ['id' => 'ds_NA']) !!}&nbsp<label for="ds_NA">NA</label>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('documents_sent') }}</div>
-                                            </div>
-                                            {{-- add field here --}}
-                                            <div class="col-sm-4 ds_depend">
-                                                <label class="">Responsible Person</label>
-                                                <select class="form-control responsible_person_depend" name="ds_person">
-                                                    <option value="">Select Person</option>
-                                                    @foreach ($persons as $person)
-                                                        @if (Auth::user()->id != $person->id)
-                                                            @if ($person->id != 1)
-                                                                <option value="{{ $person->id }}" @if ($person->id == $record->ds_person) {{ 'selected' }} @endif>
-                                                                    {{ $person->name }}</option>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('ds_person') }}</div>
-                                            </div>
-
-                                            <div class="col-sm-5 ds_depend">
-                                                <label for="inputEmail3" class="">Last Date Of Document Sent</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"></span>
-                                                    {!! Form::text('ds_last_date', \Carbon\Carbon::parse($record->ds_last_date)->format('d/m/Y'), ['autocomplete' => 'off', 'class' => 'form-control', 'id' => 'datepicker5', 'placeholder' => 'Last Date Of Document Sent']) !!}
-                                                </div>
-                                                <div class="alert-danger" style="text-align:center">
-                                                    {{ $errors->first('ds_last_date') }}</div>
-                                            </div>
-                                        </div>
-
-                                        {{-- end field here --}}
-                                        <div class="documents_sent_details" style="display: none;">
-                                            <label for="inputEmail3" class="">Document Details</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"></span>
-                                                {!! Form::textarea('documents_sent_details', $record->documents_sent_details, ['class' => 'form-control', 'placeholder' => 'Document Details', 'style' => 'height:60px']) !!}
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('documents_sent_details') }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12" style="margin-bottom: 10px">
-                                    <h2 class="col-sm-offset-1">App login Sent</h2>
-                                    <div class="row box-cus">
-                                        <label for="inputEmail3" class="">App login Sent</label><br>
-                                        {!! Form::radio('electronic_copy_sent', 'yes', $record->electronic_copy_sent == 'yes' ? true : null, ['id' => 'ecs_yes']) !!}&nbsp<label for="ecs_yes">Yes</label>
-                                        {!! Form::radio('electronic_copy_sent', 'no', $record->electronic_copy_sent == 'no' ? true : null, ['id' => 'ecs_no']) !!}&nbsp<label for="ecs_no">No</label>
-                                        <div class="alert-danger" style="text-align:center">
-                                            {{ $errors->first('electronic_copy_sent') }}</div>
-                                        <span id="app_login_detail" style="color: #3c8dbc"></span>
-                                        <input id="app_login_date" type="hidden" name="app_login_date"
-                                            value="{{ $record->app_login_date }}">
-
-                                        <div class="electronic_copy_details" style="display: none;">
-                                            <label for="inputEmail3" class="">App Login Sent Details</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"></span>
-                                                {!! Form::textarea('electronic_copy_details', $record->electronic_copy_details, ['class' => 'form-control', 'placeholder' => 'App Login Sent Details', 'style' => 'height:60px']) !!}
-                                            </div>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('electronic_copy_details') }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1" style="margin-bottom:49px">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <label class="">Deposit Received
-                                                <input <?php if ($record->deposit_received == 1) {
-                                                echo 'checked';
-                                                } ?> type='checkbox' name="deposit_received" value="1"
-                                                style="margin:5px"/>
-                                            </label>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('deposit_received') }}</div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="">Remaining Amount Received
-                                                <input <?php if ($record->remaining_amount_received == 1) {
-                                                echo 'checked';
-                                                } ?> type='checkbox' name="remaining_amount_received"
-                                                value="1" style="margin:5px"/>
-                                            </label>
-                                            <div class="alert-danger" style="text-align:center">
-                                                {{ $errors->first('remaining_amount_received') }}</div>
-                                        </div>
-                                </div>
-
+                              
+ 
                                 <br><br><br>
-
-
 
                                 <div class="row">
                                     <div class="col-sm-2 col-sm-offset-1">
                                         <div class="row">
                                             <label style="margin-right: 10px; margin-bottom: 10px;">Net Price</label>
                                         </div>
-                               
-                                        <div class="row"> 
+
+                                        <div class="row">
                                             <label style="margin-right: 10px; margin-bottom: 10px;">Markup</label>
-                                            
+
                                         </div>
-                                        <div class="row"> 
+                                        <div class="row">
                                             <label style="margin-right: 10px; margin-bottom: 10px;">Selling</label>
                                         </div>
-                                        <div class="row"> 
+                                        <div class="row">
                                             <label style="margin-right: 10px; margin-bottom: 10px;">Gross Profit Rate</label>
                                         </div>
-        
-        
+
+
                                         <br><br>
                                     </div>
-        
-               
-                               
+
+
+
                                     <div class="col-sm-2">
                                         <div class="row">
                                             <label class="">
@@ -1297,27 +1386,26 @@
                                             <label class="">
                                                 <label class="currency" ></label>
                                                 <input type="number" class="gross-profit hide-arrows" min="0" step="any" name="gross_profit" value="{{ number_format($booking->gross_profit, 2, '.', '') }}">
-                                                <span>%</span> 
+                                                <span>%</span>
                                             </label>
                                         </div>
-                            
+
                                     </div>
-        
-                                    
+
+
                                     <div class="col-sm-2">
                                         <br>
                                         <div class="row">
                                             <label class="">
                                                 <input type="number" class="markup-percent" name="markup_percent" min="0" value="{{ number_format($booking->markup_percent, 2, '.', '') }}" style="width:70px;">
-                                                <span>%</span> 
+                                                <span>%</span>
                                             </label>
                                         </div>
                                     </div>
-                    
+
                                 </div>
-        
-        
-                                <div class="row"> 
+
+                                <div class="row">
                                     <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
                                         <select class="form-control select2" id="convert-currency" name="convert_currency">
                                             <option value="">Select Currency</option>
@@ -1326,27 +1414,27 @@
                                             @endforeach
                                         </select>
                                     </div>
-        
+
                                     <div class="col-sm-2" style="margin-bottom:15px;">
                                         <label class="convert-currency"></label>
                                             <input type="number" name="show_convert_currency" min="0" value="{{ number_format($booking->show_convert_currency, 2, '.', '') }}" step="any" class="show-convert-currency hide-arrows" value="0">
                                         </label>
                                     </div>
                                 </div>
-        
-                                <div class="row"> 
+
+                                <div class="row">
                                     <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                        <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
+                                        <label class="" style="margin-right: 10px; margin-bottom: 10px;">
                                             <label style="margin-right: 10px; margin-bottom: 10px;">Booking Amount Per Person</label>
-                                        </label> 
+                                        </label>
                                     </div>
-        
+
                                     <div class="col-sm-2" style="margin-bottom:15px;">
                                         <label class="convert-currency"></label>
                                         <input type="number" class="per-person hide-arrows" min="0" value="{{ number_format($booking->per_person, 2, '.', '') }}" step="any" name="per_person" value="0">
                                     </div>
                                 </div>
-                                
+
                                 <div class="box-footer">
                                     {!! Form::submit('Submit', ['class' => 'btn btn-info pull-right']) !!}
                                 </div>
@@ -1404,7 +1492,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                     
+
                         </div>
                     </div>
                 </div>
@@ -1636,6 +1724,395 @@
     {!! HTML::script('dist/js/demo.js') !!}
 
 
+<script>
+
+$(document).ready(function() {
+    // Initialize all Select2 
+    $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+    $(".datepicker").datepicker({
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+
+    document.getElementById('ds_yes').addEventListener('click', function() {
+        if((document.getElementById('deposit').checked ==false) || (document.getElementById('remain').checked ==false)){
+        confirm('Full Payment may not have been received--Please confirm you like to Send Documnet to client');
+        }
+    },false);
+
+    // Flight Booked
+
+    if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
+        $('.flight_booking_details').show();
+        $('.flight_booking_details').show(200);
+        $('.fb_airline_ref_no').show(200);
+        $('.fb_booking_date').show(200);
+        $('.fb_airline_name_id').show(200);
+        $('.fb_payment_method_id').show(200);
+        $("#airline").css({"margin-top": "25px"});
+
+        $('textarea[name=flight_booking_details]').prop('required',true);
+        $('input[name=fb_airline_ref_no]').prop('required',true);
+        $('input[name=fb_booking_date]').prop('required',true);
+        $('select[name="fb_airline_name_id"]').prop('required',true);
+        $('select[name="fb_payment_method_id"]').prop('required',true);
+        $(".fb_select2").select2({ width: '100%' }); 
+    }
+    else{
+        $('.flight_booking_details').hide(200);
+        $('.fb_airline_ref_no').hide(200);
+        $('.fb_booking_date').hide(200);
+        $('.fb_airline_name_id').hide(200);
+        $('.fb_payment_method_id').hide(200);
+        $(".fb_select2").select2({ width: '100%' }); 
+
+        $("#airline").css({"margin-top": "0px"});
+
+        $('textarea[name=flight_booking_details]').prop('required',false);
+        $('input[name=fb_airline_ref_no]').prop('required',false);
+        $('input[name=fb_booking_date]').prop('required',false);
+        $('select[name="fb_airline_name_id"]').prop('required',false);
+        $('select[name="fb_payment_method_id"]').prop('required',false);
+    }
+    if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
+        $('.fb_depend').hide(200);
+    }else{
+        $('.fb_depend').show(200);
+    }
+
+
+    $('input:radio[name=flight_booked]').click(function(){
+        if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
+
+            $('.flight_booking_details').show(200);
+            $('.fb_airline_ref_no').show(200);
+            $('.fb_booking_date').show(200);
+            $('.fb_airline_name_id').show(200);
+            $('.fb_payment_method_id').show(200);
+            $(".fb_select2").select2({ width: '100%' });      
+
+            $("#airline").css({"margin-top": "25px"});
+
+            $('textarea[name=flight_booking_details]').prop('required',true);
+            $('input[name=fb_airline_ref_no]').prop('required',true);
+            $('input[name=fb_booking_date]').prop('required',true);
+            $('select[name="fb_airline_name_id"]').prop('required',true);
+            $('select[name="fb_payment_method_id"]').prop('required',true);
+        }
+        else{
+            $('.flight_booking_details').hide(200);
+            $('.fb_airline_ref_no').hide(200);
+            $('.fb_booking_date').hide(200);
+            $('.fb_airline_name_id').hide(200);
+            $('.fb_payment_method_id').hide(200);
+
+            $("#airline").css({"margin-top": "0px"});
+
+            $('textarea[name=flight_booking_details]').prop('required',false);
+            $('input[name=fb_airline_ref_no]').prop('required',false);
+            $('input[name=fb_booking_date]').prop('required',false);
+            $('select[name="fb_airline_name_id"]').prop('required',false);
+            $('select[name="fb_payment_method_id"]').prop('required',false);
+        }
+
+        if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
+            $('.fb_depend').hide(200);
+        }else{
+            $('.fb_depend').show(200);
+        }
+    });
+    // Flight Booked
+
+    // Transfer Info
+    if($('input:radio[name=asked_for_transfer_details]:checked').val() == 'yes'){
+
+        $('.transfer_details').show(200);
+        $('textarea[name=transfer_details]').prop('required',true);
+        $('input[name=aft_last_date]').prop('required',false);
+        $(".responsible_person_depend").select2({ width: '100%' }); 
+
+    }else{
+        $('.transfer_details').hide(200);
+        $('textarea[name=transfer_details]').prop('required',false);
+        // $('input[name=aft_last_date]').prop('required',true);
+        $(".responsible_person_depend").select2({ width: '100%' }); 
+    }
+
+    if($('input:radio[name=asked_for_transfer_details]:checked').val() == 'NA'){
+
+        $('.aft_depend').hide(200);
+        // $('select[name="aft_person"]').prop('required',false);
+        // $('input[name=aft_last_date]').prop('required',false);
+
+    }else{
+        $('.aft_depend').show(200);
+    }
+
+    $('input:radio[name=asked_for_transfer_details]').click(function(){
+        if($('input:radio[name=asked_for_transfer_details]:checked').val() == 'yes'){
+
+            $('.transfer_details').show(200);
+            $('textarea[name=transfer_details]').prop('required',true);
+            $('input[name=aft_last_date]').prop('required',false);
+            $(".responsible_person_depend").select2({ width: '100%' }); 
+
+        }else{
+            $('.transfer_details').hide(200);
+
+            $('textarea[name=transfer_details]').prop('required',false);
+            // $('input[name=aft_last_date]').prop('required',true);
+            $(".responsible_person_depend").select2({ width: '100%' }); 
+        }
+
+        if($('input:radio[name=asked_for_transfer_details]:checked').val() == 'NA'){
+            
+            $('.aft_depend').hide(200);
+            // $('select[name="aft_person"]').prop('required',false);
+            // $('input[name=aft_last_date]').prop('required',false);
+
+        }else{
+            $('.aft_depend').show(200);
+        }
+    });
+    // Transfer Info
+
+    // Transfers Organised
+
+    if($('input:radio[name=transfer_organised]:checked').val() == 'yes'){
+        $('.transfer_organised_details').show(200);
+        $('textarea[name=transfer_organised_details]').prop('required',true);
+        // $('input[name=to_last_date]').prop('required',false);
+
+        
+        $(".to_rp").select2({ width: '100%' });
+    }else{
+        $('.transfer_organised_details').hide(200);
+        $('textarea[name=transfer_organised_details]').prop('required',false);
+        // $('input[name=to_last_date]').prop('required',true);
+
+        $(".to_rp").select2({ width: '100%' });
+    }
+    if($('input:radio[name=transfer_organised]:checked').val() == 'NA'){
+        $('.to_depend').hide(200);
+        // $('input[name=to_last_date]').prop('required',false);
+    }else{
+        $('.to_depend').show(200);
+    }
+
+    $('input:radio[name=transfer_organised]').click(function(){
+        if($('input:radio[name=transfer_organised]:checked').val() == 'yes'){
+            $('.transfer_organised_details').show(200);
+            $('textarea[name=transfer_organised_details]').prop('required',true);
+            // $('input[name=to_last_date]').prop('required',false);
+
+            $(".to_rp").select2({ width: '100%' });
+        }else{
+            $('.transfer_organised_details').hide(200);
+            $('textarea[name=transfer_organised_details]').prop('required',false);
+            // $('input[name=to_last_date]').prop('required',true);
+
+            $(".to_rp").select2({ width: '100%' });
+        }
+        if($('input:radio[name=transfer_organised]:checked').val() == 'NA'){
+            $('.to_depend').hide(200);
+            // $('input[name=to_last_date]').prop('required',false);
+        }else{
+            $('.to_depend').show(200);
+        }
+    });
+    // Transfers Organised
+
+    // Itinerary Finalised
+    if($('input:radio[name=itinerary_finalised]:checked').val() == 'yes'){
+        
+        $('.itinerary_finalised_details').show(200);
+        $('.itf_current_date').show(200);
+        $('textarea[name=itinerary_finalised_details]').prop('required',true);
+        $('input[name=itf_current_date]').prop('required',true);
+        $(".if_rp").select2({ width: '100%' });
+
+    }else{
+        $('.itinerary_finalised_details').hide(200);
+        $('textarea[name=itinerary_finalised_details]').prop('required',false);
+        $('input[name=itf_current_date]').prop('required',false);
+        $(".if_rp").select2({ width: '100%' });
+    }
+    if($('input:radio[name=itinerary_finalised]:checked').val() == 'NA'){
+        $('.itf_depend').hide(200);
+        // $('input[name=itf_last_date]').prop('required',false);
+    }else{
+        $('.itf_depend').show(200);
+    }
+
+    $('input:radio[name=itinerary_finalised]').click(function(){
+        if($('input:radio[name=itinerary_finalised]:checked').val() == 'yes'){
+        
+            $('.itinerary_finalised_details').show(200);
+            $('.itf_current_date').show(200);
+            $('textarea[name=itinerary_finalised_details]').prop('required',true);
+            $('input[name=itf_current_date]').prop('required',true);
+            $(".if_rp").select2({ width: '100%' });
+
+        }else{
+            $('.itinerary_finalised_details').hide(200);
+            $('textarea[name=itinerary_finalised_details]').prop('required',false);
+            $('input[name=itf_current_date]').prop('required',false);
+            $(".if_rp").select2({ width: '100%' });
+        }
+        if($('input:radio[name=itinerary_finalised]:checked').val() == 'NA'){
+            $('.itf_depend').hide(200);
+            // $('input[name=itf_last_date]').prop('required',false);
+        }else{
+            $('.itf_depend').show(200);
+        }
+    });
+
+    // Itinerary Finalised
+
+
+    // Travel Document Prepared
+    if($('input:radio[name=document_prepare]:checked').val() == 'yes'){
+
+        $('.tdp_current_date').show(200);
+        $('textarea[name=tdp_current_date]').prop('required',true);
+        $(".tdp_rp").select2({ width: '100%' });
+    }else
+    {
+        $('.tdp_current_date').hide(200);
+        $('textarea[name=tdp_current_date]').prop('required',false);
+        $(".tdp_rp").select2({ width: '100%' });
+    }
+
+    if($('input:radio[name=document_prepare]:checked').val() == 'NA'){
+        $('.dp_depend').hide(200);
+    }else{
+        $('.dp_depend').show(200);
+    }
+
+    $('input:radio[name=document_prepare]').click(function(){
+        if($('input:radio[name=document_prepare]:checked').val() == 'yes'){
+
+        $('.tdp_current_date').show(200);
+        $('textarea[name=tdp_current_date]').prop('required',true);
+        $(".tdp_rp").select2({ width: '100%' });
+    }else
+    {
+        $('.tdp_current_date').hide(200);
+        $('textarea[name=tdp_current_date]').prop('required',false);
+        $(".tdp_rp").select2({ width: '100%' });
+    }
+
+    if($('input:radio[name=document_prepare]:checked').val() == 'NA'){
+        $('.dp_depend').hide(200);
+    }else{
+        $('.dp_depend').show(200);
+    }
+    });
+    // Travel Document Prepared
+
+    // Travel Document Sent
+    if($('input:radio[name=documents_sent]:checked').val() == 'yes'){
+            // confirm('Full Payment may not have been received--Please confirm you like to Send Documnet to client');
+            $('.documents_sent_details').show(200);
+            $('.tds_current_date').show(200);
+
+            $('textarea[name=documents_sent_details]').prop('required',true);
+            $('input[name=tds_current_date]').prop('required',true);
+
+            $('.tds_rp').select2({ width: '100%' });
+        }else{
+            $('.documents_sent_details').hide(200);
+            $('.tds_current_date').hide(200);
+
+            $('textarea[name=documents_sent_details]').prop('required',false);
+            $('input[name=tds_current_date]').prop('required',false);
+
+            $('.tds_rp').select2({ width: '100%' });
+        }
+        if($('input:radio[name=documents_sent]:checked').val() == 'NA'){
+            $('.ds_depend').hide(200);
+            // $('input[name=ds_last_date]').prop('required',false);
+        }else{
+            $('.ds_depend').show(200);
+        }
+
+    $('input:radio[name=documents_sent]').click(function(){
+        if($('input:radio[name=documents_sent]:checked').val() == 'yes'){
+            confirm('Full Payment may not have been received--Please confirm you like to Send Documnet to client');
+            $('.documents_sent_details').show(200);
+            $('.tds_current_date').show(200);
+
+            $('textarea[name=documents_sent_details]').prop('required',true);
+            $('input[name=tds_current_date]').prop('required',true);
+
+            $('.tds_rp').select2({ width: '100%' });
+        }else{
+            $('.documents_sent_details').hide(200);
+            $('.tds_current_date').hide(200);
+
+            $('textarea[name=documents_sent_details]').prop('required',false);
+            $('input[name=tds_current_date]').prop('required',false);
+
+            $('.tds_rp').select2({ width: '100%' });
+        }
+        if($('input:radio[name=documents_sent]:checked').val() == 'NA'){
+            $('.ds_depend').hide(200);
+            // $('input[name=ds_last_date]').prop('required',false);
+        }else{
+            $('.ds_depend').show(200);
+        }
+    });
+    // Travel Document Sent
+
+    // App login Sent
+    if($('input:radio[name=electronic_copy_sent]:checked').val() == 'yes'){
+        $('.electronic_copy_details').show(200);
+        $('.set_reminder_app').show(200);
+
+        $('select[name=aps_person]').prop('required',true);
+        $('input[name=aps_last_date]').prop('required',true);
+        $('textarea[name=electronic_copy_details]').prop('required',true);
+
+        $('.als_rp').select2({ width: '100%' });
+
+    }else{
+        $('.electronic_copy_details').hide(200);
+        $('.set_reminder_app').hide(200);
+
+        $('select[name=aps_person]').prop('required',false);
+        $('input[name=aps_last_date]').prop('required',false);
+        $('textarea[name=electronic_copy_details]').prop('required',false);
+
+        $('.als_rp').select2({ width: '100%' });
+    }
+
+    $('input:radio[name=electronic_copy_sent]').click(function(){
+        if($('input:radio[name=electronic_copy_sent]:checked').val() == 'yes'){
+            $('.electronic_copy_details').show(200);
+            $('.set_reminder_app').show(200);
+
+            $('select[name=aps_person]').prop('required',true);
+            $('input[name=aps_last_date]').prop('required',true);
+            $('textarea[name=electronic_copy_details]').prop('required',true);
+
+            $('.als_rp').select2({ width: '100%' });
+
+        }else{
+            $('.electronic_copy_details').hide(200);
+            $('.set_reminder_app').hide(200);
+
+            $('select[name=aps_person]').prop('required',false);
+            $('input[name=aps_last_date]').prop('required',false);
+            $('textarea[name=electronic_copy_details]').prop('required',false);
+
+            $('.als_rp').select2({ width: '100%' });
+        }
+    });
+    // App login Sent
+});  
+
+</script>
+
     <script type="text/javascript">
    
 
@@ -1746,12 +2223,7 @@
                 reinitializedDynamicFeilds();
             });
 
-            // Initialize all Select2 
-            $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
-            $(".datepicker").datepicker({
-                autoclose: true,
-                format: 'dd/mm/yyyy'
-            });
+
 
             function reinitializedDynamicFeilds() {
 
@@ -1876,6 +2348,7 @@
                 });
 
             });
+
             $(document).on('change', '.cost',function(){
 
                 var cost = $(this).val();
@@ -1949,7 +2422,6 @@
 
             });
     
-
             $(document).on('change', '.markup-percent', function() {
 
                 var net_price = parseFloat($('.net_price').val());
@@ -1988,11 +2460,6 @@
                 // $('.per-person').val(perPersonAmount);
 
             });
-
-            // $(document).on('change', 'select[name="currency"]',function(){
-            //     var selected_currency_code = $(this).val();
-            //     $('.currency').html(selected_currency_code);
-            // });
 
             $(document).on('change', 'select[name="currency"]', function() {
 
@@ -2143,6 +2610,8 @@
 
                 $('#error_ref_no, #error_brand_name, #error_lead_passenger_name , #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
 
+                $('#error_fb_airline_name_id, #error_fb_payment_method_id, #error_fb_booking_date, #error_fb_airline_ref_no, #error_flight_booking_details, #error_transfer_details, #error_transfer_organised_details, #error_itinerary_finalised_details, #error_itf_current_date, #error_tdp_current_date, #error_documents_sent_details, #error_tds_current_date, #error_aps_person, #error_aps_last_date, #error_electronic_copy_details ').html('');
+
                 jQuery(".finance-row").find(".disable-feild").attr("disabled", "disabled");
 
                 $.ajax({
@@ -2158,7 +2627,7 @@
                     success: function(data) {
                         $("#divLoading").removeClass('show');
                         alert(data.success_message);
-                        window.history.back();
+                        // window.history.back();
                         // location.reload();
                     },
                     error: function(reject) {
@@ -2366,6 +2835,9 @@
         });
 
     </script>
+
+    
+
 
     </body>
 
