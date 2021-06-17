@@ -494,9 +494,9 @@
                                                 </div>
 
                                                 <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Select Supplier Currency</label>
-                                                    <select class="form-control supplier-currency"
-                                                        name="supplier_currency[]" required>
+                                                    <label class="">Supplier Currency</label>
+                                                    <select class="form-control supplier-currency" disabled
+                                                        name="supplier_currency[]">
                                                         <option value="">Select Currency</option>
                                                         @foreach ($currencies as $currency)
                                                             <option value="{{ $currency->code }}"
@@ -658,13 +658,17 @@
 
                                                     <div class="col-sm-2" style="margin-bottom: 15px; ">
                                                         <label for="inputEmail3" class=""> Upload to Calender</label>
-                                                        <div class="form-check">
-                                                            <input type='hidden' class="disable-feild" value='false'
-                                                                name='upload_calender[{{ $key }}][]'>
+                                                        <div class="input-group">
+                                                            <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{ $key }}][]'>
                                                             <input class="form-check-input uploadCalender disable-feild"
                                                                 type="checkbox" value="false"
                                                                 name="upload_calender[{{ $key }}][]"
                                                                 style="height: 20px; width:28px;">
+                                                            <div class="input-group">
+                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0">
+                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -739,8 +743,8 @@
                                                         </div>
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px; ">
-                                                            <label for="inputEmail3" class=""> Upload to Calender</label>
-                                                            <div class="form-check">
+                                                            <label for="inputEmail3" class="">Upload to Calender</label>
+                                                            <div class="input-group">
                                                                 <input type='hidden' class="disable-feild"
                                                                     {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'disabled="disabled"' }}
                                                                     value="false"
@@ -751,12 +755,35 @@
                                                                     {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'checked' }}
                                                                     name="upload_calender[{{ $key }}][]"
                                                                     style="height: 20px; width:28px;">
+
+                                                                        <div class="input-group">
+                                                                          <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                      
+                                                                          <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0">
+                                                                      
+                                                                          <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                                        </div>
+                                                                        
+                                                                        {{-- <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">-</button>
+                                                                        <lable style="margin-top: -13px;"><strong>2</strong></lable>
+                                                                        <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">+</button> --}}
+                                                                       
                                                             </div>
                                                         </div>
+                                                
+                                                        {{-- <div class="col-md-2">
+                                                            <label for="inputEmail3" class="">Add Event</label>
+                                                            <div class="form-check">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                                <div class="input-group-append">
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                        </div> --}}
 
                                                         @if ($fkey == 0)
-                                                            <div class="col-sm-2"
-                                                                style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                                            <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
                                                                 <button type="button" class="add_finance">+</button>
                                                             </div>
                                                         @endif
@@ -824,13 +851,18 @@
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px; ">
                                                             <label for="inputEmail3" class=""> Upload to Calender</label>
-                                                            <div class="form-check">
+                                                            <div class="input-group">
                                                                 <input type='hidden' value='false'
                                                                     name='upload_calender[{{ $key }}][]'>
                                                                 <input class="form-check-input uploadCalender"
                                                                     type="checkbox" value="false"
                                                                     name="upload_calender[{{ $key }}][]"
                                                                     style="height: 20px; width:28px;">
+                                                                    <div class="input-group">
+                                                                        <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                        <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults" size="10" value="0">
+                                                                        <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                                    </div>
                                                             </div>
                                                         </div>
 
@@ -2831,9 +2863,54 @@ $(document).ready(function() {
                 $('#quotation-version').toggle();
             });
             
+            
+            $(document).on('click', '.increment', function() {
+                
+                var close = $(this).closest('.row');
+                
+                    var valueElement = close.find('.adults');
+                //     var dueDate = close.find('.deposit_due_date').val();
+                //     var nowDate  =todayDate();
+                //     const firstDate = convertDate(dueDate);
+                //     const secondDate = convertDate(nowDate);
+                //     const oneDay = 24 * 60 * 60 * 1000; 
+                //     const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+                //    if(firstDate > secondDate){
+                //         $(this).props('disabled', true);
+                //    }else{
+                //     console.log('less than');
+                       
+                //    }
+
+                    // console.log(diffDays);
+                    // console.log(close , valueElement);
+                    if($(this).hasClass('plus')) 
+                    {
+                        valueElement.val(Math.max(parseInt(valueElement.val()) + 1));
+                    } 
+                    else if (valueElement.val() > 0) // Stops the value going into negatives
+                    {
+                        valueElement.val(Math.max(parseInt(valueElement.val()) - 1));
+                    } 
+
+                return false;
+            });
+
 
         });
 
+        // function convertDate(date) {
+        //     var dateParts = date.split("/");
+        //     return dateParts = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+        // }
+
+        // function todayDate() {
+        //     var today = new Date();
+        //     var dd = String(today.getDate()).padStart(2, '0');
+        //     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        //     var yyyy = today.getFullYear();
+        //     return today = dd + '/' + mm + '/' + yyyy;
+        // }
     </script>
 
     
