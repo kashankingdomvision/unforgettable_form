@@ -532,7 +532,7 @@
                                                             class="input-group-addon symbol">{{ $booking_detail->supplier_currency }}</span>
                                                         <input type="number"
                                                             data-code="{{ $booking_detail->supplier_currency }}"
-                                                            name="actual_cost[]" class="form-control cost"
+                                                            name="actual_cost[]" class="form-control cost cost{{ $key }} " data-key="cost{{$key}}"
                                                             value="{{ $booking_detail->actual_cost }}" placeholder="Cost"
                                                             min="0" required>
                                                     </div>
@@ -610,7 +610,7 @@
                                                         <div class="input-group">
                                                             <input type="number"
                                                                 name="deposit_amount[{{ $key }}][]"
-                                                                class="form-control disable-feild deposit_amount"
+                                                                class="form-control disable-feild deposit_amount depositeAmount"
                                                                 placeholder="Deposit Amount" min="0">
                                                         </div>
                                                         <div class="alert-danger" style="text-align:center"> </div>
@@ -695,7 +695,7 @@
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
-                                                                    class="form-control deposit_amount"
+                                                                    class="form-control deposit_amount depositecost{{$key}}"
                                                                     placeholder="Deposit Amount" min="0">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
@@ -2318,7 +2318,7 @@ $(document).ready(function() {
 
 
                 $('.cost').each(function() {
-
+                    console.log('count');   
                     cost = $(this).val();
                     currency = $(this).attr("data-code");
 
@@ -2903,9 +2903,21 @@ $(document).ready(function() {
                 return false;
             });
 
+            $(document).on('change', '.cost', function () {
+                    var val = $(this).val();
+                    var data = $(this).data('key');
+                    var sum = 0;
+                    $('.deposite'+data).each(function(){
+                        sum += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+                    });
+                    
+                    // if(sum > val){
+                    //     $('.deposite'+data).val('');
+                    // }
+            });
 
         });
-
+        
         // function convertDate(date) {
         //     var dateParts = date.split("/");
         //     return dateParts = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
