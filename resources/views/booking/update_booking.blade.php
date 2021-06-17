@@ -606,7 +606,7 @@
                                             <div class="row finance-row" hidden>
                                                 <div class="row">
                                                     <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                        <label for="inputEmail3" class="">Deposit Amount</label>
+                                                        <label for="inputEmail3" class="title">Payment {{ $key }}</label>
                                                         <div class="input-group">
                                                             <input type="number"
                                                                 name="deposit_amount[{{ $key }}][]"
@@ -687,10 +687,10 @@
 
                                                 @foreach ($finance_booking_details as $fkey => $finance_booking_detail)
 
-                                                    <div class="row">
+                                                    <div class="row" data-title="title{{$key}}">
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Deposit Amount</label>
+                                                            <label for="inputEmail3" class="title{{$key}}">Payment {{ $fkey + 1}}</label>
                                                             <div class="input-group">
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
@@ -797,7 +797,7 @@
                                                 <div class="row">
                                                     <div class="append">
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Deposit Amount</label>
+                                                            <label for="inputEmail3" class="">Payment {{ $key  }}</label>
                                                             <div class="input-group">
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
@@ -2759,12 +2759,20 @@ $(document).ready(function() {
 
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
-
+                var getClass = $(this).closest('.row').data('title');
+                var count = $('.'+getClass).length + 1;
+                var $v_text = 'Payment '+count;
+                console.log($v_text);
+                $('.finance-row').find('.row').attr("data-title", getClass);
+                $('.finance-row').find('.title').text($v_text);
+                var title =  $('.finance-row').find('.title').addClass(getClass);
                 let $selector = $(this);
                 let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();
 
                 $selector.closest(".qoute").append(html);
-
+                $('.finance-row').find('.row').removeAttr("data-title");
+                $('.finance-row').find('.row').find('.title').removeClass(getClass);
+                
                 $(".datepicker").datepicker({
                     autoclose: true,
                     format: 'dd/mm/yyyy'
@@ -2774,7 +2782,6 @@ $(document).ready(function() {
                 $(".booking-method-select2").removeClass('select2-hidden-accessible').next().remove();
                 $(".booking-method-select2").select2();
 
-                console.log(html);
             });
 
             $(document).on('click', '.upload_to_google_calendar', function() {
