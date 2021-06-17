@@ -1364,47 +1364,61 @@ class AdminController extends Controller
 
                         $filename = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
                     }
+                    
+                    $arrayBookingDetail =  [
+                        'qoute_id'          => $request->qoute_id,
+                        'booking_id'        => $booking->id,
+                        'quotation_no'      => $request->quotation_no,
+                        'row'               => $key+1,
+                        'date_of_service'   => $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null,
+                        'service_details'   => $request->service_details[$key],
+                        'category_id'       => $request->category[$key],
+                        'supplier'          => $request->supplier[$key],
+                        'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
+                        'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
+                        // 'booking_method'    => $request->booking_method[$key],
+                        'booked_by'         => $request->booked_by[$key],
+                        'booking_refrence'  => $request->booking_refrence[$key],
+                        'booking_type'      => $request->booking_type[$key],
+                        'comments'          => $request->comments[$key],
+                        'cost'              => $request->cost[$key],
+                        'actual_cost'       => $request->actual_cost[$key],
+                        'supervisor_id'     => $request->supervisor[$key],
+                        'added_in_sage'     => $request->added_in_sage[$key],
+                        'qoute_base_currency' => $request->qoute_base_currency[$key],
+                        'qoute_invoice'     => $filename,
+                    ];
+                    
+                    if($request->has('supplier_currency') && !empty($request->supplier_currency)){
+                        $arrayBookingDetail['supplier_currency'] =  $request->supplier_currency[$key];
+                    }
 
                     $bookingDetail = BookingDetail::updateOrCreate(
                         [
                             'quotation_no' => $request->quotation_no,
                             'row' => $key+1,
                         ],
-
-                        [
-                            'qoute_id'          => $request->qoute_id,
-                            'booking_id'        => $booking->id,
-                            'quotation_no'      => $request->quotation_no,
-                            'row'               => $key+1,
-                            'date_of_service'   => $request->date_of_service[$key] ? Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d') : null,
-                            'service_details'   => $request->service_details[$key],
-                            'category_id'       => $request->category[$key],
-                            'supplier'          => $request->supplier[$key],
-                            'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
-                            'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
-                            // 'booking_method'    => $request->booking_method[$key],
-                            'booked_by'         => $request->booked_by[$key],
-                            'booking_refrence'  => $request->booking_refrence[$key],
-                            'booking_type'      => $request->booking_type[$key],
-                            'comments'          => $request->comments[$key],
-                            'supplier_currency' => $request->supplier_currency[$key],
-                            'cost'              => $request->cost[$key],
-                            'actual_cost'       => $request->actual_cost[$key],
-                            'supervisor_id'     => $request->supervisor[$key],
-                            'added_in_sage'     => $request->added_in_sage[$key],
-                            'qoute_base_currency' => $request->qoute_base_currency[$key],
-                            'qoute_invoice'     => $filename,
-                        ]
+                        $arrayBookingDetail
                     );
-
+                    $nowDate = Carbon::now()->toDateString();
                     foreach($request->deposit_due_date[$key] as $ikey => $deposit_due_date){
-
+                    
+                    
                         if($request->upload_calender[$key][$ikey]  == true && $deposit_due_date != NULL){
+                            $supplier = ($request->has('supplier_currency'))? $request->supplier_currency[$key] : $bookingDetail->supplier_currency;
                             $event = new Event;
-                            $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$request->supplier_currency[$key]." to Supplier";
+                            $event->name        = "To Pay ".$request->deposit_amount[$key][$ikey].' '.$supplier." to Supplier";
                             $event->description = 'Event description';
-                            $event->startDate   = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay(): NULL;
-                            $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
+                            
+                            $addDate          = (int)$request->additional_date[$key][$ikey];
+
+                            if(Carbon::parse(str_replace('/', '-', $deposit_due_date))->subDays($addDate)->toDateString() >= $nowDate && $addDate != 0){
+                                $event->startDate   = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->subDays($addDate): NULL;
+                                $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->subDays($addDate): NULL;
+                            }else{
+                                $event->startDate   = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->startOfDay(): NULL;
+                                $event->endDate     = ($deposit_due_date != NULL)? Carbon::parse(str_replace('/', '-', $deposit_due_date))->endOfDay(): NULL;
+                            }
                             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
                             // $event->save();
 
