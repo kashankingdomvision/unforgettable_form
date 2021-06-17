@@ -174,6 +174,7 @@ Route::group(['middleware' => ['auth']], function(){
 	// view quotation in booking
 	Route::get('view-quotation/{id}',array('as'=>'view-quotation','uses'=>'AdminController@view_quotation'));
 	Route::get('view-booking-version/{booking_id}/{log_no}',array('as'=>'view-booking-version','uses'=>'AdminController@view_booking_version'));
+	Route::get('view-quotation-version/{quote_id}/{log_no}',array('as'=>'view-quotation-version','uses'=>'AdminController@view_quotation_version'));
 
 	Route::get('del-booking/{season_id}/{booking_id}',array('as'=>'del-booking','uses'=>'AdminController@delete_booking'));
 	Route::post('del-multi-booking/{id}',array('as'=>'del-multi-booking','uses'=>'AdminController@delete_multi_booking'));

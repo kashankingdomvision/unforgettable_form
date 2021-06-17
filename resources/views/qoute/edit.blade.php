@@ -522,7 +522,7 @@ td.day{
                                     </div>
         
                                     <div class="col-sm-2 mb-3">
-                                        <label for="inputEmail3" class="">Booking Due Date {{ $quote_detail->booking_due_date }} <span style="color:red">*</span></label> 
+                                        <label for="inputEmail3" class="">Booking Due Date<span style="color:red">*</span></label> 
                                         <div class="input-group">
                                             <input type="text" name="booking_due_date[]"  value="{{ !empty($quote_detail->booking_due_date) ? date('d/m/Y', strtotime($quote_detail->booking_due_date)) : "" }}" class="form-control datepicker bookingDueDate" placeholder="Booking Date" required>
                                         </div>

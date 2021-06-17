@@ -486,16 +486,16 @@ thead.border_thead {
         $book_id = @$book_id;
         $id      = @$id;
         ?>
-        <li class="treeview @if ( Request::is('create-booking') ||   Request::is('view-booking/'.$book_id) || Request::is('view-booking-season') || Request::is('update-booking/'.$id) ) active @endif  ">
+        <li class="treeview {{ $route == 'create-booking' || $route == 'view-booking' || $route == 'view-booking-season' || $route == 'update-booking' || $route == 'view-quotation-version' || $route == 'view-quotation' || $route == 'view-booking-version' ? 'active' : '' }}">
           <a href="#">
-            <i class="fa fa-book"></i> <span>Booking</span>
+            <i class="fa fa-book"></i> <span>Booking </span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{Request::is('create-booking') ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking</a></li>
-            <li class="{{Request::is('view-booking-season') ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
+            <li class="{{ $route == 'create-booking' ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking </a></li>
+            <li class="{{ $route == 'view-booking-season' || $route == 'view-booking' || $route == 'update-booking' || $route == 'view-quotation-version' || $route == 'view-quotation' || $route == 'view-booking-version' ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
 
           </ul>
         </li>

@@ -81,9 +81,11 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">
+                            Booking Reference # &nbsp;{{ $booking_log->ref_no }}
+                        </h3>
+                        <h3 class="box-title pull-right">
                             Booking Version {{ $booking_log->log_no }}: {{ $booking_log->quotation_no }} / {{ $booking_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $booking_log->created_date))->format('d/m/Y') : ""}}  {{ isset(\App\User::find($booking_log->user_id)->name) ? "By ".\App\User::find($booking_log->user_id)->name : ""}}
-                        </h1></h3>
-  
+                        </h3>
                     </div>
 
                     
@@ -103,13 +105,13 @@
                             <div class="row">
                                 <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
-                                    <label class="radio-inline"><input type="radio" disabled {{ ($booking_log->reference_name == 'zoho')? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
+                                    <label class="radio-inline"><input type="radio" disabled {{ ($booking_log->reference_name == 'zoho') ? 'checked': NULL }} name="reference" value="zoho" checked>Zoho Reference</label>
                                     {{-- <label class="radio-inline"><input type="radio" disabled {{ ($booking_log->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label> --}}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                    <label for="inputEmail3" id="referencename">{{ ($booking_log->reference_name == 'zoho')? 'Zoho': "TAS" }} Reference</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" id="referencename">{{ ($booking_log->reference_name == 'zoho') ? 'Zoho': "" }} Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="ref_no" disabled value="{{ $booking_log->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
