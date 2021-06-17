@@ -70,6 +70,15 @@
         background:#eee;
     }
 
+
+    .box-header>.fa, .box-header>.glyphicon, .box-header>.ion, .box-header .box-title{
+
+    display: inline-block;
+    font-size: 18px;
+    margin: 0;
+    line-height: 2;
+}
+
 </style>
 
 <div class="content-wrapper">
@@ -77,7 +86,7 @@
 
 
     <section class="content-header">
-        <h1>  Quotation Version {{ $qoute_log->log_no }}  : {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}}  By {{\App\User::findOrFail($qoute_log->user_id)->name}}</h1>
+        <h1>  </h1>
     </section>
 
     <section class="content">
@@ -86,10 +95,13 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title"> Quote</h3>
+                        <h3 class="box-title">
+                            Quotation Version {{ $qoute_log->log_no }}  : {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}}  By {{\App\User::findOrFail($qoute_log->user_id)->name}}
+                        </h3>
+                        {{-- <h3 > Quote</h3> --}}
                         <div class="pull-right">
-                            <a onclick="return confirm('Are you sure you want to recall this quote?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
-                                <button class="btn btn-info pull-right"> Recall Quote</button>
+                            <a onclick="return confirm('Are you sure you want to recall this Quotation?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
+                                <button class="btn btn-info pull-right"> Recall Quotation</button>
                             </a>
                         </div>
                     </div>
@@ -260,14 +272,10 @@
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 35px;">
-                                        <label for="inputEmail3" class="">Service Details</label> 
-                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1" disabled>{{ $quote_detail->service_details }}</textarea>
-                                        <div class="alert-danger" style="text-align:center"></div>
-                                    </div>
+                       
 
                                     <div class="col-sm-2" style="margin-bottom:15px;">
-                                        <label class="">Select Category</label> 
+                                        <label class="">Category</label> 
                                         <select class="form-control category-select2"  name="category[]" disabled>
                                             <option value="">Select Category</option>
                                             @foreach ($categories as $category)
@@ -278,7 +286,7 @@
                                     </div>
         
                                     <div class="col-sm-2" style="margin-bottom:15px">
-                                        <label class="test">Select Supplier</label> 
+                                        <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" disabled>
                                             <option value="">Select Supplier</option>
                                             @foreach ($suppliers as $supplier)
@@ -286,6 +294,17 @@
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
+                                    <div class="col-sm-2 mb-3">
+                                        <label class="">Product</label> 
+                                        <select class="form-control product-select2"  name="product[]" disabled>
+                                            <option value="">Select Product</option>
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }} > {{ $product->name }} </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -310,6 +329,13 @@
                        
         
                                 <div class="row">
+
+                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                        <label for="inputEmail3" class="">Service Details</label> 
+                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1" disabled>{{ $quote_detail->service_details }}</textarea>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
@@ -361,9 +387,13 @@
                                         <textarea name="comments[]"   class="form-control" cols="30" rows="1" disabled>{{ $quote_detail->comments }}</textarea>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
+ 
+                                </div>
+
+                                <div class="row">
 
                                     <div class="col-sm-2" style="margin-bottom:15px;">
-                                        <label class="">Select Supplier Currency</label> 
+                                        <label class="">Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required  disabled>
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -372,11 +402,6 @@
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
-                                    
- 
-                                </div>
-
-                                <div class="row">
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>

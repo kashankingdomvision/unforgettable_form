@@ -78,13 +78,9 @@ td.day{
                     </div>
                     <div class="alert-danger date_of_service" style="text-align:center">  </div>
                 </div>
-                <div class="col-sm-2" style="margin-bottom: 35px;">
-                    <label for="inputEmail3" class="">Service Details</label> 
-                    <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
-                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
-                </div>
+
                 <div class="col-sm-2 " style="margin-bottom:15px;">
-                    <label class="">Select Category</label> 
+                    <label class="">Category</label> 
                     <select class="form-control category-select2" name="category[]" >
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
@@ -94,7 +90,7 @@ td.day{
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
                 <div class="col-sm-2" style="margin-bottom:15px">
-                    <label class="">Select Supplier</label> 
+                    <label class="">Supplier</label> 
                     <select class="form-control supplier-select2 " name="supplier[]" >
                         <option value="">Select Supplier</option>
                         @foreach ($suppliers as $supplier)
@@ -102,6 +98,16 @@ td.day{
                         @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                </div>
+                <div class="col-sm-2 mb-3">
+                    <label class="">Product</label> 
+                    <select class="form-control product-select2"  name="product[]" >
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                        @endforeach
+                    </select>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                 </div>
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Date</label>
@@ -119,6 +125,11 @@ td.day{
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-2" style="margin-bottom: 35px;">
+                    <label for="inputEmail3" class="">Service Details</label> 
+                    <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
+                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                </div>
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Method</label> 
                     <div class="input-group">
@@ -166,8 +177,11 @@ td.day{
                     <textarea name="comments[]" id="" class="form-control" cols="30" rows="1"></textarea>
                     <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
                 </div>
+              
+            </div>
+            <div class="row">
                 <div class="col-sm-2" style="margin-bottom:15px;">
-                    <label class="">Select Supplier Currency</label> 
+                    <label class="">Supplier Currency</label> 
                     <select class="form-control supplier-currency"  name="supplier_currency[]" >
                         <option value="">Select Currency</option>
                         @foreach ($currencies as $currency)
@@ -176,13 +190,11 @@ td.day{
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Estimsted Cost <span style="color:red">*</span></label>
                     <div class="input-group">
                         <span class="input-group-addon symbol"></span>
-                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" min="0" value="0"  >
+                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" min="0" value="0" step="any"  >
                     </div>
                     <div class="alert-danger error-cost" style="text-align:center"></div>
                 </div>
@@ -389,12 +401,7 @@ td.day{
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
-                                        <label for="inputEmail3" class="">Service Details</label> 
-                                        <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
-                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <label class="">Select Category</label> 
+                                        <label class="">Category</label> 
                                         <select class="form-control category-select2"  name="category[]" >
                                             <option value="">Select Category</option>
                                             @foreach ($categories as $category)
@@ -404,7 +411,7 @@ td.day{
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
-                                        <label class="test">Select Supplier</label> 
+                                        <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2"  name="supplier[]" >
                                             <option value="">Select Supplier</option>
                                             @foreach ($suppliers as $supplier)
@@ -412,6 +419,16 @@ td.day{
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                                    </div>
+                                    <div class="col-sm-2 mb-3">
+                                        <label class="">Product</label> 
+                                        <select class="form-control product-select2"  name="product[]" >
+                                            <option value="">Select Product</option>
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="test222">Booking Date</label>
@@ -429,6 +446,11 @@ td.day{
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-sm-2 mb-3">
+                                        <label for="inputEmail3" class="">Service Details</label> 
+                                        <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
+                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                                    </div>
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
@@ -476,8 +498,10 @@ td.day{
                                         <textarea name="comments[]"   class="form-control" cols="30" rows="1"></textarea>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-2 mb-3">
-                                        <label>Select Supplier Currency</label> 
+                                        <label>Supplier Currency</label> 
                                         <select class="form-control supplier-currency" name="supplier_currency[]" >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -486,13 +510,11 @@ td.day{
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon symbol" ></span>
-                                            <input type="number" data-code="" name="cost[]" class="form-control cost" min="0" value="0" placeholder="Cost" >
+                                            <input type="number" data-code="" name="cost[]" class="form-control cost" min="0" value="0" placeholder="Cost" step="any">
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
@@ -845,6 +867,10 @@ td.day{
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
 <script type="text/javascript">
+
+    // Initialize all select2
+    $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+
     function datePickerSetDate(y = 1) {
         var season_id  = $('#bookingSeason').val();
         var season  = {!! json_encode($seasons->toArray()) !!};
@@ -1015,34 +1041,23 @@ td.day{
                     });
             }
         }
-        // $('.select2').select2();
-        // $('#category-select2').select2();
-        // $('#supplier-select2').select2();
-        // $('#booking-method-select2').select2();
-        // $('#booked-by-select2').select2();
-        // $('#supplier-currency').select2();
-        // $('#supervisor-select2').select2();
-        // $('#booking-type-select2').select2();
-        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
-        // $('#convert-currency').select2();
+ 
+        
+
         $('body').on('click', '#new', function (e) {
             var qoute = $('#qoute').html();
             $("#parent").append(qoute);
             reinitializedDynamicFeilds();
         });
+
         function reinitializedDynamicFeilds(){
-            // $(".category-select2:last").select2();
-            // $(".supplier-select2:last").select2();
-            // $(".booking-method-select2:last").select2();
-            // $(".booked-by-select2:last").select2();
-            // $('.supplier-currency:last').select2();
-            // $('.supervisor-select2:last').select2();
-            // $('.booking-type-select2').select2();
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();        
-            // $(".datepicker").datepicker({ autoclose: true, format: 'dd-mm-yyyy'  });
+       
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();        
+  
             datePickerSetDate('reinitializedDynamicFeilds');
         }
+        
         $(document).on('change', 'select[name="category[]"]',function(){
             var $selector = $(this);
             var category_id = $(this).val();
@@ -1064,6 +1079,7 @@ td.day{
                 }
             })
         });
+
         $(document).on('change', 'select[name="supplier_currency[]"]',function(){
             let $selector = $(this);
             let selected_currency_code = $(this).val();
@@ -1168,6 +1184,7 @@ td.day{
                 }
             });
         });
+
         $(document).on('change', '.markup-percent',function(){
             var net_price = parseFloat($('.net_price').val());
             var markup_percent = parseFloat($('.markup-percent').val());
@@ -1181,6 +1198,7 @@ td.day{
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
         });
+
         $(document).on('change', '.markup-amount',function(){
             var net_price = parseFloat($('.net_price').val());
             var markup_percent = parseFloat($('.markup-percent').val());
@@ -1194,6 +1212,7 @@ td.day{
             // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
             // $('.per-person').val(perPersonAmount);
         });
+
         $(document).on('change', 'select[name="currency"]',function(){
             var selected_currency_code = $(this).val();
             var costArray = [];
@@ -1245,16 +1264,19 @@ td.day{
             });
             $('.currency').html(selected_currency_code);
         });
+
         $(document).on('click', '#ab_no',function(){
             $('#agency-detail').css("display", "none");
             $("input[name='agency_name']").prop('required',false);
             $("input[name='agency_contact_no']").prop('required',false);
         });
+
         $(document).on('click', '#ab_yes',function(){
             $('#agency-detail').css("display", "block");
             $("input[name='agency_name']").prop('required',true);
             $("input[name='agency_contact_no']").prop('required',true);
         });
+
         // $(document).on('change', 'select[name="convert_currency"]',function(){
         $(document).on('change', '#convert-currency',function(){
             // var selected_currency = 'USD';
@@ -1284,6 +1306,7 @@ td.day{
                 }
             });
         });
+
         $(document).on('change', 'select[name="group_no"]',function(){
             var group_no = $(this).val();
             var show_convert_currency =  $('.show-convert-currency').val();
@@ -1293,12 +1316,14 @@ td.day{
             total_per_person = port_tax + perPersonAmount;
             $('.total').val(total_per_person);
         });
+
         $(document).on('change', '.port-tax',function(){
             var port_tax = parseFloat($(this).val());
             var perPersonAmount = parseFloat($('.per-person').val());
             total_per_person = port_tax + perPersonAmount;
             $('.total').val(total_per_person);
         });
+
         $(document).on('submit','#user_form',function(){
             // $('#user_form').on('submit', function(event){
             event.preventDefault();
@@ -1379,13 +1404,18 @@ td.day{
             }
             });
         });
+
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
         });
-        // auto select default currency of supplier
+
+        // set supplier's default & supplier's product list
         $(document).on('change', 'select[name="supplier[]"]',function(){
+
             var $selector = $(this);
             var supplier_id = $(this).val();
+            var options = '';
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-supplier-currency') }}',
@@ -1394,10 +1424,40 @@ td.day{
                     'supplier_id': supplier_id
                 },
                 success: function(response) {
-                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+
+                    // set supplier's product 
+                    options += '<option value="">Select Product</option>';
+                    $.each(response.supplier_products,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    $selector.closest('.row').find('[class*="product-select2"]').html(options);
+
+                    // set supplier's currency 
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
                 }
             })
         });
+
+        // get product's details for service details
+        $(document).on('change', 'select[name="product[]"]',function(){
+
+            var $selector = $(this);
+            var product_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-product-details') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'product_id': product_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[name="service_details[]"]').val(response.description);
+                }
+            })
+        });
+
         $(document).on('change', 'select[name="booked_by[]"]',function(){
             var $selector = $(this);
             var booked_by = $(this).val();

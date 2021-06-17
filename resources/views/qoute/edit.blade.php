@@ -103,14 +103,8 @@ td.day{
                     <div class="alert-danger date_of_service" style="text-align:center"></div>
                 </div>
 
-                <div class="col-sm-2" style="margin-bottom: 35px;">
-                    <label for="inputEmail3" class="">Service Details</label> 
-                    <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
-                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
-                </div>
-
                 <div class="col-sm-2 " style="margin-bottom:15px;">
-                    <label class="">Select Category</label> 
+                    <label class="">Category</label> 
                     <select class="form-control category-select2" name="category[]" >
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
@@ -121,7 +115,7 @@ td.day{
                 </div>
 
                 <div class="col-sm-2" style="margin-bottom:15px">
-                    <label class="">Select Supplier</label> 
+                    <label class="">Supplier</label> 
                     <select class="form-control supplier-select2" name="supplier[]" >
                         <option value="">Select Supplier</option>
                         @foreach ($suppliers as $supplier)
@@ -130,6 +124,18 @@ td.day{
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
                 </div>
+
+                <div class="col-sm-2 mb-3">
+                    <label class="">Product</label> 
+                    <select class="form-control product-select2"  name="product[]" >
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                        @endforeach
+                    </select>
+                    <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
+                </div>
+
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Date</label>
                     <div class="input-group">
@@ -150,6 +156,13 @@ td.day{
             </div>
 
             <div class="row">
+                
+                <div class="col-sm-2" style="margin-bottom: 35px;">
+                    <label for="inputEmail3" class="">Service Details</label> 
+                    <textarea name="service_details[]"  class="form-control" cols="30" rows="1"></textarea>
+                    <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+                </div>
+
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Booking Method</label> 
                     <div class="input-group">
@@ -203,8 +216,12 @@ td.day{
                     <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
                 </div>
 
+            </div>
+
+            <div class="row">
+
                 <div class="col-sm-2" style="margin-bottom:15px;">
-                    <label class="">Select Supplier Currency</label> 
+                    <label class="">Supplier Currency</label> 
                     <select class="form-control supplier-currency"  name="supplier_currency[]" >
                         <option value="">Select Currency</option>
                         @foreach ($currencies as $currency)
@@ -214,16 +231,11 @@ td.day{
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                 </div>
 
-
-            </div>
-
-            <div class="row">
-
                 <div class="col-sm-2" style="margin-bottom: 15px;">
                     <label for="inputEmail3" class="">Cost <span style="color:red">*</span></label>
                     <div class="input-group">
                         <span class="input-group-addon symbol"></span>
-                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" value="0" min="0" required>
+                        <input type="number" name="cost[]" data-code="" class="form-control cost" placeholder="Cost" value="0" min="0" step="any" required>
                     </div>
                     <div class="alert-danger error-cost" style="text-align:center"></div>
                 </div>
@@ -485,14 +497,10 @@ td.day{
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2 mb-3">
-                                        <label for="inputEmail3" class="">Service Details</label> 
-                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1">{{ $quote_detail->service_details }}</textarea>
-                                        <div class="alert-danger" style="text-align:center"></div>
-                                    </div>
+
 
                                     <div class="col-sm-2 mb-3">
-                                        <label class="">Select Category</label> 
+                                        <label class="">Category</label> 
                                         <select class="form-control category-select2"  name="category[]" >
                                             <option value="">Select Category</option>
                                             @foreach ($categories as $category)
@@ -503,7 +511,7 @@ td.day{
                                     </div>
         
                                     <div class="col-sm-2 mb-3">
-                                        <label class="test">Select Supplier</label> 
+                                        <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" >
                                             <option value="">Select Supplier</option>
                                             @foreach ($suppliers as $supplier)
@@ -511,6 +519,17 @@ td.day{
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
+                                    <div class="col-sm-2 mb-3">
+                                        <label class="">Product</label> 
+                                        <select class="form-control product-select2"  name="product[]" >
+                                            <option value="">Select Product</option>
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>
         
                                     <div class="col-sm-2 mb-3">
@@ -533,6 +552,13 @@ td.day{
                                 </div>
         
                                 <div class="row">
+
+                                    <div class="col-sm-2 mb-3">
+                                        <label for="inputEmail3" class="">Service Details</label> 
+                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1">{{ $quote_detail->service_details }}</textarea>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
@@ -584,9 +610,13 @@ td.day{
                                         <textarea name="comments[]"   class="form-control" cols="30" rows="1">{{ $quote_detail->comments }}</textarea>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
+                                    
+                                </div>
+
+                                <div class="row">
 
                                     <div class="col-sm-2 mb-3">
-                                        <label class="">Select Supplier Currency</label> 
+                                        <label class="">Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
@@ -595,17 +625,12 @@ td.day{
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
-                                    
-
-                                </div>
-
-                                <div class="row">
 
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon symbol" >{{ $quote_detail->supplier_currency }}</span>
-                                            <input type="number" data-code="{{$quote_detail->supplier_currency}}" name="cost[]" class="form-control cost" value="{{ $quote_detail->cost }}"  placeholder="Cost" min="0" required>
+                                            <input type="number" data-code="{{$quote_detail->supplier_currency}}" name="cost[]" class="form-control cost" value="{{ $quote_detail->cost }}"  placeholder="Cost" min="0" step="any" required>
                                         </div>
                                         <div class="alert-danger error-cost" style="text-align:center" ></div>
                                     </div>
@@ -1027,6 +1052,9 @@ td.day{
 
 <script type="text/javascript">
 
+    // Initialize all Select2 
+    $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+
     function datePickerSetDate(y = 1) {
         var season_id  = $('#bookingSeason').val();
         var season  = {!! json_encode($seasons->toArray()) !!};
@@ -1181,15 +1209,14 @@ td.day{
             reinitializedDynamicFeilds('reinitializedDynamicFeilds');
         });
 
-        // Initialize all Select2 
-        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+   
         // $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
         datePickerSetDate();
         
         function reinitializedDynamicFeilds(){
 
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();
 
             // $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
             datePickerSetDate('reinitializedDynamicFeilds');
@@ -1650,11 +1677,12 @@ td.day{
             $(this).closest(".qoute").remove();
         });
 
-        // auto select default currency of supplier
+        // set supplier's default & supplier's product list
         $(document).on('change', 'select[name="supplier[]"]',function(){
 
             var $selector = $(this);
             var supplier_id = $(this).val();
+            var options = '';
 
             $.ajax({
                 type: 'POST',
@@ -1665,7 +1693,35 @@ td.day{
                 },
                 success: function(response) {
 
-                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.code).change();
+                    // set supplier's product 
+                    options += '<option value="">Select Product</option>';
+                    $.each(response.supplier_products,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    $selector.closest('.row').find('[class*="product-select2"]').html(options);
+
+                    // set supplier's currency 
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
+                }
+            })
+        });
+
+        // get product's details for service details
+        $(document).on('change', 'select[name="product[]"]',function(){
+
+            var $selector = $(this);
+            var product_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-product-details') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'product_id': product_id
+                },
+                success: function(response) {
+                    
+                    $selector.closest('.qoute').find('[name="service_details[]"]').val(response.description);
                 }
             })
         });
