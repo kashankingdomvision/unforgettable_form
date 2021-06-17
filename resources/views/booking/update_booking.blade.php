@@ -516,8 +516,7 @@
                                                     <label for="inputEmail3" class="">Estimated Cost</label> <span
                                                         style="color:red">*</span>
                                                     <div class="input-group">
-                                                        <span
-                                                            class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                        <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                         <input type="number" name="cost[]" class="form-control"
                                                             value="{{ $booking_detail->cost }}" placeholder="Cost"
                                                             min="0" required readonly>
@@ -608,6 +607,8 @@
                                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                                         <label for="inputEmail3" class="title">Payment {{ $key }}</label>
                                                         <div class="input-group">
+                                                            <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                        
                                                             <input type="number"
                                                                 name="deposit_amount[{{ $key }}][]"
                                                                 class="form-control disable-feild deposit_amount depositeAmount"
@@ -692,6 +693,8 @@
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                                             <label for="inputEmail3" class="title{{$key}}">Payment {{ $fkey + 1}}</label>
                                                             <div class="input-group">
+                                                        <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                            
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
@@ -799,6 +802,7 @@
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                                             <label for="inputEmail3" class="">Payment {{ $key  }}</label>
                                                             <div class="input-group">
+                                                                <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
