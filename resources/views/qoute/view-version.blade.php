@@ -100,7 +100,7 @@
                         </h3>
                         {{-- <h3 > Quote</h3> --}}
                         <div class="pull-right">
-                            <a onclick="return confirm('Are you sure you want to recall this Quotation?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
+                            <a onclick="return confirm('Are you sure you want to Recall this Quotation?');"  href="{{ route('recall-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}">
                                 <button class="btn btn-info pull-right"> Recall Quotation</button>
                             </a>
                         </div>

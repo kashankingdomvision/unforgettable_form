@@ -287,8 +287,9 @@ td.day{
         <h1> Edit Quote</h1>
         <div class="row">
             <div class="col-md-12 pull-right">
+                <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
                 @if(!empty($qoute_logs))
-                    <div id="version">
+                    <div id="quotation-version" hidden>
                         @foreach ($qoute_logs as $key => $qoute_log)
                             <p> 
                                 <a href="{{ route('view-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
@@ -1743,6 +1744,11 @@ td.day{
                     $selector.closest('.qoute').find('[class*="supervisor-select2"]').val(response.supervisor_id).change();
                 }
             })
+        });
+
+        $(document).on('click', '.view-quotation-version', function(e) {
+            e.preventDefault();
+            $('#quotation-version').toggle();
         });
 
         // $(document).on('click', '.version',function(e){

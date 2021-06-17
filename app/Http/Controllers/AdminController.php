@@ -3485,7 +3485,7 @@ class AdminController extends Controller
             'suppliers'         => Supplier::all()->sortBy('name'),
             'booking_methods'   => BookingMethod::all()->sortBy('id'),
             'currencies'        => Currency::all()->sortBy('name'),
-            'qoute_logs'        => QouteLog::where('qoute_id',$id)->get(),
+            'qoute_logs'        => QouteLog::where('qoute_id',$id)->orderBy('log_no', 'DESC')->get(),
         ]);
     }
 
@@ -3573,7 +3573,7 @@ class AdminController extends Controller
             'suppliers'         => Supplier::all()->sortBy('name'),
             'booking_methods'   => BookingMethod::all()->sortBy('id'),
             'currencies'        => Currency::all()->sortBy('name'),
-            'qoute_logs'        => QouteLog::where('qoute_id',$quote_id)->get(),
+            'qoute_logs'        => QouteLog::where('qoute_id',$quote_id)->orderBy('log_no', 'DESC')->get(),
         ]);
 
     }

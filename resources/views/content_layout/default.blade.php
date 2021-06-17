@@ -503,7 +503,7 @@ thead.border_thead {
         <?php
         $id = @$id;
         ?>
-        <li class="treeview {{ $route == 'creat-quote' || $route =='view-quote'  || $route =='edit-quote' ? 'active' : ''}}" >
+        <li class="treeview {{ $route == 'creat-quote' || $route =='view-quote'  || $route =='edit-quote' || $route == 'view-version' || $route == 'recall-version' ? 'active' : ''}}" >
           <a href="#">
             <i class="fa fa-file"></i> <span>Quote Management</span>
             <span class="pull-right-container">
@@ -515,7 +515,7 @@ thead.border_thead {
             <li class="{{ $route =='view-code'  || $route =='edit-code' ? 'active' : ''}}"><a href="{{ URL::to('view-code')}}"><i class="fa fa-eye"></i>View Codes</a></li> --}}
 
             <li class="{{ $route == 'creat-quote' ? 'active' : ''}}"><a href="{{ URL::to('creat-quote')}}"><i class="fa fa-plus"></i>Add Quotes</a></li>
-            <li class="{{ $route == 'view-quote' || $route == 'edit-quote'  ? 'active' : ''}}"><a href="{{ URL::to('view-quote')}}"><i class="fa fa-eye"></i>View Quotes</a></li>
+            <li class="{{ $route == 'view-quote' || $route == 'edit-quote' || $route == 'view-version' || $route == 'recall-version' ? 'active' : ''}}"><a href="{{ URL::to('view-quote')}}"><i class="fa fa-eye"></i>View Quotes</a></li>
           </ul>
 
         </li>
