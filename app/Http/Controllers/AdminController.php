@@ -2601,6 +2601,7 @@ class AdminController extends Controller
                     $qouteDetail->service_details   = $request->service_details[$key];
                     $qouteDetail->category_id       = $request->category[$key];
                     $qouteDetail->supplier          = $request->supplier[$key];
+                    $qouteDetail->product           = $request->product[$key];
                     $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d'))) : null;
                     $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d'))): null;
                     $qouteDetail->booking_method    = $request->booking_method[$key];
@@ -2637,14 +2638,15 @@ class AdminController extends Controller
         return view('qoute.create')->with([
             'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::all()->sortBy('name'),
-            'templates' => Template::all()->sortBy('name'),
+            'categories'       => Category::all()->sortBy('name'),
+            'products'         => Product::all()->sortBy('name'),
+            'seasons'          => season::all(),
+            'users'            => User::all()->sortBy('name'),
+            'supervisors'      => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'suppliers'        => Supplier::all()->sortBy('name'),
+            'booking_methods'  => BookingMethod::all()->sortBy('id'),
+            'currencies'       => Currency::all()->sortBy('name'),
+            'templates'        => Template::all()->sortBy('name'),
             // 'sale_person' => User::where('role_id',2)->orderBy('name', 'asc')->get(),
         ]);
     }
@@ -3391,6 +3393,7 @@ class AdminController extends Controller
                 $QouteDetailLog->date_of_service   = $qouteDetail->date_of_service;
                 $QouteDetailLog->service_details   =  $qouteDetail->service_details;
                 $QouteDetailLog->category_id       =  $qouteDetail->category_id;
+                $QouteDetailLog->product           = $qouteDetail->product;
                 $QouteDetailLog->supplier          =  $qouteDetail->supplier;
                 $QouteDetailLog->booking_date      =  $qouteDetail->booking_date;
                 $QouteDetailLog->booking_due_date  =  $qouteDetail->booking_due_date;
@@ -3419,6 +3422,7 @@ class AdminController extends Controller
                     $qouteDetail->service_details   = $request->service_details[$key];
                     $qouteDetail->category_id       = $request->category[$key];
                     $qouteDetail->supplier          = $request->supplier[$key];
+                    $qouteDetail->product           = $request->product[$key];
                     $qouteDetail->booking_date      = $request->booking_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d'))) : null;
                     $qouteDetail->booking_due_date  = $request->booking_due_date[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d'))): null;
                     $qouteDetail->booking_method    = $request->booking_method[$key];
@@ -3487,19 +3491,20 @@ class AdminController extends Controller
         });
 
         return view('qoute.edit')->with([
-            'quote' => Qoute::find($id),
-            'quote_details' => QouteDetail::where('qoute_id',$id)->orderBy('date_of_service', 'ASC')->get(),
+            'quote'             => Qoute::find($id),
+            'quote_details'     => QouteDetail::where('qoute_id',$id)->orderBy('date_of_service', 'ASC')->get(),
             'get_user_branches' => $get_user_branches,
-            'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
+            'get_holiday_type'  => $get_holiday_type,
+            'categories'        => Category::all()->sortBy('name'),
+            'products'          => Product::all()->sortBy('name'),
             // 'seasons' => season::where('default_season',1)->first(),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::all()->sortBy('name'),
-            'qoute_logs' => QouteLog::where('qoute_id',$id)->get(),
+            'seasons'           => season::all(),
+            'users'             => User::all()->sortBy('name'),
+            'supervisors'       => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'suppliers'         => Supplier::all()->sortBy('name'),
+            'booking_methods'   => BookingMethod::all()->sortBy('id'),
+            'currencies'        => Currency::all()->sortBy('name'),
+            'qoute_logs'        => QouteLog::where('qoute_id',$id)->orderBy('log_no', 'DESC')->get(),
         ]);
     }
 
@@ -3533,18 +3538,16 @@ class AdminController extends Controller
         });
 
         return view('qoute.view-version')->with([
-            'qoute_log' => $qoute_log,
+            'qoute_log'         => $qoute_log,
             'qoute_detail_logs' => $qoute_detail_logs,
-            'seasons' =>  season::all(),
-            'currencies' => Currency::all()->sortBy('name'),
-
-            'categories' => Category::all()->sortBy('name'),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'users' => User::all()->sortBy('name'),
-
-            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
-
+            'seasons'           =>  season::all(),
+            'currencies'        => Currency::all()->sortBy('name'),
+            'categories'       => Category::all()->sortBy('name'),
+            'suppliers'        => Supplier::all()->sortBy('name'),
+            'products'         => Product::all()->sortBy('name'),
+            'booking_methods'  => BookingMethod::all()->sortBy('id'),
+            'users'            => User::all()->sortBy('name'),
+            'supervisors'      => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'get_user_branches' => $get_user_branches,
             'get_holiday_type' => $get_holiday_type
         ]);
@@ -3576,19 +3579,20 @@ class AdminController extends Controller
         });
 
         return view('qoute.recall-version')->with([
-            'quote' => $qoute_log,
-            'quote_details' => $qoute_detail_logs,
+            'quote'             => $qoute_log,
+            'quote_details'     => $qoute_detail_logs,
             'get_user_branches' => $get_user_branches,
-            'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
+            'get_holiday_type'  => $get_holiday_type,
+            'categories'        => Category::all()->sortBy('name'),
+            'products'          => Product::all()->sortBy('name'),
             // 'seasons' => season::where('default_season',1)->first(),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::all()->sortBy('name'),
-            'qoute_logs' => QouteLog::where('qoute_id',$quote_id)->get(),
+            'seasons'           => season::all(),
+            'users'             => User::all()->sortBy('name'),
+            'supervisors'       => User::where('role_id',5)->orderBy('name','ASC')->get(),
+            'suppliers'         => Supplier::all()->sortBy('name'),
+            'booking_methods'   => BookingMethod::all()->sortBy('id'),
+            'currencies'        => Currency::all()->sortBy('name'),
+            'qoute_logs'        => QouteLog::where('qoute_id',$quote_id)->orderBy('log_no', 'DESC')->get(),
         ]);
 
     }
@@ -3948,14 +3952,26 @@ class AdminController extends Controller
         return $supplier_category;
     }
 
+    public function get_product_details(Request $request){
+
+        $product = Product::find($request->product_id);
+        return $product;
+
+        // $supplier_category = supplier_category::where('category_id',$request->category_id)
+        // ->select('suppliers.id','suppliers.name')
+        // ->leftJoin('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id')
+        // ->get();
+        // return $supplier_category;
+    }
+
 
     public function get_supplier_currency(Request $request){
 
-        $supplier_currency = Supplier::leftJoin('currencies', 'currencies.id', '=', 'suppliers.currency_id')
-        ->where('suppliers.id', $request->supplier_id)
-        ->first();
+        $supplier_currency = Supplier::leftJoin('currencies', 'currencies.id', '=', 'suppliers.currency_id')->where('suppliers.id', $request->supplier_id)->first();
+ 
+        $supplier_products = Supplier::find($request->supplier_id)->products;
 
-        return $supplier_currency;
+        return array('supplier_currency' => $supplier_currency, 'supplier_products' => $supplier_products);
     }
 
     public function get_saleagent_supervisor(Request $request){

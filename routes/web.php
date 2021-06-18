@@ -96,6 +96,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('get-currency',array('as'=>'get-currency','uses'=>'AdminController@get_currency'));
 	//end category
 
+	// get product's details
+	Route::post('get-product-details',array('as'=>'get-product-details','uses'=>'AdminController@get_product_details'));
 
     Route::match(['get', 'post'],'creat-quote',array('as'=>'creat-quote','uses'=>'AdminController@create_quote'));
     Route::match(['get', 'post'],'view-quote',array('as'=>'view-quote','uses'=>'AdminController@view_quote'));

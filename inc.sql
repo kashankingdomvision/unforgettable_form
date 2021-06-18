@@ -381,3 +381,9 @@ ALTER TABLE `qoutes` ADD `pax_name` VARCHAR(300) NULL AFTER `lead_passenger_name
 ALTER TABLE `qoute_logs` ADD `pax_name` VARCHAR(255) NULL AFTER `reference_name`;
 ALTER TABLE `bookings` ADD `pax_name` VARCHAR(255) NULL AFTER `lead_passenger_name`;
 ALTER TABLE `booking_logs` ADD `pax_name` VARCHAR(255) NOT NULL AFTER `lead_passenger_name`;
+-- add product feild in qoute_details
+ALTER TABLE `qoute_details` ADD `product` INT(10) NULL AFTER `supplier`;
+
+-- add product feild in qoute_detail_logs
+ALTER TABLE `qoute_detail_logs` ADD `product` INT(10) NULL AFTER `supplier`;
+
