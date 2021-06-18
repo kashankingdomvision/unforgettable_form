@@ -381,3 +381,19 @@ ALTER TABLE `qoute_details` ADD `product` INT(10) NULL AFTER `supplier`;
 -- add product feild in qoute_detail_logs
 ALTER TABLE `qoute_detail_logs` ADD `product` INT(10) NULL AFTER `supplier`;
 
+-- add product feild in booking_details
+ALTER TABLE `booking_details` ADD `product` INT(10) NULL AFTER `supplier`;
+
+-- add product feild in booking_detail_logs
+ALTER TABLE `booking_detail_logs` ADD `product` INT(10) NULL AFTER `supplier`;
+
+TRUNCATE TABLE `booking_logs`;
+TRUNCATE TABLE `booking_detail_logs`;
+TRUNCATE TABLE `finance_booking_detail_logs`
+
+-- add additional_date in finance_booking_details
+ALTER TABLE `finance_booking_details` ADD `additional_date` INT(10) NULL AFTER `upload_to_calender`;
+
+-- add additional_date in finance_booking_detail_logs
+ALTER TABLE `finance_booking_detail_logs` ADD `additional_date` INT(10) NULL AFTER `upload_to_calender`;
+ 

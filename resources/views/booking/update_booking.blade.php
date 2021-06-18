@@ -74,6 +74,10 @@
         -moz-appearance: textfield !important;
     }
 
+    .additional_date{
+        width: 80%;
+    }
+
 </style>
     <div class="content-wrapper">
 
@@ -99,7 +103,7 @@
                 <div class="col-md-6 text-right">
                     <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
                     @php
-                        $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->get();
+                        $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
                     @endphp
 
                     <div id="quotation-version" hidden>
@@ -358,15 +362,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-2" style="margin-bottom: 35px;">
-                                                    <label for="inputEmail3" class="">Service Details</label>
-                                                    <textarea name="service_details[]" class="form-control" cols="30"
-                                                        rows="1">{{ $booking_detail->service_details }}</textarea>
-                                                    <div class="alert-danger" style="text-align:center"></div>
-                                                </div>
-
                                                 <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Select Category</label>
+                                                    <label class="">Category</label>
                                                     <select class="form-control category-select2" name="category[]">
                                                         <option value="">Select Category</option>
                                                         @foreach ($categories as $category)
@@ -380,7 +377,7 @@
                                                 </div>
 
                                                 <div class="col-sm-2" style="margin-bottom:15px">
-                                                    <label class="test">Select Supplier</label>
+                                                    <label class="test">Supplier</label>
                                                     <select class="form-control supplier-select2 supplier-select2"
                                                         name="supplier[]">
                                                         <option value="">Select Supplier</option>
@@ -391,6 +388,17 @@
                                                         @endforeach
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center"></div>
+                                                </div>
+
+                                                <div class="col-sm-2" style="margin-bottom:15px;">
+                                                    <label class="">Product</label>
+                                                    <select class="form-control product-select2" name="product[]">
+                                                        <option value="">Select Product</option>
+                                                        @foreach ($products as $product)
+                                                            <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id ? 'selected' : '' }}>{{ $product->name }} </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
                                                 </div>
 
                                                 <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -422,6 +430,13 @@
                                             </div>
 
                                             <div class="row">
+
+                                                <div class="col-sm-2" style="margin-bottom: 35px;">
+                                                    <label for="inputEmail3" class="">Service Details</label>
+                                                    <textarea name="service_details[]" class="form-control" cols="30"
+                                                        rows="1">{{ $booking_detail->service_details }}</textarea>
+                                                    <div class="alert-danger" style="text-align:center"></div>
+                                                </div>
 
                                                 <div class="col-sm-2" style="margin-bottom: 15px;">
                                                     <label for="inputEmail3" class="">Booked By </label>
@@ -493,6 +508,12 @@
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
 
+
+
+                                            </div>
+
+                                            <div class="row">
+
                                                 <div class="col-sm-2" style="margin-bottom:15px;">
                                                     <label class="">Supplier Currency</label>
                                                     <select class="form-control supplier-currency" disabled
@@ -508,18 +529,12 @@
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
 
-                                            </div>
-
-                                            <div class="row">
-
                                                 <div class="col-sm-2" style="margin-bottom: 15px;">
                                                     <label for="inputEmail3" class="">Estimated Cost</label> <span
                                                         style="color:red">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                        <input type="number" name="cost[]" class="form-control"
-                                                            value="{{ $booking_detail->cost }}" placeholder="Cost"
-                                                            min="0" required readonly>
+                                                        <input type="number" name="cost[]" class="form-control" value="{{ $booking_detail->cost }}" placeholder="Cost" min="0" step="any" readonly>
                                                     </div>
                                                 </div>
 
@@ -529,11 +544,7 @@
                                                     <div class="input-group">
                                                         <span
                                                             class="input-group-addon symbol">{{ $booking_detail->supplier_currency }}</span>
-                                                        <input type="number"
-                                                            data-code="{{ $booking_detail->supplier_currency }}"
-                                                            name="actual_cost[]" class="form-control cost cost{{ $key }} " data-key="cost{{$key}}"
-                                                            value="{{ $booking_detail->actual_cost }}" placeholder="Cost"
-                                                            min="0" required>
+                                                        <input type="number" data-code="{{ $booking_detail->supplier_currency }}" name="actual_cost[]" class="form-control cost cost{{ $key }} " data-key="cost{{$key}}" value="{{ $booking_detail->actual_cost }}" placeholder="Cost" min="0" step="any" required>
                                                     </div>
                                                     <div class="alert-danger error-cost" style="text-align:center"></div>
                                                 </div>
@@ -573,6 +584,12 @@
                                                     <div class="alert-danger" style="text-align:center"> </div>
                                                 </div>
 
+
+
+                                            </div>
+
+                                            <div class="row">
+
                                                 <div class="col-sm-2" style="margin-bottom: 15px;">
                                                     <label for="inputEmail3" class="">Upload Invoice</label>
                                                     <div class="input-group">
@@ -584,9 +601,6 @@
                                                     <div class="alert-danger" style="text-align:center"> </div>
                                                 </div>
 
-                                            </div>
-
-                                            <div class="row">
                                                 <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
                                                     <label for="inputEmail3" class="">Uploaded Invoice</label>
                                                     <div class="input-group">
@@ -612,7 +626,7 @@
                                                             <input type="number"
                                                                 name="deposit_amount[{{ $key }}][]"
                                                                 class="form-control disable-feild deposit_amount depositeAmount"
-                                                                placeholder="Deposit Amount" min="0">
+                                                                placeholder="Deposit Amount" min="0" step="any">
                                                         </div>
                                                         <div class="alert-danger" style="text-align:center"> </div>
                                                     </div>
@@ -657,7 +671,7 @@
                                                             {{ $errors->first('payment_method') }} </div>
                                                     </div>
 
-                                                    <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                    <div class="col-sm-1" style="margin-bottom: 15px; ">
                                                         <label for="inputEmail3" class=""> Upload to Calender</label>
                                                         <div class="input-group">
                                                             <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{ $key }}][]'>
@@ -665,16 +679,27 @@
                                                                 type="checkbox" value="false"
                                                                 name="upload_calender[{{ $key }}][]"
                                                                 style="height: 20px; width:28px;">
-                                                            <div class="input-group">
-                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0">
-                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                                            </div>
+                                                                <label for="inputEmail3" class=""></label>
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                        <button type="button" class="remove_finance">-</button>
+                                                    <div class="col-sm-2">
+                                                        <label for="inputEmail3" class="">No of Days</label>
+                                                        <div class="input-group additional_date">
+                                                            <a href="#" class="input-group-addon minus increment">
+                                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                                            </a>
+
+                                                            <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0" >
+                                                            
+                                                            <a href="#" class="input-group-addon plus increment">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                                        <button type="button" class="btn btn-info remove_finance">-</button>
                                                     </div>
 
                                                 </div>
@@ -693,13 +718,13 @@
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                                             <label for="inputEmail3" class="title{{$key}}">Payment {{ $fkey + 1}}</label>
                                                             <div class="input-group">
-                                                        <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                            <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                             
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
                                                                     class="form-control deposit_amount depositecost{{$key}}"
-                                                                    placeholder="Deposit Amount" min="0">
+                                                                    placeholder="Deposit Amount" min="0" step="any">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
                                                         </div>
@@ -745,7 +770,7 @@
                                                                 {{ $errors->first('payment_method') }} </div>
                                                         </div>
 
-                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                        <div class="col-sm-1" style="margin-bottom: 15px; ">
                                                             <label for="inputEmail3" class="">Upload to Calender</label>
                                                             <div class="input-group">
                                                                 <input type='hidden' class="disable-feild"
@@ -759,18 +784,20 @@
                                                                     name="upload_calender[{{ $key }}][]"
                                                                     style="height: 20px; width:28px;">
 
-                                                                        <div class="input-group">
-                                                                          <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                                                                      
-                                                                          <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0">
-                                                                      
-                                                                          <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                                                        </div>
-                                                                        
                                                                         {{-- <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">-</button>
                                                                         <lable style="margin-top: -13px;"><strong>2</strong></lable>
                                                                         <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">+</button> --}}
                                                                        
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                            <label for="inputEmail3" class="">No of Days</label>
+                                                            <div class="input-group additional_date">
+                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="{{ !empty($finance_booking_detail->additional_date) ? $finance_booking_detail->additional_date : 0 }} ">
+                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                             </div>
                                                         </div>
                                                 
@@ -787,7 +814,7 @@
 
                                                         @if ($fkey == 0)
                                                             <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                                <button type="button" class="add_finance">+</button>
+                                                                <button type="button" class="add_finance btn btn-info">+</button>
                                                             </div>
                                                         @endif
 
@@ -807,7 +834,7 @@
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
                                                                     class="form-control deposit_amount"
-                                                                    placeholder="Deposit Amount" min="0">
+                                                                    placeholder="Deposit Amount" min="0" step="any">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
                                                         </div>
@@ -853,7 +880,7 @@
                                                         </div>
 
 
-                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                        <div class="col-sm-1" style="margin-bottom: 15px; ">
                                                             <label for="inputEmail3" class=""> Upload to Calender</label>
                                                             <div class="input-group">
                                                                 <input type='hidden' value='false'
@@ -862,18 +889,23 @@
                                                                     type="checkbox" value="false"
                                                                     name="upload_calender[{{ $key }}][]"
                                                                     style="height: 20px; width:28px;">
-                                                                    <div class="input-group">
-                                                                        <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                                                                        <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults" size="10" value="0">
-                                                                        <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                                                    </div>
+                                                             
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                            <label for="inputEmail3" class="">No of Days</label>
+                                                            <div class="input-group additional_date">
+                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults" size="10" value="0">
+                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                             </div>
                                                         </div>
 
                                                     </div>
 
-                                                    <div class="col-sm-2" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                        <button type="button" class="add_finance">+</button>
+                                                    <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
+                                                        <button type="button" class="add_finance btn btn-info">+</button>
                                                     </div>
                                                 </div>
                                             @endif
@@ -1764,7 +1796,7 @@
 
 $(document).ready(function() {
     // Initialize all Select2 
-    $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+    $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
     $(".datepicker").datepicker({
         autoclose: true,
         format: 'dd/mm/yyyy'
@@ -2263,9 +2295,9 @@ $(document).ready(function() {
 
             function reinitializedDynamicFeilds() {
 
-                $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2")
+                $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2")
                     .removeClass('select2-hidden-accessible').next().remove();
-                $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2")
+                $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2")
                     .select2();
 
                 $(".datepicker").datepicker({
@@ -2920,6 +2952,26 @@ $(document).ready(function() {
                     // }
             });
 
+        });
+
+        // get product's details for service details
+        $(document).on('change', 'select[name="product[]"]',function(){
+
+            var $selector = $(this);
+            var product_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-product-details') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'product_id': product_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[name="service_details[]"]').val(response.description);
+                }
+            })
         });
         
         // function convertDate(date) {
