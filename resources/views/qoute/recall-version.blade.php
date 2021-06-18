@@ -424,10 +424,16 @@
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
-
-                            <div class="col-sm-5" style="margin-bottom:15px">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
+                                <div class="alert-danger" style="text-align:center"   id="error_dinning_preferences"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2" name="group_no">
+                                  <select class="form-control paxNumber dropdown_value select2" name="group_no">
                                     {{-- <option value="">Select Pax No.</option> --}}
                                     @for($i=1;$i<=30;$i++)
                                     <option value={{$i}} {{ $quote->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
@@ -435,13 +441,18 @@
                                   </select>
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                             </div>
-
                         </div>
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
-                                <div class="alert-danger" style="text-align:center"   id="error_dinning_preferences"></div>
+                            <div class="col-sm-offset-1 mb-2" id="appendPaxName">
+                                @if($quote->pax_name != 'null')
+                                    @foreach (json_decode($quote->pax_name) as $key => $name)
+                                        <div class="col-md-3 mb-2">
+                                            <label>Pax Name #{{ $key+2 }}</label> <span style="color:red">*</span>
+                                            <input type="text" name="pax_name[]" class="form-control" value="{{ $name }}" required >
+                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
 
@@ -1624,6 +1635,26 @@
         //         error: function (reject) {}
         //     });
         // });
+        
+        $(document).on('change', '.paxNumber',function () {
+            var $_val = $(this).val();
+            $('#appendPaxName').empty();
+            if($_val > 1){
+                for (i = 1; i < $_val; ++i) {
+                var count = i +1;
+                var validatecount = i -1;
+                var heading = 'Pax Name #'+count;
+                const $_html =  '<div class="col-md-3 mb-2">'+
+                                    '<label>'+heading+'</label> <span style="color:red">*</span>'+
+                                    '<input type="text" name="pax_name[]" class="form-control" >'+
+                                    '<div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>'+
+                                '</div>';
+                $('#appendPaxName').append($_html);
+                }
+                
+                
+            }
+        });
         
     });
 </script>
