@@ -927,7 +927,7 @@
 
                                 <br><br>
 
-                                <div>
+                                {{-- <div>
                                     <h2 class="col-sm-offset-1">Flight Booked</h2>
                                     <div class="outline">
                                         <div class="row">
@@ -1036,7 +1036,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
 
                                 <div>
@@ -1821,85 +1821,85 @@ $(document).ready(function() {
 
     // Flight Booked
 
-    if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
-        $('.flight_booking_details').show();
-        $('.flight_booking_details').show(200);
-        $('.fb_airline_ref_no').show(200);
-        $('.fb_booking_date').show(200);
-        $('.fb_airline_name_id').show(200);
-        $('.fb_payment_method_id').show(200);
-        $("#airline").css({"margin-top": "25px"});
+    // if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
+    //     $('.flight_booking_details').show();
+    //     $('.flight_booking_details').show(200);
+    //     $('.fb_airline_ref_no').show(200);
+    //     $('.fb_booking_date').show(200);
+    //     $('.fb_airline_name_id').show(200);
+    //     $('.fb_payment_method_id').show(200);
+    //     $("#airline").css({"margin-top": "25px"});
 
-        $('textarea[name=flight_booking_details]').prop('required',true);
-        $('input[name=fb_airline_ref_no]').prop('required',true);
-        $('input[name=fb_booking_date]').prop('required',true);
-        $('select[name="fb_airline_name_id"]').prop('required',true);
-        $('select[name="fb_payment_method_id"]').prop('required',true);
-        $(".fb_select2").select2({ width: '100%' }); 
-    }
-    else{
-        $('.flight_booking_details').hide(200);
-        $('.fb_airline_ref_no').hide(200);
-        $('.fb_booking_date').hide(200);
-        $('.fb_airline_name_id').hide(200);
-        $('.fb_payment_method_id').hide(200);
-        $(".fb_select2").select2({ width: '100%' }); 
+    //     $('textarea[name=flight_booking_details]').prop('required',true);
+    //     $('input[name=fb_airline_ref_no]').prop('required',true);
+    //     $('input[name=fb_booking_date]').prop('required',true);
+    //     $('select[name="fb_airline_name_id"]').prop('required',true);
+    //     $('select[name="fb_payment_method_id"]').prop('required',true);
+    //     $(".fb_select2").select2({ width: '100%' }); 
+    // }
+    // else{
+    //     $('.flight_booking_details').hide(200);
+    //     $('.fb_airline_ref_no').hide(200);
+    //     $('.fb_booking_date').hide(200);
+    //     $('.fb_airline_name_id').hide(200);
+    //     $('.fb_payment_method_id').hide(200);
+    //     $(".fb_select2").select2({ width: '100%' }); 
 
-        $("#airline").css({"margin-top": "0px"});
+    //     $("#airline").css({"margin-top": "0px"});
 
-        $('textarea[name=flight_booking_details]').prop('required',false);
-        $('input[name=fb_airline_ref_no]').prop('required',false);
-        $('input[name=fb_booking_date]').prop('required',false);
-        $('select[name="fb_airline_name_id"]').prop('required',false);
-        $('select[name="fb_payment_method_id"]').prop('required',false);
-    }
-    if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
-        $('.fb_depend').hide(200);
-    }else{
-        $('.fb_depend').show(200);
-    }
+    //     $('textarea[name=flight_booking_details]').prop('required',false);
+    //     $('input[name=fb_airline_ref_no]').prop('required',false);
+    //     $('input[name=fb_booking_date]').prop('required',false);
+    //     $('select[name="fb_airline_name_id"]').prop('required',false);
+    //     $('select[name="fb_payment_method_id"]').prop('required',false);
+    // }
+    // if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
+    //     $('.fb_depend').hide(200);
+    // }else{
+    //     $('.fb_depend').show(200);
+    // }
 
 
-    $('input:radio[name=flight_booked]').click(function(){
-        if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
+    // $('input:radio[name=flight_booked]').click(function(){
+    //     if($('input:radio[name=flight_booked]:checked').val() == 'yes'){
 
-            $('.flight_booking_details').show(200);
-            $('.fb_airline_ref_no').show(200);
-            $('.fb_booking_date').show(200);
-            $('.fb_airline_name_id').show(200);
-            $('.fb_payment_method_id').show(200);
-            $(".fb_select2").select2({ width: '100%' });      
+    //         $('.flight_booking_details').show(200);
+    //         $('.fb_airline_ref_no').show(200);
+    //         $('.fb_booking_date').show(200);
+    //         $('.fb_airline_name_id').show(200);
+    //         $('.fb_payment_method_id').show(200);
+    //         $(".fb_select2").select2({ width: '100%' });      
 
-            $("#airline").css({"margin-top": "25px"});
+    //         $("#airline").css({"margin-top": "25px"});
 
-            $('textarea[name=flight_booking_details]').prop('required',true);
-            $('input[name=fb_airline_ref_no]').prop('required',true);
-            $('input[name=fb_booking_date]').prop('required',true);
-            $('select[name="fb_airline_name_id"]').prop('required',true);
-            $('select[name="fb_payment_method_id"]').prop('required',true);
-        }
-        else{
-            $('.flight_booking_details').hide(200);
-            $('.fb_airline_ref_no').hide(200);
-            $('.fb_booking_date').hide(200);
-            $('.fb_airline_name_id').hide(200);
-            $('.fb_payment_method_id').hide(200);
+    //         $('textarea[name=flight_booking_details]').prop('required',true);
+    //         $('input[name=fb_airline_ref_no]').prop('required',true);
+    //         $('input[name=fb_booking_date]').prop('required',true);
+    //         $('select[name="fb_airline_name_id"]').prop('required',true);
+    //         $('select[name="fb_payment_method_id"]').prop('required',true);
+    //     }
+    //     else{
+    //         $('.flight_booking_details').hide(200);
+    //         $('.fb_airline_ref_no').hide(200);
+    //         $('.fb_booking_date').hide(200);
+    //         $('.fb_airline_name_id').hide(200);
+    //         $('.fb_payment_method_id').hide(200);
 
-            $("#airline").css({"margin-top": "0px"});
+    //         $("#airline").css({"margin-top": "0px"});
 
-            $('textarea[name=flight_booking_details]').prop('required',false);
-            $('input[name=fb_airline_ref_no]').prop('required',false);
-            $('input[name=fb_booking_date]').prop('required',false);
-            $('select[name="fb_airline_name_id"]').prop('required',false);
-            $('select[name="fb_payment_method_id"]').prop('required',false);
-        }
+    //         $('textarea[name=flight_booking_details]').prop('required',false);
+    //         $('input[name=fb_airline_ref_no]').prop('required',false);
+    //         $('input[name=fb_booking_date]').prop('required',false);
+    //         $('select[name="fb_airline_name_id"]').prop('required',false);
+    //         $('select[name="fb_payment_method_id"]').prop('required',false);
+    //     }
 
-        if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
-            $('.fb_depend').hide(200);
-        }else{
-            $('.fb_depend').show(200);
-        }
-    });
+    //     if($('input:radio[name=flight_booked]:checked').val() == 'NA'){
+    //         $('.fb_depend').hide(200);
+    //     }else{
+    //         $('.fb_depend').show(200);
+    //     }
+    // });
     // Flight Booked
 
     // Transfer Info
