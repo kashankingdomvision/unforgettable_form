@@ -375,6 +375,12 @@ ALTER TABLE `bookings` ADD `documents_sent` VARCHAR(5) NULL AFTER `tdp_current_d
 -- App login Sent (booking table)
 ALTER TABLE `bookings` ADD `electronic_copy_sent` VARCHAR(5) NULL AFTER `tds_current_date`, ADD `aps_person` INT(10) NULL AFTER `electronic_copy_sent`, ADD `aps_last_date` DATE NULL AFTER `aps_person`, ADD `electronic_copy_details` TEXT NULL AFTER `aps_last_date`;
 
+-- //pax name
+
+ALTER TABLE `qoutes` ADD `pax_name` VARCHAR(300) NULL AFTER `lead_passenger_name`;
+ALTER TABLE `qoute_logs` ADD `pax_name` VARCHAR(255) NULL AFTER `reference_name`;
+ALTER TABLE `bookings` ADD `pax_name` VARCHAR(255) NULL AFTER `lead_passenger_name`;
+ALTER TABLE `booking_logs` ADD `pax_name` VARCHAR(255) NOT NULL AFTER `lead_passenger_name`;
 -- add product feild in qoute_details
 ALTER TABLE `qoute_details` ADD `product` INT(10) NULL AFTER `supplier`;
 

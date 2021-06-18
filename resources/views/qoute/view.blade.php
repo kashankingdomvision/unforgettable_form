@@ -1,6 +1,17 @@
 @extends('content_layout.default')
 
 @section('content')
+
+<style rel="styleSheet">
+td.details-control {
+    background: url('../resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../resources/details_close.png') no-repeat center center;
+}
+
+</style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -283,8 +294,35 @@
 <script>
   $(function () {
     $("#example1").DataTable({
+      "columns": [
+            {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
+          ],
         "order": [[ 2, "desc" ]]
     });
+    
+    
+    
+    $('#example1 tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
+    
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,

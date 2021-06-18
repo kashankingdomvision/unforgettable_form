@@ -67,6 +67,16 @@ class AdminController extends Controller
         return view('admin.index');
     }
     
+    public function checkReference(Request $request)
+    {
+        $ref_no = $request->id;
+        $response = false;
+        if (Qoute::where('ref_no', $request->id)->exists()) {
+            $response = true; 
+        }
+        return response()->json($response);
+    }
+    
     public function logout()
     {
         if (Auth::check()) {
@@ -870,7 +880,6 @@ class AdminController extends Controller
     // get reference function start
     public function get_ref_detail(Request $request){
 
-        if (!Qoute::where('ref_no', $request->id)->exists()) {
             $ajax_response = array();
 
             if ($request->reference_name == "zoho") {
@@ -889,7 +898,6 @@ class AdminController extends Controller
                 );
 
                 $response = $this->cf_remote_request($url, $args);
-
                 if ($response['status'] == 200) {
                     $responses_data = array_shift($response['body']['data']);
                     $passenger_id = $responses_data['id'];
@@ -909,10 +917,7 @@ class AdminController extends Controller
                     );
                 }
             }
-        }else{
-            $errors['ref_no'] = "Quote is already generated. are you sure you want to create another one.";
-            throw \Illuminate\Validation\ValidationException::withMessages($errors);
-        }
+       
         
         if ($request->ajax()) {
             return response()->json($ajax_response);
@@ -1200,6 +1205,7 @@ class AdminController extends Controller
             $booking_log->per_person            =  $booking->per_person;
             $booking_log->created_date          =  date("Y-m-d");
             $booking_log->user_id               =  Auth::user()->id;
+            $booking_log->pax_name              =  $booking->pax_name;
             $booking_log->save(); 
 
 
@@ -2375,6 +2381,7 @@ class AdminController extends Controller
         $booking->port_tax              =  $qoute->port_tax;
         $booking->total_per_person      =  $qoute->total_per_person;
         $booking->qoute_to_booking_date = date('Y-m-d');
+        $booking->pax_name              =  $qoute->pax_name;
         $booking->save();
 
         $qouteDetails = QouteDetail::where('qoute_id',$id)->get();
@@ -2410,7 +2417,8 @@ class AdminController extends Controller
     public function create_quote(Request $request){
 
         if($request->isMethod('post')){
-
+            
+            
             $this->validate($request, ['ref_no'           => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name'       => 'required'], ['required' => 'Please select Brand Name']);
@@ -2425,8 +2433,9 @@ class AdminController extends Controller
             $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
-
+            $this->validate($request, ["pax_name"    => "array", "pax_name.*"  => "required|string|distinct",], ['required' => 'Pax Name is required']);         
             $season = season::find($request->season_id);
+
 
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
@@ -2585,6 +2594,9 @@ class AdminController extends Controller
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
             $qoute->per_person       =  $request->per_person;
+            $qoute->pax_name         =  $request->pax_name;
+            // if($request->has('pax_name') && count($request->pax_name) > 0){
+            // }
             $qoute->save();
 
             if(!empty($request->cost)){
@@ -2649,7 +2661,10 @@ class AdminController extends Controller
   
     public function view_quote(){
 
-        return view('qoute.view')->with(['quotes' => $results = Qoute::orderBy('created_at', 'desc')->get() ]);
+        $data['quotes'] = Qoute::orderBy('created_at', 'desc')->get();
+        
+        return view('qoute.view', $data);
+    
     }
 
 
@@ -3169,8 +3184,9 @@ class AdminController extends Controller
             $this->validate($request, ['dinning_preferences'          => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, [ "booking_due_date"    => "required|array", "booking_due_date.*"  => "required" ]);
             $this->validate($request, [ "cost"    => "required|array", "cost.*"  => "required"]);
+            $this->validate($request, ["pax_name"    => "array", "pax_name.*"  => "required|string|distinct",], ['required' => 'Pax Name is required']);         
+            
             $season = season::findOrFail($request->season_id);
-
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
             //     foreach($request->date_of_service as $key => $date){
@@ -3342,6 +3358,7 @@ class AdminController extends Controller
             $qoute_log->created_date      =  date("Y-m-d");
             $qoute_log->log_no            =  $qouteDetailLogNumber;
             $qoute_log->user_id           =  Auth::user()->id;
+            $qoute_log->pax_name          =  $qoute->pax_name;
             $qoute_log->save();
 
 
@@ -3366,7 +3383,9 @@ class AdminController extends Controller
             $qoute->gross_profit      =  $request->gross_profit;
             $qoute->markup_percent    =  $request->markup_percent;
             $qoute->show_convert_currency =  $request->show_convert_currency;
-            $qoute->per_person       =  $request->per_person;
+            $qoute->per_person        =  $request->per_person;
+            $qoute->pax_name          =  $request->pax_name;
+            
             $qoute->save();
 
 

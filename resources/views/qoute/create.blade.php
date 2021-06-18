@@ -63,6 +63,8 @@ td.day{
     }
 </style>
 <div class="content-wrapper">
+
+
     <div class="" id="qoute" hidden>
         <div class="qoute">
             <div class="row">
@@ -328,7 +330,7 @@ td.day{
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
                             </div>
-                            <div class="col-sm-1 mb-2">
+                            <div class="col-sm-5 mb-2">
                                 <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red"> *</span><br>
                                 <input type="radio" name="agency_booking" value="2" id="ab_yes"> <label for="ab_yes"> Yes</label>
                                 <input type="radio" name="agency_booking" value="1"  id="ab_no" checked> <label for="ab_no"> No</label>
@@ -358,9 +360,17 @@ td.day{
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
+                            
                             <div class="col-sm-5 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" class="form-control">
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2" name="group_no" >
+                                  <select class="form-control dropdown_value select2 paxNumber" name="group_no" >
                                     @for($i=1;$i<=30;$i++)
                                     <option value={{$i}} >{{$i}}</option>
                                     @endfor
@@ -369,10 +379,8 @@ td.day{
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" class="form-control">
-                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            <div class="col-sm-offset-1 mb-2" id="appendPaxName">
+                               
                             </div>
                         </div>
                         <br><br>
@@ -1002,43 +1010,72 @@ td.day{
             if(book_id) {
                 token = $('input[name=_token]').val();
                 data = {id: book_id, reference_name: referenceName};
-                url = '{{route('get-ref-detail')}}';
+                url1 = '{{ route('check.reference') }}';
                 $.ajax({
-                    url: url,
+                    url: url1,
                     headers: {'X-CSRF-TOKEN': token},
                     data : data,
-                    beforeSend: function() {
-                        $("#divLoading").addClass('show');
-                    },
                     type: 'POST',
                     dataType: "json",
                     success:function(data) {
-                        if( Object.keys(data).length > 0 ){
-                            $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
-                            // $('select[name="sale_person"]').val(data.sale_person).trigger('change');  
-                            // $('select[name="currency"]').val(data.currency).trigger('change');  
-                            $('select[name="group_no"]').val(data.pax).trigger('change');  
-                        }else{
-                            $('#error_ref_no').text('The Reference is not found');
+                        var r = true;
+                        if(data == true){
+                            r = confirm('The reference number '+book_id+' is already exists. Are you sure! you want to create quote again on same reference');
                         }
-                        $('#sendReference').text('Search');
-                        $("#divLoading").removeClass('show');
-                        $('#sendReference').removeAttr('disabled');
-                    }, //end success
-                    error: function (reject) {
                         
-                            if( reject.status === 422 ) {
-                                var errors = $.parseJSON(reject.responseText);
-                                jQuery.each(errors.errors, function( index, value ) {
-                                    $('#error_ref_no').html(value);
-            
-                                });
-                                $('#sendReference').text('Search');
-                                $("#divLoading").removeClass('show');
-                                $('#sendReference').removeAttr('disabled');
-                            }
+                        console.log(r);
+                        
+                        if(r == true){
+                            url = '{{route('get-ref-detail')}}';
+                            $.ajax({
+                                url: url,
+                                headers: {'X-CSRF-TOKEN': token},
+                                data : {id: book_id, reference_name: referenceName},
+                                beforeSend: function() {
+                                    $("#divLoading").addClass('show');
+                                },
+                                type: 'POST',
+                                dataType: "json",
+                                success:function(data) {
+                                    if( Object.keys(data).length > 0 ){
+                                        $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
+                                        $('select[name="group_no"]').val(data.pax).trigger('change');  
+                                    }else{
+                                        $('#error_ref_no').text('The Reference is not found');
+                                    }
+                                    $('#sendReference').text('Search');
+                                    $("#divLoading").removeClass('show');
+                                    $('#sendReference').removeAttr('disabled');
+                                }, //end success
+                                error: function (reject) {
+                                    if( reject.status === 422 ) {
+                                        var errors = $.parseJSON(reject.responseText);
+                                        jQuery.each(errors.errors, function( index, value ) {
+                                            $('#error_ref_no').html(value);
+                    
+                                        });
+                                    }
+                                    $('#sendReference').text('Search');
+                                    $("#divLoading").removeClass('show');
+                                    $('#sendReference').removeAttr('disabled');
+                                }
+                                
+                                
+                            });   
+                        }else{
+                            $('#sendReference').text('Search');
+                            $("#divLoading").removeClass('show');
+                            $('#sendReference').removeAttr('disabled');
                         }
-                    });
+                           
+                       
+                    }
+                })
+                
+                
+                
+                
+               
             }
         }
  
@@ -1328,7 +1365,7 @@ td.day{
             // $('#user_form').on('submit', function(event){
             event.preventDefault();
             var formdata = $(this).serialize();
-            $('#error_ref_no, #error_brand_name, #error_lead_passenger_name , #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
+            $(' .errorpax, #error_ref_no, #error_brand_name, #error_lead_passenger_name , #error_type_of_holidays, #error_sale_person, #error_season_id, #error_agency_name, #error_agency_contact_no, #error_currency, #error_group_no, #error_dinning_preferences, .error-cost, .date_of_service, .booking_date, .booking_due_date').html('');
             $.ajax({
                 type: 'POST',
                 url: '{{ route('creat-quote') }}',
@@ -1342,12 +1379,14 @@ td.day{
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
-                   window.location.href = "{{ route('view-quote')}}";
+                //    window.location.href = "{{ route('view-quote')}}";
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {
                     var errors = $.parseJSON(reject.responseText);
                     jQuery.each(errors.errors, function( index, value ) {
+                        index = index.replace(/\./g,'_')
+                    console.log(index);
                         $('#error_'+ index).html(value);
                         if($('#error_'+ index).length){
                             $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
@@ -1472,6 +1511,7 @@ td.day{
                     $selector.closest('.qoute').find('[class*="supervisor-select2"]').val(response.supervisor_id).change();
                 }
             })
+            
         });
         // var xc = mainCurrencyConverter('EUR',10,'USD');
         // console.log(xc);
@@ -1490,7 +1530,30 @@ td.day{
         //     }
         //     return ans;
         // }
+        
+        
+        $(document).on('change', '.paxNumber',function () {
+            var $_val = $(this).val();
+            $('#appendPaxName').empty();
+            if($_val > 1){
+                for (i = 1; i < $_val; ++i) {
+                var count = i +1;
+                var validatecount = i -1;
+                var heading = 'Pax Name #'+count;
+                const $_html =  '<div class="col-md-3 mb-2">'+
+                                    '<label>'+heading+'</label> <span style="color:red">*</span>'+
+                                    '<input type="text" name="pax_name[]" class="form-control" >'+
+                                    '<div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>'+
+                                '</div>';
+                $('#appendPaxName').append($_html);
+                }
+                
+                
+            }
+        });
     });
+        
+        
 </script>
 </body>
 </html>
