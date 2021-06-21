@@ -255,21 +255,6 @@ Route::group(['middleware' => ['auth']], function(){
 			Route::post('update/{id}', ['as' => 'update', 'uses' => 'TemplateController@update']);
 			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'TemplateController@call_template']);
 	});
-	
-	
-	Route::group([
-		'prefix' => 'currency',
-		'as' 	 => 'currency.'
-	],function (){
-			Route::get('index', ['as' => 'index', 'uses' => 'CurrencyController@index']);
-			Route::get('create', ['as' => 'create', 'uses' => 'CurrencyController@create']);
-			Route::post('store', ['as' => 'store', 'uses' => 'CurrencyController@store']);
-			Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'CurrencyController@detail']);
-			Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'CurrencyController@destroy']);
-			Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'CurrencyController@edit']);
-			Route::post('update/{id}', ['as' => 'update', 'uses' => 'CurrencyController@update']);
-			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'CurrencyController@call_template']);
-	});
 
 });
 

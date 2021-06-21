@@ -601,7 +601,6 @@ thead.border_thead {
                 <li class="{{ $route == 'view-payment' || $route == 'update-payment'  ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
                 <li class="{{ $route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
                 <li class="{{ $route == 'view-booking-method' || $route == 'edit-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
-                <li class="{{ $route == 'currency.index' || $route == 'currency.index' ? 'active' : '' }}"><a href="{{ route('currency.index')}}"><i class="fa fa-eye"></i> View Currencies</a></li>
             </ul>
         </li>
 
