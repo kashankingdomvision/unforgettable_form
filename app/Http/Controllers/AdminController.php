@@ -7322,7 +7322,7 @@ class AdminController extends Controller
                 // 'get_refs'          => $get_ref,
                 'get_user_branches' => $get_user_branches,
                 'record' => old_booking::where('id', '=', $id)->get()->first(),
-                'currencies' => Currency::all()->sortBy('name'),
+                'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
                 'get_holiday_type' => $get_holiday_type,
                 'booking_details' => BookingDetail::where('booking_id', $id)->get(),
                 'categories' => Category::all()->sortBy('name'),
@@ -9290,7 +9290,7 @@ class AdminController extends Controller
             'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::all()->sortBy('name'),
+            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
             'qoute_logs' => QouteLog::where('qoute_id', $id)->orderBy('log_no', 'DESC')->get(),
         ]);
     }
@@ -9374,7 +9374,7 @@ class AdminController extends Controller
             'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::all()->sortBy('name'),
+            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
             'qoute_logs' => QouteLog::where('qoute_id', $quote_id)->orderBy('log_no', 'DESC')->get(),
         ]);
 
