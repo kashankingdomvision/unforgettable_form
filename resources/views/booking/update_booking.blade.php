@@ -104,11 +104,10 @@
 
                 <div class="col-md-6 text-right">
                     <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
-                    @if(isset($booking->qoute_id) && !empty($booking->qoute_id))
-                        @php
-                            $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
-                        @endphp
-                    @endif
+                    @if(!empty($booking))
+                    @php
+                        $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
+                    @endphp
 
                     <div id="quotation-version" hidden>
                         @if(count($quote_logs))
@@ -123,6 +122,8 @@
                             No Quotation Versions Available
                         @endif
                     </div>
+                    @endif
+                    
 
                 </div>
             </div>
@@ -731,7 +732,7 @@
                                                     <div class="row" data-title="title{{$key}}">
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="title{{$key}}">Payment {{ $fkey + 1}}</label>
+                                                            <label for="inputEmail3" class="title{{$key}}">Payment #{{ $fkey + 1}}</label>
                                                             <div class="input-group">
                                                             <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                             
@@ -839,10 +840,10 @@
 
                                             @else
 
-                                                <div class="row">
+                                                <div class="row" data-title="title{{$key+1}}">
                                                     <div class="append">
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Payment {{ $key  }}</label>
+                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $key+1  }}</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                                 <input type="number"
@@ -2842,7 +2843,7 @@ $(document).ready(function() {
                 // $(".disable-feild").prop("disabled", false);
                 var getClass = $(this).closest('.row').data('title');
                 var count = $('.'+getClass).length + 1;
-                var $v_text = 'Payment '+count;
+                var $v_text = 'Payment #'+count;
                 console.log($v_text);
                 $('.finance-row').find('.row').attr("data-title", getClass);
                 $('.finance-row').find('.title').text($v_text);
