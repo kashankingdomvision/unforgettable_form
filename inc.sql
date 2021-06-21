@@ -414,3 +414,15 @@ ALTER TABLE `currencies` CHANGE `symbol` `symbol` VARCHAR(255) CHARACTER SET utf
 ALTER TABLE `currencies` ADD `isObsolete` VARCHAR(10) NULL AFTER `code`, ADD `flag` TEXT NULL AFTER `isObsolete`;
 
 ALTER TABLE `currencies` ADD `status` TINYINT NOT NULL DEFAULT '1' AFTER `flag`;
+
+-- truncate all tables qoutes to book
+TRUNCATE TABLE `qoutes` ;
+TRUNCATE TABLE `qoute_details` ;
+TRUNCATE TABLE `qoute_logs` ;
+TRUNCATE TABLE `qoute_detail_logs` ;
+TRUNCATE TABLE `bookings` ;
+TRUNCATE TABLE `booking_details` ;
+TRUNCATE TABLE `finance_booking_details` ;
+TRUNCATE TABLE `booking_logs` ;
+TRUNCATE TABLE `booking_detail_logs` ;
+TRUNCATE TABLE `finance_booking_detail_logs` ;
