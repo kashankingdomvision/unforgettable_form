@@ -46,8 +46,8 @@
                 <tbody>
                 @foreach ($currencies as $key => $value)
                 <tr>
-                  <td>{{ $key+1 }}</td>
                   <td>{{ $value->name }}</td>
+                  <td>{{ $value->code }}</td>
                   <td>{{ $value->status == 1 ? 'Active' : 'Inactive' }}</td>
                   <td>
                     <a href="{{ route('edit-currency', $value->id) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
