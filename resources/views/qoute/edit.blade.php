@@ -288,8 +288,8 @@ td.day{
         <div class="row">
             <div class="col-md-12 pull-right">
                 <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
-                @if(!empty($qoute_logs))
-                    <div id="quotation-version" hidden>
+                <div id="quotation-version" hidden>
+                @if(count($qoute_logs))
                         @foreach ($qoute_logs as $key => $qoute_log)
                             <p> 
                                 <a href="{{ route('view-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
@@ -298,6 +298,8 @@ td.day{
                             </p>
                         @endforeach
                     </div>
+                @else
+                    No Quotation Versions Available
                 @endif
 
             </div>
