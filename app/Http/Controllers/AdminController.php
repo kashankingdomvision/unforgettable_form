@@ -5795,84 +5795,74 @@ class AdminController extends Controller
         $allcurrencys = AllCurrency::all();
 
         foreach ($allcurrencys as $key => $allcurrency) {
-
-
             foreach ($jayParsedArys as $key => $jayParsedAry) {
-
                 if ($allcurrency->code == $jayParsedAry['currency']['code']) {
-
                     AllCurrency::where('code', $allcurrency->code)->update(['flag' => $jayParsedAry['flag']]);
                 }
             }
         }
 
         dd("done");
-
     }
 
     public function creat_currency(Request $request)
     {
-
         if ($request->isMethod('post')) {
-      
             $request->validate(['currency' => 'required|unique:currencies,code'], ['required' => 'Currency is required']);
 
-            //-- add new currency in currenvy table 
+            //-- add new currency in currenvy table
 
-                $new_currency = AllCurrency::where('code',$request->currency)->first();
+            $new_currency = AllCurrency::where('code', $request->currency)->first();
 
-                $currency = new Currency;
-                $currency->name       = $new_currency->name;
-                $currency->code       = $new_currency->code;
-                $currency->isObsolete = $new_currency->isObsolete;
-                $currency->flag       = $new_currency->flag;
-                $currency->save();
+            $currency = new Currency;
+            $currency->name       = $new_currency->name;
+            $currency->code       = $new_currency->code;
+            $currency->isObsolete = $new_currency->isObsolete;
+            $currency->flag       = $new_currency->flag;
+            $currency->save();
 
             //-- end
 
             //-- creating possibilty of already added currency with new currency from(old_currency) - to(new_currency)
 
-                $existing_currencies   = CurrencyConversions::groupBy('from')->get(['from']);
+            $existing_currencies   = CurrencyConversions::groupBy('from')->get(['from']);
             
-                foreach($existing_currencies as $key => $existing_currency ){
-
-                    $cc       = new CurrencyConversions;
-                    $cc->from = $existing_currency->from;
-                    $cc->to   = $new_currency->code;
-                    $cc->save();
-                }
+            foreach ($existing_currencies as $key => $existing_currency) {
+                $cc       = new CurrencyConversions;
+                $cc->from = $existing_currency->from;
+                $cc->to   = $new_currency->code;
+                $cc->save();
+            }
                 
             //-- end
 
             //-- creating possibilty of already added currency with new currency from(new_currency) - to(old_currency)
 
-                $all_currencies = Currency::all();
+            $all_currencies = Currency::all();
 
-                foreach($all_currencies as $key => $all_currency ){
-
-                    $cc       = new CurrencyConversions;
-                    $cc->from = $currency->code;
-                    $cc->to   = $all_currency->code;
-                    $cc->save();
-                }
+            foreach ($all_currencies as $key => $all_currency) {
+                $cc       = new CurrencyConversions;
+                $cc->from = $currency->code;
+                $cc->to   = $all_currency->code;
+                $cc->save();
+            }
 
             //-- end
 
 
             //-- updating cuurency rate of new added currencies
 
-                $values = CurrencyConversions::whereNull('value')->count();
-                $from   = CurrencyConversions::whereNull('value')->pluck('from');
-                $to     = CurrencyConversions::whereNull('value')->pluck('to');
+            $values = CurrencyConversions::whereNull('value')->count();
+            $from   = CurrencyConversions::whereNull('value')->pluck('from');
+            $to     = CurrencyConversions::whereNull('value')->pluck('to');
 
-                for($i=0 ; $i<$values; $i++){
-
-                    $url = "https://free.currencyconverterapi.com/api/v6/convert?q=$from[$i]_$to[$i]&compact=ultra&apiKey=9910709386be4f00aa5b";
-                    $output2 =  json_decode($this->curl_data($url));
-                    $key = "$from[$i]_$to[$i]";
+            for ($i=0 ; $i<$values; $i++) {
+                $url = "https://free.currencyconverterapi.com/api/v6/convert?q=$from[$i]_$to[$i]&compact=ultra&apiKey=9910709386be4f00aa5b";
+                $output2 =  json_decode($this->curl_data($url));
+                $key = "$from[$i]_$to[$i]";
         
-                    CurrencyConversions::where('from',"$from[$i]")->where('to',"$to[$i]")->update(['value' => floatval($output2->{$key}) ]); 
-                }
+                CurrencyConversions::where('from', "$from[$i]")->where('to', "$to[$i]")->update(['value' => floatval($output2->{$key}) ]);
+            }
 
             //-- end
 
@@ -5885,7 +5875,6 @@ class AdminController extends Controller
 
     public function edit_currency(Request $request, $id)
     {
-
         if ($request->isMethod('post')) {
       
             // $request->validate(['currency' => 'required|unique:currencies,code'], ['required' => 'Currency is required']);
@@ -5904,7 +5893,6 @@ class AdminController extends Controller
 
     public function view_currency()
     {
-
         return view('currency.view')->with([ 'currencies' => Currency::all() ]);
     }
 
@@ -5913,7 +5901,7 @@ class AdminController extends Controller
 
 // $allcurrencys = AllCurrency::all();
 
-// foreach($allcurrencys as $key => $allcurrency){
+        // foreach($allcurrencys as $key => $allcurrency){
 
 //     // dd($allcurrency->code);
 
@@ -5939,36 +5927,36 @@ class AdminController extends Controller
 
 //     }
 
-// }
+        // }
 
-// foreach($jayParsedArys as $key => $jayParsedAry){
+        // foreach($jayParsedArys as $key => $jayParsedAry){
 
 //     dd($jayParsedAry['currency']['code']);
 
 //     // AllCurrency::where('id',$i)->update(['isObsolete' =>  ($currencyData['isObsolete'] == true ? 'true' : 'false' ) ]);
 
-// }
+        // }
 
-//  dd($jayParsedArys);
+        //  dd($jayParsedArys);
 
-            // $new_currency = AllCurrency::find(4);
+        // $new_currency = AllCurrency::find(4);
 
-            // $currency = new Currency;
-            // $currency->name = $new_currency->name;
-            // $currency->code = $new_currency->code;
-            // // $currency->save();
+        // $currency = new Currency;
+        // $currency->name = $new_currency->name;
+        // $currency->code = $new_currency->code;
+        // // $currency->save();
 
-            // $all_currencies = Currency::all();
+        // $all_currencies = Currency::all();
 
-            // foreach($all_currencies as $key => $all_currency ){
+        // foreach($all_currencies as $key => $all_currency ){
 
-            //     $cc = new CurrencyConversions;
-            //     $cc->from = $currency->code;
-            //     $cc->to   = $all_currency->code;
-            //     // $cc->save();
-            // }
+        //     $cc = new CurrencyConversions;
+        //     $cc->from = $currency->code;
+        //     $cc->to   = $all_currency->code;
+        //     // $cc->save();
+        // }
 
-            // dd("done");
+        // dd("done");
 
 
         if ($request->isMethod('post')) {
@@ -5993,9 +5981,7 @@ class AdminController extends Controller
             $user->save();
 
             return Redirect::route('view-user')->with('success_message', 'Created Successfully');
-
         } else {
-
             $branch = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 $output = $this->curl_data($url);
@@ -6024,7 +6010,6 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
 
         if ($request->isMethod('post')) {
-
             $request->validate([
                 'username' => 'required|string',
                 'role' => 'required',
@@ -6045,7 +6030,6 @@ class AdminController extends Controller
             $user->save();
 
             return Redirect::route('view-user')->with('success_message', 'Update Successfully');
-
         } else {
             $branch = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
@@ -6073,9 +6057,7 @@ class AdminController extends Controller
     // CRUD related to seasson
     public function create_season(Request $request)
     {
-
         if ($request->isMethod('post')) {
-
             $this->validate($request, ['name' => 'required|unique:seasons']);
             $this->validate($request, ['start_date' => 'required']);
             $this->validate($request, ['end_date' => 'required']);
@@ -6110,7 +6092,6 @@ class AdminController extends Controller
     public function update_season(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-
             $this->validate($request, ['name' => 'required|unique:seasons,name,' . $id]);
             $this->validate($request, ['start_date' => 'required']);
             $this->validate($request, ['end_date' => 'required']);
@@ -6148,7 +6129,6 @@ class AdminController extends Controller
     //
     public function create_supervisor(Request $request)
     {
-
         if ($request->isMethod('post')) {
             $this->validate($request, ['name' => 'required']);
             $this->validate($request, ['email' => 'required|email|unique:supervisors']);
@@ -6168,7 +6148,6 @@ class AdminController extends Controller
     public function update_supervisor(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|max:100|unique:supervisors,email,' . $id,
                 'name' => 'required',
@@ -6423,7 +6402,6 @@ class AdminController extends Controller
 
             return Redirect::route('create-booking')->with('success_message', 'Created Successfully');
         } else {
-
             $get_ref = Cache::remember('get_ref', $this->cacheTimeOut, function () {
                 $url = 'http://localhost/unforgettable_payment/backend/api/payment/get_ref';
                 $output = $this->curl_data($url);
@@ -6701,7 +6679,6 @@ class AdminController extends Controller
 
         if ($err) {
             $response = array('message' => $err, 'body' => $err);
-
         } else {
             if ($curl_info['status'] == 200
                 && in_array($args['format'], array('ARRAY', 'OBJECT'))
@@ -6739,7 +6716,6 @@ class AdminController extends Controller
     // get reference function start
     public function get_ref_detail(Request $request)
     {
-
         $ajax_response = array();
 
         if ($request->reference_name == "zoho") {
@@ -7066,7 +7042,6 @@ class AdminController extends Controller
 
             $booking = Booking::updateOrCreate(
                 ['quotation_no' => $request->quotation_no],
-
                 [
                     'ref_no' => $request->ref_no,
                     'reference_name' => $request->reference,
@@ -7138,7 +7113,6 @@ class AdminController extends Controller
             $bookingDetails = BookingDetail::where('booking_id', $booking->id)->get();
 
             foreach ($bookingDetails as $key => $bookingDetail) {
-
                 $bookingDetailLog = new BookingDetailLog;
                 $bookingDetailLog->booking_id = $booking->id;
                 $bookingDetailLog->log_no = $bookingDetailLogNumber;
@@ -7170,7 +7144,6 @@ class AdminController extends Controller
                 // dd($financebookingDetails);
 
                 foreach ($financebookingDetails as $financebookingDetail) {
-
                     $financeBookingDetailLog = new FinanceBookingDetailLog;
 
                     $financeBookingDetailLog->booking_detail_id = $bookingDetailLog->id;
@@ -7183,17 +7156,13 @@ class AdminController extends Controller
                     $financeBookingDetailLog->upload_to_calender = $financebookingDetail->upload_calender;
                     $financeBookingDetailLog->additional_date = $financebookingDetail->additional_date;
                     $financeBookingDetailLog->save();
-
                 }
             }
 
             if (!empty($request->actual_cost)) {
                 foreach ($request->actual_cost as $key => $cost) {
-
                     if (!is_null($request->qoute_invoice)) {
-
                         if (array_key_exists($key, $request->qoute_invoice)) {
-
                             $oldFileName = $request->qoute_invoice_record[$key];
 
                             $file = $request->qoute_invoice[$key];
@@ -7212,12 +7181,10 @@ class AdminController extends Controller
                             // File::delete($destinationPath);
 
                             $file->move(public_path('booking/' . $request->qoute_id), $filename);
-
                         } else {
                             $filename = isset($request->qoute_invoice_record[$key]) ? $request->qoute_invoice_record[$key] : null;
                         }
                     } else {
-
                         $filename = isset($request->qoute_invoice_record[$key]) ? $request->qoute_invoice_record[$key] : null;
                     }
 
@@ -7259,7 +7226,6 @@ class AdminController extends Controller
                     );
                     $nowDate = Carbon::now()->toDateString();
                     foreach ($request->deposit_due_date[$key] as $ikey => $deposit_due_date) {
-
                         if ($request->upload_calender[$key][$ikey] == true && $deposit_due_date != null) {
                             $supplier = ($request->has('supplier_currency')) ? $request->supplier_currency[$key] : $bookingDetail->supplier_currency;
                             $event = new Event;
@@ -7277,7 +7243,6 @@ class AdminController extends Controller
                             }
                             // $event->addAttendee(['email' => 'kashan.kingdomvision@gmail.com']);
                             // $event->save();
-
                         }
 
                         FinanceBookingDetail::updateOrCreate(
@@ -7293,19 +7258,15 @@ class AdminController extends Controller
                                 'payment_method' => $request->payment_method[$key][$ikey] ?? null,
                                 'additional_date' => $request->additional_date[$key][$ikey] ?? null,
                             ]
-
                         );
-
                     }
-
                 }
             }
 
             return response()->json(['success_message' => 'Booking Updated Successfully']);
 
-            // return Redirect::route('update-booking', $id)->with('success_message', 'Updated Successfully');
+        // return Redirect::route('update-booking', $id)->with('success_message', 'Updated Successfully');
         } else {
-
             $get_user_branches = Cache::remember('get_user_branches', $this->cacheTimeOut, function () {
                 $url = 'http://whipplewebdesign.com/php/unforgettable_payment/backend/api/payment/get_payment_settings';
                 // $url    = 'http://localhost/unforgettable_payment/backend/api/payment/get_payment_settings';
@@ -7370,7 +7331,6 @@ class AdminController extends Controller
 
     public function view_booking_version($booking_id, $log_no)
     {
-
         $booking_log = BookingLog::where('booking_id', $booking_id)->where('log_no', $log_no)->first();
         $booking_detail_logs = BookingDetailLog::where('booking_id', $booking_id)->where('log_no', $log_no)->get();
 
@@ -7403,13 +7363,11 @@ class AdminController extends Controller
             'payment_method' => payment::all()->sortBy('name'),
             'products' => Product::all()->sortBy('name'),
         ]);
-
     }
 
     // view quotation version in update booking
     public function view_quotation_version($quote_id, $log_no)
     {
-
         $qoute_log = QouteLog::where('qoute_id', $quote_id)->where('log_no', $log_no)->first();
 
         $qoute_detail_logs = QouteDetailLog::where('qoute_id', $quote_id)->where('log_no', $log_no)->get();
@@ -7446,7 +7404,6 @@ class AdminController extends Controller
 
     public function view_quotation($id)
     {
-
         return view('booking.view-quotation')->with([
 
             'qoute' => Qoute::findOrFail($id),
@@ -7473,7 +7430,6 @@ class AdminController extends Controller
 
     public function create_airline(Request $request)
     {
-
         if ($request->isMethod('post')) {
             $this->validate($request, ['name' => 'required'], ['required' => 'Name is required.']);
 
@@ -7494,7 +7450,6 @@ class AdminController extends Controller
     public function update_airline(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-
             $validator = Validator::make($request->all(), ['name' => 'required'], ['required' => 'Name is required.']);
 
             if ($validator->fails()) {
@@ -7524,7 +7479,6 @@ class AdminController extends Controller
     }
     public function create_payment(Request $request)
     {
-
         if ($request->isMethod('post')) {
             $this->validate($request, ['name' => 'required'], ['required' => 'Name is required']);
 
@@ -7545,7 +7499,6 @@ class AdminController extends Controller
     public function update_payment(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-
             $validator = Validator::make($request->all(), ['name' => 'required'], ['required' => 'Name is required.']);
 
             if ($validator->fails()) {
@@ -7650,7 +7603,6 @@ class AdminController extends Controller
 
     public function details_supplier($id)
     {
-
         $supplier = Supplier::findOrFail(decrypt($id));
         $data = [
             'name' => $supplier->name,
@@ -7762,7 +7714,6 @@ class AdminController extends Controller
 
     public function view_supplier_products()
     {
-
         $supplier_products = supplier_product::join('suppliers', 'suppliers.id', '=', 'supplier_products.supplier_id')
             ->leftJoin('products', 'products.id', '=', 'supplier_products.product_id')
             ->select('suppliers.id as supplier_id', 'suppliers.name as supplier_name', 'products.id as product_id', 'products.code', 'products.name', 'products.description')
@@ -7773,7 +7724,6 @@ class AdminController extends Controller
 
     public function view_supplier_categories()
     {
-
         $supplier_categories = supplier_category::join('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id')
             ->leftJoin('categories', 'categories.id', '=', 'supplier_categories.category_id')
             ->select('suppliers.id as supplier_id', 'suppliers.name as supplier_name', 'categories.id as category_id', 'categories.name as category_name')
@@ -7792,7 +7742,6 @@ class AdminController extends Controller
     public function update_supplier(Request $request, $id)
     {
         if ($request->isMethod('post')) {
-
             $this->validate($request, ['username' => 'required'], ['required' => 'Name is required']);
             // $this->validate($request, ['email' => 'required|email|unique:suppliers,email,'.$id], ['required' => 'Email is required']);
             // $this->validate($request, ['phone' => 'required|unique:suppliers,phone,'.$id, ], ['required' => 'Phone Number is required']);
@@ -7905,9 +7854,7 @@ class AdminController extends Controller
 
     public function create_code(Request $request)
     {
-
         if ($request->isMethod('post')) {
-
             $season = season::find($request->season_id);
             $start_date = $season->start_date;
             $end_date = $season->end_date;
@@ -7929,7 +7876,6 @@ class AdminController extends Controller
                     throw \Illuminate\Validation\ValidationException::withMessages([
                         'date_of_travel' => ['Wrong Date Selected'],
                     ]);
-
                 }
             }
 
@@ -8190,12 +8136,10 @@ class AdminController extends Controller
         $qoute = Qoute::findOrFail(decrypt($id));
         $qoute->delete();
         return Redirect::route('view-quote')->with('success_message', 'Supplier Successfully Updated!!');
-
     }
 
     public function convert_quote_to_booking($id)
     {
-
         $qoute = Qoute::find($id);
         $qoute->qoute_to_booking_status = 1;
         $qoute->qoute_to_booking_date = date('Y-m-d');
@@ -8233,7 +8177,6 @@ class AdminController extends Controller
 
         $qouteDetails = QouteDetail::where('qoute_id', $id)->get();
         foreach ($qouteDetails as $key => $qouteDetail) {
-
             $bookingDetail = new BookingDetail;
             $bookingDetail->qoute_id = $id;
             $bookingDetail->booking_id = $booking->id;
@@ -8263,9 +8206,7 @@ class AdminController extends Controller
 
     public function create_quote(Request $request)
     {
-
         if ($request->isMethod('post')) {
-
             $this->validate($request, ['ref_no' => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name' => 'required'], ['required' => 'Please select Brand Name']);
@@ -8447,7 +8388,6 @@ class AdminController extends Controller
 
             if (!empty($request->cost)) {
                 foreach ($request->cost as $key => $cost) {
-
                     $qouteDetail = new QouteDetail;
                     $qouteDetail->qoute_id = $qoute->id;
                     $qouteDetail->date_of_service = $request->date_of_service[$key] ? date('Y-m-d', strtotime(Carbon::parse(str_replace('/', '-', $request->date_of_service[$key]))->format('Y-m-d'))) : null;
@@ -8472,7 +8412,6 @@ class AdminController extends Controller
             }
 
             return response()->json(['success_message' => 'Quote Successfully Created!!']);
-
         }
 
         $get_user_branche = Cache::remember('get_user_branche', $this->cacheTimeOut, function () {
@@ -8498,21 +8437,17 @@ class AdminController extends Controller
             'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::where('status',1)->orderBy('id','ASC')->get(),
+            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
             'templates' => Template::all()->sortBy('name'),
             // 'sale_person' => User::where('role_id',2)->orderBy('name', 'asc')->get(),
         ]);
     }
 
   
-    public function view_quote(){
-        
-        // $data['quotes'] = Qoute::select('*', DB::raw('count(*) as quote_count'))->get()->sortBy('created_at');
-        
+    public function view_quote()
+    {
         $data['quotes'] = Qoute::select('*', DB::raw('count(*) as quote_count'))->groupBy('ref_no')->get();
         return view('qoute.view', $data);
-    }
-
     }
 
     public function booking(Request $request, $id)
@@ -8969,7 +8904,6 @@ class AdminController extends Controller
             $output = $this->curl_data($url);
             return json_decode($output);
         });
-
         return view('qoute.view')->with(['quotes' => Qoute::all()]);
     }
 
