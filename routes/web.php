@@ -233,6 +233,12 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('update-payment/{id}',array('as'=>'update-payment','uses'=>'AdminController@update_payment'));
 	Route::get('del-payment/{id}',array('as'=>'del-payment','uses'=>'AdminController@delete_payment'));
 	
+	//check reference
+	Route::post('reference/verify',array('before'=>'csrf','as'=>'check.reference','uses'=>'AdminController@checkReference'));
+	//check reference
+	
+	Route::get('quote/{ref_no}/child',array('as'=>'get.child.reference','uses'=>'AdminController@childReference'));
+	
 	
 	Route::group([
 			'prefix' => 'template',
@@ -246,6 +252,21 @@ Route::group(['middleware' => ['auth']], function(){
 			Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'TemplateController@edit']);
 			Route::post('update/{id}', ['as' => 'update', 'uses' => 'TemplateController@update']);
 			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'TemplateController@call_template']);
+	});
+	
+	
+	Route::group([
+		'prefix' => 'currency',
+		'as' 	 => 'currency.'
+	],function (){
+			Route::get('index', ['as' => 'index', 'uses' => 'CurrencyController@index']);
+			Route::get('create', ['as' => 'create', 'uses' => 'CurrencyController@create']);
+			Route::post('store', ['as' => 'store', 'uses' => 'CurrencyController@store']);
+			Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'CurrencyController@detail']);
+			Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'CurrencyController@destroy']);
+			Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'CurrencyController@edit']);
+			Route::post('update/{id}', ['as' => 'update', 'uses' => 'CurrencyController@update']);
+			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'CurrencyController@call_template']);
 	});
 
 });

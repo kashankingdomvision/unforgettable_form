@@ -1,26 +1,14 @@
 @extends('content_layout.default')
 
 @section('content')
-
-<style rel="styleSheet">
-td.details-control {
-    background: url('../resources/details_open.png') no-repeat center center;
-    cursor: pointer;
-}
-tr.shown td.details-control {
-    background: url('../resources/details_close.png') no-repeat center center;
-}
-
-</style>
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>View Qoute</h1>
-        <ol class="breadcrumb">
-            <li>
-              <a href="{{ route('creat-quote') }}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add"><span class="fa fa-plus">Add</span></a>
-            </li>
-          </ol>
+        <h1>View All Currencies</h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="{{ route('currency.create') }}" class="btn btn-primary btn-xs"><span class="fa fa-plus">Create New</span></a>
+                </li>
+            </ol>
     </section>
     <section class="content">
         <div id="divLoading"></div>
@@ -39,61 +27,32 @@ tr.shown td.details-control {
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    {{-- <th>#</th> --}}
-                    <th></th>
-                    <th>Ref #</th>
-                    <th>Season</th>
-                    <th>Type Of Holidays</th>
-                    <th>Brand Name</th>
-                    <th>Sales Person</th>
-                    <th>Booking Currency</th>
-                    <th>Pax No.</th>
-                    <th>Status</th>
-                    <th>Booking Date</th>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Code</th>
+                    <th>Symbol</th>
+                    <th>Created </th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                @foreach ($quotes as $key => $quote)
-                    <tr>
-                      <td>
-                          @if($quote->quote_count > 1)
-                          <button class="btn btn-sm addChild" id="show{{$quote->id}}" data-remove="#remove{{$quote->id}}" data-append="#appendChild{{$quote->id}}" data-ref="{{ $quote->ref_no }}" data-id="{{$quote->id}}">
-                            <span class="fa fa-plus"></span>
-                          </button>
-                          
-                          <button class="btn btn-sm removeChild" id="remove{{$quote->id}}" data-show="#show{{$quote->id}}" data-append="#appendChild{{$quote->id}}" data-ref="{{ $quote->ref_no }}" data-id="{{$quote->id}}" style="display:none;" >
-                            <span class="fa fa-minus"></span>
-                          </button>
-                          @endif
-                        </td>
-                      
-                        <td>{{ $quote->ref_no }}</td>
-                        <td>{{ $quote->season->name }}</td>
-                        <td>{{ $quote->type_of_holidays }}</td>
-                        <td>{{ $quote->brand_name }}</td>
-                        <td>{{ $quote->sale_person }}</td>
-                        <td>{{ $quote->currency }}</td>
-                        <td>{{ $quote->group_no }}</td>
-                        <td>{!! $quote->booking_formated_status !!}</td>
-                        <td>{{ $quote->qoute_to_booking_date??NULL }}</td>
-                        
-                        <td width="10%" >
-                        <a href="{{ URL::to('edit-quote/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                        <a onclick="return confirm('Are you sure you want to convert this Quotation to Booking?');" href="{{ route('convert-quote-to-booking', $quote->id) }}" class="btn btn-success btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-check"></span></a>
-                        {{-- <a href="{{ URL::to('confirm-booking/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class=""></span>Booking</a> --}}                        
-                        <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
-                        </td>
-                           <tbody class="append" id="appendChild{{$quote->id}}">
-                           
-                          </tbody>
-                    </tr>
+                @foreach ($currencies as $cur)
+                  
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $cur->name }}</td>
+                  <td>{{ $cur->code }}</td>
+                  <td>{{ $cur->symbol }}</td>
+                  <td>{{ $cur->created_at }}</td>
+                  <td>
+                    <a href="{{ route('currency.edit', encrypt($cur->id)) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
+                    {{-- <a href="{{ route('currency.detail', encrypt($cur->id)) }}" class="btn btn-primary btn-xs" data-title="view details" data-target="#details"><span class="fa fa-eye"></span></a> --}}
+                    <a onclick="return confirm('Are you sure you want to delete this record?');" href="{{ route('currency.delete', encrypt($cur->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash text-light"></span></a>
+                  </td>
+                </tr>
                 @endforeach
                 </tbody>
-              </table>
-            
-            
-            
+            </table>
             </div>
         </div>
         </div>
@@ -313,94 +272,11 @@ tr.shown td.details-control {
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
 <!-- page script -->
-<script>
-
-// function getChild(refNumber, id) {
-//   console.log(id);
-//   $('.appendChild').empty();
-//   var url = '{{ route("get.child.reference", ":id") }}';
-//       url = url.replace(':id', refNumber);
-//       token = $('input[name=_token]').val();
-//   $.ajax({
-//       url:  url,
-//       headers: {'X-CSRF-TOKEN': token},
-//       data: {id: id},
-//       type: 'get',
-//       success: function(response) {
-//         console.log(response);
-//         $('.appendChild').append(response);
-//       }
-//   });
-// }
+{{-- <script>
   $(function () {
-    
-    $(document).on('click', '.removeChild', function () {
-      var id = $(this).data('show');
-      $(id).removeAttr("style");
-      $($(this).data('append')).empty();
-      $(this).attr("style", "display:none");
-    });
-    $(document).on('click', '.addChild', function () {
-      $('.append').empty();
-   
-      
-      var id = $(this).data('id');
-      var refNumber = $(this).data('ref');
-      var appendId  = $(this).data('append');
-      console.log(appendId);
-      var url = '{{ route("get.child.reference", ":id") }}';
-      url = url.replace(':id', refNumber);
-      
-      var removeBtnId =$(this).data('remove');
-      var showBtnId = $(this).data('show');
-      $('.addChild').removeAttr("style");
-      $('.removeChild').attr("style", "display:none");
-
-      $(this).attr("style", "display:none")
-      // $(appendId).empty();
-      
-      token = $('input[name=_token]').val();
-      $.ajax({
-          url:  url,
-          headers: {'X-CSRF-TOKEN': token},
-          data: {id: id},
-          type: 'get',
-          success: function(response) {
-            $(appendId).html(response);
-            $(removeBtnId).removeAttr("style");
-          }
-      });
-    });
-    
     $("#example1").DataTable({
-      // createdRow: function(row) {
-      //   $(row).find('td table')
-      //     .DataTable({
-      //       columns: columns,
-      //       dom: 'td'
-      //     })
-      // }
-      "order": [[ 2, "desc" ]]
+        "order": [[ 2, "desc" ]]
     });
-    
-    
-    
-    $('#example1 tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
- 
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    } );
-    
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -410,7 +286,7 @@ tr.shown td.details-control {
       "autoWidth": false
     });
   });
-</script>
+</script> --}}
 </body>
 </html>
 @endsection

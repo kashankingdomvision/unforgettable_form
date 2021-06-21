@@ -494,8 +494,8 @@ thead.border_thead {
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $route == 'create-booking' ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking </a></li>
-            <li class="{{ $route == 'view-booking-season' || $route == 'view-booking' || $route == 'update-booking' || $route == 'view-quotation-version' || $route == 'view-quotation' || $route == 'view-booking-version' ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
+            {{-- <li class="{{Request::is('create-booking') ? 'active' : ''}}"><a href="{{ route('create-booking')}}"><i class="fa fa-plus"></i>Create Booking</a></li> --}}
+            <li class="{{Request::is('view-booking-season') ? 'active' : ''}}"><a href="{{ route('view-booking-season')}}"><i class="fa fa-eye"></i>View Booking Season</a></li>
 
           </ul>
         </li>
@@ -601,6 +601,7 @@ thead.border_thead {
                 <li class="{{ $route == 'view-payment' || $route == 'update-payment'  ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
                 <li class="{{ $route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
                 <li class="{{ $route == 'view-booking-method' || $route == 'edit-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
+                <li class="{{ $route == 'currency.index' || $route == 'currency.index' ? 'active' : '' }}"><a href="{{ route('currency.index')}}"><i class="fa fa-eye"></i> View Currencies</a></li>
             </ul>
         </li>
 

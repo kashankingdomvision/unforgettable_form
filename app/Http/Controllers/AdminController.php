@@ -52,6 +52,7 @@ use App\old_booking;
 use App\BookingLog;
 use App\BookingDetailLog;
 use App\FinanceBookingDetailLog;
+use Illuminate\Support\Facades\View;
 
 use App\Template;
 class AdminController extends Controller
@@ -2653,11 +2654,11 @@ class AdminController extends Controller
 
   
     public function view_quote(){
-
-        $data['quotes'] = Qoute::orderBy('created_at', 'desc')->get();
         
+        // $data['quotes'] = Qoute::select('*', DB::raw('count(*) as quote_count'))->get()->sortBy('created_at');
+        
+        $data['quotes'] = Qoute::select('*', DB::raw('count(*) as quote_count'))->groupBy('ref_no')->get();
         return view('qoute.view', $data);
-    
     }
 
 
@@ -3992,8 +3993,15 @@ class AdminController extends Controller
         return  $arr;
     }
 
-    public function delete_code(Request $request,$id){
+    public function delete_code($id){
         code::destroy($id);
         return Redirect::route('view-code')->with('success_message', 'Code Successfully Deleted!!');
+    }
+    
+    
+    public function childReference(Request $request, $refNumber)
+    {
+        $data['quotes'] = Qoute::where('ref_no', $refNumber)->where('id', '!=' ,$request->id)->orderBy('created_at')->get();
+        return response()->json(View::make('qoute.partial_quote_child', $data)->render());
     }
 }
