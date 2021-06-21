@@ -1296,6 +1296,7 @@ class AdminController extends Controller
                 $bookingDetailLog->service_details     = $bookingDetail->service_details;
                 $bookingDetailLog->category_id         = $bookingDetail->category;
                 $bookingDetailLog->supplier            = $bookingDetail->supplier;
+                $bookingDetailLog->product             = $bookingDetail->product;
                 $bookingDetailLog->booking_date        = $bookingDetail->booking_date ? Carbon::parse(str_replace('/', '-', $bookingDetail->booking_date))->format('Y-m-d') : null;
                 $bookingDetailLog->booking_due_date    = $bookingDetail->booking_due_date ? Carbon::parse(str_replace('/', '-', $bookingDetail->booking_due_date))->format('Y-m-d') : null;
                 $bookingDetailLog->booked_by           = $bookingDetail->booked_by;
@@ -1328,6 +1329,7 @@ class AdminController extends Controller
                     $financeBookingDetailLog->paid_date          =  $financebookingDetail->paid_date ? Carbon::parse(str_replace('/', '-', $financebookingDetail->deposit_due_date))->format('Y-m-d') : null;
                     $financeBookingDetailLog->payment_method     =  $financebookingDetail->payment_method ?? NULL;
                     $financeBookingDetailLog->upload_to_calender =  $financebookingDetail->upload_calender;
+                    $financeBookingDetailLog->additional_date    =  $financebookingDetail->additional_date;
                     $financeBookingDetailLog->save();
 
                 }
@@ -1381,6 +1383,7 @@ class AdminController extends Controller
                         'service_details'   => $request->service_details[$key],
                         'category_id'       => $request->category[$key],
                         'supplier'          => $request->supplier[$key],
+                        'product'           => $request->product[$key],
                         'booking_date'      => $request->booking_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_date[$key]))->format('Y-m-d') : null,
                         'booking_due_date'  => $request->booking_due_date[$key] ? Carbon::parse(str_replace('/', '-', $request->booking_due_date[$key]))->format('Y-m-d') : null,
                         // 'booking_method'    => $request->booking_method[$key],
@@ -1442,6 +1445,7 @@ class AdminController extends Controller
                                 'deposit_due_date'   =>  $request->deposit_due_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'paid_date'          =>  $request->paid_date[$key][$ikey] ? Carbon::parse(str_replace('/', '-', $request->deposit_due_date[$key][$ikey]))->format('Y-m-d') : null,
                                 'payment_method'     =>  $request->payment_method[$key][$ikey]??NULL,
+                                'additional_date'    =>  $request->additional_date[$key][$ikey]??NULL,
                             ]
 
                         );
@@ -1512,9 +1516,10 @@ class AdminController extends Controller
                 'supervisors'       =>  User::where('role_id',5)->orderBy('name','ASC')->get(),
                 'payment_method'    =>  payment::all()->sortBy('name'),
                 'id'                =>  $id,
-                'booking_logs'      =>  BookingLog::where('booking_id',$id)->get(),
+                'booking_logs'      =>  BookingLog::where('booking_id',$id)->orderBy('log_no', 'DESC')->get(),
                 'airlines'          =>  airline::all(),
                 'payments'          =>  payment::all(),
+                'products'          =>  Product::all()->sortBy('name'),
             ]);
         }
     }
@@ -1551,6 +1556,7 @@ class AdminController extends Controller
             'get_user_branches'   => $get_user_branches,
             'get_holiday_type'    => $get_holiday_type,
             'payment_method'      => payment::all()->sortBy('name'),
+            'products'            => Product::all()->sortBy('name'),
         ]);
     
     }
@@ -1587,7 +1593,8 @@ class AdminController extends Controller
             'users'              => User::all()->sortBy('name'),
             'supervisors'        => User::where('role_id',5)->orderBy('name','ASC')->get(),
             'get_user_branches'  => $get_user_branches,
-            'get_holiday_type'   => $get_holiday_type
+            'get_holiday_type'   => $get_holiday_type,
+            'products'           => Product::all()->sortBy('name'),
         ]);
     }
 

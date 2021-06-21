@@ -114,6 +114,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('recall-version/{quote_id}/{log_no}',array('as'=>'recall-version','uses'=>'AdminController@recall_version'));
 
+	Route::post('reference/verify',array('before'=>'csrf','as'=>'check.reference','uses'=>'AdminController@checkReference'));
+
     Route::match(['get', 'post'],'creat-booking-method',array('as'=>'creat-booking-method','uses'=>'AdminController@booking_method'));
     Route::get('view-booking-method',array('as'=>'view-booking-method','uses'=>'AdminController@view_booking_method'));
     Route::match(['get', 'post'],'edit-booking-method/{id}',array('as'=>'edit-booking-method','uses'=>'AdminController@edit_booking_method'));
