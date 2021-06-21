@@ -86,8 +86,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <h4><a href="" class="view-booking-version">View Booking Versions </a></h4>
-                    @if(!empty($booking_logs))
-                        <div id="booking-version" hidden>
+                    <div id="booking-version" hidden>
+                        @if(count($booking_logs))
                             @foreach ($booking_logs as $key => $booking_log)
                                 <p> 
                                     <a href="{{ route('view-booking-version',['booking_id'=>$booking_log->booking_id, 'log_no'=>$booking_log->log_no]) }}" class="version" target="_blank">
@@ -95,23 +95,27 @@
                                     </a>
                                 </p>
                             @endforeach
-                        </div>
-                    @endif
+                        @else
+                            No Booking Versions Available
+                        @endif
+                    </div>
 
                 </div>
 
                 <div class="col-md-6 text-right">
                     <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
-                    @php
-                        $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
-                    @endphp
+                    @if(isset($booking->qoute_id) && !empty($booking->qoute_id))
+                        @php
+                            $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
+                        @endphp
+                    @endif
 
                     <div id="quotation-version" hidden>
                         @if(count($quote_logs))
                             @foreach ($quote_logs as $key => $qoute_log)
                                 <p> 
                                     <a href="{{ route('view-quotation-version',['quote_id'=>$qoute_log->qoute_id, 'log_no'=>$qoute_log->log_no]) }}" class="version" target="_blank">
-                                        Quotation Version {{ $qoute_log->log_no }}: {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}} {{ isset(\App\User::find($booking_log->user_id)->name) ? "By ".\App\User::find($qoute_log->user_id)->name : ""}}
+                                        Quotation Version {{ $qoute_log->log_no }}: {{ $qoute_log->quotation_no }} / {{ $qoute_log->created_date ? \Carbon\Carbon::parse(str_replace('/', '-', $qoute_log->created_date))->format('d/m/Y') : ""}} {{ isset(\App\User::find($qoute_log->user_id)->name) ? "By ".\App\User::find($qoute_log->user_id)->name : ""}}
                                     </a>
                                 </p>
                             @endforeach
@@ -300,12 +304,12 @@
                                 <div class="row">
                                     <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                         <label> Booking Currency</label> <span style="color:red">*</span>
-                                        <select name="currency" class="form-control select2">
+                                        <select name="currency" class="form-control currency-select2">
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
                                                 <option value="{{ $currency->code }}"
-                                                    {{ $booking->currency == $currency->code ? 'selected' : '' }}>
-                                                    {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                    {{ $booking->currency == $currency->code ? 'selected' : '' }}  data-image="data:image/png;base64, {{$currency->flag}}">
+                                                    &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center" id="error_currency"></div>
@@ -532,8 +536,8 @@
                                                         <option value="">Select Currency</option>
                                                         @foreach ($currencies as $currency)
                                                             <option value="{{ $currency->code }}"
-                                                                {{ $booking_detail->supplier_currency == $currency->code ? 'selected' : '' }}>
-                                                                {{ $currency->name }} ({{ $currency->symbol }})
+                                                                {{ $booking_detail->supplier_currency == $currency->code ? 'selected' : '' }} data-image="data:image/png;base64, {{$currency->flag}}">
+                                                                &nbsp; {{$currency->code}} - {{$currency->name}}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -1537,7 +1541,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {!! $record->finance_detail !!}
+                                        {{-- {!! $record->finance_detail !!} --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -1808,6 +1812,31 @@
 $(document).ready(function() {
     // Initialize all Select2 
     $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
+    
+
+
+    function formatState(opt) {
+        if (!opt.id) {
+            return opt.text;
+        }
+
+        var optimage = $(opt.element).attr('data-image');
+
+        if (!optimage) {
+            return opt.text ;
+        } else {
+            var $opt = $(
+                '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+            );
+            return $opt;
+        }
+    };
+
+    $('.currency-select2, .supplier-currency').select2({
+        templateResult: formatState,
+        templateSelection: formatState
+    });
+    
     $(".datepicker").datepicker({
         autoclose: true,
         format: 'dd/mm/yyyy'
@@ -2308,8 +2337,13 @@ $(document).ready(function() {
 
                 $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2")
                     .removeClass('select2-hidden-accessible').next().remove();
-                $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2")
+                $(" .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2")
                     .select2();
+
+                $('.supplier-currency').select2({
+                    templateResult: formatState,
+                    templateSelection: formatState
+                });
 
                 $(".datepicker").datepicker({
                     autoclose: true,

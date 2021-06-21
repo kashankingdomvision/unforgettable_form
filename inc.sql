@@ -426,3 +426,5 @@ TRUNCATE TABLE `finance_booking_details` ;
 TRUNCATE TABLE `booking_logs` ;
 TRUNCATE TABLE `booking_detail_logs` ;
 TRUNCATE TABLE `finance_booking_detail_logs` ;
+
+ALTER TABLE `bookings` ADD `created_at` TIMESTAMP NULL AFTER `electronic_copy_details`, ADD `updated_at` TIMESTAMP NULL AFTER `created_at`;

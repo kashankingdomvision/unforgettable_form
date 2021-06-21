@@ -215,33 +215,28 @@
                   <th style="width:1%">
                      <input id="select_all" type='checkbox' name="" value="" />
                   </th>
-                  {{-- <th>Id</th> --}}
-                  <th>Form Sent On</th>
-                  <th>Created By</th>
-                  <th>Ref.No</th>
-                  <th>Departure Date</th>
+           
+       
+                  <th>Ref #</th>
+                  <th>Quote Reference</th>
+                  <th>Lead Passenger Name</th>
                   <th>Brand Name</th>
-                  <th>Booking Season</th>
+                  <th>Type Of Holidays</th>
+                  <th>Sales Person</th>
                   <th>Agency Booking</th>
-                  <th>Flight Booked</th>
-                  <th>Created On</th>
-                  <th>Type of Holidays</th>
-                  <th>Airline Name</th>
-                  <th>Payment Method</th>
-                  <th>Flight Booked Responsible Person</th>
+                  <th>Booking Currency</th>
+                  <th>Pax No.</th>
+                  <th>Dinning Preferences</th>
+
                   <th>Transfer Info Responsible Person</th>
                   <th>Transfer Organized Responsible Person</th>
                   <th>Itinerary Finalised Responsible Person</th>
+
                   <th>Travel Document Prepared Responsible Person</th>
                   <th>Document Sent Responsible Person</th>
-                  <th>Pax No</th>
                   <th>Asked For Transfer</th>
                   <th>Transfer Organised</th>
                   <th>Itinerary Finalised</th>
-                  
-
-
-                  
 
                   <th>Action</th>
                 </tr>
@@ -250,40 +245,26 @@
                 @foreach ($data as $value)
                 <tr>
                   <td>
-                      <input class="checkbox multi_val" type='checkbox' name='multi_val[]' value="<?php echo "$value->id";?>" />
+                    <input class="checkbox multi_val" type='checkbox' name='multi_val[]' value="<?php echo "$value->id";?>" />
                   </td>
-                  {{-- <td>{{ $value->id }}</td> --}}
-                  <td>{{\Carbon\Carbon::parse($value->form_sent_on)->format('d-m-Y')}}</td>
-                  <td>{{$value->username}}</td>
                   <td>{{$value->ref_no}}</td>
-                  <td>{{\Carbon\Carbon::parse($value->date_of_travel)->format('d-m-Y')}}</td>
+                  <td>{{$value->quotation_no}}</td>
+                  <td>{{$value->lead_passenger_name}}</td>
                   <td>{{$value->brand_name}}</td>
-                  <td>{{$value->name}}</td>
-                  <td>
-                    @if($value->agency_booking == 1)
-                      Client
-                    @else
-                      Agency
-                    @endif
-                  </td>
-                  <td>{{$value->flight_booked}}</td>
-                  <td>{{\Carbon\Carbon::parse(substr($value->created_at,0,10))->format('d-m-Y') }}</td>
                   <td>{{$value->type_of_holidays}}</td>
-                   <td>{{$value->airline_name}}</td>
-                    <td>{{$value->payment_name}}</td>
-                   <td>{{$value->fbusername}}</td>
-                    <td>{{$value->tiusername}}</td>
-                    <td>{{$value->tousername}}</td>
-                    <td>{{$value->itfusername}}</td>
-                    <td>{{$value->tdpusername}}</td>
-                    <td>{{$value->dsusername}}</td>
-                    <td>{{$value->pax_no}}</td>
-                    <td>{{$value->asked_for_transfer_details}}</td>
-                    <td>{{$value->transfer_organised}}</td>
-                    <td>{{$value->itinerary_finalised}}</td>
-
-
-
+                  <td>{{$value->sale_person}}</td>
+                  <td>{{$value->agency_booking == 1 ? 'No' : 'Yes'}}</td>
+                  <td>{{$value->currency}}</td>
+                  <td>{{$value->group_no}}</td>
+                  <td>{{$value->dinning_preferences}}</td>
+                  <td>{{$value->aft_person}}</td>
+                  <td>{{$value->to_person}}</td>
+                  <td>{{$value->itf_person}}</td>
+                  <td>{{$value->dp_person}}</td>
+                  <td>{{$value->ds_person}}</td>
+                  <td>{{$value->asked_for_transfer_details}}</td>
+                  <td>{{$value->transfer_organised}}</td>
+                  <td>{{$value->itinerary_finalised}}</td>
                   <td>
                     <a href="{{ route('update-booking',$value->id)}}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="left" title="Edit"><span class="fa fa-pencil"></span></a>
                     <a onclick="return confirm('Are you sure want to this');" href="{{ route('del-booking',array($book_id,$value->id))}}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>

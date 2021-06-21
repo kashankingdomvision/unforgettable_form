@@ -6470,101 +6470,112 @@ class AdminController extends Controller
             $output = $this->curl_data($url);
             return json_decode($output);
         });
-        $query = old_booking::join('seasons', 'seasons.id', '=', 'old_bookings.season_id')
-            ->join('users', 'users.id', '=', 'old_bookings.user_id')
-            ->leftjoin('users as user_fb', 'user_fb.id', '=', 'old_bookings.fb_person')
-            ->leftjoin('users as user_ti', 'user_ti.id', '=', 'old_bookings.aft_person')
-            ->leftjoin('users as user_to', 'user_to.id', '=', 'old_bookings.to_person')
-            ->leftjoin('users as user_itf', 'user_itf.id', '=', 'old_bookings.itf_person')
-            ->leftjoin('users as user_tdp', 'user_tdp.id', '=', 'old_bookings.dp_person')
-            ->leftjoin('users as user_ds', 'user_ds.id', '=', 'old_bookings.ds_person')
-            ->leftjoin('airlines', 'airlines.id', '=', 'old_bookings.fb_airline_name_id')
-            ->leftjoin('payments', 'payments.id', '=', 'old_bookings.fb_payment_method_id')->where('old_bookings.season_id', '=', $id);
+        // $query = old_booking::join('seasons', 'seasons.id', '=', 'old_bookings.season_id')
+        //     ->join('users', 'users.id', '=', 'old_bookings.user_id')
+        //     ->leftjoin('users as user_fb', 'user_fb.id', '=', 'old_bookings.fb_person')
+        //     ->leftjoin('users as user_ti', 'user_ti.id', '=', 'old_bookings.aft_person')
+        //     ->leftjoin('users as user_to', 'user_to.id', '=', 'old_bookings.to_person')
+        //     ->leftjoin('users as user_itf', 'user_itf.id', '=', 'old_bookings.itf_person')
+        //     ->leftjoin('users as user_tdp', 'user_tdp.id', '=', 'old_bookings.dp_person')
+        //     ->leftjoin('users as user_ds', 'user_ds.id', '=', 'old_bookings.ds_person')
+        //     ->leftjoin('airlines', 'airlines.id', '=', 'old_bookings.fb_airline_name_id')
+        //     ->leftjoin('payments', 'payments.id', '=', 'old_bookings.fb_payment_method_id')->where('old_bookings.season_id', '=', $id);
 
-        if ($request->created_at != '') {
-            $date = explode('-', $request->created_at);
-            $start_date = $date[0];
-            $end_date = $date[1];
+        // if ($request->created_at != '') {
+        //     $date = explode('-', $request->created_at);
+        //     $start_date = $date[0];
+        //     $end_date = $date[1];
 
-            $start_created_at = Carbon::parse($start_date)->format('Y-m-d');
-            $end_created_at = Carbon::parse($end_date)->format('Y-m-d');
-            $query = $query->whereRaw('DATE(old_bookings.created_at) >= ?', $start_created_at);
-            $query = $query->whereRaw('DATE(old_bookings.created_at) <= ?', $end_created_at);
-        }
-        if ($request->created_by != '') {
-            $query = $query->where('old_bookings.user_id', '=', $request->created_by);
-        }
-        if ($request->ref_no != '') {
-            $query = $query->where('old_bookings.ref_no', '=', $request->ref_no);
-        }
-        if ($request->date_of_travel != '') {
-            $date = explode('-', $request->date_of_travel);
-            $start_date = $date[0];
-            $end_date = $date[1];
+        //     $start_created_at = Carbon::parse($start_date)->format('Y-m-d');
+        //     $end_created_at = Carbon::parse($end_date)->format('Y-m-d');
+        //     $query = $query->whereRaw('DATE(old_bookings.created_at) >= ?', $start_created_at);
+        //     $query = $query->whereRaw('DATE(old_bookings.created_at) <= ?', $end_created_at);
+        // }
+        // if ($request->created_by != '') {
+        //     $query = $query->where('old_bookings.user_id', '=', $request->created_by);
+        // }
+        // if ($request->ref_no != '') {
+        //     $query = $query->where('old_bookings.ref_no', '=', $request->ref_no);
+        // }
+        // if ($request->date_of_travel != '') {
+        //     $date = explode('-', $request->date_of_travel);
+        //     $start_date = $date[0];
+        //     $end_date = $date[1];
 
-            $query = $query->where('old_bookings.date_of_travel', '>=', Carbon::parse($start_date)->format('Y-m-d'));
-            $query = $query->where('old_bookings.date_of_travel', '<=', Carbon::parse($end_date)->format('Y-m-d'));
-        }
-        if ($request->brand_name != '') {
-            $query = $query->where('old_bookings.brand_name', '=', $request->brand_name);
-        }
-        if ($request->season_id != '') {
-            $query = $query->where('old_bookings.season_id', '=', $request->season_id);
-        }
-        if ($request->agency_booking != '') {
-            $query = $query->where('old_bookings.agency_booking', '=', $request->agency_booking);
-        }
-        if ($request->flight_booked != '') {
-            $query = $query->where('old_bookings.flight_booked', '=', $request->flight_booked);
-        }
-        if ($request->form_sent_on != '') {
-            $date = explode('-', $request->form_sent_on);
-            $start_date = $date[0];
-            $end_date = $date[1];
-            $query = $query->where('old_bookings.form_sent_on', '>=', Carbon::parse($start_date)->format('Y-m-d'));
-            $query = $query->where('old_bookings.form_sent_on', '<=', Carbon::parse($end_date)->format('Y-m-d'));
-        }
-        if ($request->type_of_holidays != '') {
-            $query = $query->where('old_bookings.type_of_holidays', '=', $request->type_of_holidays);
-        }
-        if ($request->fb_payment_method_id != '') {
-            $query = $query->where('old_bookings.fb_payment_method_id', '=', $request->fb_payment_method_id);
-        }
-        if ($request->fb_airline_name_id != '') {
-            $query = $query->where('old_bookings.fb_airline_name_id', '=', $request->fb_airline_name_id);
-        }
-        if ($request->fb_responsible_person != '') {
-            $query = $query->where('old_bookings.fb_person', '=', $request->fb_responsible_person);
-        }
-        if ($request->ti_responsible_person != '') {
-            $query = $query->where('old_bookings.aft_person', '=', $request->ti_responsible_person);
-        }
-        if ($request->to_responsible_person != '') {
-            $query = $query->where('old_bookings.to_person', '=', $request->to_responsible_person);
-        }
-        if ($request->itf_responsible_person != '') {
-            $query = $query->where('old_bookings.itf_person', '=', $request->itf_responsible_person);
-        }
-        if ($request->dp_responsible_person != '') {
-            $query = $query->where('old_bookings.dp_person', '=', $request->dp_responsible_person);
-        }
-        if ($request->ds_responsible_person != '') {
-            $query = $query->where('old_bookings.ds_person', '=', $request->ds_responsible_person);
-        }
-        if ($request->pax_no != '') {
-            $query = $query->where('old_bookings.pax_no', '=', $request->pax_no);
-        }
-        if ($request->asked_for_transfer_details != '') {
-            $query = $query->where('old_bookings.asked_for_transfer_details', '=', $request->asked_for_transfer_details);
-        }
-        if ($request->transfer_organised != '') {
-            $query = $query->where('old_bookings.transfer_organised', '=', $request->transfer_organised);
-        }
-        if ($request->itinerary_finalised != '') {
-            $query = $query->where('old_bookings.itinerary_finalised', '=', $request->itinerary_finalised);
-        }
-        $query = $query->orderBy('old_bookings.created_at', 'desc')->paginate(10, ['old_bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends($request->all());
+        //     $query = $query->where('old_bookings.date_of_travel', '>=', Carbon::parse($start_date)->format('Y-m-d'));
+        //     $query = $query->where('old_bookings.date_of_travel', '<=', Carbon::parse($end_date)->format('Y-m-d'));
+        // }
+        // if ($request->brand_name != '') {
+        //     $query = $query->where('old_bookings.brand_name', '=', $request->brand_name);
+        // }
+        // if ($request->season_id != '') {
+        //     $query = $query->where('old_bookings.season_id', '=', $request->season_id);
+        // }
+        // if ($request->agency_booking != '') {
+        //     $query = $query->where('old_bookings.agency_booking', '=', $request->agency_booking);
+        // }
+        // if ($request->flight_booked != '') {
+        //     $query = $query->where('old_bookings.flight_booked', '=', $request->flight_booked);
+        // }
+        // if ($request->form_sent_on != '') {
+        //     $date = explode('-', $request->form_sent_on);
+        //     $start_date = $date[0];
+        //     $end_date = $date[1];
+        //     $query = $query->where('old_bookings.form_sent_on', '>=', Carbon::parse($start_date)->format('Y-m-d'));
+        //     $query = $query->where('old_bookings.form_sent_on', '<=', Carbon::parse($end_date)->format('Y-m-d'));
+        // }
+        // if ($request->type_of_holidays != '') {
+        //     $query = $query->where('old_bookings.type_of_holidays', '=', $request->type_of_holidays);
+        // }
+        // if ($request->fb_payment_method_id != '') {
+        //     $query = $query->where('old_bookings.fb_payment_method_id', '=', $request->fb_payment_method_id);
+        // }
+        // if ($request->fb_airline_name_id != '') {
+        //     $query = $query->where('old_bookings.fb_airline_name_id', '=', $request->fb_airline_name_id);
+        // }
+        // if ($request->fb_responsible_person != '') {
+        //     $query = $query->where('old_bookings.fb_person', '=', $request->fb_responsible_person);
+        // }
+        // if ($request->ti_responsible_person != '') {
+        //     $query = $query->where('old_bookings.aft_person', '=', $request->ti_responsible_person);
+        // }
+        // if ($request->to_responsible_person != '') {
+        //     $query = $query->where('old_bookings.to_person', '=', $request->to_responsible_person);
+        // }
+        // if ($request->itf_responsible_person != '') {
+        //     $query = $query->where('old_bookings.itf_person', '=', $request->itf_responsible_person);
+        // }
+        // if ($request->dp_responsible_person != '') {
+        //     $query = $query->where('old_bookings.dp_person', '=', $request->dp_responsible_person);
+        // }
+        // if ($request->ds_responsible_person != '') {
+        //     $query = $query->where('old_bookings.ds_person', '=', $request->ds_responsible_person);
+        // }
+        // if ($request->pax_no != '') {
+        //     $query = $query->where('old_bookings.pax_no', '=', $request->pax_no);
+        // }
+        // if ($request->asked_for_transfer_details != '') {
+        //     $query = $query->where('old_bookings.asked_for_transfer_details', '=', $request->asked_for_transfer_details);
+        // }
+        // if ($request->transfer_organised != '') {
+        //     $query = $query->where('old_bookings.transfer_organised', '=', $request->transfer_organised);
+        // }
+        // if ($request->itinerary_finalised != '') {
+        //     $query = $query->where('old_bookings.itinerary_finalised', '=', $request->itinerary_finalised);
+        // }
+        // $query = $query->orderBy('old_bookings.created_at', 'desc')->paginate(10, ['old_bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends($request->all());
 
+
+        // $query = booking;
+       
+
+        // dd($query );
+        // $query = $query->orderBy('old_bookings.created_at', 'desc')->paginate(10, ['old_bookings.*', 'airlines.name as airline_name', 'payments.name as payment_name', 'seasons.name', 'users.name as username', 'user_fb.name as fbusername', 'user_ti.name as tiusername', 'user_to.name as tousername', 'user_itf.name as itfusername', 'user_tdp.name as tdpusername', 'user_ds.name as dsusername'])->appends($request->all());
+
+
+
+        $query  =  booking::paginate(10);
+        
         return view('booking.view_booking')->with([
             'data' => $query,
             'book_id' => $id,
