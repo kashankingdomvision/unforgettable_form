@@ -403,3 +403,14 @@ ALTER TABLE `finance_booking_details` ADD `additional_date` INT(10) NULL AFTER `
 -- add additional_date in finance_booking_detail_logs
 ALTER TABLE `finance_booking_detail_logs` ADD `additional_date` INT(10) NULL AFTER `upload_to_calender`;
  
+
+CREATE TABLE `lara_unforge`.`all_currencies` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NULL , `code` VARCHAR(10) NULL , `isObsolete` VARCHAR(10) NULL , `created_at` TIMESTAMP NULL , `updated_at` TIMESTAMP NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE `all_currencies` ADD `flag` VARCHAR(255) NOT NULL AFTER `isObsolete`;
+
+ALTER TABLE `currencies` CHANGE `symbol` `symbol` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+
+ALTER TABLE `currencies` ADD `isObsolete` VARCHAR(10) NULL AFTER `code`, ADD `flag` TEXT NULL AFTER `isObsolete`;
+
+ALTER TABLE `currencies` ADD `status` TINYINT NOT NULL DEFAULT '1' AFTER `flag`;

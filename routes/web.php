@@ -156,6 +156,13 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
 	//end mufti
 
+
+	Route::match(['get', 'post'],'creat-currency',array('as'=>'creat-currency','uses'=>'AdminController@creat_currency'));
+	Route::match(['get', 'post'],'edit-currency/{id}',array('as'=>'edit-currency','uses'=>'AdminController@edit_currency'));
+	Route::get('view-currency',array('as'=>'view-currency','uses'=>'AdminController@view_currency'));
+
+	// Route::get('currency-data',array('as'=>'currency-data','uses'=>'AdminController@currency_data'));
+
 	// season 
 	Route::match(['get', 'post'],'creat-season',array('as'=>'creat-season','uses'=>'AdminController@create_season'));
 	Route::get('view-season',array('as'=>'view-season','uses'=>'AdminController@view_season'));

@@ -586,7 +586,7 @@ thead.border_thead {
 
         {{-- @if (Request::is('creat-airline') || Request::is('view-airline') || Request::is('creat-payment') || Request::is('view-payment') || Request::is('creat-booking-method') ||  Request::is('view-booking-method') )  active @endif --}}
 
-        <li class="treeview {{ $route == 'creat-airline' || $route == 'view-airline' || $route == 'update-airline' || $route == 'creat-payment' || $route == 'view-payment' || $route == 'update-payment' || $route == 'creat-booking-method' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'view-booking-method' ? 'active' : '' }}">
+        <li class="treeview {{ $route == 'creat-airline' || $route == 'view-airline' || $route == 'update-airline' || $route == 'creat-payment' || $route == 'view-payment' || $route == 'update-payment' || $route == 'creat-booking-method' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'view-booking-method' || $route == 'creat-currency' || $route == 'edit-currency' || $route == 'view-currency' ? 'active' : '' }}">
             <a href="#">
                 <i class="fa fa-gear"></i>
                 <span>Setting</span>
@@ -601,6 +601,9 @@ thead.border_thead {
                 <li class="{{ $route == 'view-payment' || $route == 'update-payment'  ? 'active' : ''}}"><a href="{{ route('view-payment')}}"><i class="fa fa-eye"></i>View Payment Method</a></li>
                 <li class="{{ $route == 'creat-booking-method' ? 'active' : '' }}"><a href="{{ route('creat-booking-method')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
                 <li class="{{ $route == 'view-booking-method' || $route == 'edit-booking-method' ? 'active' : '' }}"><a href="{{ route('view-booking-method')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
+                
+                <li class="{{ $route == 'creat-currency'  ? 'active' : '' }}"><a href="{{ route('creat-currency')}}"><i class="fa fa-plus"></i> Add Currency</a></li>
+                <li class="{{ $route == 'view-currency' || $route == 'edit-currency' ? 'active' : '' }}"><a href="{{ route('view-currency')}}"><i class="fa fa-eye"></i> View Currency</a></li>
             </ul>
         </li>
 

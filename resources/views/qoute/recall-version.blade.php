@@ -209,7 +209,7 @@
                     <select class="form-control supplier-currency"  name="supplier_currency[]" required>
                         <option value="">Select Currency</option>
                         @foreach ($currencies as $currency)
-                            <option value="{{ $currency->code }}"  > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                            <option value="{{ $currency->code }}"  data-image="data:image/png;base64, {{$currency->flag}}" > &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                         @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
@@ -430,11 +430,11 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
-                                <select name="currency" class="form-control select2">
+                                <select name="currency" class="form-control currency-select2">
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
                                     {{-- {{ $currency->code == 'GBP' ? 'selected' : '' }}/ --}}
-                                        <option value="{{ $currency->code }}" {{ $quote->currency == $currency->code ? 'selected' : ''}} > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote->currency == $currency->code ? 'selected' : ''}} > &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
@@ -459,7 +459,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-offset-1 mb-2" id="appendPaxName">
-                                @if($quote->pax_name != 'null')
+                                @if($quote->pax_name != 'null' && $quote->pax_name != NULL)
                                     @foreach (json_decode($quote->pax_name) as $key => $name)
                                         <div class="col-md-3 mb-2">
                                             <label>Pax Name #{{ $key+2 }}</label> <span style="color:red">*</span>
@@ -613,7 +613,7 @@
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->code }}" {{ $quote_detail->supplier_currency == $currency->code  ? "selected" : "" }}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote_detail->supplier_currency == $currency->code  ? "selected" : "" }}> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
@@ -1058,6 +1058,28 @@
         $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
         $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
 
+        $('.currency-select2, .supplier-currency').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        function formatState(opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+
+            var optimage = $(opt.element).attr('data-image');
+
+            if (!optimage) {
+                return opt.text ;
+            } else {
+                var $opt = $(
+                    '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+                );
+                return $opt;
+            }
+        };
+
         $('.currency').html($('select[name="currency"]').val());
         $('.convert-currency').html($('select[name="convert_currency"]').val());
 
@@ -1144,7 +1166,12 @@
         function reinitializedDynamicFeilds(){
 
             $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
-            $(".supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();
+            $(".booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();
+
+            $('.supplier-currency').select2({
+                templateResult: formatState,
+                templateSelection: formatState
+            });
 
             $(".datepicker").datepicker({ autoclose: true, format: 'dd/mm/yyyy'  });
         }
