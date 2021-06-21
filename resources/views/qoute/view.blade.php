@@ -40,6 +40,7 @@ tr.shown td.details-control {
                 <thead>
                   <tr>
                     {{-- <th>#</th> --}}
+                    <th></th>
                     <th>Ref #</th>
                     <th>Season</th>
                     <th>Type Of Holidays</th>
@@ -47,28 +48,52 @@ tr.shown td.details-control {
                     <th>Sales Person</th>
                     <th>Booking Currency</th>
                     <th>Pax No.</th>
+                    <th>Status</th>
+                    <th>Booking Date</th>
                     <th>Action</th>
                   </tr>
                 </thead>
-              
+                <tbody>
                 @foreach ($quotes as $key => $quote)
-                  <tr>
-                      {{-- <td>{{ $key+1 }}</td> --}}
-                      <td>{{ $quote->ref_no }}</td>
-                      <td>{{ !empty($quote->season->name) ? $quote->season->name : '' }}</td>
-                      <td>{{ $quote->type_of_holidays }}</td>
-                      <td>{{ $quote->brand_name }}</td>
-                      <td>{{ $quote->sale_person }}</td>
-                      <td>{{ $quote->currency }}</td>
-                      <td>{{ $quote->group_no }}</td>
-                      <td width="10%">
+                    <tr>
+                      <td>
+                          @if($quote->quote_count > 1)
+                          <button class="btn btn-sm addChild" id="show{{$quote->id}}" data-remove="#remove{{$quote->id}}" data-append="#appendChild{{$quote->id}}" data-ref="{{ $quote->ref_no }}" data-id="{{$quote->id}}">
+                            <span class="fa fa-plus"></span>
+                          </button>
+                          
+                          <button class="btn btn-sm removeChild" id="remove{{$quote->id}}" data-show="#show{{$quote->id}}" data-append="#appendChild{{$quote->id}}" data-ref="{{ $quote->ref_no }}" data-id="{{$quote->id}}" style="display:none;" >
+                            <span class="fa fa-minus"></span>
+                          </button>
+                          @endif
+                        </td>
+                      
+                        <td>{{ $quote->ref_no }}</td>
+                        <td>{{ $quote->season->name }}</td>
+                        <td>{{ $quote->type_of_holidays }}</td>
+                        <td>{{ $quote->brand_name }}</td>
+                        <td>{{ $quote->sale_person }}</td>
+                        <td>{{ $quote->currency }}</td>
+                        <td>{{ $quote->group_no }}</td>
+                        <td>{!! $quote->booking_formated_status !!}</td>
+                        <td>{{ $quote->qoute_to_booking_date??NULL }}</td>
+                        
+                        <td width="10%" >
                         <a href="{{ URL::to('edit-quote/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                         <a onclick="return confirm('Are you sure you want to convert this Quotation to Booking?');" href="{{ route('convert-quote-to-booking', $quote->id) }}" class="btn btn-success btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-check"></span></a>
+                        {{-- <a href="{{ URL::to('confirm-booking/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class=""></span>Booking</a> --}}                        
                         <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
-                      </td>
-                  </tr>
+                        </td>
+                           <tbody class="append" id="appendChild{{$quote->id}}">
+                           
+                          </tbody>
+                    </tr>
                 @endforeach
-            </table>
+                </tbody>
+              </table>
+            
+            
+            
             </div>
         </div>
         </div>
@@ -289,17 +314,73 @@ tr.shown td.details-control {
 {!! HTML::script('dist/js/demo.js') !!}
 <!-- page script -->
 <script>
+
+// function getChild(refNumber, id) {
+//   console.log(id);
+//   $('.appendChild').empty();
+//   var url = '{{ route("get.child.reference", ":id") }}';
+//       url = url.replace(':id', refNumber);
+//       token = $('input[name=_token]').val();
+//   $.ajax({
+//       url:  url,
+//       headers: {'X-CSRF-TOKEN': token},
+//       data: {id: id},
+//       type: 'get',
+//       success: function(response) {
+//         console.log(response);
+//         $('.appendChild').append(response);
+//       }
+//   });
+// }
   $(function () {
+    
+    $(document).on('click', '.removeChild', function () {
+      var id = $(this).data('show');
+      $(id).removeAttr("style");
+      $($(this).data('append')).empty();
+      $(this).attr("style", "display:none");
+    });
+    $(document).on('click', '.addChild', function () {
+      $('.append').empty();
+   
+      
+      var id = $(this).data('id');
+      var refNumber = $(this).data('ref');
+      var appendId  = $(this).data('append');
+      console.log(appendId);
+      var url = '{{ route("get.child.reference", ":id") }}';
+      url = url.replace(':id', refNumber);
+      
+      var removeBtnId =$(this).data('remove');
+      var showBtnId = $(this).data('show');
+      $('.addChild').removeAttr("style");
+      $('.removeChild').attr("style", "display:none");
+
+      $(this).attr("style", "display:none")
+      // $(appendId).empty();
+      
+      token = $('input[name=_token]').val();
+      $.ajax({
+          url:  url,
+          headers: {'X-CSRF-TOKEN': token},
+          data: {id: id},
+          type: 'get',
+          success: function(response) {
+            $(appendId).html(response);
+            $(removeBtnId).removeAttr("style");
+          }
+      });
+    });
+    
     $("#example1").DataTable({
-      "columns": [
-            {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
-          ],
-        "order": [[ 2, "desc" ]]
+      // createdRow: function(row) {
+      //   $(row).find('td table')
+      //     .DataTable({
+      //       columns: columns,
+      //       dom: 'td'
+      //     })
+      // }
+      "order": [[ 2, "desc" ]]
     });
     
     

@@ -242,6 +242,12 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('update-payment/{id}',array('as'=>'update-payment','uses'=>'AdminController@update_payment'));
 	Route::get('del-payment/{id}',array('as'=>'del-payment','uses'=>'AdminController@delete_payment'));
 	
+	//check reference
+	Route::post('reference/verify',array('before'=>'csrf','as'=>'check.reference','uses'=>'AdminController@checkReference'));
+	//check reference
+	
+	Route::get('quote/{ref_no}/child',array('as'=>'get.child.reference','uses'=>'AdminController@childReference'));
+	
 	
 	Route::group([
 			'prefix' => 'template',

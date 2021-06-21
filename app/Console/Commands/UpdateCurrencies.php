@@ -51,15 +51,15 @@ class UpdateCurrencies extends Command
         \Log::info(" UpdateCurrencies Cron is working fine!");
 
    
-        // $from = CurrencyConversions::pluck('from');
-        // $to   = CurrencyConversions::pluck('to');
+        $from = CurrencyConversions::pluck('from');
+        $to   = CurrencyConversions::pluck('to');
         
-        // for($i=0 ; $i<16; $i++){
-        //   $url = "https://free.currencyconverterapi.com/api/v6/convert?q=$from[$i]_$to[$i]&compact=ultra&apiKey=9910709386be4f00aa5b";
-        //   $output2 =  json_decode($this->curl_data($url));
-        //   $key = "$from[$i]_$to[$i]";
+        for($i=0 ; $i<16; $i++){
+          $url = "https://free.currencyconverterapi.com/api/v6/convert?q=$from[$i]_$to[$i]&compact=ultra&apiKey=9910709386be4f00aa5b";
+          $output2 =  json_decode($this->curl_data($url));
+          $key = "$from[$i]_$to[$i]";
 
-        //   CurrencyConversions::where('from',"$from[$i]")->where('to',"$to[$i]")->update(['value' => floatval($output2->{$key}) ]); 
-        // }
+          CurrencyConversions::where('from',"$from[$i]")->where('to',"$to[$i]")->update(['value' => floatval($output2->{$key}) ]); 
+        }
     }
 }

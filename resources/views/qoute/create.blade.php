@@ -1407,7 +1407,7 @@ td.day{
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
-                //    window.location.href = "{{ route('view-quote')}}";
+                   window.location.href = "{{ route('view-quote')}}";
                 },
                 error: function (reject) {
                 if( reject.status === 422 ) {

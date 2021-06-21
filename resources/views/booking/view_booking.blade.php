@@ -286,7 +286,7 @@
 
                   <td>
                     <a href="{{ route('update-booking',$value->id)}}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="left" title="Edit"><span class="fa fa-pencil"></span></a>
-                    <a onclick="return confirm('Are you sure want to this');" href="{{ route('del-booking',array($book_id,$value->id))}}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="right" data-title="Delete" data-target="#edit"><span class="fa fa-remove"></span></a>
+                    <a onclick="return confirm('Are you sure want to this');" href="{{ route('del-booking',array($book_id,$value->id))}}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>
                   </td>
                 </tr>
                 @endforeach

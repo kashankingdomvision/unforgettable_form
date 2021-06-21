@@ -18,8 +18,25 @@ class Qoute extends Model
     {
         return $this->belongsToMany('App\QouteDetail','qoute_details','qoute_id');
     }
-
-
+    
+    public function setPaxNameAttribute($value)
+    {
+        $this->attributes['pax_name'] = json_encode($value);
+    }
+    public function getBookingFormatedStatusAttribute()
+    {
+        $status = $this->qoute_to_booking_status;
+        switch ($status) {
+            case 1:
+                return '<span class="badge badge-success">Booked</span>';
+                break;
+            case 0:
+                return '<span class="badge badge-dark">Quote</span>';
+                break;
+        }
+        
+        return $status;
+    }
     // public function categories()
     // {
     // 	return $this->belongsToMany('App\Model\user\category','category_posts')->withTimestamps();;
