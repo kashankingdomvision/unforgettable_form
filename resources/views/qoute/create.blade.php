@@ -311,7 +311,7 @@ td.day{
                                 <select class="form-control select2" id="sales_person" name="sale_person"  >
                                     <option value="">Select Person</option>
                                     @foreach ($users as $user)
-                                    <option {{ (Auth::user()->email == $user['email'])? 'selected':'' }} value="{{ $user['email'] }}" > {{ $user['name'] }}</option>
+                                    <option {{ (Auth::user()->email == $user['email'])? 'selected':'' }} value="{{ $user['email'] }}" > {{ $user['email'] }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>

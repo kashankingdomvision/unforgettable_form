@@ -179,7 +179,7 @@
                                 <select class="form-control select2" id="sales_person" name="sale_person" >
                                     <option value="">Select Person</option>
                                     @foreach ($users as $user)
-                                    <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->name }}</option>
+                                    <option value="{{ $user->email }}" {{ $quote->sale_person == $user->email ? 'selected' : ''}}> {{ $user->email }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>

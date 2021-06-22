@@ -439,7 +439,7 @@
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                            <div class="col-sm-5 mb-2">
                                 <label> Dinning Preferences</label> <span style="color:red">*</span>
                                 <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
                                 <div class="alert-danger" style="text-align:center"   id="error_dinning_preferences"></div>
