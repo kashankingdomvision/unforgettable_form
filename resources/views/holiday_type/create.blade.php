@@ -287,34 +287,8 @@
 {!! HTML::script('dist/js/demo.js') !!}
 
 <script type="text/javascript">
-
     $(document).ready(function() {
-
-        $('.select2').select2({
-
-            templateResult: formatState,
-            templateSelection: formatState
-        });
-
-        function formatState(opt) {
-            if (!opt.id) {
-                return opt.text;
-            }
-
-            var optimage = $(opt.element).attr('data-image');
-
-            if (!optimage) {
-                return opt.text ;
-            } else {
-                var $opt = $(
-                    '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
-                );
-                return $opt;
-            }
-        };
-
- 
-
+        $('.select2').select2();
     });
 </script>
 

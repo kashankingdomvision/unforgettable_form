@@ -52,7 +52,7 @@
                   <td>{{ $brand->email }}</td>
                   <td>{{ $brand->address  }}</td>
                   <td>{{ $brand->phone  }}</td>
-                  <td>@if($brand->logo)<img src="{{ asset('brands/'.$brand->logo)  }}" width="50px" height="50px" /> @endif</td>
+                  <td>@if($brand->logo)<img src="{{ asset('brands/'.$brand->logo)  }}" width="30px" height="30px" /> @endif</td>
                   <td>
                     <a href="{{ route('brand.edit', encrypt($brand->id)) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                     <a onclick="return confirm('Are you sure you want to delete this record?');" href="{{ route('brand.delete', encrypt($brand->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash text-light"></span></a>

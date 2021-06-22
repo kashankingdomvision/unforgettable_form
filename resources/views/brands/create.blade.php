@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-3 " >
                                     <label for="brandName" class=""> Brand Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" class="form-control" placeholder="Enter the brand name" value="{{ old('name') }}" id="brandName" />
+                                    <input type="text" name="name" class="form-control" placeholder="Brand name" value="{{ old('name') }}" id="brandName" />
                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('name') }}</div>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-3 " >
                                     <label for="brandEmail" class=""> Email Address </label>
-                                    <input type="email" name="email" class="form-control" placeholder="Enter the email address" value="{{ old('email') }}" id="brandEmail" />
+                                    <input type="email" name="email" class="form-control" placeholder="Email address" value="{{ old('email') }}" id="brandEmail" />
                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('email') }}</div>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-3 " >
                                     <label for="brandAddress" class="">Address </label>
-                                    <input type="text" name="address" class="form-control" placeholder="Enter the brand address" value="{{ old('address') }}" id="brandAddress" />
+                                    <input type="text" name="address" class="form-control" placeholder="Brand address" value="{{ old('address') }}" id="brandAddress" />
                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('address') }}</div>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <div class="col-sm-6 col-sm-offset-3 " >
                                     <label for="brandPhone" class=""> Phone Number </label>
-                                    <input type="Number" name="phone" class="form-control" placeholder="Enter the phone number (03062122433)" value="{{ old('phone') }}" id="brandPhone" />
+                                    <input type="Number" name="phone" class="form-control" placeholder="132456789" value="{{ old('phone') }}" id="brandPhone" />
                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('phone') }}</div>
                                 </div>
                             </div>
