@@ -183,8 +183,8 @@ td.day{
             </div>
             <div class="row">
                 <div class="col-sm-2" style="margin-bottom:15px;">
-                    <label class="">Supplier Currency</label> 
-                    <select class="form-control supplier-currency"  name="supplier_currency[]" >
+                    <label class="">Supplier Currency <span class="text-danger">*</span></label> 
+                    <select class="form-control supplier-currency" required name="supplier_currency[]" >
                         <option value="">Select Currency</option>
                         @foreach ($currencies as $currency)
                             <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" > &nbsp; {{$currency->code}} - {{$currency->name}} </option>
@@ -509,8 +509,8 @@ td.day{
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-2 mb-3">
-                                        <label>Supplier Currency</label> 
-                                        <select class="form-control supplier-currency" name="supplier_currency[]" >
+                                        <label>Supplier Currency  <span class="text-danger">*</span></label> 
+                                        <select class="form-control supplier-currency" required name="supplier_currency[]" >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
                                                 <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}">  &nbsp; {{$currency->code}} - {{$currency->name}} </option>
@@ -922,6 +922,7 @@ td.day{
     $(function(){
         datePickerSetDate();
     });
+    
     $(document).ready(function() {
         $(document).on('change', '#template', function(e) {
             e.preventDefault();
@@ -940,7 +941,6 @@ td.day{
                         type: 'get',
                         // dataType: "json",
                         success:function(data) {
-                            console.log(data);
                             $('#parent').children( ".qoute" ).remove();
                             // $('.qoute').remove();
                             $('#parent').append(data.template_view);
@@ -995,7 +995,6 @@ td.day{
         // $('.checkDates').on('click', function() {
         //         var select = $(this);
         //         var name = $(this).attr("name");
-        //         console.log(name);
         //         // select.closest('.row').find('[class*="supplier-select2"]').html(options);
         // });
         /////////////
@@ -1025,6 +1024,7 @@ td.day{
         var typingTimer;                //timer identifier
         var doneTypingInterval = 2000;  //time in ms, 5 second for example
         var $input = $('input[name="ref_no"]');
+        
         //user is "finished typing," do something
         function doneTyping () {
             book_id = $('input[name="ref_no"]').val();
@@ -1045,7 +1045,6 @@ td.day{
                             r = confirm('The reference number '+book_id+' is already exists. Are you sure! you want to create quote again on same reference');
                         }
                         
-                        console.log(r);
                         
                         if(r == true){
                             url = '{{route('get-ref-detail')}}';
@@ -1060,12 +1059,15 @@ td.day{
                                 dataType: "json",
                                 success:function(data) {
                                     if( Object.keys(data).length > 0 ){
-                                        console.log(data.currency);
-                                        $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
+                                        var typeOfHoliday = {!! json_encode($get_holiday_type->holiday_type) !!}
+                                        var findHoliday = $.grep(typeOfHoliday, function(e){ return e.name == data.holiday_type; });
+                                        // var findHoliday = myArray.find(item => item.id === data.holiday_type);
+                                        // var findHoliday = typeOfHoliday.find(x => x.name === data.holiday_type).foo;
+                                        $('select[name="type_of_holidays"]').val(findHoliday[0].id).trigger('change'); 
                                         $('select[name="group_no"]').val(data.pax).trigger('change');  
                                         $('select[name="currency"]').val(data.currency).trigger('change');
                                         $('#sales_person').val(data.sale_person).trigger('change');
-                                    console.log(data);
+                                        $('input[name="lead_passenger_name"]').val(data.passenger_name);
                                     }else{
                                         $('#error_ref_no').text('The Reference is not found');
                                     }
@@ -1139,7 +1141,6 @@ td.day{
                     'category_id': category_id
                 },
                 success: function(response) {
-                    // console.log(response);
                     options += '<option value="">Select Supplier</option>';
                     $.each(response,function(key,value){
                         options += '<option value="'+value.id+'">'+value.name+'</option>';
@@ -1209,7 +1210,6 @@ td.day{
             var $selector = $(this);
             var costArray = [];
             var currencyArray = [];
-            console.log(selectedMainCurrency);
             $('.cost').each(function(){
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
@@ -1326,12 +1326,9 @@ td.day{
                     });
                        
                     for(i=0 ; i < supplierCurrency.length; i++){
-                        console.log(supplierCurrency[i].name ,supplierCurrency, i);
                         if(supplierCurrency[i].name != ''){
                             var data = (isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) );
-                            console.log('data'+data);
                         // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
-                            console.log($('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').val(data));
                         $('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').eq(i+1).val();
                         
                         // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
@@ -1387,7 +1384,6 @@ td.day{
                     'from': selectedMainCurrency
                 },
                 success: function(response) {
-                    // console.log(response[selectedMainCurrency]);
                     final = sellingPrice * response[selectedMainCurrency];
                     $('.show-convert-currency').val(final.toFixed(2));
                     var group_no = $("select[name='group_no']").val();
@@ -1444,7 +1440,6 @@ td.day{
                     var errors = $.parseJSON(reject.responseText);
                     jQuery.each(errors.errors, function( index, value ) {
                         index = index.replace(/\./g,'_')
-                    console.log(index);
                         $('#error_'+ index).html(value);
                         if($('#error_'+ index).length){
                             $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);

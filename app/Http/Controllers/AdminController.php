@@ -6705,6 +6705,7 @@ class AdminController extends Controller
                     $pax_no = count($passenger_response['body']['data']);
                 }
                 $ajax_response = array(
+                    "passenger_name" => isset($passenger_response['body']['data'][0]['Deal']) && !empty($passenger_response['body']['data'][0]['Deal']['name']) ? $passenger_response['body']['data'][0]['Deal']['name'] : null,
                     "holiday_type" => isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null,
                     "sale_person" => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
                     "currency" => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null,

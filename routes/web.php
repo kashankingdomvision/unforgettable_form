@@ -291,6 +291,8 @@ Route::group(['middleware' => ['auth']], function(){
 		Route::post('update/{id}', ['as' => 'update', 'uses' => 'HolidayTypeController@update']);
 	});
 
+	Route::post('brands/holiday', ['as' => 'brand_with_holiday', 'uses' => 'HolidayTypeController@getBrandWithHoliday']);
+
 });
 
 // Auth::routes();

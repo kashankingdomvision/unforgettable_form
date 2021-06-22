@@ -525,8 +525,8 @@
                                             <div class="row">
 
                                                 <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Supplier Currency</label>
-                                                    <select class="form-control supplier-currency" disabled
+                                                    <label class="">Supplier Currency </label>
+                                                    <select class="form-control supplier-currency"  disabled
                                                         name="supplier_currency[]">
                                                         <option value="">Select Currency</option>
                                                         @foreach ($currencies as $currency)

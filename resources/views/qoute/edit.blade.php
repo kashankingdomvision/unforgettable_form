@@ -221,8 +221,8 @@ td.day{
             <div class="row">
 
                 <div class="col-sm-2" style="margin-bottom:15px;">
-                    <label class="">Supplier Currency</label> 
-                    <select class="form-control supplier-currency"  name="supplier_currency[]" >
+                    <label class="">Supplier Currency  <span class="text-danger">*</span></label> 
+                    <select class="form-control supplier-currency" required name="supplier_currency[]" >
                         <option value="">Select Currency</option>
                         @foreach ($currencies as $currency)
                             <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
@@ -630,8 +630,8 @@ td.day{
                                 <div class="row">
 
                                     <div class="col-sm-2 mb-3">
-                                        <label class="">Supplier Currency</label> 
-                                        <select class="form-control supplier-currency" name="supplier_currency[]" required >
+                                        <label class="">Supplier Currency  <span class="text-danger">*</span></label> 
+                                        <select class="form-control supplier-currency" required name="supplier_currency[]" required >
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
                                                 <option value="{{ $currency->code }}" {{ $quote_detail->supplier_currency == $currency->code  ? "selected" : "" }} data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
