@@ -262,6 +262,19 @@ Route::group(['middleware' => ['auth']], function(){
 			Route::post('update/{id}', ['as' => 'update', 'uses' => 'TemplateController@update']);
 			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'TemplateController@call_template']);
 	});
+	
+	Route::group([
+		'prefix' => 'brand',
+		'as' 	 => 'brand.'
+	],function (){
+		Route::get('index', ['as' => 'index', 'uses' => 'BrandController@index']);
+		Route::get('create', ['as' => 'create', 'uses' => 'BrandController@create']);
+		Route::post('store', ['as' => 'store', 'uses' => 'BrandController@store']);
+		Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'BrandController@detail']);
+		Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'BrandController@destroy']);
+		Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'BrandController@edit']);
+		Route::post('update/{id}', ['as' => 'update', 'uses' => 'BrandController@update']);
+	});
 
 });
 

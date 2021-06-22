@@ -680,7 +680,6 @@
                              </select>
                           <div class="alert-danger" style="text-align:center">{{$errors->first('aps_person')}}</div>
                         </div>
-
                         <div class="col-sm-5 aps_depend">
                           <label for="inputEmail3" class="">Date</label>
                           <div class="input-group">

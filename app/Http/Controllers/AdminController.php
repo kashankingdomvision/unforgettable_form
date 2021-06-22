@@ -6755,7 +6755,6 @@ class AdminController extends Controller
                 if ($passenger_response['status'] == 200) {
                     $pax_no = count($passenger_response['body']['data']);
                 }
-
                 $ajax_response = array(
                     "holiday_type" => isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null,
                     "sale_person" => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,

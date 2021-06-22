@@ -604,6 +604,7 @@ thead.border_thead {
                 
                 <li class="{{ $route == 'creat-currency'  ? 'active' : '' }}"><a href="{{ route('creat-currency')}}"><i class="fa fa-plus"></i> Add Currency</a></li>
                 <li class="{{ $route == 'view-currency' || $route == 'edit-currency' ? 'active' : '' }}"><a href="{{ route('view-currency')}}"><i class="fa fa-eye"></i> View Currency</a></li>
+                <li class="{{ $route == 'brand.index' || $route == 'brand.index' ? 'active' : '' }}"><a href="{{ route('brand.index')}}"><i class="fa fa-eye"></i>View Brand</a></li>
             </ul>
         </li>
 
