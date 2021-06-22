@@ -67,11 +67,10 @@ tr.shown td.details-control {
                           </button>
                           @endif
                         </td>
-                      
                         <td>{{ $quote->ref_no }}</td>
                         <td>{{ $quote->season->name }}</td>
-                        <td>{{ $quote->getHolidayType->name }}</td>
-                        <td>{{ $quote->getBrand->name }}</td>
+                        <td>{{ (isset($quote->getHolidayType->name))? $quote->getHolidayType->name:NULL }}</td>
+                        <td>{{ (isset($quote->getBrand->name))? $quote->getBrand->name: NULL }}</td>
                         <td>{{ $quote->sale_person }}</td>
                         <td>{{ !empty($quote->getCurrency->code) && !empty($quote->getCurrency->name) ? $quote->getCurrency->code.' - '.$quote->getCurrency->name : NULL }}</td>
                         <td>{{ $quote->group_no }}</td>
