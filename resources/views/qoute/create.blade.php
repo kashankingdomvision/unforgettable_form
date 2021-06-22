@@ -286,7 +286,7 @@ td.day{
                             </div>
                             <div class="col-sm-5">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <select class="form-control select2" name="brand_name">
+                                <select class="form-control select2" name="brand_name" id="brand_name">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                     <option value="{{$brand->id}}" {{ Auth::user()->brand_id == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
@@ -1059,15 +1059,19 @@ td.day{
                                 dataType: "json",
                                 success:function(data) {
                                     if( Object.keys(data).length > 0 ){
-                                        var typeOfHoliday = {!! json_encode($get_holiday_type->holiday_type) !!}
-                                        var findHoliday = $.grep(typeOfHoliday, function(e){ return e.name == data.holiday_type; });
-                                        // var findHoliday = myArray.find(item => item.id === data.holiday_type);
-                                        // var findHoliday = typeOfHoliday.find(x => x.name === data.holiday_type).foo;
-                                        $('select[name="type_of_holidays"]').val(findHoliday[0].id).trigger('change'); 
+                                        $('select[name="type_of_holidays"]').empty();
+                                            $.each( data.holidayTypes, function( key, value ) {
+                                            var selected = (value.id == data.holiday_type.id)? true: false;
+                                            var newOption = new Option(value.name, value.id, selected, true);
+                                            $('select[name="type_of_holidays"]').append(newOption);
+                                        });
+                                            
+                                        $('select[name="brand_name"]').val(data.holiday_type.brand_id).trigger('change');
                                         $('select[name="group_no"]').val(data.pax).trigger('change');  
                                         $('select[name="currency"]').val(data.currency).trigger('change');
                                         $('#sales_person').val(data.sale_person).trigger('change');
                                         $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                                        $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
                                     }else{
                                         $('#error_ref_no').text('The Reference is not found');
                                     }
@@ -1501,32 +1505,29 @@ td.day{
             $(this).closest(".qoute").remove();
         });
 
-        $(document).on('change', 'select[name="brand_name"]',function(){
-
+        $('#brand_name').on('select2:select', function (e) { 
             let brand_id = $(this).val();
             var options = '';
-
-            console.log(brand_id);
-
             $.ajax({
-            type: 'POST',
-            url: '{{ route('get-holiday-type') }}',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                'brand_id': brand_id
-            },
-            success: function(response) {
+                type: 'POST',
+                url: '{{ route('get-holiday-type') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'brand_id': brand_id
+                },
+                success: function(response) {
 
-                options += '<option value="">Select Holiday Type</option>';
-                $.each(response,function(key,value){
-                options += '<option value="'+value.id+'">'+value.name+'</option>';
-                });
+                    options += '<option value="">Select Holiday Type</option>';
+                    $.each(response,function(key,value){
+                    options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
 
-                $('select[name="type_of_holidays"]').html(options);
-                
-            }
+                    $('select[name="type_of_holidays"]').html(options);
+                    
+                }
             });
         });
+   
 
         // set supplier's default & supplier's product list
         $(document).on('change', 'select[name="supplier[]"]',function(){

@@ -635,7 +635,7 @@
                                                         
                                                             <input type="number"
                                                                 name="deposit_amount[{{ $key }}][]"
-                                                                class="form-control disable-feild deposit_amount depositeAmount"
+                                                                class="form-control disable-feild deposit_amount depositeAmount" data-key="{{$key}}"
                                                                 placeholder="Deposit Amount" min="0" step="any">
                                                         </div>
                                                         <div class="alert-danger" style="text-align:center"> </div>
@@ -733,7 +733,7 @@
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
-                                                                    class="form-control deposit_amount depositecost{{$key}}"
+                                                                    class="form-control deposit_amount depositecost{{$key}}" data-key="{{ $key }}"
                                                                     placeholder="Deposit Amount" min="0" step="any">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
@@ -843,7 +843,7 @@
                                                                 <input type="number"
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
-                                                                    class="form-control deposit_amount"
+                                                                    class="form-control deposit_amount depositecost{{$key}}" data-key="{{$key}}"
                                                                     placeholder="Deposit Amount" min="0" step="any">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
@@ -2301,13 +2301,21 @@ $(document).ready(function() {
                         dataType: "json",
                         success: function(data) {
 
-                            if (Object.keys(data).length > 0) {
-                                $('select[name="type_of_holidays"]').val(data.holiday_type).trigger(
-                                    'change');
-                                // $('select[name="sale_person"]').val(data.sale_person).trigger('change');  
-                                // $('select[name="currency"]').val(data.currency).trigger('change');  
-                                $('select[name="group_no"]').val(data.pax).trigger('change');
-                            } else {
+                            if( Object.keys(data).length > 0 ){
+                                $('select[name="type_of_holidays"]').empty();
+                                    $.each( data.holidayTypes, function( key, value ) {
+                                    var selected = (value.id == data.holiday_type.id)? true: false;
+                                    var newOption = new Option(value.name, value.id, selected, true);
+                                    $('select[name="type_of_holidays"]').append(newOption);
+                                });
+                                    
+                                $('select[name="brand_name"]').val(data.holiday_type.brand_id).trigger('change');
+                                $('select[name="group_no"]').val(data.pax).trigger('change');  
+                                $('select[name="currency"]').val(data.currency).trigger('change');
+                                $('#sales_person').val(data.sale_person).trigger('change');
+                                $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                                $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
+                            }else{
                                 $('#error_ref_no').text('The Reference is not found');
                             }
 
@@ -2830,12 +2838,33 @@ $(document).ready(function() {
                 $(this).closest(".qoute").remove();
             });
 
+
+            $(document).on('change', '.deposit_amount', function () {
+                var key     =   $(this).data('key');
+                var getclass   =   '.depositecost'+key;
+                var actualcost  =  $('.cost').val();
+                // console.log(getclass);
+                var sum = 0;
+                $(getclass).each(function(){
+                    sum += +$(this).val();
+                });
+               
+              
+                // console.log($(this).val(), sum);
+                
+                if(sum > actualcost){
+                    alert('deposite amout is bigger');
+                    $(this).val('');
+                }
+            });
             $(document).on('click', '.add_finance', function() {
 
 
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
                 var getClass = $(this).closest('.row').data('title');
+                var classs = $('.finance-row').find('.row').find('.deposit_amount ').data('key');
+                $('.finance-row').find('.row').find('.deposit_amount ').addClass('depositecost'+classs);
                 var count = $('.'+getClass).length + 1;
                 var $v_text = 'Payment #'+count;
                 console.log($v_text);
@@ -2895,31 +2924,29 @@ $(document).ready(function() {
                 $(this).closest(".row").remove();
             });
 
-            $(document).on('change', 'select[name="brand_name"]',function(){
+            $('#brand_name').on('select2:select', function (e) { 
+            let brand_id = $(this).val();
+            var options = '';
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-holiday-type') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'brand_id': brand_id
+                },
+                success: function(response) {
 
-                let brand_id = $(this).val();
-                var holiday_type_id  = "{{ isset($booking->type_of_holidays) && !empty($booking->type_of_holidays) ? $booking->type_of_holidays : '' }}";
-                var options = '';
+                    options += '<option value="">Select Holiday Type</option>';
+                    $.each(response,function(key,value){
+                    options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
 
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('get-holiday-type') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        'brand_id': brand_id
-                    },
-                    success: function(response) {
-
-                        options += '<option value="">Select Holiday Type</option>';
-                        $.each(response,function(key,value){
-                            options += '<option value="' + value.id + '"' + (value.id == holiday_type_id ? 'selected="selected"' : '') +'>' + value.name+ '</option>';
-                        });
-
-                        $('select[name="type_of_holidays"]').html(options);
-                        
-                    }
-                });
+                    $('select[name="type_of_holidays"]').html(options);
+                    
+                }
             });
+        });
+   
 
             // auto select default currency of supplier
             $(document).on('change', 'select[name="supplier[]"]', function() {
@@ -3009,9 +3036,15 @@ $(document).ready(function() {
                     var val = $(this).val();
                     var data = $(this).data('key');
                     var sum = 0;
+                    
+                    var sum = 0;
                     $('.deposite'+data).each(function(){
-                        sum += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+                        sum += +$(this).val();
                     });
+                    
+                    $('.deposite'+data).attr('max', val);
+                    
+                    // console.log('.deposite'+data);
                     
                     // if(sum > val){
                     //     $('.deposite'+data).val('');

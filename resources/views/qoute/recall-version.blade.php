@@ -352,7 +352,7 @@
 
                             <div class="col-sm-5"  style="margin-bottom:15px">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <select class="form-control select2" name="brand_name" >
+                                <select class="form-control select2" id="brand_name" name="brand_name" >
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                     <option value="{{$brand->id}}" {{ $quote->brand_name == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
@@ -464,7 +464,7 @@
                                         <div class="col-md-3 mb-2">
                                             <label>Pax Name #{{ $key+2 }}</label> <span style="color:red">*</span>
                                             <input type="text" name="pax_name[]" class="form-control" value="{{ $name }}" required >
-                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_{{ $key }}"></div>
                                         </div>
                                     @endforeach
                                 @endif
@@ -1141,10 +1141,19 @@
                     success:function(data) {
 
                         if( Object.keys(data).length > 0 ){
-                            $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
-                            // $('select[name="sale_person"]').val(data.sale_person).trigger('change');  
-                            // $('select[name="currency"]').val(data.currency).trigger('change');  
+                            $('select[name="type_of_holidays"]').empty();
+                                $.each( data.holidayTypes, function( key, value ) {
+                                var selected = (value.id == data.holiday_type.id)? true: false;
+                                var newOption = new Option(value.name, value.id, selected, true);
+                                $('select[name="type_of_holidays"]').append(newOption);
+                            });
+                                
+                            $('select[name="brand_name"]').val(data.holiday_type.brand_id).trigger('change');
                             $('select[name="group_no"]').val(data.pax).trigger('change');  
+                            $('select[name="currency"]').val(data.currency).trigger('change');
+                            $('#sales_person').val(data.sale_person).trigger('change');
+                            $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                            $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
                         }else{
                             $('#error_ref_no').text('The Reference is not found');
                         }
@@ -1556,7 +1565,14 @@
                 if( reject.status === 422 ) {
 
                     var errors = $.parseJSON(reject.responseText);
-
+                    jQuery.each(errors.errors, function( index, value ) {
+                        index = index.replace(/\./g,'_')
+                        $('#error_'+ index).html(value);
+                        if($('#error_'+ index).length){
+                            $('html, body').animate({ scrollTop: $('#error_'+ index).offset().top }, 1000);
+                        }
+                    });
+                    
                     jQuery.each(errors.errors['date_of_service'], function( index, value ) {
                         jQuery.each(value, function( key, value ) {
                             jQuery(".date_of_service").eq(key).html(value);
@@ -1627,12 +1643,9 @@
             $(this).closest(".qoute").remove();
         });
 
-        $(document).on('change', 'select[name="brand_name"]',function(){
-
+        $('#brand_name').on('select2:select', function (e) { 
             let brand_id = $(this).val();
-            var holiday_type_id  = "{{ isset($quote->type_of_holidays) && !empty($quote->type_of_holidays) ? $quote->type_of_holidays : '' }}";
             var options = '';
-
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-holiday-type') }}',
@@ -1644,7 +1657,7 @@
 
                     options += '<option value="">Select Holiday Type</option>';
                     $.each(response,function(key,value){
-                        options += '<option value="' + value.id + '"' + (value.id == holiday_type_id ? 'selected="selected"' : '') +'>' + value.name+ '</option>';
+                    options += '<option value="'+value.id+'">'+value.name+'</option>';
                     });
 
                     $('select[name="type_of_holidays"]').html(options);
@@ -1756,6 +1769,7 @@
                 for (i = 1; i < $_val; ++i) {
                 var count = i +1;
                 var validatecount = i -1;
+                console.log(validatecount);
                 var heading = 'Pax Name #'+count;
                 const $_html =  '<div class="col-md-3 mb-2">'+
                                     '<label>'+heading+'</label> <span style="color:red">*</span>'+

@@ -6704,9 +6704,17 @@ class AdminController extends Controller
                 if ($passenger_response['status'] == 200) {
                     $pax_no = count($passenger_response['body']['data']);
                 }
+                $holidayName = isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null;
+                $holiday = HolidayType::where('name', $holidayName)->first();
+                $holidayTypes = NULL;
+                if($holiday){
+                    $holidayTypes = HolidayType::where('brand_id', $holiday->brand_id)->get();
+                }
                 $ajax_response = array(
+                    "holiday_type" => $holiday,
+                    "holidayTypes" => $holidayTypes,
+                    
                     "passenger_name" => isset($passenger_response['body']['data'][0]['Deal']) && !empty($passenger_response['body']['data'][0]['Deal']['name']) ? $passenger_response['body']['data'][0]['Deal']['name'] : null,
-                    "holiday_type" => isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null,
                     "sale_person" => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
                     "currency" => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null,
                     "pax" => isset($pax_no) && !empty($pax_no) ? $pax_no : null,
