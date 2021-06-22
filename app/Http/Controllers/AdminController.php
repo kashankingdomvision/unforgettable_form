@@ -8419,6 +8419,26 @@ class AdminController extends Controller
         return view('qoute.view', $data);
     }
 
+    public function view_quote_detail($id)
+    {
+        $quote = Qoute::find($id);
+        $quote_details = QouteDetail::where('qoute_id',$id)->get();
+
+        return view('qoute.view_quote_detail')->with([
+            'quote'            => $quote,
+            'quote_details'    => $quote_details,
+            'seasons'          => season::all(),
+            'currencies'       => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+            'categories'       => Category::all()->sortBy('name'),
+            'suppliers'        => Supplier::all()->sortBy('name'),
+            'products'         => Product::all()->sortBy('name'),
+            'booking_methods'  => BookingMethod::all()->sortBy('id'),
+            'users'            => User::all()->sortBy('name'),
+            'supervisors'      => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
+            'brands'           => Brand::orderBy('id','ASC')->get(),
+        ]);
+    }
+
     public function booking(Request $request, $id)
     {
 

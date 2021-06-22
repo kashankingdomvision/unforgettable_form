@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::match(['get', 'post'],'view-quote',array('as'=>'view-quote','uses'=>'AdminController@view_quote'));
     Route::match(['get', 'post'],'edit-quote/{id}',array('as'=>'edit-quote','uses'=>'AdminController@edit_quote'));
     Route::get('delete-quote/{id}',array('as'=>'delete-quote','uses'=>'AdminController@delete_quote'));
+	Route::get('view-quote-detail/{id}',array('as'=>'view-quote-detail','uses'=>'AdminController@view_quote_detail'));
 	Route::get('convert-quote-to-booking/{id}',array('as'=>'convert-quote-to-booking','uses'=>'AdminController@convert_quote_to_booking'));
 
 	Route::match(['get', 'post'],'confirm-booking/{id}',array('as'=>'confirm-booking','uses'=>'AdminController@booking'));

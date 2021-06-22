@@ -76,16 +76,24 @@ tr.shown td.details-control {
                         <td>{{ !empty($quote->getCurrency->code) && !empty($quote->getCurrency->name) ? $quote->getCurrency->code.' - '.$quote->getCurrency->name : NULL }}</td>
                         <td>{{ $quote->group_no }}</td>
                         <td>{!! $quote->booking_formated_status !!}</td>
-                        <td>{{ $quote->qoute_to_booking_date??NULL }}</td>
+                        <td>{{ date('d/m/Y', strtotime($quote->qoute_to_booking_date)) ??NULL }}</td>
                         
                         <td width="10%" >
-                        <a href="{{ URL::to('edit-quote/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                        <a onclick="return confirm('Are you sure you want to convert this Quotation to Booking?');" href="{{ route('convert-quote-to-booking', $quote->id) }}" class="btn btn-success btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-check"></span></a>
-                        <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
+                          @if($quote->qoute_to_booking_status == 0)
+                            <a href="{{ URL::to('edit-quote/'.$quote->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
+                            <a onclick="return confirm('Are you sure you want to convert this Quotation to Booking?');" href="{{ route('convert-quote-to-booking', $quote->id) }}" class="btn btn-success btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-check"></span></a>
+                          @endif
+
+                          <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
+
+                          @if($quote->qoute_to_booking_status == 1)
+                            <a target="_blank" href="{{ route('view-quote-detail', $quote->id) }}" class="btn btn-primary btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-eye"></span></a>
+                          @endif
+
                         </td>
-                           <tbody class="append" id="appendChild{{$quote->id}}">
-                           
-                          </tbody>
+                        <tbody class="append" id="appendChild{{$quote->id}}">
+                          
+                        </tbody>
                     </tr>
                 @endforeach
                 </tbody>
