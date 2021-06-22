@@ -275,6 +275,19 @@ Route::group(['middleware' => ['auth']], function(){
 		Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'BrandController@edit']);
 		Route::post('update/{id}', ['as' => 'update', 'uses' => 'BrandController@update']);
 	});
+	
+	Route::group([
+		'prefix' => 'holiday_type',
+		'as' 	 => 'holidaytype.'
+	],function (){
+		Route::get('index', ['as' => 'index', 'uses' => 'HolidayTypeController@index']);
+		Route::get('create', ['as' => 'create', 'uses' => 'HolidayTypeController@create']);
+		Route::post('store', ['as' => 'store', 'uses' => 'HolidayTypeController@store']);
+		Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'HolidayTypeController@detail']);
+		Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'HolidayTypeController@destroy']);
+		Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'HolidayTypeController@edit']);
+		Route::post('update/{id}', ['as' => 'update', 'uses' => 'HolidayTypeController@update']);
+	});
 
 });
 
