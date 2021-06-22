@@ -12,13 +12,13 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Edit Currency
+            <h1> 
+                Edit Holiday Type
             </h1>
             
             <ol class="breadcrumb">
               <li>
-                <a href="{{ route('brand.index') }}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add">View Brand</a>
+                <a href="{{ route('holidaytype.index') }}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add">View Holiday Types</a>
               </li>
             </ol>
         </section>

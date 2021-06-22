@@ -9,7 +9,13 @@
 </style>
     
 <div class="content-wrapper">
-    <section class="content-header"><h1>Add New Brand</h1></section>
+    <section class="content-header"><h1>Add New Brand</h1>
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ route('brand.index') }}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add">View Brand</a>
+            </li>
+        </ol>
+    </section>
 
     <section class="content">
         <div class="row">
@@ -18,6 +24,7 @@
                 <div class="box box-info">
                     <div class="box-header with-border mb-2">
                         <h3 class="box-title">Add Brand</h3>
+                       
                     </div>
 
                     <form action="{{ route('brand.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">

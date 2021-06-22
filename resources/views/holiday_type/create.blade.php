@@ -9,7 +9,13 @@
 </style>
     
 <div class="content-wrapper">
-    <section class="content-header"><h1>Add New Holiday Type</h1></section>
+    <section class="content-header"><h1>Add New Holiday Type</h1>
+        <ol class="breadcrumb">
+            <li>
+              <a href="{{ route('holidaytype.index') }}" class="btn btn-primary btn-xs" data-title="Add" data-target="#Add">View Holiday Types</a>
+            </li>
+          </ol>
+    </section>
 
     <section class="content">
         <div class="row">
