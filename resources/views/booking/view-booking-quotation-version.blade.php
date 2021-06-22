@@ -151,7 +151,7 @@
 
                             <div class="col-sm-5" style="margin-bottom:15px;">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <input type="text" name="brand_name" value="{{ $qoute_log->brand_name }}" class="form-control"  disabled>
+                                <input type="text" name="brand_name" value="{{ $qoute_log->getBrand->name }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
                             </div>
                         </div>
@@ -159,7 +159,7 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
-                                <input type="text" name="type_of_holidays" value="{{ $qoute_log->type_of_holidays }}" class="form-control"  disabled>
+                                <input type="text" name="type_of_holidays" value="{{ $qoute_log->getHolidayType->name }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
                             </div>
     
@@ -211,10 +211,10 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
-                                <select name="currency" class="form-control select2 " disabled>
+                                <select name="currency" class="form-control currency-select2" disabled>
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" {{ $qoute_log->currency == $currency->code ? 'selected' : ''}} > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $qoute_log->currency == $currency->code ? 'selected' : ''}} > &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
@@ -383,7 +383,7 @@
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required  disabled>
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->code }}" {{ $quote_detail->supplier_currency == $currency->code  ? "selected" : "" }}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote_detail->supplier_currency == $currency->code  ? "selected" : "" }}> &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
@@ -777,9 +777,36 @@
 
 <script type="text/javascript">
 
-    $(function(){
-        $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+    $(document).ready(function(){
+
+        $(function(){
+            $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
+        });
+
+        $('.currency-select2, .supplier-currency').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        function formatState(opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+
+            var optimage = $(opt.element).attr('data-image');
+
+            if (!optimage) {
+                return opt.text ;
+            } else {
+                var $opt = $(
+                    '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+                );
+                return $opt;
+            }
+        };
+
     });
+
 
     // $(document).on('submit','#user_form',function(){
 

@@ -250,11 +250,11 @@
                   <td>{{$value->ref_no}}</td>
                   <td>{{$value->quotation_no}}</td>
                   <td>{{$value->lead_passenger_name}}</td>
-                  <td>{{$value->brand_name}}</td>
-                  <td>{{$value->type_of_holidays}}</td>
+                  <td>{{$value->getBrand->name}}</td>
+                  <td>{{$value->getHolidayType->name}}</td>
                   <td>{{$value->sale_person}}</td>
                   <td>{{$value->agency_booking == 1 ? 'No' : 'Yes'}}</td>
-                  <td>{{$value->currency}}</td>
+                  <td>{{ !empty($value->getCurrency->code) && !empty($value->getCurrency->name) ? $value->getCurrency->code.' - '.$value->getCurrency->name : NULL }}</td>
                   <td>{{$value->group_no}}</td>
                   <td>{{$value->dinning_preferences}}</td>
                   <td>{{$value->aft_person}}</td>

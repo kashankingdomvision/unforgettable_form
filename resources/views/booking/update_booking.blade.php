@@ -210,10 +210,8 @@
                                         <label class="">Brand Name</label> <span style="color:red">*</span>
                                         <select class="form-control select2" name="brand_name">
                                             <option value="">Select Brand</option>
-                                            @foreach ($get_user_branches->branches as $branche)
-                                                <option value="{{ $branche->name }}"
-                                                    {{ $booking->brand_name == $branche->name ? 'selected' : '' }}>
-                                                    {{ $branche->name }}</option>
+                                            @foreach ($brands as $brand)
+                                            <option value="{{$brand->id}}" {{ $booking->brand_name == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
@@ -227,10 +225,8 @@
                                         <label class="">Type Of Holidays</label> <span style="color:red">*</span>
                                         <select class="form-control select2" id="type_of_holidays" name="type_of_holidays">
                                             <option value="">Select Holiday</option>
-                                            @foreach ($get_holiday_type->holiday_type as $holiday)
-                                                <option value="{{ $holiday->name }}"
-                                                    {{ $booking->type_of_holidays == $holiday->name ? 'selected' : '' }}>
-                                                    {{ $holiday->name }}</option>
+                                            @foreach ($holiday_types as $holiday_type)
+                                                <option value="{{ $holiday_type->id }}" {{  $booking->type_of_holidays == $holiday_type->id ? 'selected' : '' }} >{{ $holiday_type->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center" id="error_type_of_holidays">
@@ -241,10 +237,8 @@
                                         <label class="">Sales Person</label> <span style="color:red">*</span>
                                         <select class="form-control select2" id="sales_person" name="sale_person">
                                             <option value="">Select Person</option>
-                                            @foreach ($get_user_branches->users as $user)
-                                                <option value="{{ $user->email }}"
-                                                    {{ $booking->sale_person == $user->email ? 'selected' : '' }}>
-                                                    {{ $user->email }}</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->email }}" {{ $user->email == $booking->sale_person ? 'selected' : '' }}> {{ $user->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
@@ -2899,6 +2893,32 @@ $(document).ready(function() {
 
             $(document).on('click', '.remove_finance', function() {
                 $(this).closest(".row").remove();
+            });
+
+            $(document).on('change', 'select[name="brand_name"]',function(){
+
+                let brand_id = $(this).val();
+                var holiday_type_id  = "{{ isset($booking->type_of_holidays) && !empty($booking->type_of_holidays) ? $booking->type_of_holidays : '' }}";
+                var options = '';
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('get-holiday-type') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        'brand_id': brand_id
+                    },
+                    success: function(response) {
+
+                        options += '<option value="">Select Holiday Type</option>';
+                        $.each(response,function(key,value){
+                            options += '<option value="' + value.id + '"' + (value.id == holiday_type_id ? 'selected="selected"' : '') +'>' + value.name+ '</option>';
+                        });
+
+                        $('select[name="type_of_holidays"]').html(options);
+                        
+                    }
+                });
             });
 
             // auto select default currency of supplier

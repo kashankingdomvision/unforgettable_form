@@ -7261,29 +7261,33 @@ class AdminController extends Controller
             //     return json_decode($output);
             // });
 
+            $booking = Booking::where('id', '=', $id)->first();
+
             return view('booking.update_booking')->with([
 
-                'booking' => Booking::where('id', '=', $id)->first(),
-                'booking_email' => booking_email::where('booking_id', '=', $id)->get(),
-                'users' => user::all(),
-                'seasons' => season::all(),
+                'booking'           => $booking,
+                'booking_email'     => booking_email::where('booking_id', '=', $id)->get(),
+                'users'             => User::all()->sortBy('name'),
+                'seasons'           => season::all(),
                 // 'get_refs'          => $get_ref,
                 'get_user_branches' => $get_user_branches,
-                'record' => old_booking::where('id', '=', $id)->get()->first(),
-                'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
-                'get_holiday_type' => $get_holiday_type,
-                'booking_details' => BookingDetail::where('booking_id', $id)->get(),
-                'categories' => Category::all()->sortBy('name'),
-                'suppliers' => Supplier::all()->sortBy('name'),
-                'users' => User::all()->sortBy('name'),
-                'booking_methods' => BookingMethod::all()->sortBy('id'),
-                'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-                'payment_method' => payment::all()->sortBy('name'),
-                'id' => $id,
-                'booking_logs' => BookingLog::where('booking_id', $id)->orderBy('log_no', 'DESC')->get(),
-                'airlines' => airline::all(),
-                'payments' => payment::all(),
-                'products' => Product::all()->sortBy('name'),
+                'record'            => old_booking::where('id', '=', $id)->get()->first(),
+                'currencies'        => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+                'get_holiday_type'  => $get_holiday_type,
+                'booking_details'   => BookingDetail::where('booking_id', $id)->get(),
+                'categories'        => Category::all()->sortBy('name'),
+                'suppliers'         => Supplier::all()->sortBy('name'),
+                'users'             => User::all()->sortBy('name'),
+                'booking_methods'   => BookingMethod::all()->sortBy('id'),
+                'supervisors'       => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
+                'payment_method'    => payment::all()->sortBy('name'),
+                'id'                => $id,
+                'booking_logs'      => BookingLog::where('booking_id', $id)->orderBy('log_no', 'DESC')->get(),
+                'airlines'          => airline::all(),
+                'payments'          => payment::all(),
+                'products'          => Product::all()->sortBy('name'),
+                'brands'            => Brand::orderBy('id','ASC')->get(),
+                'holiday_types'     => HolidayType::where('brand_id',$booking->brand_name)->get(),
             ]);
         }
     }
