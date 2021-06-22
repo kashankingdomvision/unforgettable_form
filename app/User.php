@@ -50,4 +50,7 @@ class User extends Authenticatable
         return $this->hasOne(Currency::class, 'id', 'currency_id');
     }
     
+    function getBrand() {
+        return $this->hasOne(Brand::class, 'id', 'brand_id');
+    }
 }

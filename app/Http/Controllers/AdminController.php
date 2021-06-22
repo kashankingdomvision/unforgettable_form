@@ -47,7 +47,8 @@ use Response;
 use Session;
 use Spatie\GoogleCalendar\Event;
 use Validator;
-
+use App\Brand;
+use App\HolidayType;
 
 class AdminController extends Controller
 {
@@ -5898,67 +5899,6 @@ class AdminController extends Controller
 
     public function create_user(Request $request)
     {
-
-// $allcurrencys = AllCurrency::all();
-
-        // foreach($allcurrencys as $key => $allcurrency){
-
-//     // dd($allcurrency->code);
-
-//     // dd($jayParsedAry['currency']['code']);
-
-//     // AllCurrency::where('id',$i)->update(['isObsolete' =>  ($currencyData['isObsolete'] == true ? 'true' : 'false' ) ]);
-
-//     foreach($jayParsedArys as $key => $jayParsedAry){
-
-//         if($allcurrency->code == $jayParsedAry['currency']['code']){
-
-//             // dd("sd");
-
-//             // dd($jayParsedAry['flag']);
-
-//             AllCurrency::where('code',$allcurrency->code)->update(['flag' => $jayParsedAry['flag'] ]);
-
-//         }
-
-//         // dd($jayParsedAry['currency']['code']);
-
-//         // AllCurrency::where('id',$i)->update(['isObsolete' =>  ($currencyData['isObsolete'] == true ? 'true' : 'false' ) ]);
-
-//     }
-
-        // }
-
-        // foreach($jayParsedArys as $key => $jayParsedAry){
-
-//     dd($jayParsedAry['currency']['code']);
-
-//     // AllCurrency::where('id',$i)->update(['isObsolete' =>  ($currencyData['isObsolete'] == true ? 'true' : 'false' ) ]);
-
-        // }
-
-        //  dd($jayParsedArys);
-
-        // $new_currency = AllCurrency::find(4);
-
-        // $currency = new Currency;
-        // $currency->name = $new_currency->name;
-        // $currency->code = $new_currency->code;
-        // // $currency->save();
-
-        // $all_currencies = Currency::all();
-
-        // foreach($all_currencies as $key => $all_currency ){
-
-        //     $cc = new CurrencyConversions;
-        //     $cc->from = $currency->code;
-        //     $cc->to   = $all_currency->code;
-        //     // $cc->save();
-        // }
-
-        // dd("done");
-
-
         if ($request->isMethod('post')) {
             $request->validate([
                 'username' => 'required|string',
@@ -5971,13 +5911,14 @@ class AdminController extends Controller
             ]);
 
             $user = new User;
-            $user->name = $request->username;
-            $user->role_id = (int) $request->role;
-            $user->email = $request->email;
-            $user->supervisor_id = $request->supervisor ?? null;
-            $user->brand_name = $request->brand ?? null;
-            $user->currency_id = $request->currency ?? null;
-            $user->password = bcrypt($request->password);
+            $user->name            = $request->username;
+            $user->role_id         = (int) $request->role;
+            $user->email           = $request->email;
+            $user->supervisor_id   = $request->supervisor ?? null;
+            $user->brand_id        = $request->brand ?? null;
+            $user->holiday_type_id = $request->holiday_type ?? null;
+            $user->currency_id     = $request->currency ?? null;
+            $user->password        = bcrypt($request->password);
             $user->save();
 
             return Redirect::route('view-user')->with('success_message', 'Created Successfully');
@@ -5989,13 +5930,12 @@ class AdminController extends Controller
                 return json_decode($output);
             });
 
-            $data['roles'] = role::all();
-            $data['supervisors'] = User::where('role_id', 5)->orderBy('name', 'ASC')->get();
-            $data['currencies'] = Currency::get();
+            $data['roles']          = role::all();
+            $data['supervisors']    = User::where('role_id', 5)->orderBy('name', 'ASC')->get();
+            $data['currencies']     = Currency::get();
             $data['all_currencies'] = AllCurrency::get();
-            $data['brands'] = $branch;
+            $data['brands']         = Brand::orderBy('id','ASC')->get();
             return view('user.create_user', $data);
-            // return view('user.create_user')->with(['name' => '', 'id' => '', 'roles' => role::all(), 'supervisors' => User::where('role_id',5)->orderBy('name','ASC')->get() ]);
         }
     }
 
@@ -6018,12 +5958,13 @@ class AdminController extends Controller
                 // 'supervisor'=> 'required|sometimes',
             ]);
 
-            $user->name = $request->username;
-            $user->role_id = (int) $request->role;
-            $user->email = $request->email;
-            $user->supervisor_id = $request->supervisor ?? null;
-            $user->brand_name = $request->brand ?? null;
-            $user->currency_id = $request->currency ?? null;
+            $user->name            = $request->username;
+            $user->role_id         = (int) $request->role;
+            $user->email           = $request->email;
+            $user->supervisor_id   = $request->supervisor ?? null;
+            $user->brand_id        = $request->brand ?? null;
+            $user->holiday_type_id = $request->holiday_type ?? null;
+            $user->currency_id     = $request->currency ?? null;
             if ($request->has('password') && $request->password != null) {
                 $user->password = bcrypt($request->password);
             }
@@ -6037,10 +5978,11 @@ class AdminController extends Controller
                 return json_decode($output);
             });
             $data['data'] = $user;
-            $data['roles'] = role::all();
-            $data['supervisors'] = User::where('role_id', 5)->orderBy('name', 'ASC')->get();
-            $data['currencies'] = Currency::get();
-            $data['brands'] = $branch;
+            $data['roles']         = role::all();
+            $data['supervisors']   = User::where('role_id', 5)->orderBy('name', 'ASC')->get();
+            $data['currencies']    = Currency::get();
+            $data['brands']        = Brand::orderBy('id','ASC')->get();
+            $data['holiday_types'] = HolidayType::where('brand_id',$user->brand_id)->get();
 
             return view('user.update_user', $data);
         }
@@ -6052,6 +5994,12 @@ class AdminController extends Controller
         // }
         user::destroy('id', '=', $id);
         return Redirect::route('view-user')->with('success_message', 'Delete Successfully');
+    }
+
+    public function get_holiday_type(Request $request)
+    {
+        $holiday_types = HolidayType::where('brand_id',$request->brand_id)->get();
+        return $holiday_types;
     }
 
     // CRUD related to seasson

@@ -53,11 +53,9 @@
                   <td>{{ $value->name }}</td>
                   <td style="text-transform: capitalize;">{{ $value->getRole->name ?? null }}</td>
                   <td>{{ $value->email }}</td>
-                  <td>{{ $value->getCurrency->name ?? NULL }} {{ !empty($value->getCurrency->name) ? '( '.$value->getCurrency->symbol.' )' : ''  }}</td>
-                  <td>{{ $value->brand_name ?? NULL }}</td>
+                  <td>{{ !empty($value->getCurrency->code) && !empty($value->getCurrency->name) ? $value->getCurrency->code.' - '.$value->getCurrency->name : NULL }}</td>
+                  <td>{{ $value->getBrand->name ?? NULL }}</td>
                   <td>{{ $value->getSupervisor->name ?? NULL }}</td>
-                  {{-- <td>{{ $value->supervisor_name }}</td> --}}
-                  {{-- <td>{{ $value->supervisor_email }}</td> --}}
                   <td>
                     <a href="{{ URL::to('update-user/'.$value->id)}}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                     <a onclick="return confirm('Are you sure want to this delete this record?');" href="{{ URL::to('del-user/'.$value->id)}}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#edit"><span class="fa fa-trash"></span></a>

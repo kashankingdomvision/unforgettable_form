@@ -119,10 +119,10 @@
                   <label for="inputEmail3" class="">Default Currency</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                      <select class="form-control" name="currency">
+                      <select class="form-control currency-select2" name="currency">
                           <option value="">Select Currency</option>
                           @foreach($currencies as $currency)
-                              <option value="{{$currency->id}}" {{ ($data->currency_id == $currency->id )? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }} >{{$currency->name}}</option>
+                              <option value="{{$currency->id}}"  data-image="data:image/png;base64, {{$currency->flag}}" {{ ($data->currency_id == $currency->id )? 'selected' : ((old('currency') == $currency->id)? 'selected' : NULL) }}>  &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                           @endforeach
                       </select>
                     </div>
@@ -135,16 +135,32 @@
                   <label for="inputEmail3" class="">Default Brands</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                    <select class="form-control" name="brand">
+                    <select class="form-control select2" name="brand">
                         <option value="">Select Brands</option>
-                        @foreach($brands->branches as $brand)
-                            <option value="{{$brand->name}}" {{ ($data->brand_name == $brand->name)? 'selected' : ((old('brand') == $brand->name)? 'selected' : NULL) }} >{{ $brand->name }}</option>
+                        @foreach($brands as $brand)
+                          <option value="{{$brand->id}}" {{ ($data->brand_id == $brand->id)? 'selected' : ((old('brand') == $brand->id)? 'selected' : NULL) }} >{{ $brand->name }}</option>
                         @endforeach
                     </select>
                   </div>
                   <div class="alert-danger" style="text-align:center">{{$errors->first('brand')}}</div>
                 </div>
-            </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3">
+                <label for="inputEmail3" class="">Holiday Type</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <select class="form-control select2" name="holiday_type">
+                      <option  value="">Select Holiday Type</option>
+                      @foreach($holiday_types as $holiday_type)
+                        <option value="{{$holiday_type->id}}" {{ ($data->holiday_type_id == $holiday_type->id)? 'selected' : ((old('brand') == $holiday_type->id)? 'selected' : NULL) }} >{{ $holiday_type->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="alert-danger" style="text-align:center">{{$errors->first('holiday_type')}}</div>
+                </div>
+              </div>
 
               </div>
               <!-- /.box-body -->
@@ -377,6 +393,8 @@
 <!-- Bootstrap 3.3.6 -->
 {!! HTML::script('bootstrap/js/bootstrap.min.js') !!}
 <!-- FastClick -->
+{!! HTML::script('plugins/select2/select2.full.min.js') !!}
+
 {!! HTML::script('plugins/fastclick/fastclick.js') !!}
 <!-- AdminLTE App -->
 {!! HTML::script('dist/js/app.min.js') !!}
@@ -384,37 +402,85 @@
 {!! HTML::script('dist/js/demo.js') !!}
 
 <script type="text/javascript">
-    function submitForm(btn) {
-        // btn.disabled = true;
-        // btn.form.submit();
+
+$(document).ready(function(){
+
+  $('.select2').select2();
+
+  $('.currency-select2').select2({
+    templateResult: formatState,
+    templateSelection: formatState
+  });
+
+  function formatState(opt) {
+    if (!opt.id) {
+      return opt.text;
     }
 
-    $(document).ready(function(){
+    var optimage = $(opt.element).attr('data-image');
 
-        var role = $('select[name="role"]').find('option:selected').data('role'); 
+    if (!optimage) {
+      return opt.text ;
+    } else {
+      var $opt = $(
+        '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+      );
+      return $opt;
+    }
+  };
 
-        if(role == 'Sales Agent' || role == 2 ){
-            $('#supervisor').show();                
-            $('#selectSupervisor').removeAttr('disabled');
-        }else{
-            $('#supervisor').hide();                
-            $('#selectSupervisor').attr('disabled', 'disabled');
-        }
+  var role = $('select[name="role"]').find('option:selected').data('role'); 
 
-        $(document).on('change', 'select[name="role"]',function(){
+  if(role == 'Sales Agent' || role == 2 ){
+    $('#supervisor').show();                
+    $('#selectSupervisor').removeAttr('disabled');
+  }else{
+    $('#supervisor').hide();                
+    $('#selectSupervisor').attr('disabled', 'disabled');
+  }
 
-            var role = $(this).find('option:selected').data('role'); 
-            if(role == 'Sales Agent' || role == 2 ){
-                $('#supervisor').show();                
-                $('#selectSupervisor').removeAttr('disabled');
-            }else{
-                $('#supervisor').hide();                
-                $('#selectSupervisor').attr('disabled', 'disabled');
-            }
+  $(document).on('change', 'select[name="role"]',function(){
 
+    var role = $(this).find('option:selected').data('role'); 
+    if(role == 'Sales Agent' || role == 2 ){
+      $('#supervisor').show();                
+      $('#selectSupervisor').removeAttr('disabled');
+    }else{
+      $('#supervisor').hide();                
+      $('#selectSupervisor').attr('disabled', 'disabled');
+    }
+  });
+
+  
+  $(document).on('change', 'select[name="brand"]',function(){
+
+    let brand_id = $(this).val();
+    var options = '';
+
+    var holiday_type_id  = "{{ isset($data->holiday_type_id) && !empty($data->holiday_type_id) ? $data->holiday_type_id : '' }}";
+
+    $.ajax({
+      type: 'POST',
+      url: '{{ route('get-holiday-type') }}',
+      data: {
+        "_token": "{{ csrf_token() }}",
+        'brand_id': brand_id
+      },
+      success: function(response) {
+
+        options += '<option value="">Select Holiday Type</option>';
+        $.each(response,function(key,value){
+          options += '<option value="' + value.id + '"' + (value.id == holiday_type_id ? 'selected="selected"' : '') +'>' + value.name+ '</option>';
         });
 
+        $('select[name="holiday_type"]').html(options);
+        
+
+      }
     });
+  });
+
+});
     
 </script>
 
