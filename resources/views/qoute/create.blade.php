@@ -1060,8 +1060,12 @@ td.day{
                                 dataType: "json",
                                 success:function(data) {
                                     if( Object.keys(data).length > 0 ){
+                                        console.log(data.currency);
                                         $('select[name="type_of_holidays"]').val(data.holiday_type).trigger('change'); 
                                         $('select[name="group_no"]').val(data.pax).trigger('change');  
+                                        $('select[name="currency"]').val(data.currency).trigger('change');
+                                        $('#sales_person').val(data.sale_person).trigger('change');
+                                    console.log(data);
                                     }else{
                                         $('#error_ref_no').text('The Reference is not found');
                                     }
@@ -1205,6 +1209,7 @@ td.day{
             var $selector = $(this);
             var costArray = [];
             var currencyArray = [];
+            console.log(selectedMainCurrency);
             $('.cost').each(function(){
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
@@ -1279,21 +1284,27 @@ td.day{
         });
 
         $(document).on('change', 'select[name="currency"]',function(){
+
+         
+            
             var selected_currency_code = $(this).val();
             var costArray = [];
             var currencyArray = [];
             var selectedMainCurrency = $("select[name='currency']").val();
+     
             var final = 0;
             $('.cost').each(function(){
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
-                if(cost !== "" && cost !== '0'){
+                // if(cost !== "" && cost !== '0'){
                     costArray.push(parseFloat(cost));
-                }
-                if(currency !== "" && cost !== '0'){
+                // }
+                // if(currency !== "" && cost !== '0'){
                     currencyArray.push(currency);
-                }
+                // }
             });
+            
+            
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
@@ -1303,10 +1314,29 @@ td.day{
                     'from': currency
                 },
                 success: function(response) {
-                    for(i=0 ; i < currencyArray.length; i++){
-                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-                        final += (costArray[i] * response[currencyArray[i]]);
+                    
+                    var supplierCurrency = [];
+                        $('.supplier-currency').each(function(index){
+                            curren = $(this).val();
+                            if(curren !=  null){
+                                var $x = {'class':"addCurrency"+index, 'name':curren};
+                                supplierCurrency.push($x);
+                                $(this).addClass("addCurrency"+index); 
+                            }
+                    });
+                       
+                    for(i=0 ; i < supplierCurrency.length; i++){
+                        console.log(supplierCurrency[i].name ,supplierCurrency, i);
+                        if(supplierCurrency[i].name != ''){
+                            var data = (isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) );
+                            console.log('data'+data);
+                        // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
+                            console.log($('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').val(data));
+                        $('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').eq(i+1).val();
+                        
+                        // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                            final += (costArray[i] * response[currencyArray[i]]);
+                            }
                     }
                     // $('.net_price').val(final.toFixed(2));
                     $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
