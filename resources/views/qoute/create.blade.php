@@ -286,10 +286,10 @@ td.day{
                             </div>
                             <div class="col-sm-5">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <select class="form-control select2" name="brand_name"  >
+                                <select class="form-control select2" name="brand_name">
                                     <option value="">Select Brand</option>
-                                    @foreach ($get_user_branche['branches'] as $branche)
-                                    <option {{ (Auth::user()->brand_name == $branche['name'])? 'selected':'' }} value="{{ $branche['name'] }}" >{{ $branche['name'] }}</option>
+                                    @foreach ($brands as $brand)
+                                    <option value="{{$brand->id}}" {{ Auth::user()->brand_id == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
@@ -300,8 +300,8 @@ td.day{
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
                                 <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" >
                                     <option value="">Select Holiday</option>
-                                    @foreach ($get_holiday_type->holiday_type as $holiday)
-                                    <option value="{{ $holiday->name }}">{{ $holiday->name }}</option>
+                                    @foreach ($holiday_types as $holiday_type)
+                                    <option value="{{ $holiday_type->id }}" {{ Auth::user()->holiday_type_id == $holiday_type->id ? 'selected' : '' }} >{{ $holiday_type->name }}</option>
                                     @endforeach
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
@@ -1474,6 +1474,33 @@ td.day{
 
         $(document).on('click', '.close',function(){
             $(this).closest(".qoute").remove();
+        });
+
+        $(document).on('change', 'select[name="brand_name"]',function(){
+
+            let brand_id = $(this).val();
+            var options = '';
+
+            console.log(brand_id);
+
+            $.ajax({
+            type: 'POST',
+            url: '{{ route('get-holiday-type') }}',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'brand_id': brand_id
+            },
+            success: function(response) {
+
+                options += '<option value="">Select Holiday Type</option>';
+                $.each(response,function(key,value){
+                options += '<option value="'+value.id+'">'+value.name+'</option>';
+                });
+
+                $('select[name="type_of_holidays"]').html(options);
+                
+            }
+            });
         });
 
         // set supplier's default & supplier's product list

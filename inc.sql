@@ -439,5 +439,4 @@ ALTER TABLE `users` CHANGE `brand_name` `brand_id` INT(10) NULL DEFAULT NULL;
 
 ALTER TABLE `users` ADD `holiday_type_id` INT(10) NULL AFTER `brand_id`;
 
-
-
+ALTER TABLE `qoutes` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT NULL, CHANGE `type_of_holidays` `type_of_holidays` INT(10) NULL DEFAULT NULL;

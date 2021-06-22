@@ -49,6 +49,7 @@ use Spatie\GoogleCalendar\Event;
 use Validator;
 use App\Brand;
 use App\HolidayType;
+use Illuminate\Support\Facades\View;
 
 class AdminController extends Controller
 {
@@ -8386,18 +8387,23 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
+
+       
+
         return view('qoute.create')->with([
             'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
-            'products' => Product::all()->sortBy('name'),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
-            'templates' => Template::all()->sortBy('name'),
+            'categories'       => Category::all()->sortBy('name'),
+            'products'         => Product::all()->sortBy('name'),
+            'seasons'          => season::all(),
+            'users'            => User::all()->sortBy('name'),
+            'supervisors'      => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
+            'suppliers'        => Supplier::all()->sortBy('name'),
+            'booking_methods'  => BookingMethod::all()->sortBy('id'),
+            'currencies'       => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+            'templates'        => Template::all()->sortBy('name'),
+            'brands'           => Brand::orderBy('id','ASC')->get(),
+            'holiday_types'    => HolidayType::where('brand_id',Auth::user()->brand_id)->get(),
             // 'sale_person' => User::where('role_id',2)->orderBy('name', 'asc')->get(),
         ]);
     }
@@ -9225,21 +9231,25 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
+        $quote = Qoute::find($id);
+
         return view('qoute.edit')->with([
-            'quote' => Qoute::find($id),
-            'quote_details' => QouteDetail::where('qoute_id', $id)->orderBy('date_of_service', 'ASC')->get(),
+            'quote'             => $quote,
+            'quote_details'     => QouteDetail::where('qoute_id', $id)->orderBy('date_of_service', 'ASC')->get(),
             'get_user_branches' => $get_user_branches,
-            'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
-            'products' => Product::all()->sortBy('name'),
+            'get_holiday_type'  => $get_holiday_type,
+            'categories'        => Category::all()->sortBy('name'),
+            'products'          => Product::all()->sortBy('name'),
             // 'seasons' => season::where('default_season',1)->first(),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
-            'qoute_logs' => QouteLog::where('qoute_id', $id)->orderBy('log_no', 'DESC')->get(),
+            'seasons'           => season::all(),
+            'users'             => User::all()->sortBy('name'),
+            'supervisors'       => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
+            'suppliers'         => Supplier::all()->sortBy('name'),
+            'booking_methods'   => BookingMethod::all()->sortBy('id'),
+            'currencies'        => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+            'qoute_logs'        => QouteLog::where('qoute_id', $id)->orderBy('log_no', 'DESC')->get(),
+            'brands'            => Brand::orderBy('id','ASC')->get(),
+            'holiday_types'     => HolidayType::where('brand_id',$quote->brand_name)->get(),
         ]);
     }
 
@@ -9310,20 +9320,22 @@ class AdminController extends Controller
         });
 
         return view('qoute.recall-version')->with([
-            'quote' => $qoute_log,
-            'quote_details' => $qoute_detail_logs,
+            'quote'             => $qoute_log,
+            'quote_details'     => $qoute_detail_logs,
             'get_user_branches' => $get_user_branches,
-            'get_holiday_type' => $get_holiday_type,
-            'categories' => Category::all()->sortBy('name'),
-            'products' => Product::all()->sortBy('name'),
+            'get_holiday_type'  => $get_holiday_type,
+            'categories'        => Category::all()->sortBy('name'),
+            'products'          => Product::all()->sortBy('name'),
+            'seasons'           => season::all(),
+            'users'             => User::all()->sortBy('name'),
+            'supervisors'       => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
+            'suppliers'         => Supplier::all()->sortBy('name'),
+            'booking_methods'   => BookingMethod::all()->sortBy('id'),
+            'currencies'        => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+            'qoute_logs'        => QouteLog::where('qoute_id', $quote_id)->orderBy('log_no', 'DESC')->get(),
+            'brands'            => Brand::orderBy('id','ASC')->get(),
+            'holiday_types'     => HolidayType::where('brand_id',$qoute_log->brand_name)->get(),
             // 'seasons' => season::where('default_season',1)->first(),
-            'seasons' => season::all(),
-            'users' => User::all()->sortBy('name'),
-            'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'currencies' => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
-            'qoute_logs' => QouteLog::where('qoute_id', $quote_id)->orderBy('log_no', 'DESC')->get(),
         ]);
 
     }

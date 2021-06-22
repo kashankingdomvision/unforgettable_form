@@ -37,6 +37,17 @@ class Qoute extends Model
         
         return $status;
     }
+    function getBrand() {
+        return $this->hasOne(Brand::class,'id', 'brand_name' );
+    }
+
+    function getHolidayType() {
+        return $this->hasOne(HolidayType::class,'id', 'type_of_holidays' );
+    }
+
+    function getCurrency() {
+        return $this->hasOne(Currency::class, 'code', 'currency');
+    }
     // public function categories()
     // {
     // 	return $this->belongsToMany('App\Model\user\category','category_posts')->withTimestamps();;

@@ -160,10 +160,10 @@
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
                             </div>
-
+                
                             <div class="col-sm-5" style="margin-bottom:15px;">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <input type="text" name="brand_name" value="{{ $qoute_log->brand_name }}" class="form-control"  disabled>
+                                <input type="text" name="brand_name" value="{{$qoute_log->getBrand->name}}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
-                                <input type="text" name="type_of_holidays" value="{{ $qoute_log->type_of_holidays }}" class="form-control"  disabled>
+                                <input type="text" name="type_of_holidays" value="{{ $qoute_log->getHolidayType->name }}" class="form-control"  disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_type_of_holidays"></div>
                             </div>
     
