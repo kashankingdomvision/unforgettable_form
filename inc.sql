@@ -428,3 +428,15 @@ TRUNCATE TABLE `booking_detail_logs` ;
 TRUNCATE TABLE `finance_booking_detail_logs` ;
 
 ALTER TABLE `bookings` ADD `created_at` TIMESTAMP NULL AFTER `electronic_copy_details`, ADD `updated_at` TIMESTAMP NULL AFTER `created_at`;
+
+CREATE TABLE `lara_unforge`.`brands` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NULL , `email` VARCHAR(255) NULL , `address` VARCHAR(255) NULL , `phone` VARCHAR(255) NULL , `logo` VARCHAR(255) NULL , `user_id` INT(10) NULL , `created_at` TIMESTAMP NULL , `updated_at` TIMESTAMP NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `lara_unforge`.`holiday_types` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `brand_id` INT(10) NULL , `name` INT NULL , `created_at` TIMESTAMP NULL , `updated_at` TIMESTAMP NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `holiday_types` CHANGE `name` `name` VARCHAR(255) NULL DEFAULT NULL;
+
+ALTER TABLE `users` CHANGE `brand_name` `brand_id` INT(10) NULL DEFAULT NULL;
+
+ALTER TABLE `users` ADD `holiday_type_id` INT(10) NULL AFTER `brand_id`;
+
+ALTER TABLE `qoutes` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT NULL, CHANGE `type_of_holidays` `type_of_holidays` INT(10) NULL DEFAULT NULL;

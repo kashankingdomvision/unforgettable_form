@@ -111,10 +111,10 @@
                     <label for="inputEmail3" class="">Default Currency</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                      <select class="form-control select2" name="currency">
+                      <select class="form-control currency-select2" name="currency">
                           <option selected value="">Select Currency</option>
                           @foreach($currencies as $currency)
-                              <option value="{{$currency->id}}" {{ (old('currency') == $currency->id)? 'selected' : NULL }} >{{$currency->name}} ({{ $currency->symbol }})</option>
+                              <option value="{{$currency->id}}" {{ (old('currency') == $currency->id)? 'selected' : NULL }}  data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                           @endforeach
                       </select>
                     </div>
@@ -122,23 +122,34 @@
                   </div>
               </div>
               
-              <div class="form-group" >
+              <div class="form-group">
                 <div class="col-sm-6 col-sm-offset-3">
                 <label for="inputEmail3" class="">Default Brands</label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <select class="form-control select2" name="brand">
                         <option selected value="">Select Brands</option>
-                      
-                        @foreach($brands->branches as $brand)
-                            <option value="{{ $brand->name }}" {{ (old('brand') == $brand->name)? 'selected' : NULL }} >{{$brand->name}}</option>
+                        @foreach($brands as $brand)
+                          <option value="{{ $brand->id }}" {{ (old('brand') == $brand->id) ? 'selected' : NULL }} >{{$brand->name}}</option>
                         @endforeach
                     </select>
                   </div>
                   <div class="alert-danger" style="text-align:center">{{$errors->first('brand')}}</div>
                 </div>
-            </div>
+              </div>
 
+              <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3">
+                <label for="inputEmail3" class="">Holiday Type</label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <select class="form-control select2" name="holiday_type">
+                      <option  value="">Select Holiday Type</option>
+                    </select>
+                  </div>
+                  <div class="alert-danger" style="text-align:center">{{$errors->first('holiday_type')}}</div>
+                </div>
+              </div>
 
               </div>
               <!-- /.box-body -->
@@ -380,16 +391,32 @@
 {!! HTML::script('dist/js/demo.js') !!}
 
 <script type="text/javascript">
-    function submitForm(btn) {
-        // btn.disabled = true;
-        // btn.form.submit();
-    }
-    $(function () {
-        $('.select2').select2();
+
+  $(document).ready(function(){
+ 
+    $('.select2').select2();
+       
+    $('.currency-select2').select2({
+      templateResult: formatState,
+      templateSelection: formatState
     });
 
+    function formatState(opt) {
+      if (!opt.id) {
+        return opt.text;
+      }
 
-    $(document).ready(function(){
+      var optimage = $(opt.element).attr('data-image');
+
+      if (!optimage) {
+        return opt.text ;
+      } else {
+        var $opt = $(
+          '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+        );
+        return $opt;
+      }
+    };
 
         $(document).on('change', 'select[name="role"]',function(){
              var role = $(this).find('option:selected').data('role'); 
@@ -403,6 +430,35 @@
             }
         
         });
+
+      $(document).on('change', 'select[name="brand"]',function(){
+
+        let brand_id = $(this).val();
+        var options = '';
+
+        console.log(brand_id);
+
+        $.ajax({
+          type: 'POST',
+          url: '{{ route('get-holiday-type') }}',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            'brand_id': brand_id
+          },
+          success: function(response) {
+
+            options += '<option value="">Select Holiday Type</option>';
+            $.each(response,function(key,value){
+              options += '<option value="'+value.id+'">'+value.name+'</option>';
+            });
+
+            $('select[name="holiday_type"]').html(options);
+            
+          }
+        });
+
+      
+      });
 
     });
 

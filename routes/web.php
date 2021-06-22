@@ -154,6 +154,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
 	Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
 	Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
+
+	Route::post('get-holiday-type',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));
 	//end mufti
 
 
