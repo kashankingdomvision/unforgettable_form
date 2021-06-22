@@ -109,4 +109,5 @@ class HolidayTypeController extends Controller
         HolidayType::findOrFail(decrypt($id))->delete();
         return redirect()->route('holidaytype.index')->with('success_message', 'Holiday type deleted successfully'); 
     }
+    
 }
