@@ -66,6 +66,7 @@
                                     <div class="form-group">
                                         <label for="template_title" >Template Tilte <span class="text-danger">*</span></label>
                                         <input id="template_title" class="form-control" type="text"  name="template_name" placeholder="Enter the template title" required>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('template_name') }} </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -77,6 +78,7 @@
                                                 <option value="{{ $sess->id }}"  {{ (old('season_id') == $sess->id)? 'selected' :(($sess->default_season == 1 )? 'selected': NULL) }} >{{ $sess->name }}</option>
                                             @endforeach
                                         </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('season_id') }} </div>
                                     </div>
                                 </div>
                             </div>
