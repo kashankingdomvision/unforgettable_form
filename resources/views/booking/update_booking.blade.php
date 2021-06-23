@@ -833,11 +833,11 @@
                                                 @endforeach
 
                                             @else
-
+                                            @php $count = 1; @endphp;
                                                 <div class="row" data-title="title{{$key+1}}">
                                                     <div class="append">
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $key+1  }}</label>
+                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $count  }}</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                                 <input type="number"
@@ -2748,9 +2748,7 @@ $(document).ready(function() {
                     },
                     error: function(reject) {
                         if (reject.status === 422) {
-
                             var errors = $.parseJSON(reject.responseText);
-
                             jQuery.each(errors.errors['date_of_service'], function(index,
                                 value) {
                                 jQuery.each(value, function(key, value) {
@@ -2841,15 +2839,19 @@ $(document).ready(function() {
 
             $(document).on('change', '.deposit_amount', function () {
                 var key     =   $(this).data('key');
+                console.log('deposite key',key);
                 var getclass   =   '.depositecost'+key;
-                var actualcost  =  $('.cost').val();
+                var actualcost  =  $('.cost'+key).val();
+                console.log('actual cost '+actualcost, '.cost'+key);
                 // console.log(getclass);
                 var sum = 0;
                 $(getclass).each(function(){
-                    sum += +$(this).val();
+                    if($(this).val() != null){
+                        sum += +$(this).val();
+                    }
                 });
                
-              
+              console.log('sum'+ sum)
                 // console.log($(this).val(), sum);
                 
                 if(sum > actualcost){
@@ -2863,8 +2865,10 @@ $(document).ready(function() {
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
                 var getClass = $(this).closest('.row').data('title');
-                var classs = $('.finance-row').find('.row').find('.deposit_amount ').data('key');
-                $('.finance-row').find('.row').find('.deposit_amount ').addClass('depositecost'+classs);
+                var classs = $(this).closest('.row').find('.deposit_amount').data('key');
+                console.log(classs);
+                $('input[name="deposit_amount['+classs+'][]"]').addClass('depositecost'+classs);
+                // $('.finance-row').find('.row').find('.deposit_amount').addClass('depositecost'+classs);
                 var count = $('.'+getClass).length + 1;
                 var $v_text = 'Payment #'+count;
                 console.log($v_text);
