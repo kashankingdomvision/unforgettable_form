@@ -67,10 +67,7 @@ class TemplateController extends Controller
     
     public function store(Request $request)
     {
-      $request->validate([
-        'title'=>'required',
-        'season_id' => 'required',
-      ]);
+  
       $template = Template::create([
         'user_id' => Auth::id(),
         'title' => $request->template_name,
