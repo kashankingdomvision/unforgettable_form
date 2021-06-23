@@ -2748,9 +2748,7 @@ $(document).ready(function() {
                     },
                     error: function(reject) {
                         if (reject.status === 422) {
-
                             var errors = $.parseJSON(reject.responseText);
-
                             jQuery.each(errors.errors['date_of_service'], function(index,
                                 value) {
                                 jQuery.each(value, function(key, value) {
@@ -2843,14 +2841,17 @@ $(document).ready(function() {
                 var key     =   $(this).data('key');
                 console.log('deposite key',key);
                 var getclass   =   '.depositecost'+key;
-                var actualcost  =  $('.cost').val();
+                var actualcost  =  $('.cost'+key).val();
+                console.log('actual cost '+actualcost, '.cost'+key);
                 // console.log(getclass);
                 var sum = 0;
                 $(getclass).each(function(){
-                    sum += +$(this).val();
+                    if($(this).val() != null){
+                        sum += +$(this).val();
+                    }
                 });
                
-              
+              console.log('sum'+ sum)
                 // console.log($(this).val(), sum);
                 
                 if(sum > actualcost){
@@ -2864,8 +2865,10 @@ $(document).ready(function() {
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
                 var getClass = $(this).closest('.row').data('title');
-                var classs = $(this).closest('.row').find('.deposit_amount ').data('key');
-                $('.finance-row').find('.row').find('.deposit_amount ').addClass('depositecost'+classs);
+                var classs = $(this).closest('.row').find('.deposit_amount').data('key');
+                console.log(classs);
+                $('input[name="deposit_amount['+classs+'][]"]').addClass('depositecost'+classs);
+                // $('.finance-row').find('.row').find('.deposit_amount').addClass('depositecost'+classs);
                 var count = $('.'+getClass).length + 1;
                 var $v_text = 'Payment #'+count;
                 console.log($v_text);
