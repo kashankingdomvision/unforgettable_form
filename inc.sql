@@ -419,10 +419,8 @@ ALTER TABLE `currencies` ADD `status` TINYINT NOT NULL DEFAULT '1' AFTER `flag`;
 TRUNCATE TABLE `qoutes` ;
 TRUNCATE TABLE `qoute_details` ;
 
-
 TRUNCATE TABLE `qoute_logs` ;
 TRUNCATE TABLE `qoute_detail_logs` ;
-
 
 TRUNCATE TABLE `bookings` ;
 TRUNCATE TABLE `booking_details` ;
