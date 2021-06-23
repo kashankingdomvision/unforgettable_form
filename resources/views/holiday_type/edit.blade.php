@@ -28,7 +28,9 @@
 
                 <div class="col-md-12">
                     <div class="box box-info">
-
+                      <div class="box-header with-border mb-2">
+                        <h3 class="box-title">Edit Holiday Type</h3>
+                      </div>
               <form action="{{ route('holidaytype.update', encrypt($holidayType->id)) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
                 @csrf
                 

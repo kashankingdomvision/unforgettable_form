@@ -28,7 +28,9 @@
 
                 <div class="col-md-12">
                     <div class="box box-info">
-
+                      <div class="box-header with-border mb-2">
+                        <h3 class="box-title">Edit Brands</h3>
+                      </div>
               <form action="{{ route('brand.update', encrypt($brand->id)) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
                 @csrf
                 
