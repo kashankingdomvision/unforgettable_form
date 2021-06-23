@@ -85,12 +85,12 @@
                                                 </div>
                     
                                                 <div class="col-sm-2">
-                                                    <label class="">Select Category</label> 
+                                                    <label class="">Category</label> 
                                                     <input   class="form-control"disabled type="text" value="{{ $detail->getCategory->name??NULL }}"  required>
                                                 </div>
                     
                                                 <div class="col-sm-2">
-                                                    <label class="test">Select Supplier</label> 
+                                                    <label class="test">Supplier</label> 
                                                     <input  class="form-control"disabled type="text" value="{{ $detail->getSupplier->name??NULL }}"  required>
                                                 </div>
                     
@@ -143,8 +143,13 @@
                                                 </div>
                     
                                                 <div class="col-sm-2">
-                                                    <label>Select Supplier Currency</label> 
-                                                    <input type="text" disabled value="{{ $detail->supplier_currency }}" class="form-control" placeholder="Booking Reference"  >
+                                                    <label>Supplier Currency</label> 
+                                                    <select class="form-control supplier-currency"  name="quote[0][currency_id]" disabled>
+                                                        <option value="">Select Currency</option>
+                                                        @foreach ($currencies as $currency)
+                                                            <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $detail->supplier_currency == $currency->code ? 'selected' : ''}} > &nbsp; {{$currency->code}} - {{$currency->name}} </option>
+                                                        @endforeach
+                                                    </select>
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
                                             </div>
@@ -185,21 +190,56 @@
 </div>
 <!-- jQuery 2.2.3 -->
 
+<!-- ./wrapper -->
+{!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
+
+<!-- jQuery 2.2.3 -->
 {!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
 <!-- Bootstrap 3.3.6 -->
 {!! HTML::script('bootstrap/js/bootstrap.min.js') !!}
-<!-- DataTables -->
+
+{!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
+
 {!! HTML::script('plugins/datatables/jquery.dataTables.min.js') !!}
 {!! HTML::script('plugins/datatables/dataTables.bootstrap.min.js') !!}
-{!! HTML::script('plugins/datepicker/bootstrap-datepicker.js') !!}
-<!-- SlimScroll -->
-{!! HTML::script('plugins/slimScroll/jquery.slimscroll.min.js') !!}
+
+{!! HTML::script('plugins/select2/select2.full.min.js') !!}
+
 <!-- FastClick -->
 {!! HTML::script('plugins/fastclick/fastclick.js') !!}
 <!-- AdminLTE App -->
 {!! HTML::script('dist/js/app.min.js') !!}
 <!-- AdminLTE for demo purposes -->
 {!! HTML::script('dist/js/demo.js') !!}
+
+<script>
+    $(function() {
+    
+        $('.supplier-currency').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        function formatState(opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+
+            var optimage = $(opt.element).attr('data-image');
+
+            if (!optimage) {
+                return opt.text ;
+            } else {
+                var $opt = $(
+                    '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+                );
+                return $opt;
+            }
+        };
+    });
+
+
+</script>
 
 {{-- <script>
     $(document).ready(function(){

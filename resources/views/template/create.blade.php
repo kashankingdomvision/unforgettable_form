@@ -65,7 +65,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="template_title" >Template Tilte <span class="text-danger">*</span></label>
-                                        <input id="template_title" class="form-control" type="text"  name="template_name" placeholder="Enter the template title" required>
+                                        <input id="template_title" class="form-control" type="text"  name="template_name" placeholder="Enter the Template Title" required>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('template_name') }} </div>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                             </div>
                 
                                             <div class="col-sm-2">
-                                                <label class="">Select Category</label> 
+                                                <label class="">Category</label> 
                                                 <select class="form-control category-select2 select2"  name="quote[0][category_id]" >
                                                     <option value="">Select Category</option>
                                                     @foreach ($categories as $category)
@@ -112,7 +112,7 @@
                                             </div>
                 
                                             <div class="col-sm-2">
-                                                <label class="test">Select Supplier</label> 
+                                                <label class="test">Supplier</label> 
                                                 <select class="form-control supplier-select2 select2"  name="quote[0][supplier_id]" >
                                                     <option value="">Select Supplier</option>
                                                     @foreach ($suppliers as $supplier)
@@ -193,11 +193,11 @@
                                             </div>
                 
                                             <div class="col-sm-2">
-                                                <label>Select Supplier Currency</label> 
-                                                <select class="form-control supplier-currency select2"  name="quote[0][currency_id]" >
+                                                <label>Supplier Currency</label> 
+                                                <select class="form-control supplier-currency"  name="quote[0][currency_id]" >
                                                     <option value="">Select Currency</option>
                                                     @foreach ($currencies as $currency)
-                                                        <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                                                     @endforeach
                                                 </select>
                                                 <div class="alert-danger" style="text-align:center"></div>
@@ -281,11 +281,33 @@
 
 <script>
     $(document).ready(function(){
-        $(function(){
-            datePickerSetDate();
-         $('.select2').select2();
-            
+ 
+        datePickerSetDate();
+        $('.select2').select2();
+
+        $('.supplier-currency').select2({
+            templateResult: formatState,
+            templateSelection: formatState
         });
+
+        function formatState(opt) {
+            if (!opt.id) {
+                return opt.text;
+            }
+
+            var optimage = $(opt.element).attr('data-image');
+
+            if (!optimage) {
+                return opt.text ;
+            } else {
+                var $opt = $(
+                    '<span><img height="20" width="20" src="' + optimage + '" width="60px" /> ' + opt.text + '</span>'
+                );
+                return $opt;
+            }
+        };
+            
+  
         
         $('body').on('click', '#createNEw', function (e) {
             
@@ -307,15 +329,21 @@
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
-                    $('.select2').removeClass('select2-hidden-accessible').next().remove()
-                $('.select2').select2();
-                    
+                    $('.select2, .supplier-currency').removeClass('select2-hidden-accessible').next().remove()
+                    $('.select2').select2();
+
+                    $('.supplier-currency').select2({
+                        templateResult: formatState,
+                        templateSelection: formatState
+                    });
+
                     $('.removeButton:last').append("<button type='button' class='remove btn btn-link pull-right'><i class='fa fa-times'  style='color:red' ></i></button>");   
                     datePickerSetDate();
         });
         
         $(document).on("click", ".remove", function() {
-            $($(this).parent().parent()).remove();
+            // $($(this).parent().parent()).remove();
+            $(this).closest(".qoute").remove();
         });
 
     

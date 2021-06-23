@@ -26,7 +26,7 @@ class TemplateController extends Controller
       $data['supervisors']      = User::where('role_id', 5)->get()->sortBy('name');
       $data['suppliers']        = Supplier::all()->sortBy('name');
       $data['booking_methods']  = BookingMethod::all()->sortBy('id');
-      $data['currencies']       = Currency::all()->sortBy('id');
+      $data['currencies']       = Currency::where('status', 1)->orderBy('id', 'ASC')->get();
       $data['users']            = User::all()->sortBy('name');
       $data['seasons']          = Season::all();
       $this->data = $data;
@@ -91,7 +91,8 @@ class TemplateController extends Controller
     public function detail($id)
     {
         $template = Template::findOrFail(decrypt($id));
-        $data['template'] = $template;
+        $data['template']   = $template;
+        $data['currencies'] = Currency::where('status', 1)->orderBy('id', 'ASC')->get();
         return view('template.details',$data);
     }
     
