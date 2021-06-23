@@ -10,8 +10,8 @@
   
     <td>{{ $quote->ref_no }}</td>
     <td>{{ $quote->season->name }}</td>
-    <td>{{ $quote->type_of_holidays }}</td>
-    <td>{{ $quote->brand_name }}</td>
+    <td>{{ (isset($quote->getHolidayType->name))? $quote->getHolidayType->name:NULL }}</td>
+    <td>{{ (isset($quote->getBrand->name))? $quote->getBrand->name: NULL }}</td>
     <td>{{ $quote->sale_person }}</td>
   <td>{{ $quote->currency }}</td>
   <td>{{ $quote->group_no }}</td>
