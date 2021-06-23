@@ -2743,7 +2743,7 @@ $(document).ready(function() {
                     success: function(data) {
                         $("#divLoading").removeClass('show');
                         alert(data.success_message);
-                        // window.history.back();
+                        window.history.back();
                         // location.reload();
                     },
                     error: function(reject) {
