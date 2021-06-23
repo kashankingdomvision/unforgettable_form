@@ -135,7 +135,7 @@ class TemplateController extends Controller
             }
         }
         
-      return redirect()->route('template.index')->with('success_message', 'template deleted successfully');
+      return redirect()->route('template.index')->with('success_message', 'template update successfully');
         
     }
     
