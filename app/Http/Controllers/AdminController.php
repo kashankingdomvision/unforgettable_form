@@ -8399,9 +8399,6 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
-
-       
-
         return view('qoute.create')->with([
             'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,

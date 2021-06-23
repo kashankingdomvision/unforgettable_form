@@ -1202,6 +1202,8 @@
                     });
 
                     $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                    $selector.closest('.row').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+                    $selector.closest('.qoute').find('[name="service_details[]"]').val('');
                 }
             })
         });
