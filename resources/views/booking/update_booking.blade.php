@@ -833,7 +833,7 @@
                                                 @endforeach
 
                                             @else
-                                            @php $count = 1; @endphp;
+                                            @php $count = 1 @endphp;
                                                 <div class="row" data-title="title{{$key+1}}">
                                                     <div class="append">
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
