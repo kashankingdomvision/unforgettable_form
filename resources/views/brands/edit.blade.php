@@ -80,9 +80,10 @@
                             <div class="alert-danger" style="text-align:center">{{ $errors->first('logo') }}</div>
                         </div>
                     </div>
+                    <hr />
                     <div class="form-group">
-                      <div class="col-sm-6 col-sm-offset-3 " >
-                        @if($brand->logo)<img src="{{ asset('brands/'.$brand->logo)  }}" width="70px" height="70px" /> @endif
+                      <div class="col-sm-6 col-sm-offset-3 text-center" >
+                        @if($brand->logo)<img src="{{ asset('brands/'.$brand->logo)  }}" width="150px" height="150px" /> @endif
                       </div>
                     </div>
                 </div>
