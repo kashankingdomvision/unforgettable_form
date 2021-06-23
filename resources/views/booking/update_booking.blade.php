@@ -833,11 +833,11 @@
                                                 @endforeach
 
                                             @else
-
+                                            @php $count = 1; @endphp;
                                                 <div class="row" data-title="title{{$key+1}}">
                                                     <div class="append">
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $key+1  }}</label>
+                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $count  }}</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                                 <input type="number"
@@ -2841,6 +2841,7 @@ $(document).ready(function() {
 
             $(document).on('change', '.deposit_amount', function () {
                 var key     =   $(this).data('key');
+                console.log('deposite key',key);
                 var getclass   =   '.depositecost'+key;
                 var actualcost  =  $('.cost').val();
                 // console.log(getclass);
@@ -2863,7 +2864,7 @@ $(document).ready(function() {
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
                 var getClass = $(this).closest('.row').data('title');
-                var classs = $('.finance-row').find('.row').find('.deposit_amount ').data('key');
+                var classs = $(this).closest('.row').find('.deposit_amount ').data('key');
                 $('.finance-row').find('.row').find('.deposit_amount ').addClass('depositecost'+classs);
                 var count = $('.'+getClass).length + 1;
                 var $v_text = 'Payment #'+count;
