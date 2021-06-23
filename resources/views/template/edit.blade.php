@@ -72,7 +72,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="bookingSeason" > Booking Season <span class="text-danger">*</span></label>
-                                        <select class="form-control dropdown_value" name="season_id" id="bookingSeason"  >
+                                        <select class="form-control dropdown_value" name="season_id" id="bookingSeason"  required>
                                             <option value="">Select Season</option>
                                             @foreach ($seasons as $sess)
                                                 <option value="{{ $sess->id }}"  {{ $template->season_id == $sess->id? 'selected' : NULL }} >{{ $sess->name }}</option>
