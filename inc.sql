@@ -451,3 +451,7 @@ ALTER TABLE `bookings` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT NUL
 ALTER TABLE `qoute_logs` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT NULL, CHANGE `type_of_holidays` `type_of_holidays` INT(10) NULL DEFAULT NULL;
 
 ALTER TABLE `booking_logs` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT NULL, CHANGE `type_of_holidays` `type_of_holidays` INT(10) NULL DEFAULT NULL;
+
+
+-- //FOREIGN key/
+ALTER TABLE `template_details` ADD FOREIGN KEY (`template_id`) REFERENCES `templates`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
