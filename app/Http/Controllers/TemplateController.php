@@ -85,7 +85,7 @@ class TemplateController extends Controller
         TemplateDetail::create($data);
       }
 
-      return redirect()->route('template.index')->with('success_message', 'template created successfully');
+      return redirect()->route('template.index')->with('success_message', 'Template Created Successfully');
     }
     
     public function detail($id)
@@ -100,7 +100,7 @@ class TemplateController extends Controller
     {
       $template = Template::findOrFail(decrypt($id));
       $template->delete();
-      return redirect()->back()->with('success_message', 'template deleted successfully');
+      return redirect()->back()->with('success_message', 'Deleted Successfully');
     }
     
     public function edit($id)
@@ -136,7 +136,7 @@ class TemplateController extends Controller
             }
         }
         
-      return redirect()->route('template.index')->with('success_message', 'template update successfully');
+      return redirect()->route('template.index')->with('success_message', 'Template Successfully Updated');
         
     }
     
