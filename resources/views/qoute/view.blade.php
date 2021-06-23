@@ -75,7 +75,7 @@ tr.shown td.details-control {
                         <td>{{ !empty($quote->getCurrency->code) && !empty($quote->getCurrency->name) ? $quote->getCurrency->code.' - '.$quote->getCurrency->name : NULL }}</td>
                         <td>{{ $quote->group_no }}</td>
                         <td>{!! $quote->booking_formated_status !!}</td>
-                        <td>{{ date('d/m/Y', strtotime($quote->qoute_to_booking_date)) ??NULL }}</td>
+                        <td>{{ !empty($quote->qoute_to_booking_date) ? date('d/m/Y', strtotime($quote->qoute_to_booking_date)) : '' }}</td>
                         
                         <td width="10%" >
                           @if($quote->qoute_to_booking_status == 0)
