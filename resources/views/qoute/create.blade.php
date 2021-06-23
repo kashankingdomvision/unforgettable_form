@@ -257,7 +257,7 @@ td.day{
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' >
+                                        <input type="text" name="ref_no"  class="form-control" placeholder='Enter Reference Number' required>
                                         <span  id="link">
                                         </span>
                                         <span class="input-group-addon">
@@ -269,7 +269,7 @@ td.day{
                                 <div class="col-sm-5 mb-2">
                                     <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="quotation_no" class="form-control" value="{{ uniqid() }}" >
+                                        <input type="text" name="quotation_no" class="form-control" value="{{ uniqid() }}" required>
                                         <span class="input-group-addon"></span>
                                     </div>
                                     <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
@@ -279,14 +279,14 @@ td.day{
                             <div class="col-sm-5 mb-2 col-sm-offset-1 mb-2">
                                 <label for="inputEmail3" class="">Lead Passenger Name</label> <span style="color:red">*</span>
                                 <div class="input-group">
-                                    <input type="text" name="lead_passenger_name" class="form-control"  >
+                                    <input type="text" name="lead_passenger_name" class="form-control"  required>
                                     <span class="input-group-addon"></span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
                             </div>
                             <div class="col-sm-5">
                                 <label class="">Brand Name</label> <span style="color:red">*</span>
-                                <select class="form-control select2" name="brand_name" id="brand_name">
+                                <select class="form-control select2" name="brand_name" id="brand_name" required>
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                     <option value="{{$brand->id}}" {{ Auth::user()->brand_id == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
@@ -298,7 +298,7 @@ td.day{
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Type Of Holidays</label> <span style="color:red">*</span>
-                                <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" >
+                                <select class="form-control select2" id="type_of_holidays" name="type_of_holidays" required>
                                     <option value="">Select Holiday</option>
                                     @foreach ($holiday_types as $holiday_type)
                                     <option value="{{ $holiday_type->id }}" {{ Auth::user()->holiday_type_id == $holiday_type->id ? 'selected' : '' }} >{{ $holiday_type->name }}</option>
@@ -308,7 +308,7 @@ td.day{
                             </div>
                             <div class="col-sm-5 mb-2">
                                 <label class="">Sales Person</label> <span style="color:red">*</span>
-                                <select class="form-control select2" id="sales_person" name="sale_person"  >
+                                <select class="form-control select2" id="sales_person" name="sale_person" required >
                                     <option value="">Select Person</option>
                                     @foreach ($users as $user)
                                     <option {{ (Auth::user()->email == $user['email'])? 'selected':'' }} value="{{ $user['email'] }}" > {{ $user['email'] }}</option>
@@ -322,7 +322,7 @@ td.day{
                                 <label class="">Booking Season</label> 
                                 <span style="color:red">*</span>
                                 {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
-                                <select class="form-control dropdown_value" name="season_id" id="bookingSeason"  >
+                                <select class="form-control dropdown_value" name="season_id" id="bookingSeason" required  >
                                     <option value="">Select Season</option>
                                     @foreach ($seasons as $sess)
                                         <option value="{{ $sess->id }}"  {{ (old('season_id') == $sess->id)? 'selected' :(($sess->default_season == 1 )? 'selected': NULL) }}>{{ $sess->name }}</option>
@@ -352,7 +352,7 @@ td.day{
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
-                                <select name="currency" class="form-control currency-select2" >
+                                <select name="currency" class="form-control currency-select2" required>
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
                                         <option {{ (Auth::user()->currency_id == $currency['id'])? 'selected':'' }} value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
@@ -363,14 +363,14 @@ td.day{
                             
                             <div class="col-sm-5 mb-2">
                                 <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" class="form-control">
+                                <input type="text" name="dinning_preferences" class="form-control" required>
                                 <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2 paxNumber" name="group_no" >
+                                  <select class="form-control dropdown_value select2 paxNumber" name="group_no" required>
                                     @for($i=1;$i<=30;$i++)
                                     <option value={{$i}} >{{$i}}</option>
                                     @endfor
@@ -448,7 +448,7 @@ td.day{
                                     <div class="col-sm-2 mb-3">
                                         <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
                                         <div class="input-group">
-                                            <input type="text" name="booking_due_date[]"   class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
+                                            <input type="text" name="booking_due_date[]"   class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" required>
                                         </div>
                                         <div class="alert-danger booking_due_date" style="text-align:center; width: 160px;"></div>
                                     </div>
