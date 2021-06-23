@@ -300,7 +300,7 @@
                                         <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" disabled>
                                             <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
+                                            @foreach ($quote_detail->getCategory->getSupplier as $supplier)
                                                 <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
                                             @endforeach
                                         </select>
@@ -311,8 +311,8 @@
                                         <label class="">Product</label> 
                                         <select class="form-control product-select2"  name="product[]" disabled>
                                             <option value="">Select Product</option>
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }} > {{ $product->name }} </option>
+                                            @foreach ($quote_detail->getSupplier->products as $product)
+                                                <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
                                             @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>

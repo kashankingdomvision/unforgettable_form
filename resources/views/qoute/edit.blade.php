@@ -118,9 +118,6 @@ td.day{
                     <label class="">Supplier</label> 
                     <select class="form-control supplier-select2" name="supplier[]" >
                         <option value="">Select Supplier</option>
-                        @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                        @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
                 </div>
@@ -129,9 +126,6 @@ td.day{
                     <label class="">Product</label> 
                     <select class="form-control product-select2"  name="product[]" >
                         <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
-                        @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                 </div>
@@ -523,12 +517,12 @@ td.day{
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
                                     </div>
-        
+
                                     <div class="col-sm-2 mb-3">
                                         <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" >
                                             <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
+                                            @foreach ($quote_detail->getCategory->getSupplier as $supplier)
                                                 <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
                                             @endforeach
                                         </select>
@@ -539,7 +533,7 @@ td.day{
                                         <label class="">Product</label> 
                                         <select class="form-control product-select2"  name="product[]" >
                                             <option value="">Select Product</option>
-                                            @foreach ($products as $product)
+                                            @foreach ($quote_detail->getSupplier->products as $product)
                                                 <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
                                             @endforeach
                                         </select>
