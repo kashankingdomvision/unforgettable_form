@@ -2855,7 +2855,7 @@ $(document).ready(function() {
                 // console.log($(this).val(), sum);
                 
                 if(sum > actualcost){
-                    alert('deposite amout is bigger');
+                    alert('Payment amount should not be bigger than Actual cost');
                     $(this).val('');
                 }
             });
