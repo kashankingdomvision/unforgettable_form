@@ -442,7 +442,7 @@
                                         <div class="row">
 
                                             <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Deposit Amount</label>
+                                                <label for="inputEmail3" class="">Payment #{{$fkey +1 }} </label>
                                                 <div class="input-group">
                                                     <input type="number"
                                                         name="deposit_amount[{{ $key }}][]"
