@@ -8331,29 +8331,29 @@ class AdminController extends Controller
             }
 
             $qoute = new Qoute;
-            $qoute->ref_no = $request->ref_no;
-            $qoute->reference_name = $request->reference;
-            $qoute->quotation_no = $request->quotation_no;
-            $qoute->dinning_preferences = $request->dinning_preferences;
-            $qoute->lead_passenger_name = $request->lead_passenger_name;
-            $qoute->brand_name = $request->brand_name;
-            $qoute->type_of_holidays = $request->type_of_holidays;
-            $qoute->sale_person = $request->sale_person;
-            $qoute->season_id = $request->season_id;
-            $qoute->agency_booking = $request->agency_booking;
-            $qoute->agency_name = $request->agency_name;
-            $qoute->agency_contact_no = $request->agency_contact_no;
-            $qoute->currency = $request->currency;
-            $qoute->convert_currency = $request->convert_currency;
-            $qoute->group_no = $request->group_no;
-            $qoute->net_price = $request->net_price;
-            $qoute->markup_amount = $request->markup_amount;
-            $qoute->selling = $request->selling;
-            $qoute->gross_profit = $request->gross_profit;
-            $qoute->markup_percent = $request->markup_percent;
+            $qoute->ref_no                = $request->ref_no;
+            // $qoute->reference_name        = $request->reference;
+            $qoute->quotation_no          = $request->quotation_no;
+            $qoute->dinning_preferences   = $request->dinning_preferences;
+            $qoute->lead_passenger_name   = $request->lead_passenger_name;
+            $qoute->brand_name            = $request->brand_name;
+            $qoute->type_of_holidays      = $request->type_of_holidays;
+            $qoute->sale_person           = $request->sale_person;
+            $qoute->season_id             = $request->season_id;
+            $qoute->agency_booking        = $request->agency_booking;
+            $qoute->agency_name           = $request->agency_name;
+            $qoute->agency_contact_no     = $request->agency_contact_no;
+            $qoute->currency              = $request->currency;
+            $qoute->convert_currency      = $request->convert_currency;
+            $qoute->group_no              = $request->group_no;
+            $qoute->net_price             = $request->net_price;
+            $qoute->markup_amount         = $request->markup_amount;
+            $qoute->selling               = $request->selling;
+            $qoute->gross_profit          = $request->gross_profit;
+            $qoute->markup_percent        = $request->markup_percent;
             $qoute->show_convert_currency = $request->show_convert_currency;
-            $qoute->per_person = $request->per_person;
-            $qoute->pax_name = $request->pax_name;
+            $qoute->per_person            = $request->per_person;
+            $qoute->pax_name              = $request->pax_name;
             // if($request->has('pax_name') && count($request->pax_name) > 0){
             // }
             $qoute->save();
@@ -9101,7 +9101,7 @@ class AdminController extends Controller
             $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog','qoute_id', $id));
             $qoute_log->qoute_id = $id;
             $qoute_log->ref_no = $qoute->ref_no;
-            $qoute_log->reference_name = $qoute->reference_name;
+            // $qoute_log->reference_name = $qoute->reference_name;
             $qoute_log->quotation_no = $qoute->quotation_no;
             $qoute_log->dinning_preferences = $qoute->dinning_preferences;
             $qoute_log->lead_passenger_name = $qoute->lead_passenger_name;
@@ -9130,7 +9130,7 @@ class AdminController extends Controller
 
             $qoute->ref_no = $request->ref_no;
             $qoute->quotation_no = $request->quotation_no;
-            $qoute->reference_name = $request->reference;
+            // $qoute->reference_name = $request->reference;
             $qoute->dinning_preferences = $request->dinning_preferences;
             $qoute->lead_passenger_name = $request->lead_passenger_name;
             $qoute->brand_name = $request->brand_name;

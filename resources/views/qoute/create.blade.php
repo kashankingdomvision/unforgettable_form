@@ -240,13 +240,14 @@ td.day{
                     <form method="POST" id="user_form" action="javascript:void(0)" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="row">
+
+                            {{-- <div class="row">
                                 <div class="col-md-5 col-sm-offset-1 mb-2">
                                     <label>Select the reference <span style="color:red">*</span></label> <br />
                                     <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
-                                    {{-- <label class="radio-inline"><input type="radio"  name="reference" value="tas" >TAS Reference</label> --}}
                                 </div>
-                            </div>
+                            </div> --}}
+                            
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
