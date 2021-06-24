@@ -760,7 +760,6 @@
                                             @if ($finance_booking_details->count())
 
                                                 @foreach ($finance_booking_details as $fkey => $finance_booking_detail)
-
                                                     <div class="row" data-title="title{{$key}}">
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -769,7 +768,7 @@
                                                             <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
                                                             
                                                                 <input type="number"
-                                                                    name="deposit_amount[{{ $key }}][]"
+                                                                    name="deposit_amount[{{ $key }}][]" {{ (Auth::user()->role_id != 1  && !empty($finance_booking_detail->deposit_amount))? 'disabled': '' }}
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
                                                                     class="form-control deposit_amount depositecost{{$key}}" data-key="{{ $key }}"
                                                                     placeholder="Deposit Amount" min="0" step="any">
@@ -781,7 +780,7 @@
                                                             <label for="inputEmail3" class="">Deposit Due Date</label>
                                                             <div class="input-group">
                                                                 <input type="text"
-                                                                    name="deposit_due_date[{{ $key }}][]"
+                                                                    name="deposit_due_date[{{ $key }}][]" 
                                                                     value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}"
                                                                     class="form-control deposit_due_date datepicker"
                                                                     placeholder="Deposit Due Date" autocomplete="off">
@@ -874,11 +873,12 @@
                                             @php $count = 1 @endphp
                                                 <div class="row" data-title="title{{$key+1}}">
                                                     <div class="append">
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="title{{$key+1}}">Payment #{{ $count  }}</label>
+                                                        <div class="col-sm-2" style="margin-bottom: 15px;"> 
+                                                            <label for="inputEmail3" class="title{{$key+1}}">Payments #{{ $count  }}</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                                <input type="number"
+                                                                <input type="number" 
+                                                                {{-- {{ (!empty($finance_booking_detail->deposit_amount) && ) }} --}}
                                                                     name="deposit_amount[{{ $key }}][]"
                                                                     value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
                                                                     class="form-control deposit_amount depositecost{{$key}}" data-key="{{$key}}"
