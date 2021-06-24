@@ -25,5 +25,8 @@ class Booking extends Model
         return $this->hasOne(HolidayType::class,'id', 'type_of_holidays' );
     }
 
-    
+    public function getBookingPaxDetail()
+    {
+        return $this->hasMany(BookingPaxDetail::class, 'booking_id', 'id');
+    }   
 }

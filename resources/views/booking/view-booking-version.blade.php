@@ -213,26 +213,71 @@
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
-
-                            <div class="col-sm-5" style="margin-bottom:15px">
-                                <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2" name="group_no" disabled>
-                                    @for($i=1;$i<=30;$i++)
-                                    <option value={{$i}} {{ $booking_log->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
-                                    @endfor
-                                  </select>
-                                <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                            <div class="col-sm-5 mb-2">
                                 <label> Dinning Preferences</label> <span style="color:red">*</span>
                                 <input type="text" name="dinning_preferences" value="{{ $booking_log->dinning_preferences }}" class="form-control" disabled>
                                 <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px">
+                               <label class="">Pax No.</label> <span style="color:red">*</span>
+                                 <select class="form-control dropdown_value select2" name="group_no" disabled>
+                                    @for($i=1;$i<=30;$i++)
+                                    <option value={{$i}} {{ $booking_log->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
+                                    @endfor
+                                 </select>
+                               <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
+                           </div>
+                       </div>
+                       <div class="row" style="margin-left: 4px;">
+                           <div class="col-sm-offset-1 mb-2" id="appendPaxName">
+                               @if($booking_log->group_no > 1)
+                                   @foreach ($booking_log->getBookingPaxDetailLog as $paxKey => $pax )
+                                   @php
+                                        $count = $paxKey +1;
+                                   @endphp
+                                   <div class="mb-2">
+                                       <div class="row" >
+                                           <div class="col-md-3 mb-2">
+                                               <label>Passenger #{{ $count }} Full Name</label> 
+                                               <input disabled type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                           <div class="col-md-3 mb-2">
+                                               <label>Email Address</label> 
+                                               <input disabled type="c" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                           <div class="col-md-3 mb-2">
+                                               <label>Contact Number</label> 
+                                               <input disabled type="c" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                       </div>
+                                       <div class="row">
+                                           <div class="col-md-3 mb-2">
+                                               <label>Date Of Birth</label> 
+                                               <input disabled type="date" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                           <div class="col-md-3 mb-2">
+                                               <label>Bedding Preference</label> 
+                                               <input disabled type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                           
+                                           <div class="col-md-3 mb-2">
+                                               <label>Dinning Preference</label> 
+                                               <input disabled type="text" name="pax[{{$paxKey}}][dinning_perference]" value="{{ $pax->dinning_preference }}" class="form-control" placeholder="DINNING PREFERENCES" >
+                                               <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   @endforeach
+                               @endif
+                           </div>
+                       </div>
                         <br><br>
 
                         <div class="parent" id="parent">

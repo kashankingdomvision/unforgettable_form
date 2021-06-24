@@ -455,3 +455,127 @@ ALTER TABLE `booking_logs` CHANGE `brand_name` `brand_name` INT(10) NULL DEFAULT
 
 -- //FOREIGN key/
 ALTER TABLE `template_details` ADD FOREIGN KEY (`template_id`) REFERENCES `templates`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- ///quote detail pax
+
+-- CREATE TABLE `lara_unforge`.`quotes_pax_details` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `quote_id` INT NOT NULL , `full_name` VARCHAR(255) NULL , `email` VARCHAR(255) NULL , `contact` VARCHAR(255) NULL , `date_of_birth` DATE NULL , `bedding_preference` VARCHAR(255) NULL , `dinning preference` VARCHAR(255) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-- ALTER TABLE `quotes_pax_details` ADD FOREIGN KEY (`quote_id`) REFERENCES `qoutes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- ALTER TABLE `quote_pax_details` ADD `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `dinning preference`, ADD `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `created_at`;
+-- ALTER TABLE `quote_pax_details` CHANGE `dinning preference` `dinning_preference` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+
+
+-- ///quote_pax_detail_logs start
+
+CREATE TABLE `quote_pax_detail_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `quote_id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `bedding_preference` varchar(255) DEFAULT NULL,
+  `dinning_preference` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `quote_pax_detail_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `quote_id` (`quote_id`);
+  
+ALTER TABLE `quote_pax_detail_logs`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+ALTER TABLE `quote_pax_detail_logs`
+  ADD CONSTRAINT `quote_pax_detail_logs_ibfk_1` FOREIGN KEY (`quote_id`) REFERENCES `qoute_logs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+-- ///quote_pax_detail_logs end
+
+-- ///booking_pax_detail_logs start
+
+CREATE TABLE `booking_pax_detail_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `booking_log_id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `bedding_preference` varchar(255) DEFAULT NULL,
+  `dinning_preference` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `booking_pax_detail_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bookin_log_id` (`booking_log_id`);
+
+ALTER TABLE `booking_pax_detail_logs`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+ALTER TABLE `booking_pax_detail_logs`
+  ADD CONSTRAINT `booking_pax_detail_logs_ibfk_1` FOREIGN KEY (`booking_log_id`) REFERENCES `booking_logs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+-- ///booking_pax_detail_logs end
+
+
+-- quote_pax_details start
+
+CREATE TABLE `quote_pax_details` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `quote_id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `bedding_preference` varchar(255) DEFAULT NULL,
+  `dinning_preference` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `quote_pax_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `quote_id` (`quote_id`);
+
+ALTER TABLE `quote_pax_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+ALTER TABLE `quote_pax_details`
+  ADD CONSTRAINT `quote_pax_details_ibfk_1` FOREIGN KEY (`quote_id`) REFERENCES `qoutes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+-- quote_pax_details end
+
+-- booking_pax_details start/
+
+
+CREATE TABLE `booking_pax_details` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `bedding_preference` varchar(255) DEFAULT NULL,
+  `dinning_preference` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `booking_pax_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bookin_id` (`booking_id`);
+
+ALTER TABLE `booking_pax_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+ALTER TABLE `booking_pax_details`
+  ADD CONSTRAINT `booking_pax_details_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+-- booking_pax_details end/
+
+
+

@@ -248,15 +248,50 @@
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin-left: 4px;">
                             <div class="col-sm-offset-1 mb-2" id="appendPaxName">
-                                @if($qoute_log->pax_name != 'null' && $qoute_log->pax_name != NULL)
-                                    @foreach (json_decode($qoute_log->pax_name) as $key => $name)
-                                        <div class="col-md-3 mb-2">
-                                            <label>Pax Name #{{ $key+2 }}</label> <span style="color:red">*</span>
-                                            <input type="text" name="pax_name[]" class="form-control" disabled value="{{ $name }}" required >
-                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                @if($qoute_log->group_no > 1)
+                                    @foreach ($qoute_log->getPaxDetailLog as $paxKey => $pax )
+                                    @php
+                                         $count = $paxKey +1;
+                                    @endphp
+                                    <div class="mb-2">
+                                        <div class="row" >
+                                            <div class="col-md-3 mb-2">
+                                                <label>Passenger #{{ $count }} Full Name</label> 
+                                                <input disabled type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label>Email Address</label> 
+                                                <input disabled type="c" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label>Contact Number</label> 
+                                                <input disabled type="c" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-2">
+                                                <label>Date Of Birth</label> 
+                                                <input disabled type="date" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label>Bedding Preference</label> 
+                                                <input disabled type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-2">
+                                                <label>Dinning Preference</label> 
+                                                <input disabled type="text" name="pax[{{$paxKey}}][dinning_perference]" value="{{ $pax->dinning_preference }}" class="form-control" placeholder="DINNING PREFERENCES" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 @endif
                             </div>

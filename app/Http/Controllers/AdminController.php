@@ -50,6 +50,12 @@ use Validator;
 use App\Brand;
 use App\HolidayType;
 use Illuminate\Support\Facades\View;
+use App\QuotePaxDetail;
+use App\QuotePaxDetailLog;
+use App\BookingPaxDetail;
+use App\BookingPaxDetailLog;
+
+
 
 class AdminController extends Controller
 {
@@ -6975,7 +6981,7 @@ class AdminController extends Controller
             // }
 
             $booking = Booking::find($id);
-
+          
             $booking_log = new BookingLog;
             $bookingDetailLogNumber = $this->increment_log_no($this->get_log_no('BookingLog', $id));
             $booking_log->booking_id = $booking->id;
@@ -7007,6 +7013,15 @@ class AdminController extends Controller
             $booking_log->user_id = Auth::user()->id;
             $booking_log->pax_name = $booking->pax_name;
             $booking_log->save();
+            
+            if($booking->getBookingPaxDetail){
+                foreach ($booking->getBookingPaxDetail as $pax) {           
+                  $data = $this->getPaxDetailArray($pax);
+                  $data['booking_log_id'] = $booking_log->id;
+                  BookingPaxDetailLog::create($data);
+                }
+                BookingPaxDetail::where('booking_id', $booking->id)->delete();
+            }
 
             $booking = Booking::updateOrCreate(
                 ['quotation_no' => $request->quotation_no],
@@ -7077,6 +7092,15 @@ class AdminController extends Controller
                     'electronic_copy_details' => $request->electronic_copy_details && ($request->electronic_copy_sent == 'yes') ? $request->electronic_copy_details : null,
                 ]
             );
+            
+            if($request->has('pax')){
+                foreach ($request->pax as $pax) {           
+                  $data = $this->getPaxDetailArray($pax);
+                  $data['booking_id'] = $booking->id;
+                  BookingPaxDetail::create($data);
+              }
+            }
+            
 
             $bookingDetails = BookingDetail::where('booking_id', $booking->id)->get();
 
@@ -8147,6 +8171,13 @@ class AdminController extends Controller
         $booking->pax_name = $qoute->pax_name;
         $booking->save();
 
+        if($qoute->getPaxDetail){
+            foreach ($qoute->getPaxDetail as $pax) {           
+              $data = $this->getPaxDetailArray($pax);
+              $data['booking_id'] = $booking->id;
+              BookingPaxDetail::create($data);
+          }
+        }
         $qouteDetails = QouteDetail::where('qoute_id', $id)->get();
         foreach ($qouteDetails as $key => $qouteDetail) {
             $bookingDetail = new BookingDetail;
@@ -8174,6 +8205,18 @@ class AdminController extends Controller
         }
 
         return Redirect::route('view-quote')->with('success_message', 'Quotation Converted Successfully. ');
+    }
+    
+    public function getPaxDetailArray($pax)
+    {
+        return [
+            'full_name'             => $pax['full_name'], 
+            'email'                 => (isset($pax['email_address']))?$pax['email_address'] : ((isset($pax['email']))? $pax['email'] : NULL), 
+            'contact'               => (isset($pax['contact_number']))?$pax['contact_number'] : ((isset($pax['contact']))? $pax['contact'] : NULL),
+            'date_of_birth'         => $pax['date_of_birth'],
+            'bedding_preference'    => $pax['bedding_preference'],
+            'dinning_preference'    => $pax['dinning_preference'],
+        ];
     }
 
     public function create_quote(Request $request)
@@ -8354,10 +8397,16 @@ class AdminController extends Controller
             $qoute->show_convert_currency = $request->show_convert_currency;
             $qoute->per_person = $request->per_person;
             $qoute->pax_name = $request->pax_name;
-            // if($request->has('pax_name') && count($request->pax_name) > 0){
-            // }
             $qoute->save();
-
+            
+            if($request->has('pax')){
+                foreach ($request->pax as $pax) {           
+                  $data = $this->getPaxDetailArray($pax);
+                  $data['quote_id'] = $qoute->id;
+                  QuotePaxDetail::create($data);
+              }
+            }
+            
             if (!empty($request->cost)) {
                 foreach ($request->cost as $key => $cost) {
                     $qouteDetail = new QouteDetail;
@@ -8909,7 +8958,6 @@ class AdminController extends Controller
 
         if ($request->isMethod('post')) {
 
-            // dd($request->all());
 
             // $title = "To Pay $request->deposit_amount $request->supplier_currency to Supplier";
 
@@ -8941,7 +8989,6 @@ class AdminController extends Controller
     {
 
         if ($request->isMethod('post')) {
-
             $this->validate($request, ['ref_no' => 'required'], ['required' => 'Reference number is required']);
             $this->validate($request, ['lead_passenger_name' => 'required'], ['required' => 'Lead Passenger Name is required']);
             $this->validate($request, ['brand_name' => 'required'], ['required' => 'Please select Brand Name']);
@@ -8957,7 +9004,7 @@ class AdminController extends Controller
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
             $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
-
+            
             $season = season::findOrFail($request->season_id);
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
@@ -9096,11 +9143,8 @@ class AdminController extends Controller
                     throw \Illuminate\Validation\ValidationException::withMessages($errors);
                 }
             }
-
             $qoute = Qoute::findOrFail($id);
-
             $qoute_log = new QouteLog;
-
             $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog', $id));
             $qoute_log->qoute_id = $id;
             $qoute_log->ref_no = $qoute->ref_no;
@@ -9130,6 +9174,14 @@ class AdminController extends Controller
             $qoute_log->user_id = Auth::user()->id;
             $qoute_log->pax_name = $qoute->pax_name;
             $qoute_log->save();
+            
+            if($qoute->getPaxDetail && $qoute->getPaxDetail != null){
+                foreach ($qoute->getPaxDetail as $pax) {           
+                  $data = $this->getPaxDetailArray($pax);
+                  $data['quote_id'] = $qoute_log->id;
+                  QuotePaxDetailLog::create($data);
+              }
+            }
 
             $qoute->ref_no = $request->ref_no;
             $qoute->quotation_no = $request->quotation_no;
@@ -9154,12 +9206,18 @@ class AdminController extends Controller
             $qoute->show_convert_currency = $request->show_convert_currency;
             $qoute->per_person = $request->per_person;
             $qoute->pax_name = $request->pax_name;
-
             $qoute->save();
+            
+            if($request->has('pax')){
+                QuotePaxDetail::where('quote_id', $id)->delete();
+                foreach ($request->pax as $pax) {           
+                  $data = $this->getPaxDetailArray($pax);
+                  $data['quote_id'] = $qoute->id;
+                  QuotePaxDetail::create($data);
+                }
+            }
 
             $qouteDetails = QouteDetail::where('qoute_id', $id)->get();
-
-            $qouteDetailLog = new QouteDetailLog;
 
             foreach ($qouteDetails as $key => $qouteDetail) {
 
@@ -9210,37 +9268,6 @@ class AdminController extends Controller
                     $qouteDetail->supervisor_id = $request->supervisor[$key];
                     $qouteDetail->added_in_sage = $request->added_in_sage[$key];
                     $qouteDetail->qoute_base_currency = $request->qoute_base_currency[$key];
-
-                    // if(!is_null($request->qoute_invoice)){
-
-                    //     if(array_key_exists($key,$request->qoute_invoice))
-                    //     {
-
-                    //         $file = $request->qoute_invoice[$key];
-
-                    //         $folder = public_path('quote/' . $qoute->id );
-                    //         $filename = $file->getClientOriginalName();
-
-                    //         if (!File::exists($folder)) {
-                    //             File::makeDirectory($folder, 0775, true, true);
-                    //         }
-
-                    //         $destinationPath = public_path('quote/'. $id .'/'.  $filename  );
-                    //         File::delete($destinationPath);
-
-                    //         $file->move(public_path('quote/' . $qoute->id ), $filename);
-
-                    //         $qouteDetail->qoute_invoice  = $filename ? $filename : null;
-
-                    //     }
-                    //     else{
-                    //         $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
-                    //     }
-                    // }else{
-
-                    //     $qouteDetail->qoute_invoice = isset($request->qoute_invoice_record[$key])  ? $request->qoute_invoice_record[$key] : null;
-                    // }
-
                     $qouteDetail->save();
 
                 }

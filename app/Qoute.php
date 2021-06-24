@@ -48,6 +48,11 @@ class Qoute extends Model
     function getCurrency() {
         return $this->hasOne(Currency::class, 'code', 'currency');
     }
+    
+    public function getPaxDetail()
+    {
+        return $this->hasMany(QuotePaxDetail::class, 'quote_id', 'id');
+    }
     // public function categories()
     // {
     // 	return $this->belongsToMany('App\Model\user\category','category_posts')->withTimestamps();;
