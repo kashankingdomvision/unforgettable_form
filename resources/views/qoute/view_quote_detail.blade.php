@@ -351,9 +351,11 @@
                                         <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]"  >
                                             <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                                            @endforeach
+                                            @if(!empty($quote_detail->getCategory->getSupplier))
+                                                @foreach ($quote_detail->getCategory->getSupplier as $supplier)
+                                                    <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
@@ -362,9 +364,11 @@
                                         <label class="">Product</label> 
                                         <select class="form-control product-select2"  name="product[]"  >
                                             <option value="">Select Product</option>
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }} > {{ $product->name }} </option>
-                                            @endforeach
+                                            @if(!empty($quote_detail->getSupplier->products))
+                                                @foreach ($quote_detail->getSupplier->products as $product)
+                                                    <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>

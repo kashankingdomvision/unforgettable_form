@@ -6983,7 +6983,7 @@ class AdminController extends Controller
             $booking = Booking::find($id);
           
             $booking_log = new BookingLog;
-            $bookingDetailLogNumber = $this->increment_log_no($this->get_log_no('BookingLog', $id));
+            $bookingDetailLogNumber = $this->increment_log_no($this->get_log_no('BookingLog','booking_id', $id));
             $booking_log->booking_id = $booking->id;
             $booking_log->log_no = $bookingDetailLogNumber;
             $booking_log->reference_name = $booking->reference_name;
@@ -8448,9 +8448,6 @@ class AdminController extends Controller
             return json_decode($output);
         });
 
-
-       
-
         return view('qoute.create')->with([
             'get_user_branche' => $get_user_branche,
             'get_holiday_type' => $get_holiday_type,
@@ -9145,7 +9142,8 @@ class AdminController extends Controller
             }
             $qoute = Qoute::findOrFail($id);
             $qoute_log = new QouteLog;
-            $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog', $id));
+
+            $qouteDetailLogNumber = $this->increment_log_no($this->get_log_no('QouteLog','qoute_id', $id));
             $qoute_log->qoute_id = $id;
             $qoute_log->ref_no = $qoute->ref_no;
             $qoute_log->reference_name = $qoute->reference_name;
@@ -9298,12 +9296,9 @@ class AdminController extends Controller
             'get_user_branches' => $get_user_branches,
             'get_holiday_type'  => $get_holiday_type,
             'categories'        => Category::all()->sortBy('name'),
-            'products'          => Product::all()->sortBy('name'),
-            // 'seasons' => season::where('default_season',1)->first(),
             'seasons'           => season::all(),
             'users'             => User::all()->sortBy('name'),
             'supervisors'       => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-            'suppliers'         => Supplier::all()->sortBy('name'),
             'booking_methods'   => BookingMethod::all()->sortBy('id'),
             'currencies'        => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
             'qoute_logs'        => QouteLog::where('qoute_id', $id)->orderBy('log_no', 'DESC')->get(),
@@ -9343,8 +9338,6 @@ class AdminController extends Controller
             'seasons' => season::all(),
             'currencies' => Currency::all()->sortBy('name'),
             'categories' => Category::all()->sortBy('name'),
-            'suppliers' => Supplier::all()->sortBy('name'),
-            'products' => Product::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
             'users' => User::all()->sortBy('name'),
             'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
@@ -9384,11 +9377,9 @@ class AdminController extends Controller
             'get_user_branches' => $get_user_branches,
             'get_holiday_type'  => $get_holiday_type,
             'categories'        => Category::all()->sortBy('name'),
-            'products'          => Product::all()->sortBy('name'),
             'seasons'           => season::all(),
             'users'             => User::all()->sortBy('name'),
             'supervisors'       => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
-            'suppliers'         => Supplier::all()->sortBy('name'),
             'booking_methods'   => BookingMethod::all()->sortBy('id'),
             'currencies'        => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
             'qoute_logs'        => QouteLog::where('qoute_id', $quote_id)->orderBy('log_no', 'DESC')->get(),
@@ -9400,10 +9391,10 @@ class AdminController extends Controller
     }
 
 
-    public function get_log_no($table,$qoute_id)  {
+    public function get_log_no($table,$column_name,$column_value)  {
 
         $modelName = "App\\$table";
-        $qoute_log = $modelName::where('qoute_id', $qoute_id)->orderBy('created_at', 'DESC')->first();
+        $qoute_log = $modelName::where($column_name, $column_value)->orderBy('created_at', 'DESC')->first();
 
         if(is_null($qoute_log)){
             return 0;

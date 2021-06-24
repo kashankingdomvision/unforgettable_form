@@ -26,7 +26,7 @@ class TemplateController extends Controller
       $data['supervisors']      = User::where('role_id', 5)->get()->sortBy('name');
       $data['suppliers']        = Supplier::all()->sortBy('name');
       $data['booking_methods']  = BookingMethod::all()->sortBy('id');
-      $data['currencies']       = Currency::all()->sortBy('id');
+      $data['currencies']       = Currency::where('status', 1)->orderBy('id', 'ASC')->get();
       $data['users']            = User::all()->sortBy('name');
       $data['seasons']          = Season::all();
       $this->data = $data;
@@ -85,13 +85,14 @@ class TemplateController extends Controller
         TemplateDetail::create($data);
       }
 
-      return redirect()->route('template.index')->with('success_message', 'template created successfully');
+      return redirect()->route('template.index')->with('success_message', 'Template Created Successfully');
     }
     
     public function detail($id)
     {
         $template = Template::findOrFail(decrypt($id));
-        $data['template'] = $template;
+        $data['template']   = $template;
+        $data['currencies'] = Currency::where('status', 1)->orderBy('id', 'ASC')->get();
         return view('template.details',$data);
     }
     
@@ -99,7 +100,7 @@ class TemplateController extends Controller
     {
       $template = Template::findOrFail(decrypt($id));
       $template->delete();
-      return redirect()->back()->with('success_message', 'template deleted successfully');
+      return redirect()->back()->with('success_message', 'Deleted Successfully');
     }
     
     public function edit($id)
@@ -135,7 +136,7 @@ class TemplateController extends Controller
             }
         }
         
-      return redirect()->route('template.index')->with('success_message', 'template update successfully');
+      return redirect()->route('template.index')->with('success_message', 'Template Successfully Updated');
         
     }
     

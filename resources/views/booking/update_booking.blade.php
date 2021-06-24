@@ -427,11 +427,11 @@
                                                     <select class="form-control supplier-select2 supplier-select2"
                                                         name="supplier[]">
                                                         <option value="">Select Supplier</option>
-                                                        @foreach ($suppliers as $supplier)
-                                                            <option value="{{ $supplier->id }}"
-                                                                {{ $booking_detail->supplier == $supplier->id ? 'selected' : '' }}>
-                                                                {{ $supplier->name }} </option>
-                                                        @endforeach
+                                                        @if(!empty($booking_detail->getCategory->getSupplier))
+                                                            @foreach ($booking_detail->getCategory->getSupplier as $supplier)
+                                                                <option value="{{ $supplier->id }}" {{ $booking_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
@@ -440,9 +440,11 @@
                                                     <label class="">Product</label>
                                                     <select class="form-control product-select2" name="product[]">
                                                         <option value="">Select Product</option>
-                                                        @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id ? 'selected' : '' }}>{{ $product->name }} </option>
-                                                        @endforeach
+                                                        @if(!empty($booking_detail->getSupplier->products))
+                                                            @foreach ($booking_detail->getSupplier->products as $product)
+                                                                <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
                                                 </div>
@@ -561,9 +563,9 @@
                                             <div class="row">
 
                                                 <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Supplier Currency </label>
+                                                    <label class="">Supplier Currency <span style="color:red">*</span> </label>
                                                     <select class="form-control supplier-currency"  disabled
-                                                        name="supplier_currency[]">
+                                                        name="supplier_currency[]" required>
                                                         <option value="">Select Currency</option>
                                                         @foreach ($currencies as $currency)
                                                             <option value="{{ $currency->code }}"
@@ -1520,11 +1522,19 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-1 mb-2">
+                                        <label for="">
+                                            Selling Price in Other Currency
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                        <select class="form-control select2" id="convert-currency" name="convert_currency">
+                                        <select class="form-control convert-currency-select2" id="convert-currency" name="convert_currency">
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->code }}" {{ $booking->convert_currency == $currency->code ? 'selected' : ''}}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $booking->convert_currency == $currency->code ? 'selected' : ''}}> &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -1863,7 +1873,7 @@ $(document).ready(function() {
         }
     };
 
-    $('.currency-select2, .supplier-currency').select2({
+    $('.currency-select2, .supplier-currency, .convert-currency-select2').select2({
         templateResult: formatState,
         templateSelection: formatState
     });
@@ -2410,12 +2420,12 @@ $(document).ready(function() {
                         options += '<option value="">Select Supplier</option>';
 
                         $.each(response, function(key, value) {
-                            options += '<option value="' + value.id + '">' + value
-                                .name + '</option>';
+                            options += '<option value="' + value.id + '">' + value.name + '</option>';
                         });
 
-                        $selector.closest('.row').find('[class*="supplier-select2"]').html(
-                            options);
+                        $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                        $selector.closest('.row').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+                        $selector.closest('.qoute').find('[name="service_details[]"]').val('');
                     }
                 })
             });
@@ -2993,6 +3003,7 @@ $(document).ready(function() {
 
                 var $selector = $(this);
                 var supplier_id = $(this).val();
+                var options = '';
 
                 $.ajax({
                     type: 'POST',
@@ -3002,9 +3013,17 @@ $(document).ready(function() {
                         'supplier_id': supplier_id
                     },
                     success: function(response) {
+                  
+                        // set supplier's product 
+                        options += '<option value="">Select Product</option>';
+                        $.each(response.supplier_products,function(key,value){
+                            options += '<option value="'+value.id+'">'+value.name+'</option>';
+                        });
 
-                        $selector.closest('.qoute').find('[class*="supplier-currency"]').val(
-                            response.code).change();
+                        $selector.closest('.row').find('[class*="product-select2"]').html(options);
+
+                        // set supplier's currency 
+                        // $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
                     }
                 })
             });

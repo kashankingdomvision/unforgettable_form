@@ -93,11 +93,8 @@ td.day{
                 </div>
                 <div class="col-sm-2" style="margin-bottom:15px">
                     <label class="">Supplier</label> 
-                    <select class="form-control supplier-select2 " name="supplier[]" >
+                    <select class="form-control supplier-select2" name="supplier[]" >
                         <option value="">Select Supplier</option>
-                        @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                        @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
                 </div>
@@ -105,9 +102,6 @@ td.day{
                     <label class="">Product</label> 
                     <select class="form-control product-select2"  name="product[]" >
                         <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
-                        @endforeach
                     </select>
                     <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                 </div>
@@ -420,21 +414,15 @@ td.day{
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <label class="test">Supplier</label> 
-                                        <select class="form-control supplier-select2"  name="supplier[]" >
+                                        <select class="form-control supplier-select2" name="supplier[]" >
                                             <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                                            @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <label class="">Product</label> 
-                                        <select class="form-control product-select2"  name="product[]" >
+                                        <select class="form-control product-select2" name="product[]">
                                             <option value="">Select Product</option>
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}" {{ old('product') == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
-                                            @endforeach
                                         </select>
                                         <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>
@@ -1149,7 +1137,10 @@ td.day{
                     $.each(response,function(key,value){
                         options += '<option value="'+value.id+'">'+value.name+'</option>';
                     });
+
                     $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                    $selector.closest('.row').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+                    $selector.closest('.qoute').find('[name="service_details[]"]').val('');
                 }
             })
         });
