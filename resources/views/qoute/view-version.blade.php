@@ -120,8 +120,8 @@
                         @csrf
 
                         <div class="row">
-                            <div class="row">
-                                <div class="col-sm-5 col-sm-offset-1 mb-2 mt-2">
+                            <div class="row mt-2">
+                                <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="ref_no" disabled value="{{ $qoute_log->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
@@ -135,9 +135,9 @@
                                 </div>
                                 
                                 <div class="col-sm-5" style="margin-bottom:15px;">
-                                    <label for="inputEmail3" class="">Quotation Number</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
-                                        <input type="text" name="quotation_no"  class="form-control" value="{{ $qoute_log->quotation_no }}" disabled>
+                                        <input type="text" name="quotation_no"  class="form-control" value="{{ $qoute_log->quotation_no }}" required readonly>
                                         <span class="input-group-addon"></span>
                                     </div>
                                     <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>

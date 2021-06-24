@@ -281,7 +281,7 @@ td.day{
         <h1> Edit Quote</h1>
         <div class="row">
             <div class="col-md-12 pull-right">
-                <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
+                <h4><a href="" class="view-quotation-version">View Quotation Versions {{ (count($qoute_logs) > 0 ) ? '('.count($qoute_logs).')' : '' }}</a></h4>
                 <div id="quotation-version" hidden>
                 @if(count($qoute_logs))
                         @foreach ($qoute_logs as $key => $qoute_log)
@@ -338,7 +338,7 @@ td.day{
                             <div class="col-sm-5">
                                 <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                 <div class="input-group">
-                                    <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}" required>
+                                    <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}" required readonly>
                                     <span class="input-group-addon"></span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>

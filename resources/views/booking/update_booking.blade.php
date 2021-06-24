@@ -82,10 +82,10 @@
     <div class="content-wrapper">
 
         <section class="content-header">
-            <h1>Update Booking</h1><br>
+            <h1>Update Booking</h1>
             <div class="row">
                 <div class="col-md-6">
-                    <h4><a href="" class="view-booking-version">View Booking Versions </a></h4>
+                    <h4><a href="" class="view-booking-version">View Booking Versions {{ (count($booking_logs) > 0 ) ? '('.count($booking_logs).')' : '' }} </a></h4>
                     <div id="booking-version" hidden>
                         @if(count($booking_logs))
                             @foreach ($booking_logs as $key => $booking_log)
@@ -103,11 +103,12 @@
                 </div>
 
                 <div class="col-md-6 text-right">
-                    <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
                     @if(!empty($booking))
                     @php
                         $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
                     @endphp
+
+                    <h4><a href="" class="view-quotation-version">View Quotation Versions {{ (count($quote_logs) > 0 ) ? '('.count($quote_logs).')' : '' }} </a></h4>
 
                     <div id="quotation-version" hidden>
                         @if(count($quote_logs))
@@ -155,19 +156,10 @@
                         <div class="box-body">
 
                             <div class="row">
-                                <div class="row">
-                                    <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
-                                        <label>Select the reference <span style="color:red">*</span></label> <br />
-                                        <label class="radio-inline"><input type="radio" {{ $booking->reference_name == 'zoho' ? 'checked' : null }}
-                                                name="reference" value="zoho" checked>Zoho Reference</label>
-                                        {{-- <label class="radio-inline"><input type="radio" {{ ($quote->reference_name == 'tas')? 'checked': NULL }} name="reference" value="tas" >TAS Reference</label> --}}
-                                    </div>
-                                </div>
+                         
                                 <div class="row">
                                     <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                        <label for="inputEmail3"
-                                            id="referencename">{{ $booking->reference_name == 'zoho' ? 'Zoho' : 'TAS' }}
-                                            Reference</label> <span style="color:red">*</span>
+                                        <label for="inputEmail3" id="referencename">Zoho Reference</label> <span style="color:red">*</span>
                                         <div class="input-group">
                                             <input type="text" name="ref_no" value="{{ $booking->ref_no }}"
                                                 class="form-control" placeholder='Enter Reference Number'>
@@ -185,7 +177,7 @@
                                             style="color:red">*</span>
                                         <div class="input-group">
                                             <input type="text" name="quotation_no" class="form-control"
-                                                value="{{ $booking->quotation_no }}" required>
+                                                value="{{ $booking->quotation_no }}" required readonly>
                                             <span class="input-group-addon"></span>
                                         </div>
                                         <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
