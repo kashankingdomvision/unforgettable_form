@@ -33,11 +33,23 @@
         .hide-arrows {
             -moz-appearance:textfield !important;
         }
+
+        .pl-3{
+            padding-left: 3rem;
+        }
+
+        .pr-3{
+            padding-right: 3rem;
+        }
+
+        .mt-2{
+        margin-top: 2rem;
+    }
     </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Create Templates (Quote)</h1>
+        <h1>Create Quote Template </h1>
         <ol class="breadcrumb">
             <li>
               <a href="{{ route('template.index') }}" class="btn btn-primary btn-xs">View all template</a>
@@ -56,12 +68,15 @@
                @endif 
             </div>
         <div class="col-xs-12">
-        <div class="box">
+        <div class="box  box-info">
             <div class="box-body">
-                <div class="row">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Template Form</h3>
+                </div>
+                <div class="row mt-2">
                     <div class="col-md-12 appendColumn">
                         <form method="POST" action="{{ route('template.store') }}"> @csrf
-                            <div class="row">
+                            <div class="row pl-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="template_title" >Template Tilte <span class="text-danger">*</span></label>
@@ -82,7 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="parent" id="parent">
+                            <div class="parent pl-3 pr-3 mt-2" id="parent">
                                 <div class="qoute">
                                         <div class="row removeButton"> </div>
                                         <div class="row" style="margin-top: 15px">
@@ -95,14 +110,8 @@
                                             </div>
                 
                                             <div class="col-sm-2">
-                                                <label for="inputEmail3" class="">Service Details</label> 
-                                                <textarea name="quote[0][service_details]"  class="form-control" cols="30" rows="1"></textarea>
-                                                {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
-                                            </div>
-                
-                                            <div class="col-sm-2">
                                                 <label class="">Category</label> 
-                                                <select class="form-control category-select2 select2"  name="quote[0][category_id]" >
+                                                <select class="form-control category-select2"  name="quote[0][category_id]" >
                                                     <option value="">Select Category</option>
                                                     @foreach ($categories as $category)
                                                         <option value="{{ $category->id }}" {{ old('category') == $category->id  ? "selected" : "" }}> {{ $category->name }} </option>
@@ -113,13 +122,18 @@
                 
                                             <div class="col-sm-2">
                                                 <label class="test">Supplier</label> 
-                                                <select class="form-control supplier-select2 select2"  name="quote[0][supplier_id]" >
+                                                <select class="form-control supplier-select2"  name="quote[0][supplier_id]" >
                                                     <option value="">Select Supplier</option>
-                                                    @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}" {{ old('supplier') == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                                                    @endforeach
                                                 </select>
                                                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                                            </div>
+
+                                            <div class="col-sm-2 mb-3">
+                                                <label class="">Product</label> 
+                                                <select class="form-control product-select2"  name="quote[0][product]" >
+                                                    <option value="">Select Product</option>
+                                                </select>
+                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                             </div>
                 
                                             <div class="col-sm-2">
@@ -140,6 +154,13 @@
                             
                                         </div>
                                         <div class="row" style="margin-top: 15px">
+
+                                            <div class="col-sm-2">
+                                                <label for="inputEmail3" class="">Service Details</label> 
+                                                <textarea name="quote[0][service_details]"  class="form-control service-detail" cols="30" rows="1"></textarea>
+                                                {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
+                                            </div>
+
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booking Method</label>
                                                 <div class="input-group">
@@ -191,7 +212,10 @@
                                                 <textarea name="quote[0][comments]"   class="form-control" cols="30" rows="1"></textarea>
                                                 <div class="alert-danger" style="text-align:center"></div>
                                             </div>
-                
+
+                                        </div>
+                                        <div class="row" style="margin-top: 15px">
+
                                             <div class="col-sm-2">
                                                 <label>Supplier Currency</label> 
                                                 <select class="form-control supplier-currency"  name="quote[0][currency_id]" >
@@ -202,8 +226,7 @@
                                                 </select>
                                                 <div class="alert-danger" style="text-align:center"></div>
                                             </div>
-                                        </div>
-                                        <div class="row" style="margin-top: 15px">
+
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Estimated Cost</label>
                                                  {{-- <span style="color:red">*</span> --}}
@@ -283,7 +306,7 @@
     $(document).ready(function(){
  
         datePickerSetDate();
-        $('.select2').select2();
+        $('.select2, .category-select2, .supplier-select2, .product-select2').select2();
 
         $('.supplier-currency').select2({
             templateResult: formatState,
@@ -329,8 +352,8 @@
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
-                    $('.select2, .supplier-currency').removeClass('select2-hidden-accessible').next().remove()
-                    $('.select2').select2();
+                    $('.select2, .supplier-currency, .category-select2, .supplier-select2, .product-select2').removeClass('select2-hidden-accessible').next().remove()
+                    $('.select2, .category-select2, .supplier-select2, .product-select2').select2();
 
                     $('.supplier-currency').select2({
                         templateResult: formatState,
@@ -428,7 +451,59 @@
                     $.each(response,function(key,value){
                         options += '<option value="'+value.id+'">'+value.name+'</option>';
                     });
+                    
                     $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                    $selector.closest('.row').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+                    $selector.closest('.qoute').find('[class*="service-detail"]').val('');
+                }
+            })
+        });
+
+        // set supplier's default & supplier's product list
+        $(document).on('change', '.supplier-select2',function(){
+
+            var $selector = $(this);
+            var supplier_id = $(this).val();
+            var options = '';
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'supplier_id': supplier_id
+                },
+                success: function(response) {
+
+                    // set supplier's product 
+                    options += '<option value="">Select Product</option>';
+                    $.each(response.supplier_products,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    $selector.closest('.row').find('[class*="product-select2"]').html(options);
+
+                    // set supplier's currency 
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
+                }
+            })
+        });
+
+        // get product's details for service details
+        $(document).on('change', '.product-select2',function(){
+
+            var $selector = $(this);
+            var product_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-product-details') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'product_id': product_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="service-detail"]').val(response.description);
                 }
             })
         });
