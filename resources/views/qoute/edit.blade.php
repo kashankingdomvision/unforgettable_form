@@ -77,7 +77,7 @@ td.day{
     .hide-arrows {
         -moz-appearance:textfield !important;
     }
-
+    
 </style>
 
 <div class="content-wrapper">
@@ -464,15 +464,51 @@ td.day{
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin-left: 4px;">
                             <div class="col-sm-offset-1 mb-2" id="appendPaxName">
-                                @if($quote->pax_name != 'null' && $quote->pax_name != NULL)
-                                    @foreach (json_decode($quote->pax_name) as $key => $name)
-                                        <div class="col-md-3 mb-2">
-                                            <label>Pax Name #{{ $key+2 }}</label> <span style="color:red">*</span>
-                                            <input type="text" name="pax_name[]" class="form-control" value="{{ $name }}" required >
-                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                @if($quote->group_no > 1)
+                                    
+                                    @foreach ($quote->getPaxDetail as $paxKey => $pax )
+                                    @php
+                                         $count = $paxKey +1;
+                                    @endphp
+                                    <div class="mb-2">
+                                        <div class="row" >
+                                            <div class="col-md-3 mb-2">
+                                                <label >Passenger #{{ $count }} Full Name</label> 
+                                                <input type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label >Email Address</label> 
+                                                <input type="email" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label >Contact Number</label> 
+                                                <input type="number" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-2">
+                                                <label>Date Of Birth</label> 
+                                                <input type="date" max="{{  date("Y-m-d") }}" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label>Bedding Preference</label> 
+                                                <input type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-2">
+                                                <label>Dinning Preference</label> 
+                                                <input type="text" name="pax[{{$paxKey}}][dinning_preference]" value="{{ $pax->dinning_preference }}" class="form-control" placeholder="DINNING PREFERENCES" >
+                                                <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 @endif
                             </div>
@@ -1847,13 +1883,39 @@ td.day{
             if($_val > 1){
                 for (i = 1; i < $_val; ++i) {
                 var count = i +1;
-                var validatecount = i -1;
-                var heading = 'Pax Name #'+count;
-                const $_html =  '<div class="col-md-3 mb-2">'+
-                                    '<label>'+heading+'</label> <span style="color:red">*</span>'+
-                                    '<input type="text" name="pax_name[]" class="form-control" >'+
-                                    '<div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>'+
-                                '</div>';
+                var currentDate = curday('-');
+                
+                const $_html = `<div class="mb-2">
+                                <div class="row" >
+                                    <div class="col-md-3 mb-2">
+                                        <label>Passenger #${ count } Full Name</label> 
+                                        <input type="text" name="pax[${i}][full_name]" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label>Email Address</label> 
+                                        <input type="email" name="pax[${i}][email_address]" class="form-control" placeholder="EMAIL ADDRESS" >
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label>Contact Number</label> 
+                                        <input type="number" name="pax[${i}][contact_number]" class="form-control" placeholder="CONTACT NUMBER" >
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label>Date Of Birth</label> 
+                                        <input type="date" max="${currentDate}" name="pax[${i}][date_of_birth]" class="form-control" placeholder="CONTACT NUMBER" >
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label>Bedding Preference</label> 
+                                        <input type="text" name="pax[${i}][bedding_preference]" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-2">
+                                        <label>Dinning Preference</label> 
+                                        <input type="text" name="pax[${i}][dinning_preference]" class="form-control" placeholder="DINNING PREFERENCES" >
+                                    </div>
+                                </div>
+                            </div> `;
                 $('#appendPaxName').append($_html);
                 }
                 
@@ -1861,6 +1923,17 @@ td.day{
             }
         });
     });
+        
+    var curday = function(sp){
+        today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //As January is 0.
+        var yyyy = today.getFullYear();
+
+        if(dd<10) dd='0'+dd;
+        if(mm<10) mm='0'+mm;
+        return (yyyy+sp+mm+sp+dd);
+    };
 </script>
 
 
