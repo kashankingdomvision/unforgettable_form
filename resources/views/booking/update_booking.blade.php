@@ -82,10 +82,10 @@
     <div class="content-wrapper">
 
         <section class="content-header">
-            <h1>Update Booking</h1><br>
+            <h1>Update Booking</h1>
             <div class="row">
                 <div class="col-md-6">
-                    <h4><a href="" class="view-booking-version">View Booking Versions </a></h4>
+                    <h4><a href="" class="view-booking-version">View Booking Versions {{ (count($booking_logs) > 0 ) ? '('.count($booking_logs).')' : '' }} </a></h4>
                     <div id="booking-version" hidden>
                         @if(count($booking_logs))
                             @foreach ($booking_logs as $key => $booking_log)
@@ -103,11 +103,12 @@
                 </div>
 
                 <div class="col-md-6 text-right">
-                    <h4><a href="" class="view-quotation-version">View Quotation Versions </a></h4>
                     @if(!empty($booking))
                     @php
                         $quote_logs = \App\QouteLog::where('qoute_id',$booking->qoute_id)->orderBy('log_no', 'DESC')->get();
                     @endphp
+
+                    <h4><a href="" class="view-quotation-version">View Quotation Versions {{ (count($quote_logs) > 0 ) ? '('.count($quote_logs).')' : '' }} </a></h4>
 
                     <div id="quotation-version" hidden>
                         @if(count($quote_logs))
