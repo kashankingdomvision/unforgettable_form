@@ -391,11 +391,11 @@
                                                     <select class="form-control supplier-select2 supplier-select2"
                                                         name="supplier[]">
                                                         <option value="">Select Supplier</option>
-                                                        @foreach ($suppliers as $supplier)
-                                                            <option value="{{ $supplier->id }}"
-                                                                {{ $booking_detail->supplier == $supplier->id ? 'selected' : '' }}>
-                                                                {{ $supplier->name }} </option>
-                                                        @endforeach
+                                                        @if(!empty($booking_detail->getCategory->getSupplier))
+                                                            @foreach ($booking_detail->getCategory->getSupplier as $supplier)
+                                                                <option value="{{ $supplier->id }}" {{ $booking_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
@@ -404,9 +404,11 @@
                                                     <label class="">Product</label>
                                                     <select class="form-control product-select2" name="product[]">
                                                         <option value="">Select Product</option>
-                                                        @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id ? 'selected' : '' }}>{{ $product->name }} </option>
-                                                        @endforeach
+                                                        @if(!empty($booking_detail->getSupplier->products))
+                                                            @foreach ($booking_detail->getSupplier->products as $product)
+                                                                <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
                                                 </div>
@@ -2957,6 +2959,7 @@ $(document).ready(function() {
 
                 var $selector = $(this);
                 var supplier_id = $(this).val();
+                var options = '';
 
                 $.ajax({
                     type: 'POST',
@@ -2966,9 +2969,17 @@ $(document).ready(function() {
                         'supplier_id': supplier_id
                     },
                     success: function(response) {
+                  
+                        // set supplier's product 
+                        options += '<option value="">Select Product</option>';
+                        $.each(response.supplier_products,function(key,value){
+                            options += '<option value="'+value.id+'">'+value.name+'</option>';
+                        });
+                        
+                        $selector.closest('.row').find('[class*="product-select2"]').html(options);
 
-                        $selector.closest('.qoute').find('[class*="supplier-currency"]').val(
-                            response.code).change();
+                        // set supplier's currency 
+                        // $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
                     }
                 })
             });
