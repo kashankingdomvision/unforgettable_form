@@ -176,7 +176,7 @@
                                             style="color:red">*</span>
                                         <div class="input-group">
                                             <input type="text" name="quotation_no" class="form-control"
-                                                value="{{ $booking->quotation_no }}" required disabled>
+                                                value="{{ $booking->quotation_no }}" required readonly>
                                             <span class="input-group-addon"></span>
                                         </div>
                                         <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
