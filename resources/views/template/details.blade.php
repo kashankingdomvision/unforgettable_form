@@ -33,6 +33,19 @@
     .hide-arrows {
         -moz-appearance:textfield !important;
     }
+
+    .pl-3{
+        padding-left: 3rem;
+    }
+
+    .pr-3{
+        padding-right: 3rem;
+    }
+
+    .mt-2{
+        margin-top: 2rem;
+    }
+    
     </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -48,11 +61,14 @@
     <div id="divLoading"></div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
+            <div class="box box-info">
                 <div class="box-body">
-                    <div class="row">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Template Form</h3>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-md-12 appendColumn">
-                            <div class="row">
+                            <div class="row pl-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="template_title" >Template Tilte <span class="text-danger">*</span></label>
@@ -67,7 +83,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="parent" id="parent">
+                            <div class="parent pl-3 pr-3 mt-2" id="parent">
                                 @foreach ($template->getTemplateDetails as $detail)
                                     <div class="qoute">
                                             <div class="row removeButton"> </div>
@@ -79,10 +95,7 @@
                                                     </div>
                                                 </div>
                     
-                                                <div class="col-sm-2">
-                                                    <label for="inputEmail3" class="">Service Details</label> 
-                                                    <textarea disabled name="quote[0][service_details]" class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
-                                                </div>
+
                     
                                                 <div class="col-sm-2">
                                                     <label class="">Category</label> 
@@ -93,6 +106,11 @@
                                                     <label class="test">Supplier</label> 
                                                     <input  class="form-control"disabled type="text" value="{{ $detail->getSupplier->name??NULL }}"  required>
                                                 </div>
+
+                                                <div class="col-sm-2">
+                                                    <label class="test">Product</label> 
+                                                    <input  class="form-control"disabled type="text" value="{{ $detail->getProduct->name??NULL }}"  required>
+                                                </div>
                     
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="test222">Booking Date</label>
@@ -100,11 +118,17 @@
                                                 </div>
                     
                                                 <div class="col-sm-2">
-                                                    <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
+                                                    <label for="inputEmail3" class="">Booking Due Date</label> 
                                                     <input type="text" disabled value="{{ !empty($detail->booking_due_date) ? date('d/m/Y', strtotime($detail->booking_due_date)) : "" }}"    class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top: 15px">
+
+                                                <div class="col-sm-2">
+                                                    <label for="inputEmail3" class="">Service Details</label> 
+                                                    <textarea disabled name="quote[0][service_details]" class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
+                                                </div>
+
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="">Booking Method</label>
                                                     <div class="input-group">
@@ -142,6 +166,10 @@
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
                     
+
+                                            </div>
+                                            <div class="row" style="margin-top: 5px">
+
                                                 <div class="col-sm-2">
                                                     <label>Supplier Currency</label> 
                                                     <select class="form-control supplier-currency"  name="quote[0][currency_id]" disabled>
@@ -152,8 +180,7 @@
                                                     </select>
                                                     <div class="alert-danger" style="text-align:center"></div>
                                                 </div>
-                                            </div>
-                                            <div class="row" style="margin-top: 5px">
+
                                                 <div class="col-sm-2">
                                                     <label for="inputEmail3" class="">Estimated Cost</label>
                                                      {{-- <span style="color:red">*</span> --}}
@@ -165,7 +192,7 @@
                                                 </div>
                     
                                                 <div class="col-sm-2">
-                                                    <label for="inputEmail3" class="">Added in Sage {{   $detail->added_in_sage }}</label>
+                                                    <label for="inputEmail3" class="">Added in Sage</label>
                                                     <div class="input-group">
                                                         <input type="checkbox"  disabled {{ ($detail->added_in_sage == '1')? 'checked': NULL }} class="addsaga" name="quote[0][add_in_sag]" value="{{ ($detail->added_in_sage == '1')? true: false }} ">
                                                         {{-- <input type="checkbox" onclick="this.previousSibling.value=1-this.previousSibling.value"> --}}

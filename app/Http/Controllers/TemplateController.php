@@ -79,6 +79,8 @@ class TemplateController extends Controller
         'title' => $request->template_name,
         'season_id' => $request->season_id
       ]);
+
+      // dd($request->quote);
       
       foreach ($request->quote as $quote) {
         $data = $this->getArrayTemplateDetails($quote);
@@ -129,12 +131,14 @@ class TemplateController extends Controller
         foreach ($request->quote as $quote) {
             if(!isset($quote['booking_due_date'])){
               $template->getTemplateDetails()->where('id', decrypt($quote['key']))->delete();
-            }else{
-              $data = $this->getArrayTemplateDetails($quote);
-              $data['template_id'] = $template->id;
-              $key = (isset($quote['key']))? decrypt($quote['key']) : 0;
-              $template->getTemplateDetails()->updateOrCreate(['id' => $key],$data);
+            // }
+            // else{
+         
             }
+            $data = $this->getArrayTemplateDetails($quote);
+            $data['template_id'] = $template->id;
+            $key = (isset($quote['key']))? decrypt($quote['key']) : 0;
+            $template->getTemplateDetails()->updateOrCreate(['id' => $key],$data);
         }
         
       return redirect()->route('template.index')->with('success_message', 'Template Successfully Updated');
