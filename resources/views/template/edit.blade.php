@@ -33,11 +33,23 @@
         .hide-arrows {
             -moz-appearance:textfield !important;
         }
+
+        .pl-3{
+            padding-left: 3rem;
+        }
+
+        .pr-3{
+            padding-right: 3rem;
+        }
+
+        .mt-2{
+            margin-top: 2rem;
+        }
     </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Edit Templates (Quote)</h1>
+        <h1>Edit Quote Template</h1>
         <ol class="breadcrumb">
             <li>
               <a href="{{ route('template.index') }}" class="btn btn-primary btn-xs">View all template</a>
@@ -56,12 +68,15 @@
                @endif 
             </div>
         <div class="col-xs-12">
-        <div class="box">
+        <div class="box box-info">
             <div class="box-body">
-                <div class="row">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Template Form</h3>
+                </div>
+                <div class="row mt-2">
                     <div class="col-md-12 appendColumn">
                         <form method="POST" action="{{ route('template.update', encrypt($template->id)) }}"> @csrf
-                            <div class="row">
+                            <div class="row pl-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="template_title" >Template Tilte <span class="text-danger">*</span></label>
@@ -82,7 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="parent" id="parent">
+                            <div class="parent pl-3 pr-3 mt-2" id="parent">
                             @foreach ($template->getTemplateDetails as $key => $detail)   
                                 <input type="hidden" name="quote[{{ $key }}][key]" value="{{ encrypt($detail->id) }}">                             
                                     <div class="qoute">
@@ -100,11 +115,7 @@
                                                 {{-- <div class="alert-danger date_of_service" style="text-align:center"></div> --}}
                                             </div>
                 
-                                            <div class="col-sm-2">
-                                                <label for="inputEmail3" class="">Service Details</label> 
-                                                <textarea name="quote[{{ $key }}][service_details]"  class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
-                                                {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
-                                            </div>
+                   
                 
                                             <div class="col-sm-2">
                                                 <label class="">Category</label> 
@@ -121,11 +132,26 @@
                                                 <label class="test">Supplier</label> 
                                                 <select class="form-control supplier-select2"  id="supplier-select2" name="quote[{{ $key }}][supplier_id]" >
                                                     <option value="">Select Supplier</option>
-                                                    @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}" {{ ($detail->supplier == $supplier->id)? 'selected': (old('supplier') == $supplier->id  ? "selected" : "") }}> {{ $supplier->name }} </option>
-                                                    @endforeach
+                                                    @if(!empty($detail->getCategory->getSupplier))
+                                                        @foreach ($detail->getCategory->getSupplier as $supplier)
+                                                            <option value="{{ $supplier->id }}" {{ $detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+                                            </div>
+
+                                            <div class="col-sm-2 mb-3">
+                                                <label class="">Product</label> 
+                                                <select class="form-control product-select2" name="quote[{{ $key }}][product]">
+                                                    <option value="">Select Product</option>
+                                                    @if(!empty($detail->getSupplier->products))
+                                                        @foreach ($detail->getSupplier->products as $product)
+                                                            <option value="{{ $product->id }}" {{ $detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                             </div>
                 
                                             <div class="col-sm-2">
@@ -137,7 +163,7 @@
                                             </div>
                 
                                             <div class="col-sm-2">
-                                                <label for="inputEmail3" class="">Booking Due Date <span style="color:red">*</span></label> 
+                                                <label for="inputEmail3" class="">Booking Due Date</label> 
                                                 <div class="input-group">
                                                     <input type="text" data-name="booking_due_date"   name="quote[{{ $key }}][booking_due_date]"  value="{{ !empty($detail->booking_due_date) ? date('d/m/Y', strtotime($detail->booking_due_date)) : NULL }}""  class="form-control datepicker checkDates bookingDueDate" autocomplete="off" placeholder="Booking Due Date" >
                                                 </div>
@@ -146,6 +172,13 @@
                             
                                         </div>
                                         <div class="row" style="margin-top: 15px">
+
+                                            <div class="col-sm-2">
+                                                <label for="inputEmail3" class="">Service Details</label> 
+                                                <textarea name="quote[{{ $key }}][service_details]"  class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
+                                                {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
+                                            </div>
+
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Booking Method</label>
                                                 <div class="input-group">
@@ -198,6 +231,9 @@
                                                 <div class="alert-danger" style="text-align:center"></div>
                                             </div>
                 
+                                        </div>
+                                        <div class="row" style="margin-top: 15px">
+
                                             <div class="col-sm-2">
                                                 <label>Supplier Currency</label> 
                                                 <select class="form-control supplier-currency"  name="quote[{{ $key }}][currency_id]" >
@@ -208,8 +244,7 @@
                                                 </select>
                                                 <div class="alert-danger" style="text-align:center"></div>
                                             </div>
-                                        </div>
-                                        <div class="row" style="margin-top: 15px">
+
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
                                                 <div class="input-group">
@@ -310,7 +345,7 @@ function convertDate(date) {
         $(function(){
             datePickerSetDate();
         });
-        $('.select2, .category-select2, .supplier-select2, .booking-method-select2, .booked-by-select2, .supervisor-select2, .booking-type-select2').select2();
+        $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supervisor-select2, .booking-type-select2').select2();
 
         $('.supplier-currency').select2({
             templateResult: formatState,
@@ -355,8 +390,8 @@ function convertDate(date) {
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
-                    $(".select2, .supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
-                    $(".select2, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .supervisor-select2, .booking-type-select2").select2();
+                    $(".select2, .supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
+                    $(".select2, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();
                     $('.supplier-currency').select2({
                         templateResult: formatState,
                         templateSelection: formatState

@@ -15,17 +15,13 @@
                 <div class="input-group">
                     <input type="text" data-name="date_of_service" name="date_of_service[]" value="{{ !empty($detail->date_of_service) ? date('d/m/Y', strtotime($detail->date_of_service)) : NULL }}" class="form-control datepicker checkDates bookingDateOfService" autocomplete="off" placeholder="Date of Service"  >
                 </div>
-                {{-- <div class="alert-danger date_of_service" style="text-align:center"></div> --}}
+                <div class="alert-danger date_of_service" style="text-align:center"></div>
             </div>
 
-            <div class="col-sm-2">
-                <label for="inputEmail3" class="">Service Details</label> 
-                <textarea name="service_details[]"  class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
-                {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
-            </div>
+
 
             <div class="col-sm-2">
-                <label class="">Select Category</label> 
+                <label class="">Category</label> 
                 <select class="form-control category-select2"   name="category[]" >
                     <option value="">Select Category</option>
                     @foreach ($categories as $category)
@@ -35,8 +31,8 @@
                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div>
             </div>
 
-            <div class="col-sm-2">
-                <label class="test">Select Supplier</label> 
+            {{-- <div class="col-sm-2">
+                <label class="test">Supplier</label> 
                 <select class="form-control supplier-select2"  name="supplier[]" >
                     <option value="">Select Supplier</option>
                     @foreach ($suppliers as $supplier)
@@ -44,6 +40,32 @@
                     @endforeach
                 </select>
                 <div class="alert-danger" style="text-align:center"> {{ $errors->first('supplier') }} </div>
+            </div> --}}
+
+            <div class="col-sm-2 mb-3">
+                <label class="test">Supplier</label> 
+                <select class="form-control supplier-select2" name="supplier[]">
+                    <option value="">Select Supplier</option>
+                    @if(!empty($detail->getCategory->getSupplier))
+                        @foreach ($detail->getCategory->getSupplier as $supplier)
+                            <option value="{{ $supplier->id }}" {{ $detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                        @endforeach
+                    @endif
+                </select>
+                <div class="alert-danger" style="text-align:center"></div>
+            </div>
+
+            <div class="col-sm-2 mb-3">
+                <label class="">Product</label> 
+                <select class="form-control product-select2" name="quote[{{ $key }}][product]">
+                    <option value="">Select Product</option>
+                    @if(!empty($detail->getSupplier->products))
+                        @foreach ($detail->getSupplier->products as $product)
+                            <option value="{{ $product->id }}" {{ $detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                        @endforeach
+                    @endif
+                </select>
+                <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
             </div>
 
             <div class="col-sm-2">
@@ -64,6 +86,13 @@
 
         </div>
         <div class="row" style="margin-top: 15px">
+
+            <div class="col-sm-2">
+                <label for="inputEmail3" class="">Service Details</label> 
+                <textarea name="service_details[]"  class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
+                <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div>
+            </div>
+
             <div class="col-sm-2">
                 <label for="inputEmail3" class="">Booking Method</label>
                 <div class="input-group">
@@ -115,19 +144,20 @@
                 <textarea name="comments[]"   class="form-control" cols="30" rows="1">{{ $detail->comments }}</textarea>
                 <div class="alert-danger" style="text-align:center"></div>
             </div>
+        </div>
+        <div class="row" style="margin-top: 15px">
 
             <div class="col-sm-2">
-                <label>Select Supplier Currency</label> 
+                <label>Supplier Currency</label> 
                 <select class="form-control supplier-currency"  name="supplier_currency[]" >
                     <option value="">Select Currency</option>
                     @foreach ($currencies as $currency)
-                        <option value="{{ $currency->code }}"  {{ ($detail->supplier_currency == $currency->code)? 'selected': NULL }} > {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ ($detail->supplier_currency == $currency->code)? 'selected': NULL }} > &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                     @endforeach
                 </select>
                 <div class="alert-danger" style="text-align:center"></div>
             </div>
-        </div>
-        <div class="row" style="margin-top: 15px">
+
             <div class="col-sm-2">
                 <label for="inputEmail3" class="">Estimated Cost</label> <span style="color:red">*</span>
                 <div class="input-group">

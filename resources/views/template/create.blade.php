@@ -43,8 +43,8 @@
         }
 
         .mt-2{
-        margin-top: 2rem;
-    }
+            margin-top: 2rem;
+        }
     </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -68,7 +68,7 @@
                @endif 
             </div>
         <div class="col-xs-12">
-        <div class="box  box-info">
+        <div class="box box-info">
             <div class="box-body">
                 <div class="box-header with-border">
                     <h3 class="box-title">Template Form</h3>

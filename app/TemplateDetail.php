@@ -12,6 +12,7 @@ class TemplateDetail extends Model
         'service_details',
         'category_id',
         'supplier',
+        'product',
         'booking_date',
         'booking_due_date',
         'booking_method',
@@ -31,10 +32,14 @@ class TemplateDetail extends Model
     {
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
-    
     public function getSupplier()
     {
         return $this->hasOne(Supplier::class, 'id', 'supplier');
+    }
+
+    public function getProduct()
+    {
+        return $this->hasOne(Product::class, 'id', 'product');
     }
     
     public function getSupervisor()

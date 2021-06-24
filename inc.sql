@@ -576,6 +576,9 @@ ALTER TABLE `booking_pax_detail_logs`
 COMMIT;
 -- ///booking_pax_detail_logs end
 
+-- add product in template_details
+ALTER TABLE `template_details` ADD `product` INT(10) NULL AFTER `supplier`;
+
 
 
 
