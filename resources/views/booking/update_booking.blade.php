@@ -1486,11 +1486,19 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-1 mb-2">
+                                        <label for="">
+                                            Selling Price in Other Currency
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                        <select class="form-control select2" id="convert-currency" name="convert_currency">
+                                        <select class="form-control convert-currency-select2" id="convert-currency" name="convert_currency">
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->code }}" {{ $booking->convert_currency == $currency->code ? 'selected' : ''}}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                                <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $booking->convert_currency == $currency->code ? 'selected' : ''}}> &nbsp; {{$currency->code}} - {{$currency->name}}  </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -1829,7 +1837,7 @@ $(document).ready(function() {
         }
     };
 
-    $('.currency-select2, .supplier-currency').select2({
+    $('.currency-select2, .supplier-currency, .convert-currency-select2').select2({
         templateResult: formatState,
         templateSelection: formatState
     });
