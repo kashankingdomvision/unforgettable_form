@@ -338,7 +338,7 @@ td.day{
                             <div class="col-sm-5">
                                 <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                 <div class="input-group">
-                                    <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}" required>
+                                    <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}" required disabled>
                                     <span class="input-group-addon"></span>
                                 </div>
                                 <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
