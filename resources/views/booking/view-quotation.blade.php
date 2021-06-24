@@ -246,11 +246,7 @@
                                         <div class="alert-danger date_of_service" style="text-align:center"></div>
                                     </div>
 
-                                    <div class="col-sm-2" style="margin-bottom: 35px;">
-                                        <label for="inputEmail3" class="">Service Details</label> 
-                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1" disabled>{{ $quote_detail->service_details }}</textarea>
-                                        <div class="alert-danger" style="text-align:center"></div>
-                                    </div>
+
 
                                     <div class="col-sm-2" style="margin-bottom:15px;">
                                         <label class="">Category</label> 
@@ -267,11 +263,27 @@
                                         <label class="test">Supplier</label> 
                                         <select class="form-control supplier-select2 supplier-select2"  name="supplier[]" disabled>
                                             <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                                            @endforeach
+                                            @if(!empty($quote_detail->getCategory->getSupplier))
+                                                @foreach ($quote_detail->getCategory->getSupplier as $supplier)
+                                                    <option value="{{ $supplier->id }}" {{ $quote_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
+                                    
+                                    <div class="col-sm-2 mb-3">
+                                        <label class="">Product</label> 
+                                        <select class="form-control product-select2"  name="product[]" disabled>
+                                            <option value="">Select Product</option>
+                                            @if(!empty($quote_detail->getSupplier->products))
+                                                @foreach ($quote_detail->getSupplier->products as $product)
+                                                    <option value="{{ $product->id }}" {{ $quote_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <div class="alert-danger" style="text-align:center"> {{ $errors->first('product') }} </div>
                                     </div>
         
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -296,6 +308,13 @@
                        
         
                                 <div class="row">
+
+                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                        <label for="inputEmail3" class="">Service Details</label> 
+                                        <textarea name="service_details[]"   class="form-control" cols="30" rows="1" disabled>{{ $quote_detail->service_details }}</textarea>
+                                        <div class="alert-danger" style="text-align:center"></div>
+                                    </div>
+
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Booking Method</label>
                                         <div class="input-group">
@@ -348,6 +367,10 @@
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
 
+                                </div>
+
+                                <div class="row">
+
                                     <div class="col-sm-2" style="margin-bottom:15px;">
                                         <label class="">Supplier Currency</label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required  disabled>
@@ -358,11 +381,6 @@
                                         </select>
                                         <div class="alert-danger" style="text-align:center"></div>
                                     </div>
-                                    
- 
-                                </div>
-
-                                <div class="row">
 
                                     <div class="col-sm-2" style="margin-bottom: 15px;">
                                         <label for="inputEmail3" class="">Cost</label> <span style="color:red">*</span>
