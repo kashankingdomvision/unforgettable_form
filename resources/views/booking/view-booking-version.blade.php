@@ -117,7 +117,7 @@
                                 </div>
                                 
                                 <div class="col-sm-5" style="margin-bottom:15px;">
-                                    <label for="inputEmail3" class="">Quotation Number</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="quotation_no"  class="form-control" value="{{ $booking_log->quotation_no }}" disabled>
                                         <span class="input-group-addon"></span>
