@@ -372,7 +372,7 @@
                                 <div class="row">
 
                                     <div class="col-sm-2" style="margin-bottom:15px;">
-                                        <label class="">Supplier Currency</label> 
+                                        <label class="">Supplier Currency <span style="color:red">*</span></label> 
                                         <select class="form-control supplier-currency"   name="supplier_currency[]" required  disabled>
                                             <option value="">Select Currency</option>
                                             @foreach ($currencies as $currency)
