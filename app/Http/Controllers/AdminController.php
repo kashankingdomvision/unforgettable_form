@@ -6986,7 +6986,7 @@ class AdminController extends Controller
             $bookingDetailLogNumber = $this->increment_log_no($this->get_log_no('BookingLog','booking_id', $id));
             $booking_log->booking_id = $booking->id;
             $booking_log->log_no = $bookingDetailLogNumber;
-            $booking_log->reference_name = $booking->reference_name;
+            // $booking_log->reference_name = $booking->reference_name;
             $booking_log->ref_no = $booking->ref_no;
             $booking_log->qoute_id = $booking->qoute_id;
             $booking_log->quotation_no = $booking->quotation_no;
@@ -7027,7 +7027,7 @@ class AdminController extends Controller
                 ['quotation_no' => $request->quotation_no],
                 [
                     'ref_no' => $request->ref_no,
-                    'reference_name' => $request->reference,
+                    // 'reference_name' => $request->reference,
                     'qoute_id' => $request->qoute_id,
                     'quotation_no' => $request->quotation_no,
                     'dinning_preferences' => $request->dinning_preferences,

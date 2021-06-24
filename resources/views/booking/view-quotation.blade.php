@@ -101,15 +101,9 @@
                         @csrf
 
                         <div class="row">
-                            <div class="row">
-                                <div class="col-md-5 col-sm-offset-1 mb-2 mt-2">
-                                    <label>Select the reference <span style="color:red">*</span></label> <br />
-                                    <label class="radio-inline"><input type="radio" name="reference" value="zoho" disabled {{ ($qoute->reference_name == 'zoho')? 'checked': NULL }}>Zoho Reference</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5 col-sm-offset-1 mb-2">
-                                    <label for="inputEmail3" id="referencename">{{ ($qoute->reference_name == 'zoho')? 'Zoho': "TAS" }} Reference</label> <span style="color:red">*</span>
+                            <div class="row mt-2">
+                                <div class="col-sm-5 col-sm-offset-1 mb-2 ">
+                                    <label for="inputEmail3" id="referencename"> Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="ref_no" disabled value="{{ $qoute->ref_no }}"  class="form-control" placeholder='Enter Reference Number' >
                                         <span  id="link">
