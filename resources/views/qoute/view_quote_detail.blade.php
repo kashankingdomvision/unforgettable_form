@@ -128,7 +128,7 @@
                                 </div>
                                 
                                 <div class="col-sm-5" style="margin-bottom:15px;">
-                                    <label for="inputEmail3" class="">Quotation Number</label> <span style="color:red">*</span>
+                                    <label for="inputEmail3" class="">Quote Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">
                                         <input type="text" name="quotation_no"  class="form-control" value="{{ $quote->quotation_no }}"  >
                                         <span class="input-group-addon"></span>
@@ -218,35 +218,41 @@
 
 
                         <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
-                                <label> Booking Currency</label> <span style="color:red">*</span>
-                                <select name="currency" class="form-control currency-select2"  >
-                                    <option value="">Select Currency</option>
-                                    @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote->currency == $currency->code ? 'selected' : ''}} >  &nbsp; {{$currency->code}} - {{$currency->name}} </option>
-                                    @endforeach
-                                </select>
-                                <div class="alert-danger" style="text-align:center" id="error_currency"></div>
-                            </div>
-                            <div class="col-sm-5 mb-2">
+                            
+                            <div class="col-sm-5  col-sm-offset-1 mb-2">
                                 <label> Dinning Preferences</label> <span style="color:red">*</span>
                                 <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control"  >
                                 <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
                             </div>
-                        </div>
-                        <div class="row">
-                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px">
-                                <label class="">Pax No.</label> <span style="color:red">*</span>
-                                  <select class="form-control dropdown_value select2" name="group_no"  >
-                                    @for($i=1;$i<=30;$i++)
-                                    <option value={{$i}} {{ $quote->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
-                                    @endfor
-                                  </select>
-                                <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
+                            <div class="col-sm-5 mb-2">
+                                <label>Bedding Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="bedding_preference" value="{{ $quote->bedding_preference }}"  class="form-control" required>
+                                <div class="alert-danger" style="text-align:center" id="error_bedding_preference"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-offset-1 mb-2" id="appendPaxName">
+                            <div class="col-sm-5  col-sm-offset-1" style="margin-bottom:15px;">
+                                <label> Booking Currency</label> <span style="color:red">*</span>
+                                <select name="currency" class="form-control currency-select2"  >
+                                    <option value="">Select Currency</option>
+                                    @foreach ($currencies as $currency)
+                                    <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote->currency == $currency->code ? 'selected' : ''}} >  &nbsp; {{$currency->code}} - {{$currency->name}} </option>
+                                    @endforeach
+                                </select>
+                                <div class="alert-danger" style="text-align:center" id="error_currency"></div>
+                            </div>
+                            <div class="col-sm-5" style="margin-bottom:15px">
+                               <label class="">Pax No.</label> <span style="color:red">*</span>
+                                 <select class="form-control dropdown_value select2" name="group_no"  >
+                                   @for($i=1;$i<=30;$i++)
+                                   <option value={{$i}} {{ $quote->group_no == $i ? 'selected' : ''}} >{{$i}}</option>
+                                   @endfor
+                                 </select>
+                               <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
+                           </div>
+                        </div>
+                        {{-- <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2" id="appendPaxName">
                                 @if($quote->pax_name != 'null' && $quote->pax_name != NULL)
                                     @foreach (json_decode($quote->pax_name) as $key => $name)
                                         <div class="col-md-3 mb-2">
@@ -257,7 +263,7 @@
                                     @endforeach
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row" style="margin-left: 4px;">
                             <div class="col-sm-offset-1 mb-2" id="appendPaxName">
                                 @if($quote->group_no > 1)

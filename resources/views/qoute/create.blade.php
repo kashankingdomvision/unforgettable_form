@@ -346,6 +346,18 @@ td.day{
                         </div>
                         <div class="row">
                             <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" class="form-control" required>
+                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
+                            </div>
+                            <div class="col-sm-5 mb-2">
+                                <label>Bedding Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="bedding_preference" class="form-control" required>
+                                <div class="alert-danger" style="text-align:center" id="error_bedding_preference"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
                                 <select name="currency" class="form-control currency-select2" required>
                                     <option value="">Select Currency</option>
@@ -355,15 +367,7 @@ td.day{
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
-                            
                             <div class="col-sm-5 mb-2">
-                                <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" class="form-control" required>
-                                <div class="alert-danger" style="text-align:center" id="error_dinning_preferences"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1 mb-2">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
                                   <select class="form-control dropdown_value select2 paxNumber" name="group_no" required>
                                     @for($i=1;$i<=30;$i++)
@@ -372,6 +376,7 @@ td.day{
                                   </select>
                                 <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
                             </div>
+                            
                         </div>
                         <div class="row" style="margin-left: 4px;">
                             <div class="col-sm-offset-1 mb-2" id="appendPaxName">

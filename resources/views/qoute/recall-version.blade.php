@@ -415,6 +415,18 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-sm-5 col-sm-offset-1 mb-2">
+                                <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control" required>
+                                <div class="alert-danger" style="text-align:center"   id="error_dinning_preferences"></div>
+                            </div>
+                            <div class="col-sm-5 mb-2">
+                                <label>Bedding Preferences</label> <span style="color:red">*</span>
+                                <input type="text" name="bedding_preference" value="{{ $quote->bedding_preference }}" class="form-control" required>
+                                <div class="alert-danger" style="text-align:center" id="error_bedding_preference"></div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
                                 <label> Booking Currency</label> <span style="color:red">*</span>
                                 <select name="currency" class="form-control currency-select2">
@@ -425,14 +437,7 @@
                                 </select>
                                 <div class="alert-danger" style="text-align:center" id="error_currency"></div>
                             </div>
-                            <div class="col-sm-5 mb-2">
-                                <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                <input type="text" name="dinning_preferences" value="{{ $quote->dinning_preferences }}" class="form-control">
-                                <div class="alert-danger" style="text-align:center"   id="error_dinning_preferences"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px">
+                            <div class="col-sm-5 " style="margin-bottom:15px">
                                 <label class="">Pax No.</label> <span style="color:red">*</span>
                                   <select class="form-control paxNumber dropdown_value select2" name="group_no">
                                     {{-- <option value="">Select Pax No.</option> --}}
