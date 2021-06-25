@@ -36,12 +36,13 @@ tr.shown td.details-control {
         <div class="col-xs-12">
         <div class="box">
             <div class="box-body">
-            <table id="example1" class="table table-bordered table-striped">
+            <table id="example1" class="table table-bordered">
                 <thead>
                   <tr>
                     {{-- <th>#</th> --}}
                     <th></th>
-                    <th>Ref #</th>
+                    <th>Zoho Reference</th>
+                    <th>Quote Reference</th>
                     <th>Season</th>
                     <th>Type Of Holidays</th>
                     <th>Brand Name</th>
@@ -55,7 +56,7 @@ tr.shown td.details-control {
                 </thead>
                 <tbody>
                 @foreach ($quotes as $key => $quote)
-                    <tr>
+                    <tr style="{{ $quote->quote_count > 1 ? 'background-color: #f9f9f9;' : null}}">
                       <td>
                           @if($quote->quote_count > 1)
                           <button class="btn btn-sm addChild" id="show{{$quote->id}}" data-remove="#remove{{$quote->id}}" data-append="#appendChild{{$quote->id}}" data-ref="{{ $quote->ref_no }}" data-id="{{$quote->id}}">
@@ -68,6 +69,7 @@ tr.shown td.details-control {
                           @endif
                         </td>
                         <td>{{ $quote->ref_no }}</td>
+                        <td>{{ $quote->quotation_no }}</td>
                         <td>{{ $quote->season->name }}</td>
                         <td>{{ (isset($quote->getHolidayType->name))? $quote->getHolidayType->name:NULL }}</td>
                         <td>{{ (isset($quote->getBrand->name))? $quote->getBrand->name: NULL }}</td>
@@ -91,7 +93,7 @@ tr.shown td.details-control {
                           <a onclick="return confirm('Are you sure want to Delete {{ $quote->ref_no }}');" href="{{ route('delete-quote', encrypt($quote->id)) }}" class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete"><span class="fa fa-trash"></span></a>
 
                         </td>
-                        <tbody class="append" id="appendChild{{$quote->id}}">
+                        <tbody class="append" id="appendChild{{$quote->id}}" style="{{ $quote->quote_count > 1 ? 'background-color: #f9f9f9;' : null}}">
                           
                         </tbody>
                     </tr>
