@@ -6682,57 +6682,79 @@ class AdminController extends Controller
     // get reference function start
     public function get_ref_detail(Request $request)
     {
-        $ajax_response = array();
-
-        // if ($request->reference_name == "zoho") 
-            $zoho_credentials = ZohoCredential::findOrFail(1);
-            $ref = $request->id;
-            // $refresh_token = '1000.18cb2e5fbe397a6422d8fcece9b67a06.d71539ff6e5fa8364879574343ab799a';
-            $url = "https://www.zohoapis.com/crm/v2/Deals/search?criteria=(Booking_Reference:equals:{$ref})";
-            $args = array(
-                'method' => 'GET',
-                'ssl' => false,
-                'format' => 'ARRAY',
-                'headers' => array(
-                    "Authorization:" . 'Zoho-oauthtoken ' . $zoho_credentials->access_token,
-                    "Content-Type: application/json",
-                ),
-            );
-
-            $response = $this->cf_remote_request($url, $args);
-// dd($response);
-            if ($response['status'] == 200) {
-                $responses_data = array_shift($response['body']['data']);
-                $passenger_id = $responses_data['id'];
-
-                $url = "https://www.zohoapis.com/crm/v2/Passengers/search?criteria=(Deal:equals:{$passenger_id})";
-                $passenger_response = $this->cf_remote_request($url, $args);
-
-                if ($passenger_response['status'] == 200) {
-                    $pax_no = count($passenger_response['body']['data']);
-                }
-                $holidayName = isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null;
-                $holiday = HolidayType::where('name', $holidayName)->first();
-                $holidayTypes = NULL;
-                if($holiday){
-                    $holidayTypes = HolidayType::where('brand_id', $holiday->brand_id)->get();
-                }
-                $ajax_response = array(
-                    "holiday_type" => $holiday,
-                    "holidayTypes" => $holidayTypes,
-                    
-                    "passenger_name" => isset($passenger_response['body']['data'][0]['Deal']) && !empty($passenger_response['body']['data'][0]['Deal']['name']) ? $passenger_response['body']['data'][0]['Deal']['name'] : null,
-                    "sale_person" => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
-                    "currency" => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null,
-                    "pax" => isset($pax_no) && !empty($pax_no) ? $pax_no : null,
-                );
+        $ajax_response = [];
+        $zoho_credentials = ZohoCredential::findOrFail(1);
+        $ref = $request->id;
+        // $refresh_token = '1000.18cb2e5fbe397a6422d8fcece9b67a06.d71539ff6e5fa8364879574343ab799a';
+        $url = "https://www.zohoapis.com/crm/v2/Deals/search?criteria=(Booking_Reference:equals:{$ref})";
+        $args = array(
+            'method' => 'GET',
+            'ssl' => false,
+            'format' => 'ARRAY',
+            'headers' => array(
+                "Authorization:" . 'Zoho-oauthtoken ' . $zoho_credentials->access_token,
+                "Content-Type: application/json",
+            ),
+        );
+        $response = $this->cf_remote_request($url, $args);
+        if ($response['status'] == 200) {
+            
+            $responses_data = array_shift($response['body']['data']);
+            $passenger_id = $responses_data['id'];
+            $url = "https://www.zohoapis.com/crm/v2/Passengers/search?criteria=(Deal:equals:{$passenger_id})";
+            $passenger_response = $this->cf_remote_request($url, $args);
+            if ($passenger_response['status'] == 200) {
+                $pax_no = count($passenger_response['body']['data']);
             }
-        // }
-
-        if ($request->ajax()) {
+            $holidayName = isset($responses_data['Holiday_Type']) && !empty($responses_data['Holiday_Type']) ? $responses_data['Holiday_Type'] : null;
+            $holiday = HolidayType::where('name', $holidayName)->first();
+            $holidayTypes = NULL;
+            if($holiday){
+                $holidayTypes = HolidayType::where('brand_id', $holiday->brand_id)->get();
+            }
+            
+            $passenger_data = [];
+            $passengerArray = [];
+            if(isset($passenger_response['body']['data']) && count($passenger_response['body']['data']) > 0 ){
+                foreach ($passenger_response['body']['data'] as $key => $passenger) {
+                        if($key == 0){    
+                        $passengerArray['lead_passenger'] = $this->getPassenger($passenger);
+                    }else{                            
+                        $x = $this->getPassenger($passenger);
+                        array_push($passenger_data, $x);
+                    }
+                }
+            }
+            $passengerArray['passengers'] = $passenger_data;
+            
+            $response = [
+                "holiday_type"  => $holiday,
+                "holidayTypes"  => $holidayTypes,
+                "sale_person"   => isset($responses_data['Owner']['email']) && !empty($responses_data['Owner']['email']) ? $responses_data['Owner']['email'] : null,
+                "currency"      => isset($responses_data['Currency']) && !empty($responses_data['Currency']) ? $responses_data['Currency'] : null,
+                "pax"           => isset($pax_no) && !empty($pax_no) ? $pax_no : null,
+                'passengers'    => $passengerArray,
+            ];
+            $ajax_response['status']    = true;
+            $ajax_response['response']  = $response;
             return response()->json($ajax_response);
         }
-        return redirect()->back();
+            $ajax_response['status'] = false;
+            $ajax_response['error'] = 'The reference is not found. Try again!';
+        return response()->json($ajax_response);
+    }
+
+    public function getPassenger($response)
+    {   
+        return [
+            'bedding_prefrences' => $response['BEDDING_PREFERENCE'],
+            'dinning_prefrences' => $response['DIETARY_PREFERENCES'],
+            'passenger_email'    => $response['Passenger_Email'],
+            'passenger_name'     => $response['Name'],
+            'passenger_dbo'      => $response['Passenger_DOB'],
+            'passenger_contact'  => $response['Passenger_Phone'],
+
+        ];
     }
 
     //get reference funtion end

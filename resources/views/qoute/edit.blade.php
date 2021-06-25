@@ -1253,7 +1253,25 @@ td.day{
                     type: 'POST',
                     dataType: "json",
                     success:function(data) {
-                        if( Object.keys(data).length > 0 ){
+                        // if( Object.keys(data).length > 0 ){
+                        //     $('select[name="type_of_holidays"]').empty();
+                        //         $.each( data.holidayTypes, function( key, value ) {
+                        //         var selected = (value.id == data.holiday_type.id)? true: false;
+                        //         var newOption = new Option(value.name, value.id, selected, true);
+                        //         $('select[name="type_of_holidays"]').append(newOption);
+                        //     });
+                                
+                        //     $('select[name="brand_name"]').val(data.holiday_type.brand_id).trigger('change');
+                        //     $('select[name="group_no"]').val(data.pax).trigger('change');  
+                        //     $('select[name="currency"]').val(data.currency).trigger('change');
+                        //     $('#sales_person').val(data.sale_person).trigger('change');
+                        //     $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                        //     $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
+                        // }else{
+                        //     $('#error_ref_no').text('The Reference is not found');
+                        // }
+                        if(data.status == true){  
+                            var data = data.response;                          
                             $('select[name="type_of_holidays"]').empty();
                                 $.each( data.holidayTypes, function( key, value ) {
                                 var selected = (value.id == data.holiday_type.id)? true: false;
@@ -1265,10 +1283,24 @@ td.day{
                             $('select[name="group_no"]').val(data.pax).trigger('change');  
                             $('select[name="currency"]').val(data.currency).trigger('change');
                             $('#sales_person').val(data.sale_person).trigger('change');
-                            $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                            $('input[name="lead_passenger_name"]').val(data.passengers.lead_passenger.passenger_name);
+                            $('input[name="dinning_preferences"]').val(data.passengers.lead_passenger.dinning_prefrences);
+                            $('input[name="bedding_preference"]').val(data.passengers.lead_passenger.bedding_prefrences);
                             $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
+                            
+                            if(data.passengers.passengers.length > 0){
+                                data.passengers.passengers.forEach(($_value, $key) => {
+                                    var $_count = $key + 1;
+                                    $('input[name="pax['+$_count+'][full_name]"]').val($_value.passenger_name);
+                                    $('input[name="pax['+$_count+'][email_address]"]').val($_value.passenger_email);
+                                    $('input[name="pax['+$_count+'][contact_number]"]').val($_value.passenger_contact);
+                                    $('input[name="pax['+$_count+'][date_of_birth]"]').val($_value.passenger_dbo);
+                                    $('input[name="pax['+$_count+'][bedding_preference]"]').val($_value.bedding_prefrences);
+                                    $('input[name="pax['+$_count+'][dinning_preference]"]').val($_value.dinning_prefrences);
+                                });
+                            }
                         }else{
-                            $('#error_ref_no').text('The Reference is not found');
+                            $('#error_ref_no').text(data.error);
                         }
 
                         $('#sendReference').text('Search');
@@ -1679,11 +1711,11 @@ td.day{
                 success: function (data) {
                     $("#divLoading").removeClass('show');
                     alert(data.success_message);
-                    $("#version").load();
+                    // $("#version").load();
 
-                    // window.location.href = "{{ route('view-quote')}}";
+                    window.location.href = "{{ route('view-quote')}}";
 
-                    $("#version").load(location.href + " #version");
+                    // $("#version").load(location.href + " #version");
 
                 },
                 error: function (reject) {
