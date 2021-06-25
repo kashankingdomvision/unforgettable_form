@@ -8497,6 +8497,32 @@ class AdminController extends Controller
         ]);
     }
 
+    public function view_manual_rates(Request $request){
+
+        $currency_conversions = CurrencyConversions::all();
+
+        return view('manual_rate.view')->with([
+            'currency_conversions' => $currency_conversions,
+        ]);
+
+    }
+
+    public function update_manual_rates(Request $request, $id){
+
+        if ($request->isMethod('post')) {
+
+            $this->validate($request, ['manual_rate' => 'required'], ['required' => 'Manual Rate is required']);
+
+            CurrencyConversions::where('id',$id)->update(['manual_rate'=>$request->manual_rate]);
+
+            return Redirect::route('view-manual-rates')->with('success_message', 'Updated Successfully');
+        }
+
+        return view('manual_rate.update')->with([
+            'currency_record'      => CurrencyConversions::find($id),
+            'currencies'           => Currency::where('status', 1)->orderBy('id', 'ASC')->get(),
+        ]);
+    }
   
     public function view_quote()
     {
@@ -9809,7 +9835,11 @@ class AdminController extends Controller
     public function get_currency(Request $request)
     {
 
+        // dd($request->all());
+
         $test = CurrencyConversions::where('to', $request->to)->get(['from', 'value']);
+
+        // dd($test);
 
         $arr = [];
         foreach ($test as $test) {

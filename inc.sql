@@ -588,3 +588,4 @@ ALTER TABLE `qoute_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinni
 ALTER TABLE `bookings` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
 ALTER TABLE `booking_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
 
+ALTER TABLE `currency_conversion` ADD `manual_rate` FLOAT(16,2) NULL AFTER `value`;
