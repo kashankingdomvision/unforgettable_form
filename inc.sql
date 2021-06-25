@@ -581,6 +581,10 @@ ALTER TABLE `template_details` ADD `product` INT(10) NULL AFTER `supplier`;
 
 
 
+-- //bedding_preference
 
-
+ALTER TABLE `qoutes` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
+ALTER TABLE `qoute_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
+ALTER TABLE `bookings` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
+ALTER TABLE `booking_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
 

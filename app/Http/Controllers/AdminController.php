@@ -6849,6 +6849,8 @@ class AdminController extends Controller
             $this->validate($request, ['currency' => 'required'], ['required' => 'Booking Currency is required']);
             $this->validate($request, ['group_no' => 'required'], ['required' => 'Pax No is required']);
             $this->validate($request, ['dinning_preferences' => 'required'], ['required' => 'Dinning Preferences is required']);
+            $this->validate($request, ['bedding_preference' => 'required'], ['required' => 'Bedding Preferences is required']);
+            
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
             $this->validate($request, ['fb_airline_name_id' => 'required_if:flight_booked,yes'], ['required_if' => 'Airline is required']);
@@ -7012,6 +7014,8 @@ class AdminController extends Controller
             $booking_log->created_date = date("Y-m-d");
             $booking_log->user_id = Auth::user()->id;
             $booking_log->pax_name = $booking->pax_name;
+            $booking_log->bedding_preference = $booking->bedding_preference;
+            
             $booking_log->save();
             
             if($booking->getBookingPaxDetail){
@@ -7028,36 +7032,37 @@ class AdminController extends Controller
                 [
                     'ref_no' => $request->ref_no,
                     // 'reference_name' => $request->reference,
-                    'qoute_id' => $request->qoute_id,
-                    'quotation_no' => $request->quotation_no,
-                    'dinning_preferences' => $request->dinning_preferences,
-                    'lead_passenger_name' => $request->lead_passenger_name,
-                    'brand_name' => $request->brand_name,
-                    'type_of_holidays' => $request->type_of_holidays,
-                    'sale_person' => $request->sale_person,
-                    'season_id' => $request->season_id,
-                    'agency_booking' => $request->agency_booking,
-                    'agency_name' => $request->agency_name,
-                    'agency_contact_no' => $request->agency_contact_no,
-                    'currency' => $request->currency,
-                    'convert_currency' => $request->convert_currency,
-                    'group_no' => $request->group_no,
-                    'net_price' => $request->net_price,
-                    'markup_amount' => $request->markup_amount,
-                    'selling' => $request->selling,
-                    'gross_profit' => $request->gross_profit,
-                    'markup_percent' => $request->markup_percent,
-                    'show_convert_currency' => $request->show_convert_currency,
-                    'per_person' => $request->per_person,
+                    'qoute_id'                  => $request->qoute_id,
+                    'quotation_no'              => $request->quotation_no,
+                    'dinning_preferences'       => $request->dinning_preferences,
+                    'bedding_preference'        => $request->bedding_preference,
+                    'lead_passenger_name'       => $request->lead_passenger_name,
+                    'brand_name'                => $request->brand_name,
+                    'type_of_holidays'          => $request->type_of_holidays,
+                    'sale_person'               => $request->sale_person,
+                    'season_id'                 => $request->season_id,
+                    'agency_booking'            => $request->agency_booking,
+                    'agency_name'               => $request->agency_name,
+                    'agency_contact_no'         => $request->agency_contact_no,
+                    'currency'                  => $request->currency,
+                    'convert_currency'          => $request->convert_currency,
+                    'group_no'                  => $request->group_no,
+                    'net_price'                 => $request->net_price,
+                    'markup_amount'             => $request->markup_amount,
+                    'selling'                   => $request->selling,
+                    'gross_profit'              => $request->gross_profit,
+                    'markup_percent'            => $request->markup_percent,
+                    'show_convert_currency'     => $request->show_convert_currency,
+                    'per_person'                => $request->per_person,
 
-                    'flight_booked' => !empty($request->flight_booked) ? $request->flight_booked : null,
-                    'fb_person' => !empty($request->fb_person) && ($request->flight_booked != 'NA') ? $request->fb_person : null,
-                    'fb_last_date' => $request->fb_last_date && ($request->flight_booked != 'NA') ? Carbon::parse(str_replace('/', '-', $request->fb_last_date))->format('Y-m-d') : null,
-                    'fb_airline_name_id' => !empty($request->fb_airline_name_id) && ($request->flight_booked == 'yes') ? $request->fb_airline_name_id : null,
-                    'fb_payment_method_id' => !empty($request->fb_payment_method_id) && ($request->flight_booked == 'yes') ? $request->fb_payment_method_id : null,
-                    'fb_booking_date' => $request->fb_booking_date && ($request->flight_booked == 'yes') ? Carbon::parse(str_replace('/', '-', $request->fb_booking_date))->format('Y-m-d') : null,
-                    'fb_airline_ref_no' => !empty($request->fb_airline_ref_no) && ($request->flight_booked == 'yes') ? $request->fb_airline_ref_no : null,
-                    'flight_booking_details' => !empty($request->flight_booking_details) && ($request->flight_booked == 'yes') ? $request->flight_booking_details : null,
+                    'flight_booked'             => !empty($request->flight_booked) ? $request->flight_booked : null,
+                    'fb_person'                 => !empty($request->fb_person) && ($request->flight_booked != 'NA') ? $request->fb_person : null,
+                    'fb_last_date'              => $request->fb_last_date && ($request->flight_booked != 'NA') ? Carbon::parse(str_replace('/', '-', $request->fb_last_date))->format('Y-m-d') : null,
+                    'fb_airline_name_id'        => !empty($request->fb_airline_name_id) && ($request->flight_booked == 'yes') ? $request->fb_airline_name_id : null,
+                    'fb_payment_method_id'      => !empty($request->fb_payment_method_id) && ($request->flight_booked == 'yes') ? $request->fb_payment_method_id : null,
+                    'fb_booking_date'           => $request->fb_booking_date && ($request->flight_booked == 'yes') ? Carbon::parse(str_replace('/', '-', $request->fb_booking_date))->format('Y-m-d') : null,
+                    'fb_airline_ref_no'         => !empty($request->fb_airline_ref_no) && ($request->flight_booked == 'yes') ? $request->fb_airline_ref_no : null,
+                    'flight_booking_details'    => !empty($request->flight_booking_details) && ($request->flight_booked == 'yes') ? $request->flight_booking_details : null,
 
                     'asked_for_transfer_details' => $request->asked_for_transfer_details,
                     'aft_person' => $request->aft_person && ($request->asked_for_transfer_details != 'NA') ? $request->aft_person : null,
@@ -8147,6 +8152,7 @@ class AdminController extends Controller
         $booking->qoute_id = $id;
         $booking->quotation_no = $qoute->quotation_no;
         $booking->dinning_preferences = $qoute->dinning_preferences;
+        $booking->bedding_preference = $qoute->bedding_preference;
         $booking->lead_passenger_name = $qoute->lead_passenger_name;
         $booking->brand_name = $qoute->brand_name;
         $booking->type_of_holidays = $qoute->type_of_holidays;
@@ -8210,12 +8216,12 @@ class AdminController extends Controller
     public function getPaxDetailArray($pax)
     {
         return [
-            'full_name'             => $pax['full_name'], 
+            'full_name'             => (isset($pax['full_name']))? $pax['full_name'] : NULL, 
             'email'                 => (isset($pax['email_address']))?$pax['email_address'] : ((isset($pax['email']))? $pax['email'] : NULL), 
             'contact'               => (isset($pax['contact_number']))?$pax['contact_number'] : ((isset($pax['contact']))? $pax['contact'] : NULL),
-            'date_of_birth'         => $pax['date_of_birth'],
-            'bedding_preference'    => $pax['bedding_preference'],
-            'dinning_preference'    => $pax['dinning_preference'],
+            'date_of_birth'         => (isset($pax['date_of_birth']))? $pax['date_of_birth'] : NULL,
+            'bedding_preference'    => (isset($pax['bedding_preference']))? $pax['bedding_preference'] : NULL,
+            'dinning_preference'    => (isset($pax['dinning_preference']))? $pax['dinning_preference'] : NULL,
         ];
     }
 
@@ -8234,6 +8240,7 @@ class AdminController extends Controller
             $this->validate($request, ['currency' => 'required'], ['required' => 'Booking Currency is required']);
             $this->validate($request, ['group_no' => 'required'], ['required' => 'Pax No is required']);
             $this->validate($request, ['dinning_preferences' => 'required'], ['required' => 'Dinning Preferences is required']);
+            $this->validate($request, ['bedding_preference' => 'required'], ['required' => 'Bedding Preferences is required']);
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
             $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
@@ -8395,16 +8402,17 @@ class AdminController extends Controller
             $qoute->gross_profit          = $request->gross_profit;
             $qoute->markup_percent        = $request->markup_percent;
             $qoute->show_convert_currency = $request->show_convert_currency;
-            $qoute->per_person = $request->per_person;
-            $qoute->pax_name = $request->pax_name;
+            $qoute->per_person            = $request->per_person;
+            $qoute->pax_name              = $request->pax_name;
+            $qoute->bedding_preference    = $request->bedding_preference;
             $qoute->save();
             
             if($request->has('pax')){
                 foreach ($request->pax as $pax) {           
-                  $data = $this->getPaxDetailArray($pax);
-                  $data['quote_id'] = $qoute->id;
-                  QuotePaxDetail::create($data);
-              }
+                    $data = $this->getPaxDetailArray($pax);
+                    $data['quote_id'] = $qoute->id;
+                    QuotePaxDetail::create($data);
+                }
             }
             
             if (!empty($request->cost)) {
@@ -8679,6 +8687,7 @@ class AdminController extends Controller
                     'markup_percent' => $request->markup_percent,
                     'show_convert_currency' => $request->show_convert_currency,
                     'per_person' => $request->per_person,
+                    'bedding_preference' => $request->bedding_preference,
 
                 ]
             );
@@ -9001,6 +9010,7 @@ class AdminController extends Controller
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
             $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
+            $this->validate($request, ['bedding_preference' => 'required'], ['required' => 'Bedding Preferences is required']);
             
             $season = season::findOrFail($request->season_id);
             // if(!empty($request->date_of_service)){
@@ -9171,6 +9181,7 @@ class AdminController extends Controller
             $qoute_log->log_no = $qouteDetailLogNumber;
             $qoute_log->user_id = Auth::user()->id;
             $qoute_log->pax_name = $qoute->pax_name;
+            $qoute_log->bedding_preference    = $qoute->bedding_preference;
             $qoute_log->save();
             
             if($qoute->getPaxDetail && $qoute->getPaxDetail != null){
@@ -9184,26 +9195,27 @@ class AdminController extends Controller
             $qoute->ref_no = $request->ref_no;
             $qoute->quotation_no = $request->quotation_no;
             // $qoute->reference_name = $request->reference;
-            $qoute->dinning_preferences = $request->dinning_preferences;
-            $qoute->lead_passenger_name = $request->lead_passenger_name;
-            $qoute->brand_name = $request->brand_name;
-            $qoute->type_of_holidays = $request->type_of_holidays;
-            $qoute->sale_person = $request->sale_person;
-            $qoute->season_id = $request->season_id;
-            $qoute->agency_booking = $request->agency_booking;
-            $qoute->agency_name = $request->agency_name;
-            $qoute->agency_contact_no = $request->agency_contact_no;
-            $qoute->currency = $request->currency;
-            $qoute->convert_currency = $request->convert_currency;
-            $qoute->group_no = $request->group_no;
-            $qoute->net_price = $request->net_price;
-            $qoute->markup_amount = $request->markup_amount;
-            $qoute->selling = $request->selling;
-            $qoute->gross_profit = $request->gross_profit;
-            $qoute->markup_percent = $request->markup_percent;
+            $qoute->dinning_preferences   = $request->dinning_preferences;
+            $qoute->lead_passenger_name   = $request->lead_passenger_name;
+            $qoute->brand_name            = $request->brand_name;
+            $qoute->type_of_holidays      = $request->type_of_holidays;
+            $qoute->sale_person           = $request->sale_person;
+            $qoute->season_id             = $request->season_id;
+            $qoute->agency_booking        = $request->agency_booking;
+            $qoute->agency_name           = $request->agency_name;
+            $qoute->agency_contact_no     = $request->agency_contact_no;
+            $qoute->currency              = $request->currency;
+            $qoute->convert_currency      = $request->convert_currency;
+            $qoute->group_no              = $request->group_no;
+            $qoute->net_price             = $request->net_price;
+            $qoute->markup_amount         = $request->markup_amount;
+            $qoute->selling               = $request->selling;
+            $qoute->gross_profit          = $request->gross_profit;
+            $qoute->markup_percent        = $request->markup_percent;
             $qoute->show_convert_currency = $request->show_convert_currency;
-            $qoute->per_person = $request->per_person;
-            $qoute->pax_name = $request->pax_name;
+            $qoute->per_person            = $request->per_person;
+            $qoute->pax_name              = $request->pax_name;
+            $qoute->bedding_preference    = $request->bedding_preference;
             $qoute->save();
             
             if($request->has('pax')){
