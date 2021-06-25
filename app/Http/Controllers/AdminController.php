@@ -6684,7 +6684,7 @@ class AdminController extends Controller
     {
         $ajax_response = array();
 
-        // if ($request->reference_name == "zoho") {
+        // if ($request->reference_name == "zoho") 
             $zoho_credentials = ZohoCredential::findOrFail(1);
             $ref = $request->id;
             // $refresh_token = '1000.18cb2e5fbe397a6422d8fcece9b67a06.d71539ff6e5fa8364879574343ab799a';
@@ -6700,6 +6700,7 @@ class AdminController extends Controller
             );
 
             $response = $this->cf_remote_request($url, $args);
+// dd($response);
             if ($response['status'] == 200) {
                 $responses_data = array_shift($response['body']['data']);
                 $passenger_id = $responses_data['id'];
@@ -7013,7 +7014,7 @@ class AdminController extends Controller
             $booking_log->per_person = $booking->per_person;
             $booking_log->created_date = date("Y-m-d");
             $booking_log->user_id = Auth::user()->id;
-            $booking_log->pax_name = $booking->pax_name;
+            // $booking_log->pax_name = $booking->pax_name;
             $booking_log->bedding_preference = $booking->bedding_preference;
             
             $booking_log->save();
@@ -8174,7 +8175,7 @@ class AdminController extends Controller
         $booking->port_tax = $qoute->port_tax;
         $booking->total_per_person = $qoute->total_per_person;
         $booking->qoute_to_booking_date = date('Y-m-d');
-        $booking->pax_name = $qoute->pax_name;
+        // $booking->pax_name = $qoute->pax_name;
         $booking->save();
 
         if($qoute->getPaxDetail){
@@ -8243,7 +8244,7 @@ class AdminController extends Controller
             $this->validate($request, ['bedding_preference' => 'required'], ['required' => 'Bedding Preferences is required']);
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
-            $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
+            // $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
             $season = season::find($request->season_id);
 
             // if(!empty($request->date_of_service)){
@@ -8403,7 +8404,7 @@ class AdminController extends Controller
             $qoute->markup_percent        = $request->markup_percent;
             $qoute->show_convert_currency = $request->show_convert_currency;
             $qoute->per_person            = $request->per_person;
-            $qoute->pax_name              = $request->pax_name;
+            // $qoute->pax_name              = $request->pax_name;
             $qoute->bedding_preference    = $request->bedding_preference;
             $qoute->save();
             
@@ -9035,9 +9036,9 @@ class AdminController extends Controller
             $this->validate($request, ['dinning_preferences' => 'required'], ['required' => 'Dinning Preferences is required']);
             $this->validate($request, ["booking_due_date" => "required|array", "booking_due_date.*" => "required"]);
             $this->validate($request, ["cost" => "required|array", "cost.*" => "required"]);
-            $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
             $this->validate($request, ['bedding_preference' => 'required'], ['required' => 'Bedding Preferences is required']);
             
+            // $this->validate($request, ["pax_name" => "array", "pax_name.*" => "required|string|distinct"], ['required' => 'Pax Name is required']);
             $season = season::findOrFail($request->season_id);
             // if(!empty($request->date_of_service)){
             //     $error_array = [];
@@ -9206,7 +9207,7 @@ class AdminController extends Controller
             $qoute_log->created_date = date("Y-m-d");
             $qoute_log->log_no = $qouteDetailLogNumber;
             $qoute_log->user_id = Auth::user()->id;
-            $qoute_log->pax_name = $qoute->pax_name;
+            // $qoute_log->pax_name = $qoute->pax_name;
             $qoute_log->bedding_preference    = $qoute->bedding_preference;
             $qoute_log->save();
             
@@ -9240,7 +9241,7 @@ class AdminController extends Controller
             $qoute->markup_percent        = $request->markup_percent;
             $qoute->show_convert_currency = $request->show_convert_currency;
             $qoute->per_person            = $request->per_person;
-            $qoute->pax_name              = $request->pax_name;
+            // $qoute->pax_name              = $request->pax_name;
             $qoute->bedding_preference    = $request->bedding_preference;
             $qoute->save();
             
