@@ -175,7 +175,7 @@
 
                                             <div class="col-sm-2">
                                                 <label for="inputEmail3" class="">Service Details</label> 
-                                                <textarea name="quote[{{ $key }}][service_details]"  class="form-control" cols="30" rows="1">{{ $detail->service_details }}</textarea>
+                                                <textarea name="quote[{{ $key }}][service_details]"  class="form-control service-detail" cols="30" rows="1">{{ $detail->service_details }}</textarea>
                                                 {{-- <div class="alert-danger" style="text-align:center">{{ $errors->first('service_details') }}</div> --}}
                                             </div>
 
@@ -390,6 +390,7 @@ function convertDate(date) {
                     }).end()
                     .show()
                     .insertAfter(".qoute:last");
+
                     $(".select2, .supplier-currency, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").removeClass('select2-hidden-accessible').next().remove();
                     $(".select2, .booked-by-select2, .booking-method-select2, .category-select2, .supplier-select2, .product-select2, .supervisor-select2, .booking-type-select2").select2();
                     $('.supplier-currency').select2({
@@ -397,10 +398,88 @@ function convertDate(date) {
                         templateSelection: formatState
                     });
 
+                    $('.qoute:last').find('[class*="supplier-select2"]').html('<option value="">Select Supplier</option>');
+                    $('.qoute:last').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+
                     $('.removeButton:last').append("<button type='button' class='remove btn btn-link pull-right'><i class='fa fa-times'  style='color:red' ></i></button>");   
                     datePickerSetDate();
                     
 
+        });
+
+        $(document).on('change', '.category-select2',function(){
+            
+            var $selector = $(this);
+            var category_id = $(this).val();
+            
+            var options = '';
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'category_id': category_id
+                },
+                success: function(response) {
+                    options += '<option value="">Select Supplier</option>';
+                    $.each(response,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    
+                    $selector.closest('.row').find('[class*="supplier-select2"]').html(options);
+                    $selector.closest('.row').find('[class*="product-select2"]').html('<option value="">Select Product</option>');
+                    $selector.closest('.qoute').find('[class*="service-detail"]').val('');
+                }
+            })
+        });
+
+        // set supplier's default & supplier's product list
+        $(document).on('change', '.supplier-select2',function(){
+
+            var $selector = $(this);
+            var supplier_id = $(this).val();
+            var options = '';
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-supplier-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'supplier_id': supplier_id
+                },
+                success: function(response) {
+
+                    // set supplier's product 
+                    options += '<option value="">Select Product</option>';
+                    $.each(response.supplier_products,function(key,value){
+                        options += '<option value="'+value.id+'">'+value.name+'</option>';
+                    });
+                    $selector.closest('.row').find('[class*="product-select2"]').html(options);
+
+                    // set supplier's currency 
+                    $selector.closest('.qoute').find('[class*="supplier-currency"]').val(response.supplier_currency.code).change();
+                }
+            })
+        });
+
+        // get product's details for service details
+        $(document).on('change', '.product-select2',function(){
+
+            var $selector = $(this);
+            var product_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-product-details') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'product_id': product_id
+                },
+                success: function(response) {
+
+                    $selector.closest('.qoute').find('[class*="service-detail"]').val(response.description);
+                }
+            })
         });
         
         $(document).on("click", ".remove", function() {
