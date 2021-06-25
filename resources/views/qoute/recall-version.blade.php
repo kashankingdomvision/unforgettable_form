@@ -788,10 +788,10 @@
 
                         <div class="row"> 
                             <div class="col-sm-2 col-sm-offset-1" style="margin-bottom:15px;">
-                                <select class="form-control select2" id="convert-currency" name="convert_currency">
+                                <select class="form-control convert_currency" id="convert-currency" name="convert_currency">
                                     <option value="">Select Currency</option>
                                     @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" {{ $quote->convert_currency == $currency->code ? 'selected' : ''}}> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                        <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}" {{ $quote->convert_currency == $currency->code ? 'selected' : ''}}> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -1088,7 +1088,7 @@
         $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
         $( ".datepicker" ).datepicker({ autoclose: true, format: 'dd/mm/yyyy' });
 
-        $('.currency-select2, .supplier-currency').select2({
+        $('.currency-select2, .supplier-currency, .convert_currency').select2({
             templateResult: formatState,
             templateSelection: formatState
         });

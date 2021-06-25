@@ -615,20 +615,14 @@ td.day{
                             <div class="col-sm-2 col-sm-offset-1 mb-2">
                                 <label class="" style="margin-right: 10px; margin-bottom: 10px;"> 
                                     {{-- <button type="button" >Convert to USD</button> --}}
-                                    <select class="form-control select2" id="convert-currency" name="convert_currency">
+                                    <select class="form-control convert_currency" id="convert-currency" name="convert_currency">
                                         <option value="">Select Currency</option>
                                         @foreach ($currencies as $currency)
-                                            <option value="{{ $currency->code }}"> {{ $currency->name }} ({{ $currency->symbol }}) </option>
+                                            <option value="{{ $currency->code }}" data-image="data:image/png;base64, {{$currency->flag}}">  &nbsp; {{$currency->code}} - {{$currency->name}} </option>
                                         @endforeach
                                     </select>
                                 </label> 
-                                {{-- <select class="form-control convert-currency"  id="convert-currency" name="convert_currency" >
-                                    <option value="">Select Currency</option>
-                                    @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->code }}" > {{ $currency->name }} ({{ $currency->symbol }}) </option>
-                                    @endforeach
-                                </select>
-                                <div class="alert-danger" style="text-align:center"> {{ $errors->first('category') }} </div> --}}
+ 
                             </div>
                             <div class="col-sm-2 mb-2">
                                 <label class="convert-currency"></label>
@@ -873,7 +867,7 @@ td.day{
     // Initialize all select2
     $('.select2, .category-select2, .supplier-select2, .product-select2, .booking-method-select2, .booked-by-select2, .supplier-currency, .supervisor-select2, .booking-type-select2').select2();
 
-    $('.currency-select2, .supplier-currency').select2({
+    $('.currency-select2, .supplier-currency, .convert_currency').select2({
         templateResult: formatState,
         templateSelection: formatState
     });
