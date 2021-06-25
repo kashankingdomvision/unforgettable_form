@@ -159,6 +159,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('get-holiday-type',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));
 	//end mufti
 
+	Route::match(['get', 'post'],'view-manual-rates',array('as'=>'view-manual-rates','uses'=>'AdminController@view_manual_rates'));
+	Route::match(['get', 'post'],'update-manual-rate/{id}',array('as'=>'update-manual-rate','uses'=>'AdminController@update_manual_rates'));
 
 	Route::match(['get', 'post'],'creat-currency',array('as'=>'creat-currency','uses'=>'AdminController@creat_currency'));
 	Route::match(['get', 'post'],'edit-currency/{id}',array('as'=>'edit-currency','uses'=>'AdminController@edit_currency'));

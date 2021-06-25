@@ -587,7 +587,7 @@ thead.border_thead {
         {{-- @if (Request::is('creat-airline') || Request::is('view-airline') || Request::is('creat-payment') || Request::is('view-payment') || Request::is('creat-booking-method') ||  Request::is('view-booking-method') )  active @endif --}}
 
         <li class="treeview {{ $route == 'creat-airline' || $route == 'view-airline' || $route == 'update-airline' || $route == 'creat-payment' || $route == 'view-payment' || $route == 'update-payment' || $route == 'creat-booking-method' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'view-booking-method' || $route == 'creat-currency' || $route == 'edit-currency' || $route == 'view-currency' || $route == 'brand.create'
-        || $route == 'brand.index' || $route == 'holidaytype.create' || $route == 'holidaytype.index' || $route == 'brand.edit' || $route == 'holidaytype.edit'? 'active' : '' }}">
+        || $route == 'brand.index' || $route == 'holidaytype.create' || $route == 'holidaytype.index' || $route == 'brand.edit' || $route == 'holidaytype.edit' || $route == 'view-manual-rates' ? 'active' : '' }}">
             <a href="#">
                 <i class="fa fa-gear"></i>
                 <span>Setting</span>
@@ -609,6 +609,7 @@ thead.border_thead {
                 <li class="{{ $route == 'brand.index' || $route == 'brand.edit' ? 'active' : '' }}"><a href="{{ route('brand.index')}}"><i class="fa fa-eye"></i>View Brand</a></li>
                 <li class="{{ $route == 'holidaytype.create'  ? 'active' : '' }}"><a href="{{ route('holidaytype.create')}}"><i class="fa fa-plus"></i> Add Holiday Type</a></li>
                 <li class="{{ $route == 'holidaytype.index' || $route == 'holidaytype.edit' ? 'active' : '' }}"><a href="{{ route('holidaytype.index')}}"><i class="fa fa-eye"></i>View Holiday Type</a></li>
+                <li class="{{ $route == 'view-manual-rates' ? 'active' : '' }}"><a href="{{ route('view-manual-rates')}}"><i class="fa fa-eye"></i>View Manual Rates</a></li>
               </ul>
         </li>
 
