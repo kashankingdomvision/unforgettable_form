@@ -9,6 +9,7 @@
     </td>
   
     <td>{{ $quote->ref_no }}</td>
+    <td>{{ $quote->quotation_no }}</td>
     <td>{{ $quote->season->name }}</td>
     <td>{{ (isset($quote->getHolidayType->name))? $quote->getHolidayType->name:NULL }}</td>
     <td>{{ (isset($quote->getBrand->name))? $quote->getBrand->name: NULL }}</td>
