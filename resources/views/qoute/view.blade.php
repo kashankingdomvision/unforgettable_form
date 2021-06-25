@@ -35,7 +35,7 @@ tr.shown td.details-control {
             </div>
         <div class="col-xs-12">
         <div class="box">
-            <div class="box-body">
+            <div class="box-body" style="overflow-x:auto;">
             <table id="example1" class="table table-bordered  table-striped" >
                 <thead>
                   <tr>
