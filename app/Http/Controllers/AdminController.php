@@ -6684,7 +6684,7 @@ class AdminController extends Controller
     {
         $ajax_response = array();
 
-        if ($request->reference_name == "zoho") {
+        // if ($request->reference_name == "zoho") 
             $zoho_credentials = ZohoCredential::findOrFail(1);
             $ref = $request->id;
             // $refresh_token = '1000.18cb2e5fbe397a6422d8fcece9b67a06.d71539ff6e5fa8364879574343ab799a';
@@ -6700,6 +6700,7 @@ class AdminController extends Controller
             );
 
             $response = $this->cf_remote_request($url, $args);
+// dd($response);
             if ($response['status'] == 200) {
                 $responses_data = array_shift($response['body']['data']);
                 $passenger_id = $responses_data['id'];
@@ -6726,7 +6727,7 @@ class AdminController extends Controller
                     "pax" => isset($pax_no) && !empty($pax_no) ? $pax_no : null,
                 );
             }
-        }
+        // }
 
         if ($request->ajax()) {
             return response()->json($ajax_response);
