@@ -470,35 +470,35 @@ td.day{
                                     
                                     @foreach ($quote->getPaxDetail as $paxKey => $pax )
                                     @php
-                                         $count = $paxKey +1;
+                                         $count = $paxKey + 1;
                                     @endphp
-                                    <div class="mb-2">
+                                    <div class="mb-2 appendCount" id="appendCount{{ $count }}">
                                         <div class="row" >
                                             <div class="col-md-3 mb-2">
-                                                <label >Passenger #{{ $count }} Full Name</label> 
-                                                <input type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                                <label >Passenger #{{ $count +1  }} Full Name</label> 
+                                                <input type="text" name="pax[{{$count}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
                                                 <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label >Email Address</label> 
-                                                <input type="email" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
+                                                <input type="email" name="pax[{{$count}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
                                                 <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label >Contact Number</label> 
-                                                <input type="number" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <input type="number" name="pax[{{$count}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
                                                 <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3 mb-2">
                                                 <label>Date Of Birth</label> 
-                                                <input type="date" max="{{  date("Y-m-d") }}" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                <input type="date" max="{{  date("Y-m-d") }}" name="pax[{{$count}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
                                                 <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label>Bedding Preference</label> 
-                                                <input type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                                <input type="text" name="pax[{{$count}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
                                                 <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
                                             </div>
                                             
@@ -1877,49 +1877,99 @@ td.day{
     
         // });
         
+        // $(document).on('change', '.paxNumber',function () {
+        //     var $_val = $(this).val();
+        //     $('#appendPaxName').empty();
+        //     if($_val > 1){
+        //         for (i = 1; i < $_val; ++i) {
+        //         var count = i +1;
+        //         var currentDate = curday('-');
+                
+        //         const $_html = `<div class="mb-2">
+        //                         <div class="row" >
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Passenger #${ count } Full Name</label> 
+        //                                 <input type="text" name="pax[${i}][full_name]" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+        //                             </div>
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Email Address</label> 
+        //                                 <input type="email" name="pax[${i}][email_address]" class="form-control" placeholder="EMAIL ADDRESS" >
+        //                             </div>
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Contact Number</label> 
+        //                                 <input type="number" name="pax[${i}][contact_number]" class="form-control" placeholder="CONTACT NUMBER" >
+        //                             </div>
+        //                         </div>
+        //                         <div class="row">
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Date Of Birth</label> 
+        //                                 <input type="date" max="${currentDate}" name="pax[${i}][date_of_birth]" class="form-control" placeholder="CONTACT NUMBER" >
+        //                             </div>
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Bedding Preference</label> 
+        //                                 <input type="text" name="pax[${i}][bedding_preference]" class="form-control" placeholder="BEDDING PREFERENCES" >
+        //                             </div>
+                                    
+        //                             <div class="col-md-3 mb-2">
+        //                                 <label>Dinning Preference</label> 
+        //                                 <input type="text" name="pax[${i}][dinning_preference]" class="form-control" placeholder="DINNING PREFERENCES" >
+        //                             </div>
+        //                         </div>
+        //                     </div> `;
+        //         $('#appendPaxName').append($_html);
+        //         }
+                
+                
+        //     }
+        // });
+        
+        
         $(document).on('change', '.paxNumber',function () {
             var $_val = $(this).val();
-            $('#appendPaxName').empty();
-            if($_val > 1){
-                for (i = 1; i < $_val; ++i) {
-                var count = i +1;
-                var currentDate = curday('-');
-                
-                const $_html = `<div class="mb-2">
+            var currentDate = curday('-');
+            if($_val > $('.appendCount').length){
+                var countable = ($_val - $('.appendCount').length) - 1;
+                for (i = 1; i <= countable; ++i) {
+                    var count = $('.appendCount').length + 1;
+                    const $_html = `<div class="mb-2 appendCount" id="appendCount${count}">
                                 <div class="row" >
                                     <div class="col-md-3 mb-2">
-                                        <label>Passenger #${ count } Full Name</label> 
-                                        <input type="text" name="pax[${i}][full_name]" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                        <label>Passenger #${ count + 1 } Full Name</label> 
+                                        <input type="text" name="pax[${count}][full_name]" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label>Email Address</label> 
-                                        <input type="email" name="pax[${i}][email_address]" class="form-control" placeholder="EMAIL ADDRESS" >
+                                        <input type="email" name="pax[${count}][email_address]" class="form-control" placeholder="EMAIL ADDRESS" >
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label>Contact Number</label> 
-                                        <input type="number" name="pax[${i}][contact_number]" class="form-control" placeholder="CONTACT NUMBER" >
+                                        <input type="number" name="pax[${count}][contact_number]" class="form-control" placeholder="CONTACT NUMBER" >
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3 mb-2">
                                         <label>Date Of Birth</label> 
-                                        <input type="date" max="${currentDate}" name="pax[${i}][date_of_birth]" class="form-control" placeholder="CONTACT NUMBER" >
+                                        <input type="date" max="${currentDate}" name="pax[${count}][date_of_birth]" class="form-control" placeholder="CONTACT NUMBER" >
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label>Bedding Preference</label> 
-                                        <input type="text" name="pax[${i}][bedding_preference]" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                        <input type="text" name="pax[${count}][bedding_preference]" class="form-control" placeholder="BEDDING PREFERENCES" >
                                     </div>
                                     
                                     <div class="col-md-3 mb-2">
                                         <label>Dinning Preference</label> 
-                                        <input type="text" name="pax[${i}][dinning_preference]" class="form-control" placeholder="DINNING PREFERENCES" >
+                                        <input type="text" name="pax[${count}][dinning_preference]" class="form-control" placeholder="DINNING PREFERENCES" >
                                     </div>
                                 </div>
                             </div> `;
-                $('#appendPaxName').append($_html);
+                        $('#appendPaxName').append($_html);
                 }
-                
-                
+            }else{
+               var countable = $('.appendCount').length + 1;
+               console.log();
+               for (var i = countable - 1; i >= $_val; i--) {
+                    $("#appendCount"+i).remove();
+                }
             }
         });
     });
