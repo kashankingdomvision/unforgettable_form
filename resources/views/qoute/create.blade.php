@@ -1337,7 +1337,6 @@ td.day{
                             var count= i;
                             var data = (isNaN((costArray[count] * response[currencyArray[count]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[count] * response[currencyArray[count]]).toFixed(2) );
                         // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
-                      console.log(data);
                         $('.'+supplierCurrency[i].class).closest(".row").find('.base-currency').val(data);
                         
                         // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
