@@ -1332,12 +1332,13 @@ td.day{
                                 $(this).addClass("addCurrency"+index); 
                             }
                     });
-                       
-                    for(i=0 ; i < supplierCurrency.length; i++){
+                    for(i=1 ; i < supplierCurrency.length; i++){
                         if(supplierCurrency[i].name != ''){
-                            var data = (isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) );
+                            var count= i;
+                            var data = (isNaN((costArray[count] * response[currencyArray[count]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[count] * response[currencyArray[count]]).toFixed(2) );
                         // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
-                        $('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').eq(i+1).val();
+                      console.log(data);
+                        $('.'+supplierCurrency[i].class).closest(".row").find('.base-currency').val(data);
                         
                         // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
                             final += (costArray[i] * response[currencyArray[i]]);
