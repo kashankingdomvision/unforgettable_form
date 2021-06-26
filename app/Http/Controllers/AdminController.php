@@ -7012,6 +7012,7 @@ class AdminController extends Controller
             $booking_log->booking_id = $booking->id;
             $booking_log->log_no = $bookingDetailLogNumber;
             // $booking_log->reference_name = $booking->reference_name;
+            $booking_log->rate_type = $booking->rate_type;
             $booking_log->ref_no = $booking->ref_no;
             $booking_log->qoute_id = $booking->qoute_id;
             $booking_log->quotation_no = $booking->quotation_no;
@@ -7053,7 +7054,8 @@ class AdminController extends Controller
             $booking = Booking::updateOrCreate(
                 ['quotation_no' => $request->quotation_no],
                 [
-                    'ref_no' => $request->ref_no,
+                    'rate_type'                 => $request->rate_type,
+                    'ref_no'                    => $request->ref_no,
                     // 'reference_name' => $request->reference,
                     'qoute_id'                  => $request->qoute_id,
                     'quotation_no'              => $request->quotation_no,

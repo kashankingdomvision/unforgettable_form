@@ -156,6 +156,14 @@
                         <div class="box-body">
 
                             <div class="row">
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-offset-1 mb-2">
+                                        <label>Rate Type </label> <br />
+                                        <label class="radio-inline"><input type="radio" name="rate_type" value="live_rate" {{ $booking->rate_type == 'live_rate' ? 'checked' : '' }} >Live Rate</label>
+                                        <label class="radio-inline"><input type="radio" name="rate_type" value="manual_rate" {{ $booking->rate_type == 'manual_rate' ? 'checked' : '' }} >Manual Rate</label>
+                                    </div>
+                                </div>
                          
                                 <div class="row">
                                     <div class="col-sm-5 col-sm-offset-1 mb-2">

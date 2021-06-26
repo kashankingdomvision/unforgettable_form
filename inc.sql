@@ -590,4 +590,10 @@ ALTER TABLE `booking_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `din
 
 ALTER TABLE `currency_conversion` ADD `manual_rate` FLOAT(16,2) NULL AFTER `value`;
 
+-- add rate_type in quote
 ALTER TABLE `qoutes` ADD `rate_type` VARCHAR(255) NULL AFTER `reference_name`;
+ALTER TABLE `qoute_logs` ADD `rate_type` VARCHAR(255) NULL AFTER `reference_name`;
+
+-- add rate_type in booking
+ALTER TABLE `bookings` ADD `rate_type` VARCHAR(255) NULL AFTER `reference_name`;
+ALTER TABLE `booking_logs` ADD `rate_type` VARCHAR(255) NULL AFTER `reference_name`;
