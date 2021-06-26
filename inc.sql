@@ -589,3 +589,5 @@ ALTER TABLE `bookings` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning
 ALTER TABLE `booking_logs` ADD `bedding_preference` VARCHAR(255) NULL AFTER `dinning_preferences`;
 
 ALTER TABLE `currency_conversion` ADD `manual_rate` FLOAT(16,2) NULL AFTER `value`;
+
+ALTER TABLE `qoutes` ADD `rate_type` VARCHAR(255) NULL AFTER `reference_name`;

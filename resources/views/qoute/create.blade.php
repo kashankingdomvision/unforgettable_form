@@ -241,12 +241,13 @@ td.day{
                         @csrf
                         <div class="row">
 
-                            {{-- <div class="row">
+                            <div class="row">
                                 <div class="col-md-5 col-sm-offset-1 mb-2">
-                                    <label>Select the reference <span style="color:red">*</span></label> <br />
-                                    <label class="radio-inline"><input type="radio"  name="reference" value="zoho" checked>Zoho Reference</label>
+                                    <label>Rate Type </label> <br />
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="live_rate" checked>Live Rate</label>
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="manual_rate">Manual Rate</label>
                                 </div>
-                            </div> --}}
+                            </div>
                             
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
@@ -1153,6 +1154,7 @@ td.day{
             let selectedMainCurrency = $("select[name='currency']").val();
             let costArray = [];
             let currencyArray = [];
+            var rate_type =  $('input[name="rate_type"]:checked').val();
             $selector.closest(".qoute").find('[class*="cost"]').attr("data-code",selected_currency_code);
             $selector.closest(".qoute").find('[class*="symbol"]').html(selected_currency_code);
             $('.cost').each(function(){
@@ -1171,7 +1173,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': selected_currency_code
+                    'from': selected_currency_code,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
                     qoute_currency = currentCost * response[selected_currency_code];
@@ -1205,6 +1208,8 @@ td.day{
             var $selector = $(this);
             var costArray = [];
             var currencyArray = [];
+            var rate_type =  $('input[name="rate_type"]:checked').val();
+
             $('.cost').each(function(){
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
@@ -1221,7 +1226,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': $selector.attr("data-code")
+                    'from': $selector.attr("data-code"),
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
                     qoute_currency = $selector.val() * response[$selector.attr("data-code")];
@@ -1278,57 +1284,39 @@ td.day{
             // $('.per-person').val(perPersonAmount);
         });
 
-        $(document).on('change', 'select[name="currency"]',function(){
+        $('input[type=radio][name=rate_type]').on('change', function() {
 
-         
-            
-            var selected_currency_code = $(this).val();
             var costArray = [];
             var currencyArray = [];
             var selectedMainCurrency = $("select[name='currency']").val();
-     
+            var rate_type = $('input[name="rate_type"]:checked').val();
             var final = 0;
+
             $('.cost').each(function(){
                 cost = $(this).val();
                 currency = $(this).attr("data-code");
-                // if(cost !== "" && cost !== '0'){
+                if(cost !== "" && cost !== '0'){
                     costArray.push(parseFloat(cost));
-                // }
-                // if(currency !== "" && cost !== '0'){
+                }
+                if(currency !== "" && cost !== '0'){
                     currencyArray.push(currency);
-                // }
+                }
             });
-            
-            
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': currency
+                    'from': currency,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
-                    
-                    var supplierCurrency = [];
-                        $('.supplier-currency').each(function(index){
-                            curren = $(this).val();
-                            if(curren !=  null){
-                                var $x = {'class':"addCurrency"+index, 'name':curren};
-                                supplierCurrency.push($x);
-                                $(this).addClass("addCurrency"+index); 
-                            }
-                    });
-                       
-                    for(i=0 ; i < supplierCurrency.length; i++){
-                        if(supplierCurrency[i].name != ''){
-                            var data = (isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) );
-                        // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
-                        $('.'+supplierCurrency[i].class).closest(".qoute").find('.base-currency').eq(i+1).val();
-                        
-                        // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-                            final += (costArray[i] * response[currencyArray[i]]);
-                            }
+                    for(i=0 ; i < currencyArray.length; i++){
+                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                        final += (costArray[i] * response[currencyArray[i]]);
                     }
                     // $('.net_price').val(final.toFixed(2));
                     $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
@@ -1349,8 +1337,85 @@ td.day{
                     // $('.per-person').val(perPersonAmount);
                 }
             });
-            $('.currency').html(selected_currency_code);
+            $('.currency').html(selectedMainCurrency);
+
+
         });
+
+        $(document).on('change', 'select[name="currency"]',function(){
+         
+            
+         var selected_currency_code = $(this).val();
+         var costArray = [];
+         var currencyArray = [];
+         var selectedMainCurrency = $("select[name='currency']").val();
+  
+         var final = 0;
+         $('.cost').each(function(){
+             cost = $(this).val();
+             currency = $(this).attr("data-code");
+             // if(cost !== "" && cost !== '0'){
+                 costArray.push(parseFloat(cost));
+             // }
+             // if(currency !== "" && cost !== '0'){
+                 currencyArray.push(currency);
+             // }
+         });
+         
+         
+         $.ajax({
+             type: 'POST',
+             url: '{{ route('get-currency') }}',
+             data: {
+                 "_token": "{{ csrf_token() }}",
+                 'to': selectedMainCurrency,
+                 'from': currency
+             },
+             success: function(response) {
+                 
+                var supplierCurrency = [];
+                    $('.supplier-currency').each(function(index){
+                        curren = $(this).val();
+                        if(curren !=  null){
+                            var $x = {'class':"addCurrency"+index, 'name':curren};
+                            supplierCurrency.push($x);
+                            $(this).addClass("addCurrency"+index); 
+                        }
+                });
+
+                 for(i=1 ; i < supplierCurrency.length; i++){
+                     if(supplierCurrency[i].name != ''){
+                         var count= i;
+                         var data = (isNaN((costArray[count] * response[currencyArray[count]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[count] * response[currencyArray[count]]).toFixed(2) );
+                     // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
+                   console.log(data);
+                     $('.'+supplierCurrency[i].class).closest(".row").find('.base-currency').val(data);
+                     
+                     // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                         final += (costArray[i] * response[currencyArray[i]]);
+                         }
+                 }
+                 // $('.net_price').val(final.toFixed(2));
+                 $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
+                 var net_price = parseFloat($('.net_price').val());
+                 var markup_percent = parseFloat($('.markup-percent').val());
+                 var markup_amount = parseFloat($('.markup-amount').val());
+                 markupAmount = (net_price / 100) * markup_percent;
+                 // $('.markup-amount').val(markupAmount.toFixed(2));
+                 $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
+                 var sellingPrice = (markupAmount + net_price);
+                 $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
+                 // $('.selling').val(sellingPrice.toFixed(2));
+                 var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
+                 $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
+                 // $('.gross-profit').val(grossProfit.toFixed(2));
+                 // console.log(last_convert_currency);
+                 // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                 // $('.per-person').val(perPersonAmount);
+             }
+         });
+         $('.currency').html(selected_currency_code);
+     });
 
         $(document).on('click', '#ab_no',function(){
             $('#agency-detail').css("display", "none");
@@ -1370,13 +1435,16 @@ td.day{
             var selected_currency =  $(this).val();
             var selectedMainCurrency = $("select[name='currency']").val();
             var sellingPrice =  $('.selling').val();
+            var rate_type =  $('input[name="rate_type"]:checked').val();
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-currency') }}',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selected_currency,
-                    'from': selectedMainCurrency
+                    'from': selectedMainCurrency,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
                     final = sellingPrice * response[selectedMainCurrency];

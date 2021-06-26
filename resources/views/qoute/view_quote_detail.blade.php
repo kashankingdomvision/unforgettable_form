@@ -112,8 +112,16 @@
                         @csrf
 
                         <div class="row">
+
+                            <div class="row mt-2">
+                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                    <label>Rate Type </label> <br />
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="live_rate" {{ $quote->rate_type == 'live_rate' ? 'checked' : '' }}>Live Rate</label>
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="manual_rate" {{ $quote->rate_type == 'manual_rate' ? 'checked' : '' }}>Manual Rate</label>
+                                </div>
+                            </div>
                    
-                            <div class="row  mt-2">
+                            <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename"> Zoho Reference</label> <span style="color:red">*</span>
                                     <div class="input-group">

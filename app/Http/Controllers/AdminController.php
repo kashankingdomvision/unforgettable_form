@@ -8384,6 +8384,7 @@ class AdminController extends Controller
             $qoute = new Qoute;
             $qoute->ref_no                = $request->ref_no;
             // $qoute->reference_name        = $request->reference;
+            $qoute->rate_type             = $request->rate_type;
             $qoute->quotation_no          = $request->quotation_no;
             $qoute->dinning_preferences   = $request->dinning_preferences;
             $qoute->lead_passenger_name   = $request->lead_passenger_name;
@@ -9184,6 +9185,7 @@ class AdminController extends Controller
             $qoute_log->qoute_id = $id;
             $qoute_log->ref_no = $qoute->ref_no;
             // $qoute_log->reference_name = $qoute->reference_name;
+            $qoute_log->rate_type = $qoute->rate_type;
             $qoute_log->quotation_no = $qoute->quotation_no;
             $qoute_log->dinning_preferences = $qoute->dinning_preferences;
             $qoute_log->lead_passenger_name = $qoute->lead_passenger_name;
@@ -9222,6 +9224,7 @@ class AdminController extends Controller
             $qoute->ref_no = $request->ref_no;
             $qoute->quotation_no = $request->quotation_no;
             // $qoute->reference_name = $request->reference;
+            $qoute->rate_type             = $request->rate_type;
             $qoute->dinning_preferences   = $request->dinning_preferences;
             $qoute->lead_passenger_name   = $request->lead_passenger_name;
             $qoute->brand_name            = $request->brand_name;
@@ -9812,16 +9815,25 @@ class AdminController extends Controller
 
     public function get_currency(Request $request)
     {
-
-        // dd($request->all());
-
-        $test = CurrencyConversions::where('to', $request->to)->get(['from', 'value']);
-
-        // dd($test);
-
         $arr = [];
-        foreach ($test as $test) {
-            $arr[$test->from] = $test->value;
+
+        if($request->rate_type == 'manual_rate'){
+
+            $currencies = CurrencyConversions::where('to', $request->to)->get(['from', 'manual_rate']);
+    
+            foreach ($currencies as $currency) {
+                $arr[$currency->from] = $currency->manual_rate;
+            }
+
+            return $arr;
+            
+        }else{
+           
+            $currencies = CurrencyConversions::where('to', $request->to)->get(['from', 'value']);
+    
+            foreach ($currencies as $currency) {
+                $arr[$currency->from] = $currency->value;
+            }
         }
 
         return $arr;

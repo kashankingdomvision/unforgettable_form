@@ -321,6 +321,15 @@ td.day{
                         @csrf
 
                         <div class="row">
+
+                            <div class="row">
+                                <div class="col-md-5 col-sm-offset-1 mb-2">
+                                    <label>Rate Type </label> <br />
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="live_rate" {{ $quote->rate_type == 'live_rate' ? 'checked' : '' }}>Live Rate</label>
+                                    <label class="radio-inline"><input type="radio" name="rate_type" value="manual_rate" {{ $quote->rate_type == 'manual_rate' ? 'checked' : '' }}>Manual Rate</label>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-1 mb-2">
                                     <label for="inputEmail3" id="referencename"> Zoho Reference</label> <span style="color:red">*</span>
@@ -1334,6 +1343,63 @@ td.day{
             })
         });
 
+        
+        $('input[type=radio][name=rate_type]').on('change', function() {
+
+            var costArray = [];
+            var currencyArray = [];
+            var selectedMainCurrency = $("select[name='currency']").val();
+            var rate_type = $('input[name="rate_type"]:checked').val();
+            var final = 0;
+
+            $('.cost').each(function(){
+                cost = $(this).val();
+                currency = $(this).attr("data-code");
+                if(cost !== "" && cost !== '0'){
+                    costArray.push(parseFloat(cost));
+                }
+                if(currency !== "" && cost !== '0'){
+                    currencyArray.push(currency);
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-currency') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'to': selectedMainCurrency,
+                    'from': currency,
+                    'rate_type' : rate_type
+                },
+                success: function(response) {
+                    for(i=0 ; i < currencyArray.length; i++){
+                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                        final += (costArray[i] * response[currencyArray[i]]);
+                    }
+                    // $('.net_price').val(final.toFixed(2));
+                    $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
+                    var net_price = parseFloat($('.net_price').val());
+                    var markup_percent = parseFloat($('.markup-percent').val());
+                    var markup_amount = parseFloat($('.markup-amount').val());
+                    markupAmount = (net_price / 100) * markup_percent;
+                    // $('.markup-amount').val(markupAmount.toFixed(2));
+                    $('.markup-amount').val((isNaN(parseFloat(markupAmount)) ?  parseFloat(0).toFixed(2) : parseFloat(markupAmount).toFixed(2) ));
+                    var sellingPrice = (markupAmount + net_price);
+                    $('.selling').val((isNaN(parseFloat(sellingPrice)) ?  parseFloat(0).toFixed(2) : parseFloat(sellingPrice).toFixed(2) ));
+                    // $('.selling').val(sellingPrice.toFixed(2));
+                    var grossProfit = (((sellingPrice.toFixed(2) - net_price.toFixed(2) ) / sellingPrice.toFixed(2)) * 100);
+                    $('.gross-profit').val((!isNaN(parseFloat(grossProfit)) ? parseFloat(grossProfit).toFixed(2) : parseFloat(0).toFixed(2) ));
+                    // $('.gross-profit').val(grossProfit.toFixed(2));
+                    // console.log(last_convert_currency);
+                    // var perPersonAmount = sellingPrice / $('select[name="group_no"]').val();
+                    // $('.per-person').val(perPersonAmount);
+                }
+            });
+            $('.currency').html(selectedMainCurrency);
+        });
+
         $(document).on('change', 'select[name="supplier_currency[]"]',function(){
 
             let $selector = $(this);
@@ -1342,6 +1408,8 @@ td.day{
 
             let final = 0;
             let selectedMainCurrency = $("select[name='currency']").val();
+
+            var rate_type =  $('input[name="rate_type"]:checked').val();
 
             let costArray = [];
             let currencyArray = [];
@@ -1372,7 +1440,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': selected_currency_code
+                    'from': selected_currency_code,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
 
@@ -1412,6 +1481,7 @@ td.day{
             var cost = $(this).val();
             var currency = $(this).attr("data-code");
             var selectedMainCurrency = $("select[name='currency']").val();
+            var rate_type =  $('input[name="rate_type"]:checked').val();
             var final = 0;
 
             var $selector = $(this);
@@ -1441,7 +1511,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': $selector.attr("data-code")
+                    'from': $selector.attr("data-code"),
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
 
@@ -1524,6 +1595,7 @@ td.day{
             var costArray = [];
             var currencyArray = [];
             var selectedMainCurrency = $("select[name='currency']").val();
+            var rate_type =  $('input[name="rate_type"]:checked').val();
             var final = 0;
 
             $('.cost').each(function(){
@@ -1547,7 +1619,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selectedMainCurrency,
-                    'from': currency
+                    'from': currency,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
 
@@ -1615,7 +1688,8 @@ td.day{
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'to': selected_currency,
-                    'from': selectedMainCurrency
+                    'from': selectedMainCurrency,
+                    'rate_type' : rate_type
                 },
                 success: function(response) {
              
