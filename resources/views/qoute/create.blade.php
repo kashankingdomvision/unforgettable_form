@@ -1047,7 +1047,8 @@ td.day{
                                 type: 'POST',
                                 dataType: "json",
                                 success:function(data) {
-                                    if( Object.keys(data).length > 0 ){
+                                    if(data.status == true){  
+                                        var data = data.response;                          
                                         $('select[name="type_of_holidays"]').empty();
                                             $.each( data.holidayTypes, function( key, value ) {
                                             var selected = (value.id == data.holiday_type.id)? true: false;
@@ -1059,10 +1060,24 @@ td.day{
                                         $('select[name="group_no"]').val(data.pax).trigger('change');  
                                         $('select[name="currency"]').val(data.currency).trigger('change');
                                         $('#sales_person').val(data.sale_person).trigger('change');
-                                        $('input[name="lead_passenger_name"]').val(data.passenger_name);
+                                        $('input[name="lead_passenger_name"]').val(data.passengers.lead_passenger.passenger_name);
+                                        $('input[name="dinning_preferences"]').val(data.passengers.lead_passenger.dinning_prefrences);
+                                        $('input[name="bedding_preference"]').val(data.passengers.lead_passenger.bedding_prefrences);
                                         $('select[name="type_of_holidays"]').val(data.holiday_type.id).trigger('change'); 
+                                        
+                                        if(data.passengers.passengers.length > 0){
+                                            data.passengers.passengers.forEach(($_value, $key) => {
+                                                var $_count = $key + 1;
+                                                $('input[name="pax['+$_count+'][full_name]"]').val($_value.passenger_name);
+                                                $('input[name="pax['+$_count+'][email_address]"]').val($_value.passenger_email);
+                                                $('input[name="pax['+$_count+'][contact_number]"]').val($_value.passenger_contact);
+                                                $('input[name="pax['+$_count+'][date_of_birth]"]').val($_value.passenger_dbo);
+                                                $('input[name="pax['+$_count+'][bedding_preference]"]').val($_value.bedding_prefrences);
+                                                $('input[name="pax['+$_count+'][dinning_preference]"]').val($_value.dinning_prefrences);
+                                            });
+                                        }
                                     }else{
-                                        $('#error_ref_no').text('The Reference is not found');
+                                        $('#error_ref_no').text(data.error);
                                     }
                                     $('#sendReference').text('Search');
                                     $("#divLoading").removeClass('show');
@@ -1080,8 +1095,6 @@ td.day{
                                     $("#divLoading").removeClass('show');
                                     $('#sendReference').removeAttr('disabled');
                                 }
-                                
-                                
                             });   
                         }else{
                             $('#sendReference').text('Search');
@@ -1313,10 +1326,26 @@ td.day{
                     'rate_type' : rate_type
                 },
                 success: function(response) {
-                    for(i=0 ; i < currencyArray.length; i++){
-                        // $('.net_price').val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ?  parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-                        $(".base-currency").eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
-                        final += (costArray[i] * response[currencyArray[i]]);
+                    
+                    var supplierCurrency = [];
+                        $('.supplier-currency').each(function(index){
+                            curren = $(this).val();
+                            if(curren !=  null){
+                                var $x = {'class':"addCurrency"+index, 'name':curren};
+                                supplierCurrency.push($x);
+                                $(this).addClass("addCurrency"+index); 
+                            }
+                    });
+                    for(i=1 ; i < supplierCurrency.length; i++){
+                        if(supplierCurrency[i].name != ''){
+                            var count= i;
+                            var data = (isNaN((costArray[count] * response[currencyArray[count]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[count] * response[currencyArray[count]]).toFixed(2) );
+                        // console.log(supplierCurrency[count].name, i , $('.'+supplierCurrency[count].class).find('.base-currency'));
+                        $('.'+supplierCurrency[i].class).closest(".row").find('.base-currency').val(data);
+                        
+                        // $('.'+supplierCurrency[count].class).find('.base-currency').eq(i+1).val((isNaN((costArray[i] * response[currencyArray[i]]).toFixed(2)) ? parseFloat(0).toFixed(2) : (costArray[i] * response[currencyArray[i]]).toFixed(2) ));
+                            final += (costArray[i] * response[currencyArray[i]]);
+                            }
                     }
                     // $('.net_price').val(final.toFixed(2));
                     $('.net_price').val((isNaN(parseFloat(final)) ?  parseFloat(0).toFixed(2) : parseFloat(final).toFixed(2) ));
