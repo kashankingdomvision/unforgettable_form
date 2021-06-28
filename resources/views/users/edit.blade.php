@@ -138,7 +138,7 @@
                 </div>
               </div><!-- /.box-body -->
               <div class="box-footer">
-                {!! Form::submit('Update', ['required' => 'required', 'onclick' => 'submitForm(this)', 'class' => 'btn btn-info pull-right']) !!}
+                {!! Form::submit('Update', ['required' => 'required', 'class' => 'btn btn-info pull-right']) !!}
               </div>
                     <!-- /.box-footer -->
             </form>

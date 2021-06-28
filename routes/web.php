@@ -263,6 +263,12 @@ Route::group(['middleware' => ['auth']], function(){
 		Route::post('update/{id}',array('as'=>'update','uses'=>'UserController@update'));
 		Route::delete('delete/{id}',array('as'=>'delete','uses'=>'UserController@delete'));
 	});
+	//roles user start
+	Route::resource('roles', 'RoleController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	//roles user end
+	
 	//old routes
 	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
 	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
@@ -285,6 +291,7 @@ Route::group(['middleware' => ['auth']], function(){
 			Route::post('update/{id}', ['as' => 'update', 'uses' => 'TemplateController@update']);
 			Route::get('template/{id}/partial', ['as' => 'partial', 'uses' => 'TemplateController@call_template']);
 	});
+	
 	
 	Route::group([
 		'prefix' => 'brand',

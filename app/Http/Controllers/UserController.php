@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Role;
 use App\Currency;
+use App\Http\Requests\UserRequest;
 use App\Brand;
 
 
@@ -36,8 +37,9 @@ class UserController extends Controller
     }
     
     
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
+        $request->validate(['password' => 'required|min:8', 'email' => 'unique:users']);
         $data = [
             'name'           =>  $request->username,
             'email'          =>  $request->email,
@@ -64,7 +66,7 @@ class UserController extends Controller
         return view('users.edit', $data);
 
     }
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {   
         $user = User::findOrFail(decrypt($id));
         $data = [

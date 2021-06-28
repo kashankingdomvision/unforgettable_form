@@ -67,6 +67,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="pagination">
+              {{ $users->links() }}
+            </div>
           </div><!-- /.box-body -->
         </div><!-- /.box -->
       </div><!-- /.col -->
