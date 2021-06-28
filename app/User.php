@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'role', 'email', 'password', 'supervisor_id', 'brand_name','currency'
+        'name', 'email', 'password', 'role_id', 'supervisor_id', 'currency_id', 'brand_id', 'holidaytype_id'
     ];
 
     /**
@@ -37,13 +37,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
+    public function getSaleAgent()
+    {
+        return $this->hasMany(User::class, 'supervisor_id', 'id');
+    }
     
     function getRole() {
-        return $this->hasOne(role::class, 'id', 'role_id');
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
     
     function getSupervisor() {
-        return $this->hasOne(user::class, 'id', 'supervisor_id');
+        return $this->hasOne(User::class, 'id', 'supervisor_id');
     }
 
     function getCurrency() {

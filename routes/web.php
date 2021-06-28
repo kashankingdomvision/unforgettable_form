@@ -156,7 +156,6 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
 	Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
 
-	Route::post('get-holiday-type',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));
 	//end mufti
 
 	Route::match(['get', 'post'],'view-manual-rates',array('as'=>'view-manual-rates','uses'=>'AdminController@view_manual_rates'));
@@ -254,6 +253,25 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('quote/{ref_no}/child',array('as'=>'get.child.reference','uses'=>'AdminController@childReference'));
 	
 	
+	
+	Route::group(['prefix' => 'users', 'as' 	 => 'users.' ], function ()
+	{
+		Route::get('index',array('as'=>'index','uses'=>'UserController@index'));
+		Route::get('create',array('as'=>'create','uses'=>'UserController@create'));
+		Route::post('store',array('as'=>'store','uses'=>'UserController@store'));
+		Route::get('edit/{id}',array('as'=>'edit','uses'=>'UserController@edit'));
+		Route::post('update/{id}',array('as'=>'update','uses'=>'UserController@update'));
+		Route::delete('delete/{id}',array('as'=>'delete','uses'=>'UserController@delete'));
+	});
+	//old routes
+	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
+	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
+	// Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
+	// Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
+	
+	
+	
+	
 	Route::group([
 			'prefix' => 'template',
 			'as' 	 => 'template.'
@@ -296,6 +314,9 @@ Route::group(['middleware' => ['auth']], function(){
 
 	Route::post('brands/holiday', ['as' => 'brand_with_holiday', 'uses' => 'HolidayTypeController@getBrandWithHoliday']);
 
+	Route::prefix('json')->group(function () {
+		Route::get('holiday-types',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));	
+	});
 });
 
 // Auth::routes();

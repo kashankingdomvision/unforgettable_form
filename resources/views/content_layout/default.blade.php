@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Unforgettable | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
@@ -13,37 +14,40 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
-  {!! HTML::style('plugins/select2/select2.min.css') !!}
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <script src="{{ asset('js/swi204cs.js') }}" ></script>x
+  
+  <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+  {{-- {!! HTML::style('plugins/select2/select2.min.css') !!} --}}
   {!! HTML::style('plugins/datatables/dataTables.bootstrap.css') !!}
   {!! HTML::style('plugins/select2/select2.min.css') !!}
   {!! HTML::style('dist/css/AdminLTE.min.css') !!}
   <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  {!! HTML::style('dist/css/skins/_all-skins.min.css') !!}
-
-  <!-- iCheck -->
-  {!! HTML::style('plugins/iCheck/flat/blue.css') !!}
-  <!-- Morris chart -->
-  {!! HTML::style('plugins/morris/morris.css') !!}
-  <!-- jvectormap -->
-  {!! HTML::style('plugins/jvectormap/jquery-jvectormap-1.2.2.css') !!}
-
-  <!-- Date Picker -->
-  {!! HTML::style('plugins/datepicker/datepicker3.css') !!}
-  {!! HTML::style('plugins/daterangepicker/daterangepicker.css') !!}
-  <!-- Daterange picker -->
-  {{-- {!! HTML::style('plugins/daterangepicker/daterangepicker.css') !!} --}}
-  <!-- bootstrap wysihtml5 - text editor -->
-  {!! HTML::style('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-  <style type="text/css">
+    folder instead of downloading all of them to reduce the load. -->
+    {!! HTML::style('dist/css/skins/_all-skins.min.css') !!}
+    
+    <!-- iCheck -->
+    {!! HTML::style('plugins/iCheck/flat/blue.css') !!}
+    <!-- Morris chart -->
+    {!! HTML::style('plugins/morris/morris.css') !!}
+    <!-- jvectormap -->
+    {!! HTML::style('plugins/jvectormap/jquery-jvectormap-1.2.2.css') !!}
+    
+    <!-- Date Picker -->
+    {!! HTML::style('plugins/datepicker/datepicker3.css') !!}
+    {!! HTML::style('plugins/daterangepicker/daterangepicker.css') !!}
+    <!-- Daterange picker -->
+    {{-- {!! HTML::style('plugins/daterangepicker/daterangepicker.css') !!} --}}
+    <!-- bootstrap wysihtml5 - text editor -->
+    {{-- {!! HTML::style('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!} --}}
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <style type="text/css">
      tr.tr_border_bottom {
    border-bottom: 2px solid black;
    } 
@@ -547,7 +551,10 @@ thead.border_thead {
           </ul>
         </li>
         
-        <li class="treeview @if (Request::is('creat-user') || Request::is('add-role') || Request::is('view-role') || Request::is('view-user') || Request::is('update-user/'.$id) || $route == 'update-user') active @endif">
+        
+        {{-- /// user managment start  --}}
+        {{-- old code 
+          <li class="treeview @if (Request::is('creat-user') || Request::is('add-role') || Request::is('view-role') || Request::is('view-user') || Request::is('update-user/'.$id) || $route == 'update-user') active @endif">
           <a href="#">
             <i class="fa fa-user"></i> <span>User Management</span>
             <span class="pull-right-container">
@@ -560,7 +567,27 @@ thead.border_thead {
             <li class="{{Request::is('add-role') ? 'active' : ''}}"><a href="{{ route('add-role')}}"><i class="fa fa-plus"></i>Add Role</a></li>
             <li class="{{Request::is('view-role') ? 'active' : ''}}"><a href="{{ route('view-role')}}"><i class="fa fa-eye"></i>View Roles</a></li>
           </ul>
+        </li>  old code--}}
+        
+        {{-- New --}}
+        {{-- /// user managment start  --}}
+        <li class="treeview {{ ($route == 'users.index')? 'active': NULL }}">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>User Management</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{($route == 'users.index')? 'active' : ''}}"><a href="{{ route('users.index') }}"><i class="fa fa-eye"></i>View Users</a></li>
+          </ul>
         </li>
+        {{-- /// user managment end  --}}
+        {{-- New end  --}}
+        {{-- /// user managment end  --}}
+        
+        
+        
         <li class="treeview {{ $route == 'add-category' || $route == 'view-category' || $route == 'update-category' ||  $route == 'add-product' ||  $route == 'update-product' || $route == 'view-product' ||  $route == 'add-supplier' || $route == 'view-supplier' || $route ==  'update-supplier' || $route == 'details-supplier' ? 'active' : ''  }}">
           <a href="#">
             <i class="fa fa-group"></i> <span>Suppliers</span>
@@ -631,3 +658,27 @@ thead.border_thead {
     </section>
   </aside>
   @yield('content')
+
+  <!-- jQuery 2.2.3 -->
+  {!! HTML::script('plugins/jQuery/jquery-2.2.3.min.js') !!}
+  <!-- Bootstrap 3.3.6 -->
+  {!! HTML::script('bootstrap/js/bootstrap.min.js') !!}
+  <!-- DataTables -->
+  {!! HTML::script('plugins/datatables/jquery.dataTables.min.js') !!}
+  {!! HTML::script('plugins/datatables/dataTables.bootstrap.min.js') !!}
+  <!-- SlimScroll -->
+  {!! HTML::script('plugins/slimScroll/jquery.slimscroll.min.js') !!}
+  <!-- FastClick -->
+  {!! HTML::script('plugins/fastclick/fastclick.js') !!}
+  <!-- AdminLTE App -->
+  {!! HTML::script('dist/js/app.min.js') !!}
+  <!-- AdminLTE for demo purposes -->
+  {!! HTML::script('dist/js/demo.js') !!}
+  {!! HTML::script('plugins/select2/select2.full.min.js') !!}
+
+  @yield('scripts')
+  
+   
+   
+  </body>
+</html>
