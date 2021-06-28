@@ -571,7 +571,7 @@ thead.border_thead {
         
         {{-- New --}}
         {{-- /// user managment start  --}}
-        <li class="treeview {{ ($route == 'users.index')? 'active': NULL }}">
+        <li class="treeview {{ ($route == 'users.index' || $route == 'users.create')? 'active': NULL }}">
           <a href="#">
             <i class="fa fa-user"></i> <span>User Management</span>
             <span class="pull-right-container">
@@ -580,6 +580,7 @@ thead.border_thead {
           </a>
           <ul class="treeview-menu">
             <li class="{{($route == 'users.index')? 'active' : ''}}"><a href="{{ route('users.index') }}"><i class="fa fa-eye"></i>View Users</a></li>
+            <li class="{{($route == 'users.create')? 'active' : ''}}"><a href="{{ route('users.create') }}"><i class="fa fa-plus"></i>Create Users</a></li>
           </ul>
         </li>
         {{-- /// user managment end  --}}

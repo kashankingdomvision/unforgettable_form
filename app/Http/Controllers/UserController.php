@@ -71,13 +71,16 @@ class UserController extends Controller
                 'name'           =>  $request->username,
                 'email'          =>  $request->email,
                 'role_id'        =>  $request->role,
-                'password'       =>  $request->password,
                 'supervisor_id'  =>  $request->supervisor,
                 'currency_id'    =>  $request->currency,
                 'brand_id'       =>  $request->brand,
                 'holidaytype_id' =>  $request->holiday_type,  
             ];
-        $user->update($data);
+        if($request->has('password') && !empty($request->password)){
+            $data['password']    =  $request->password;
+        }
+            $user->update($data);
+        
         return redirect()->route('users.index')->with('success_message', 'User updated successfully');
     }
     
