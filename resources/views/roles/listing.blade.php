@@ -37,7 +37,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td style="text-transform: capitalize;">{{ $role->name }}</td>
                         <td class="inline-flex">
-                            <a href="{{ route('roles.edit', encrypt($role->id)) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
+                          <a href="{{ route('roles.edit', encrypt($role->id)) }}" class="btn btn-primary btn-xs" data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
                           <form method="post" action="{{ route('roles.destroy', encrypt($role->id)) }}">
                             @csrf
                             @method('delete')

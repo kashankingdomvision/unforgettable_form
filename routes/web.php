@@ -273,6 +273,19 @@ Route::group(['middleware' => ['auth']], function(){
 	]]);
 	//supplier categories end
 	
+	//supplier route start
+	Route::resource('suppliers', 'CategoryController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	//supplier route end
+	
+	//supplier product start
+	Route::resource('products', 'ProductController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	//supplier product end
+	
+	
 	//old routes
 	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
 	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
