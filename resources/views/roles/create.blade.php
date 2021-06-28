@@ -19,11 +19,6 @@
             @if (Session::has('success_message'))
               <li> <div class="alert alert-success">{{ Session::get('success_message') }}</div> </li>
             @endif
-            
-            @if ($errors->any())
-            
-           
-            @endif
           </div>
           <form method="POST" action="{{ route('roles.store') }}">@csrf
             <div class="box-body">

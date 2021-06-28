@@ -81,8 +81,6 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get', 'post'],'view-code',array('as'=>'view-code','uses'=>'AdminController@view_code'));
 	
 	
-    // Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
-    // Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
 
     Route::get('details-supplier/{id}',array('as'=>'details-supplier','uses'=>'AdminController@details_supplier'));
 
@@ -269,12 +267,20 @@ Route::group(['middleware' => ['auth']], function(){
 	]]);
 	//roles user end
 	
+	//supplier categories start
+	Route::resource('categories', 'CategoryController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	//supplier categories end
+	
 	//old routes
 	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
 	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
 	// Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
 	// Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
-	
+	    Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
+    Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
+
 	
 	
 	
