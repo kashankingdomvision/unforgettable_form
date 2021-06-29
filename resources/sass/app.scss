@@ -1,6 +1,6 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
+@import "~select2/dist/css/select2.css";
 // Variables
 @import 'variables';
 
@@ -15,4 +15,31 @@
 .ml-5 {
     margin-left: 5px !important;
 }
+
+.mt-2{
+    margin-top: 1rem;
+
+} 
+
+.mb-2{
+    margin-bottom: 1rem
+}
 //margin
+
+.th{    
+    width: 15rem;
+  }
+
+.td{
+    width: 60rem;
+}
+
+.selectRow {
+    display : block;
+    padding : 20px;
+}
+.select2-container {
+    width: 200px;
+}
+
+ 

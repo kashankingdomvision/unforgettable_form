@@ -274,9 +274,7 @@ Route::group(['middleware' => ['auth']], function(){
 	//supplier categories end
 	
 	//supplier route start
-	Route::resource('suppliers', 'CategoryController',['only' => [
-		'index','create', 'store', 'edit', 'update', 'destroy'
-	]]);
+	Route::resource('suppliers', 'SupplierController');
 	//supplier route end
 	
 	//supplier product start

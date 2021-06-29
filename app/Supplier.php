@@ -6,19 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'currency_id', 'name', 'email', 'phone',
+    ];
 
-    public function categories()
+    public function getCategories()
     {
-        return $this->belongsToMany('App\Category', 'supplier_categories');
+        return $this->belongsToMany(Category::class, 'supplier_categories', 'supplier_id', 'category_id');
     }
 
-    public function products(){
-        return $this->belongsToMany('App\Product', 'supplier_products');
+    public function getProducts(){
+        return $this->belongsToMany(Product::class, 'supplier_products', 'supplier_id', 'product_id');
     }
 
-    public function currency()
+    public function getCurrency()
     {
-        return $this->belongsTo(Currency::class);
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
     }
 }

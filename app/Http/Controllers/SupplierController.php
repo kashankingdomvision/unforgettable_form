@@ -3,9 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Supplier;
+use App\Category;
+use App\Product;
+use App\Currency;
+use App\SupplierCategory;
+use App\SupplierProduct;
+use App\Http\Requests\SupplierRequest;
+
 
 class SupplierController extends Controller
 {
+    public $pagination = 10;
     /**
      * Display a listing of the resource.
      *
@@ -13,6 +22,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        $data['suppliers'] = Supplier::paginate($this->pagination);       
+        return view('suppliers.listing', $data);
     }
 
     /**
@@ -22,7 +33,10 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        $data['categories'] = Category::get();
+        $data['products']   = Product::get();
+        $data['currencies'] = Currency::get();
+        return view('suppliers.create', $data);
     }
 
     /**
@@ -31,9 +45,34 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SupplierRequest $request)
     {
-        //
+        $supplier = Supplier::create([
+            'currency_id' => $request->currency, 
+            'name'        => $request->username, 
+            'email'       => $request->email, 
+            'phone'       => $request->phone,
+        ]);
+        
+        if($request->has('categories') && count($request->categories) > 0){
+            foreach ($request->categories as $category) {
+                SupplierCategory::create([
+                    'supplier_id' => $supplier->id,
+                    'category_id' => $category
+                ]);
+            }
+        }
+    
+        if($request->has('products') && count($request->products) > 0){
+            foreach ($request->products as $product) {
+                SupplierProduct::create([
+                    'supplier_id' => $supplier->id,
+                    'product_id' => $product
+                ]);
+            }
+        }
+        
+        return redirect()->route('suppliers.index')->with('success_message', 'Supplier created successfully');
     }
 
     /**
@@ -44,7 +83,8 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        //
+        $data['supplier'] = Supplier::findOrFail(decrypt($id));
+        return view('suppliers.show',$data);
     }
 
     /**
@@ -55,7 +95,11 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['supplier'] = Supplier::findOrFail(decrypt($id));
+        $data['categories'] = Category::get();
+        $data['products']   = Product::get();
+        $data['currencies'] = Currency::get();
+        return view('suppliers.edit',$data);
     }
 
     /**
@@ -65,9 +109,38 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SupplierRequest $request, $id)
     {
-        //
+        $supplier = Supplier::findOrFail(decrypt($id));
+        SupplierCategory::where('supplier_id', $supplier->id)->delete();
+        SupplierProduct::where('supplier_id', $supplier->id)->delete();
+
+        $supplier->update([
+            'currency_id' => $request->currency, 
+            'name'        => $request->username, 
+            'email'       => $request->email, 
+            'phone'       => $request->phone,
+        ]);
+        
+        if($request->has('categories') && count($request->categories) > 0){
+            foreach ($request->categories as $category) {
+                SupplierCategory::create([
+                    'supplier_id' => $supplier->id,
+                    'category_id' => $category
+                ]);
+            }
+        }
+    
+        if($request->has('products') && count($request->products) > 0){
+            foreach ($request->products as $product) {
+                SupplierProduct::create([
+                    'supplier_id' => $supplier->id,
+                    'product_id' => $product
+                ]);
+            }
+        }
+        
+        return redirect()->route('suppliers.index')->with('success_message', 'Supplier updated successfully');
     }
 
     /**
@@ -78,6 +151,7 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Supplier::destroy(decrypt($id));
+        return redirect()->route('suppliers.index')->with('success_message', 'Supplier deleted successfully');
     }
 }
