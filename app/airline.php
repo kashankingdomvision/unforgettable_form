@@ -4,7 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class airline extends Model
+class Airline extends Model
 {
-   protected $guarded = [];
+    protected $fillable = [
+        'name'
+    ];
 }
