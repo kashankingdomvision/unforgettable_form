@@ -284,6 +284,13 @@ Route::group(['middleware' => ['auth']], function(){
 	//supplier product end
 	
 	
+	//season controller start
+	Route::resource('seasons', 'SeasonController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	//season controller end
+	
+	
 	//old routes
 	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
 	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));

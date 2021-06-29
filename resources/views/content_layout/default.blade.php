@@ -538,6 +538,21 @@ thead.border_thead {
         </li> 
         
         
+        {{-- season --}}
+        
+        <li class="treeview  {{ $route == 'seasons.create' || $route == 'seasons.index' || $route == 'season.edit'? 'active' : NULL }}">
+          <a href="#">
+            <i class="fa fa-cloud"></i> <span>Season Management</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{$route == 'seasons.create' ? 'active' : ''}}"><a href="{{ route('seasons.create') }}"><i class="fa fa-plus"></i>Create Season</a></li>
+            <li class="{{$route == 'seasons.index' || $route == 'season.edit' ? 'active' : ''}}"><a href="{{  route('seasons.index') }}"><i class="fa fa-eye"></i>View Season</a></li>
+          </ul>
+        </li>
+{{--         
         <li class="treeview  @if (Request::is('creat-season') || Request::is('view-season') || Request::is('update-season/'.$id)) active @endif">
           <a href="#">
             <i class="fa fa-cloud"></i> <span>Season Management</span>
@@ -549,8 +564,9 @@ thead.border_thead {
             <li class="{{Request::is('creat-season') ? 'active' : ''}}"><a href="{{ URL::to('creat-season')}}"><i class="fa fa-plus"></i>Create Season</a></li>
             <li class="{{Request::is('view-season') ? 'active' : ''}}"><a href="{{ URL::to('view-season')}}"><i class="fa fa-eye"></i>View Season</a></li>
           </ul>
-        </li>
+        </li> --}}
         
+        {{-- season  end--}}
         
         {{-- /// user managment start  --}}
         {{-- old code 

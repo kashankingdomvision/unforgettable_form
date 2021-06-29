@@ -17,8 +17,8 @@ class CreateSupplierTable extends Migration
             $table->id();
             $table->unsignedBigInteger('currency_id')->nullable();
             $table->string('name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
             $table->foreign('currency_id')->references('id')->on('currencies');
         });

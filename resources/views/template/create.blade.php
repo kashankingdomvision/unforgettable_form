@@ -1,7 +1,7 @@
 @extends('content_layout.default')
 
 @section('content')
-<style type="text/css">
+{{-- <style type="text/css">
     td.day{
       position:relative;  
     }
@@ -45,7 +45,7 @@
         .mt-2{
             margin-top: 2rem;
         }
-    </style>
+    </style> --}}
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">

@@ -1,13 +1,24 @@
 import select2 from 'select2';
 import $ from 'jquery';
+import datepicker from 'bootstrap-datepicker';
+// import { bootstrap-datepicker} from 'public/plugins/datepicker/bootstrap-datepicker';
 var BASEURL = 'http://localhost/unforgettable_form/public/json/';
-
 
 
 $(document).ready(function() {
     $('.select2').select2({
         width: '100%',
     });
+    
+    $('#seasons').keyup( function () {
+        var val = $(this).val();
+        if(val.length == 4){
+            $(this).val(val+'-');
+        }
+    });
+    $('.datepicker').datepicker();
+    
+   
 });
 
 $(document).on('change', '.getBrandtoHoliday',function(){
@@ -57,3 +68,5 @@ function currencyImageFormate(opt) {
         );
         return $opt;    
 }
+
+
