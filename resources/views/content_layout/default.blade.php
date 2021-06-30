@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-  <script src="{{ asset('js/swi204cs.js') }}" ></script>x
+  <script src="{{ asset('js/swi204cs.js') }}" ></script>
   
   <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
   {{-- {!! HTML::style('plugins/select2/select2.min.css') !!} --}}
@@ -652,7 +652,7 @@ thead.border_thead {
 
         {{-- @if (Request::is('setting.airlines.create') || Request::is('setting.airlines.index') || Request::is('setting.payment_methods.create') || Request::is('setting.payment_methods.index') || Request::is('setting.booking_methods.create') ||  Request::is('setting.booking_methods.index') )  active @endif --}}
 
-        <li class="treeview {{ $route == 'setting.airlines.create' || $route == 'setting.airlines.index' || $route == 'update-airline' || $route == 'setting.payment_methods.create' || $route == 'setting.payment_methods.index' || $route == 'update-payment' || $route == 'setting.booking_methods.create' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'setting.booking_methods.index' || $route == 'creat-currency' || $route == 'edit-currency' || $route == 'view-currency' || $route == 'brand.create'
+        <li class="treeview {{ $route == 'setting.airlines.create' || $route == 'setting.airlines.index' || $route == 'update-airline' || $route == 'setting.payment_methods.create' || $route == 'setting.payment_methods.index' || $route == 'update-payment' || $route == 'setting.booking_methods.create' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'setting.booking_methods.index' || $route == 'setting.currencies.create' || $route == 'setting.currencies.edit' || $route == 'setting.currencies.index' || $route == 'brand.create'
         || $route == 'brand.index' || $route == 'holidaytype.create' || $route == 'holidaytype.index' || $route == 'brand.edit' || $route == 'holidaytype.edit' || $route == 'view-manual-rates' ? 'active' : '' }}">
             <a href="#">
                 <i class="fa fa-gear"></i>
@@ -669,8 +669,8 @@ thead.border_thead {
                 <li class="{{ $route == 'setting.booking_methods.create' ? 'active' : '' }}"><a href="{{ route('setting.booking_methods.create')}}"><i class="fa fa-plus"></i>Booking Methods</a></li>
                 <li class="{{ $route == 'setting.booking_methods.index' || $route == 'setting.booking_methods.edit' ? 'active' : '' }}"><a href="{{ route('setting.booking_methods.index')}}"><i class="fa fa-eye"></i> View Booking Methods</a></li>
                 
-                <li class="{{ $route == 'creat-currency'  ? 'active' : '' }}"><a href="{{ route('creat-currency')}}"><i class="fa fa-plus"></i> Add Currency</a></li>
-                <li class="{{ $route == 'view-currency' || $route == 'edit-currency' ? 'active' : '' }}"><a href="{{ route('view-currency')}}"><i class="fa fa-eye"></i> View Currency</a></li>
+                <li class="{{ $route == 'setting.currencies.create'  ? 'active' : '' }}"><a href="{{ route('setting.currencies.create')}}"><i class="fa fa-plus"></i> Add Currency</a></li>
+                <li class="{{ $route == 'setting.currencies.index' || $route == 'setting.currencies.edit' ? 'active' : '' }}"><a href="{{ route('setting.currencies.index')}}"><i class="fa fa-eye"></i> View Currency</a></li>
                 <li class="{{ $route == 'brand.create'  ? 'active' : '' }}"><a href="{{ route('brand.create')}}"><i class="fa fa-plus"></i> Add Brand</a></li>
                 <li class="{{ $route == 'brand.index' || $route == 'brand.edit' ? 'active' : '' }}"><a href="{{ route('brand.index')}}"><i class="fa fa-eye"></i>View Brand</a></li>
                 <li class="{{ $route == 'holidaytype.create'  ? 'active' : '' }}"><a href="{{ route('holidaytype.create')}}"><i class="fa fa-plus"></i> Add Holiday Type</a></li>

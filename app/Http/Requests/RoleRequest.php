@@ -34,4 +34,5 @@ class RoleRequest extends FormRequest
             'name' => 'Role name',
         ];
     }
+    
 }

@@ -310,6 +310,12 @@ Route::group(['middleware' => ['auth']], function(){
 			'index','create', 'store', 'edit', 'update', 'destroy'
 		]]);
 		// booking method 
+		
+		//currency 
+		Route::resource('currencies', 'SettingControllers\CurrencyController',['only' => [
+			'index','create', 'store', 'edit', 'update', 'destroy'
+		]]);
+		//currency end
 	});
 	
 	
