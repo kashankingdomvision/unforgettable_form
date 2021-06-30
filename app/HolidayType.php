@@ -12,6 +12,6 @@ class HolidayType extends Model
     
     public function getBrand()
     {
-        return $this->hasOne(Brand::class, 'brand_id', 'id');
+        return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
 }

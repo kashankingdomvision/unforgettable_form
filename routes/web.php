@@ -317,11 +317,17 @@ Route::group(['middleware' => ['auth']], function(){
 		]]);
 		//currency end
 		
-		//currency 
+		//brands 
 		Route::resource('brands', 'SettingControllers\BrandController',['only' => [
 			'index','create', 'store', 'edit', 'update', 'destroy'
 		]]);
-		//currency end
+		//brands end
+		
+		//holidaytypes 
+		Route::resource('holidaytypes', 'SettingControllers\HolidayTypeController',['only' => [
+			'index','create', 'store', 'edit', 'update', 'destroy'
+		]]);
+		//holidaytypes end
 	});
 	
 	
