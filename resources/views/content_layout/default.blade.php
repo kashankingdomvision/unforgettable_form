@@ -653,7 +653,7 @@ thead.border_thead {
         {{-- @if (Request::is('setting.airlines.create') || Request::is('setting.airlines.index') || Request::is('setting.payment_methods.create') || Request::is('setting.payment_methods.index') || Request::is('setting.booking_methods.create') ||  Request::is('setting.booking_methods.index') )  active @endif --}}
 
         <li class="treeview {{ $route == 'setting.airlines.create' || $route == 'setting.airlines.index' || $route == 'update-airline' || $route == 'setting.payment_methods.create' || $route == 'setting.payment_methods.index' || $route == 'update-payment' || $route == 'setting.booking_methods.create' || $route == 'update-payment'|| $route == 'edit-booking-method' || $route == 'setting.booking_methods.index' || $route == 'setting.currencies.create' || $route == 'setting.currencies.edit' || $route == 'setting.currencies.index' || $route == 'setting.brands.create'
-        || $route == 'setting.brands.index' || $route == 'setting.holidaytypes.create' || $route == 'setting.holidaytypes.index' || $route == 'setting,brand.edit' || $route == 'setting.holidaytypes.edit' || $route == 'view-manual-rates' ? 'active' : '' }}">
+        || $route == 'setting.brands.index' || $route == 'setting.holidaytypes.create' || $route == 'setting.holidaytypes.index' || $route == 'setting,brand.edit' || $route == 'setting.holidaytypes.edit' || $route == 'setting.currnecy_conversions.index' ? 'active' : '' }}">
             <a href="#">
                 <i class="fa fa-gear"></i>
                 <span>Setting</span>
@@ -675,23 +675,9 @@ thead.border_thead {
                 <li class="{{ $route == 'setting.brands.index' || $route == 'setting,brand.edit' ? 'active' : '' }}"><a href="{{ route('setting.brands.index')}}"><i class="fa fa-eye"></i>View Brand</a></li>
                 <li class="{{ $route == 'setting.holidaytypes.create'  ? 'active' : '' }}"><a href="{{ route('setting.holidaytypes.create')}}"><i class="fa fa-plus"></i> Add Holiday Type</a></li>
                 <li class="{{ $route == 'setting.holidaytypes.index' || $route == 'setting.holidaytypes.edit' ? 'active' : '' }}"><a href="{{ route('setting.holidaytypes.index')}}"><i class="fa fa-eye"></i>View Holiday Type</a></li>
-                <li class="{{ $route == 'view-manual-rates' ? 'active' : '' }}"><a href="{{ route('view-manual-rates')}}"><i class="fa fa-eye"></i>View Manual Rates</a></li>
+                <li class="{{ $route == 'setting.currnecy_conversions.index' ? 'active' : '' }}"><a href="{{ route('setting.currnecy_conversions.index')}}"><i class="fa fa-eye"></i>View Conversion Rates</a></li>
               </ul>
         </li>
-
-
-        <!-- <li class="treeview @if (Request::is('create-supervisor') || Request::is('view-supervisor') || Request::is('update-supervisor/'.$id)) active @endif">
-          <a href="#">
-            <i class="fa fa-users"></i> <span>Supervisor Management</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="{{Request::is('create-supervisor') ? 'active' : ''}}"><a href="{{ route('create-supervisor')}}"><i class="fa fa-plus"></i>Create Supervisor</a></li>
-            <li class="{{Request::is('view-supervisor') ? 'active' : ''}}"><a href="{{ route('view-supervisor')}}"><i class="fa fa-eye"></i>View Supervisor</a></li>
-          </ul>
-        </li> -->
         
       </ul>
     </section>

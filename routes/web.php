@@ -328,6 +328,13 @@ Route::group(['middleware' => ['auth']], function(){
 			'index','create', 'store', 'edit', 'update', 'destroy'
 		]]);
 		//holidaytypes end
+		
+		//manual rates
+		Route::resource('currnecy_conversions', 'SettingControllers\CurrencyConversionController',['only' => [
+			'index', 'edit', 'update'
+		]]);
+		//manual rates
+		
 	});
 	
 	
