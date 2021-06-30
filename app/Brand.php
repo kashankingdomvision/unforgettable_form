@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Brand extends Model
 {
@@ -14,6 +15,11 @@ class Brand extends Model
     public function getHolidayTypes()
     {
         return $this->hasMany(HolidayType::class, 'brand_id', 'id');
+    }
+    
+    public function getLogoAttribute($value)
+    {
+        return url(Storage::url($value));
     }
     
 }

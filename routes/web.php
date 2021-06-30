@@ -316,6 +316,12 @@ Route::group(['middleware' => ['auth']], function(){
 			'index','create', 'store', 'edit', 'update', 'destroy'
 		]]);
 		//currency end
+		
+		//currency 
+		Route::resource('brands', 'SettingControllers\BrandController',['only' => [
+			'index','create', 'store', 'edit', 'update', 'destroy'
+		]]);
+		//currency end
 	});
 	
 	
