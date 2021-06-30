@@ -6003,11 +6003,11 @@ class AdminController extends Controller
         return Redirect::route('view-user')->with('success_message', 'Delete Successfully');
     }
 
-    public function get_holiday_type(Request $request)
-    {
-        $holiday_types = HolidayType::where('brand_id',$request->brand_id)->get();
-        return $holiday_types;
-    }
+    // public function get_holiday_type(Request $request)
+    // {
+    //     $holiday_types = HolidayType::where('brand_id',$request->brand_id)->get();
+    //     return $holiday_types;
+    // }
 
     // CRUD related to seasson
     public function create_season(Request $request)
@@ -9791,16 +9791,16 @@ class AdminController extends Controller
         return view('code.edit-code')->with([ 'code' => $code, 'get_user_branches' => $get_user_branches, 'get_holiday_type' => $get_holiday_type, 'get_user_branches' => $get_user_branches, 'codes' => $code, 'seasons' => season::all(), 'persons' => user::all(), 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(), 'suppliers' => Supplier::all(), 'booking_email' => $booking_email]);
     }
 
-    public function get_supplier(Request $request)
-    {
+    // public function get_supplier(Request $request)
+    // {
 
-        $supplier_category = supplier_category::where('category_id', $request->category_id)
-            ->select('suppliers.id', 'suppliers.name')
-            ->leftJoin('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id')
-            ->get();
-
-        return $supplier_category;
-    }
+    //     $supplier_category = supplier_category::where('category_id', $request->category_id)
+    //         ->select('suppliers.id', 'suppliers.name')
+    //         ->leftJoin('suppliers', 'suppliers.id', '=', 'supplier_categories.supplier_id')
+    //         ->get();
+    //     dd($supplier_category);
+    //     return $supplier_category;
+    // }
 
     public function get_product_details(Request $request)
     {

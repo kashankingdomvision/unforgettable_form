@@ -49,49 +49,52 @@ Route::get('update-email',array('as'=>'update-email','uses'=>'Auth\LoginControll
 Route::group(['middleware' => ['auth']], function(){
 	Route::get('/',array('as'=>'admin','uses'=>'AdminController@index'));
 	Route::get('logout',array('as'=>'logout','uses'=>'AdminController@logout'));
-	Route::get('add-fatwa',array('before'=>'csrf','as'=>'add-fatwa','uses'=>'AdminController@add_fatwa'));
-	Route::get('update-fatwa/{id}',array('as'=>'update-fatwa','uses'=>'AdminController@update_fatwa'));
-	Route::get('view-fatwa',array('as'=>'view-fatwa','uses'=>'AdminController@view_fatwa'));
-	Route::get('del-fatwa/{id}',array('as'=>'del-fatwa','uses'=>'AdminController@delete_fatwa'));
-	Route::get('activate-fatwa/{id}',array('as'=>'activate-fatwa','uses'=>'AdminController@publish_fatwa'));
-	Route::get('deactivate-fatwa/{id}',array('as'=>'deactivate-fatwa','uses'=>'AdminController@unpublish_fatwa'));
+	Route::get('refresh-token',array('before'=>'csrf','as'=>'refresh-token','uses'=>'AdminController@refresh_token'));
+	
+	
+	// Route::get('add-fatwa',array('before'=>'csrf','as'=>'add-fatwa','uses'=>'AdminController@add_fatwa'));
+	// Route::get('update-fatwa/{id}',array('as'=>'update-fatwa','uses'=>'AdminController@update_fatwa'));
+	// Route::get('view-fatwa',array('as'=>'view-fatwa','uses'=>'AdminController@view_fatwa'));
+	// Route::get('del-fatwa/{id}',array('as'=>'del-fatwa','uses'=>'AdminController@delete_fatwa'));
+	// Route::get('activate-fatwa/{id}',array('as'=>'activate-fatwa','uses'=>'AdminController@publish_fatwa'));
+	// Route::get('deactivate-fatwa/{id}',array('as'=>'deactivate-fatwa','uses'=>'AdminController@unpublish_fatwa'));
 
-	// category 
-	Route::get('creat-category',array('as'=>'creat-category','uses'=>'AdminController@create_category'));
-	Route::get('view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
-	Route::get('update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
-	Route::get('del-category/{id}',array('as'=>'del-category','uses'=>'AdminController@delete_category'));
-	Route::match(['get', 'post'],'add-supplier',array('as'=>'add-supplier','uses'=>'AdminController@add_supplier'));
-	Route::match(['get', 'post'],'view-supplier',array('as'=>'view-supplier','uses'=>'AdminController@view_supplier'));
-	Route::match(['get', 'post'],'update-supplier/{id}',array('as'=>'update-supplier','uses'=>'AdminController@update_supplier'));
-	Route::match(['get', 'post'],'delete-supplier/{id}',array('as'=>'delete-supplier','uses'=>'AdminController@delete_supplier'));
-	Route::match(['get', 'post'],'add-category',array('as'=>'add-category','uses'=>'AdminController@add_category'));
-	Route::match(['get', 'post'],'view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
-	Route::match(['get', 'post'],'update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
-	Route::match(['get', 'post'],'delete-category/{id}',array('as'=>'delete-category','uses'=>'AdminController@delete_category'));
-	Route::match(['get', 'post'],'add-product',array('as'=>'add-product','uses'=>'AdminController@add_product'));
-	Route::match(['get', 'post'],'view-product',array('as'=>'view-product','uses'=>'AdminController@view_product'));
-	Route::match(['get', 'post'],'update-product/{id}',array('as'=>'update-product','uses'=>'AdminController@update_product'));
-	Route::match(['get', 'post'],'delete-product/{id}',array('as'=>'delete-product','uses'=>'AdminController@delete_product'));
-	Route::match(['get', 'post'],'add-role',array('as'=>'add-role','uses'=>'AdminController@add_role'));
-	Route::match(['get', 'post'],'view-role',array('as'=>'view-role','uses'=>'AdminController@view_roles'));
-	Route::match(['get', 'post'],'del-role/{id}',array('as'=>'del-role','uses'=>'AdminController@del_role'));
-	Route::match(['get', 'post'],'update-role/{id}',array('as'=>'update-role','uses'=>'AdminController@update_role'));
-	Route::match(['get', 'post'],'creat-code',array('as'=>'creat-code','uses'=>'AdminController@create_code'));
-	Route::match(['get', 'post'],'view-code',array('as'=>'view-code','uses'=>'AdminController@view_code'));
+	// // category 
+	// Route::get('creat-category',array('as'=>'creat-category','uses'=>'AdminController@create_category'));
+	// Route::get('view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
+	// Route::get('update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
+	// Route::get('del-category/{id}',array('as'=>'del-category','uses'=>'AdminController@delete_category'));
+	// Route::match(['get', 'post'],'add-supplier',array('as'=>'add-supplier','uses'=>'AdminController@add_supplier'));
+	// Route::match(['get', 'post'],'view-supplier',array('as'=>'view-supplier','uses'=>'AdminController@view_supplier'));
+	// Route::match(['get', 'post'],'update-supplier/{id}',array('as'=>'update-supplier','uses'=>'AdminController@update_supplier'));
+	// Route::match(['get', 'post'],'delete-supplier/{id}',array('as'=>'delete-supplier','uses'=>'AdminController@delete_supplier'));
+	// Route::match(['get', 'post'],'add-category',array('as'=>'add-category','uses'=>'AdminController@add_category'));
+	// Route::match(['get', 'post'],'view-category',array('as'=>'view-category','uses'=>'AdminController@view_category'));
+	// Route::match(['get', 'post'],'update-category/{id}',array('as'=>'update-category','uses'=>'AdminController@update_category'));
+	// Route::match(['get', 'post'],'delete-category/{id}',array('as'=>'delete-category','uses'=>'AdminController@delete_category'));
+	// Route::match(['get', 'post'],'add-product',array('as'=>'add-product','uses'=>'AdminController@add_product'));
+	// Route::match(['get', 'post'],'view-product',array('as'=>'view-product','uses'=>'AdminController@view_product'));
+	// Route::match(['get', 'post'],'update-product/{id}',array('as'=>'update-product','uses'=>'AdminController@update_product'));
+	// Route::match(['get', 'post'],'delete-product/{id}',array('as'=>'delete-product','uses'=>'AdminController@delete_product'));
+	// Route::match(['get', 'post'],'add-role',array('as'=>'add-role','uses'=>'AdminController@add_role'));
+	// Route::match(['get', 'post'],'view-role',array('as'=>'view-role','uses'=>'AdminController@view_roles'));
+	// Route::match(['get', 'post'],'del-role/{id}',array('as'=>'del-role','uses'=>'AdminController@del_role'));
+	// Route::match(['get', 'post'],'update-role/{id}',array('as'=>'update-role','uses'=>'AdminController@update_role'));
+	// Route::match(['get', 'post'],'creat-code',array('as'=>'creat-code','uses'=>'AdminController@create_code'));
+	// Route::match(['get', 'post'],'view-code',array('as'=>'view-code','uses'=>'AdminController@view_code'));
 	
 	
 
-    Route::get('details-supplier/{id}',array('as'=>'details-supplier','uses'=>'AdminController@details_supplier'));
+    // Route::get('details-supplier/{id}',array('as'=>'details-supplier','uses'=>'AdminController@details_supplier'));
 
-	Route::get('edit-code/{id}',array('as'=>'edit-code','uses'=>'AdminController@edit_code'));
-	Route::put('update-code/{id}',array('as'=>'update-code','uses'=>'AdminController@update_code'));
+	// Route::get('edit-code/{id}',array('as'=>'edit-code','uses'=>'AdminController@edit_code'));
+	// Route::put('update-code/{id}',array('as'=>'update-code','uses'=>'AdminController@update_code'));
 	
-	Route::match(['get','post'],'delete-code/{id}',array('as'=>'delete-code','uses'=>'AdminController@delete_code'));
+	// Route::match(['get','post'],'delete-code/{id}',array('as'=>'delete-code','uses'=>'AdminController@delete_code'));
 	Route::post('get-supplier',array('as'=>'get-supplier','uses'=>'AdminController@get_supplier'));
 	Route::post('get-supplier-currency',array('as'=>'get-supplier-currency','uses'=>'AdminController@get_supplier_currency'));
-    Route::post('get-saleagent-supervisor',array('as'=>'get-saleagent-supervisor','uses'=>'AdminController@get_saleagent_supervisor'));
-	Route::post('get-currency',array('as'=>'get-currency','uses'=>'AdminController@get_currency'));
+    // Route::post('get-saleagent-supervisor',array('as'=>'get-saleagent-supervisor','uses'=>'AdminController@get_saleagent_supervisor'));
+	// Route::post('get-currency',array('as'=>'get-currency','uses'=>'AdminController@get_currency'));
 	//end category
 
 	// get product's details
@@ -107,7 +110,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::match(['get', 'post'],'confirm-booking/{id}',array('as'=>'confirm-booking','uses'=>'AdminController@booking'));
 
 	Route::match(['get', 'post'],'upload-to-calendar',array('as'=>'upload-to-calendar','uses'=>'AdminController@upload_to_calendar'));
-	Route::match(['get', 'post'],'export_to_csv/{id}',array('as'=>'export_to_csv','uses'=>'AdminController@export_to_csv'));
+	// Route::match(['get', 'post'],'export_to_csv/{id}',array('as'=>'export_to_csv','uses'=>'AdminController@export_to_csv'));
 
     Route::get('view-version/{quote_id}/{log_no}',array('as'=>'view-version','uses'=>'AdminController@view_version'));
 
@@ -121,68 +124,68 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('del-booking-method/{id}',array('as'=>'del-booking-method','uses'=>'AdminController@del_booking_method'));
 
 	// replier 
-	Route::get('creat-replier',array('as'=>'creat-replier','uses'=>'AdminController@create_replier'));
-	Route::get('view-replier',array('as'=>'view-replier','uses'=>'AdminController@view_replier'));
-	Route::get('update-replier/{id}',array('as'=>'update-replier','uses'=>'AdminController@update_replier'));
-	Route::get('del-replier/{id}',array('as'=>'del-replier','uses'=>'AdminController@delete_replier'));
+	// Route::get('creat-replier',array('as'=>'creat-replier','uses'=>'AdminController@create_replier'));
+	// Route::get('view-replier',array('as'=>'view-replier','uses'=>'AdminController@view_replier'));
+	// Route::get('update-replier/{id}',array('as'=>'update-replier','uses'=>'AdminController@update_replier'));
+	// Route::get('del-replier/{id}',array('as'=>'del-replier','uses'=>'AdminController@delete_replier'));
 	//end replier
 
 	// book 
-	Route::get('creat-book',array('as'=>'creat-book','uses'=>'AdminController@create_book'));
-	Route::get('view-book',array('as'=>'view-book','uses'=>'AdminController@view_book'));
-	Route::get('update-book/{id}',array('as'=>'update-book','uses'=>'AdminController@update_book'));
-	Route::get('del-book/{id}',array('as'=>'del-book','uses'=>'AdminController@delete_book'));
+	// Route::get('creat-book',array('as'=>'creat-book','uses'=>'AdminController@create_book'));
+	// Route::get('view-book',array('as'=>'view-book','uses'=>'AdminController@view_book'));
+	// Route::get('update-book/{id}',array('as'=>'update-book','uses'=>'AdminController@update_book'));
+	// Route::get('del-book/{id}',array('as'=>'del-book','uses'=>'AdminController@delete_book'));
 	//end book
 
 	// chapter 
-	Route::get('creat-chapter',array('as'=>'creat-chapter','uses'=>'AdminController@create_chapter'));
-	Route::get('view-chapter',array('as'=>'view-chapter','uses'=>'AdminController@view_chapter'));
-	Route::get('update-chapter/{id}',array('as'=>'update-chapter','uses'=>'AdminController@update_chapter'));
-	Route::get('del-chapter/{id}',array('as'=>'del-chapter','uses'=>'AdminController@delete_chapter'));
+	// Route::get('creat-chapter',array('as'=>'creat-chapter','uses'=>'AdminController@create_chapter'));
+	// Route::get('view-chapter',array('as'=>'view-chapter','uses'=>'AdminController@view_chapter'));
+	// Route::get('update-chapter/{id}',array('as'=>'update-chapter','uses'=>'AdminController@update_chapter'));
+	// Route::get('del-chapter/{id}',array('as'=>'del-chapter','uses'=>'AdminController@delete_chapter'));
 	//end chapter
 
 	// mufti 
-	Route::get('creat-mufti',array('as'=>'creat-mufti','uses'=>'AdminController@create_mufti'));
-	Route::get('view-mufti',array('as'=>'view-mufti','uses'=>'AdminController@view_mufti'));
-	Route::get('update-mufti/{id}',array('as'=>'update-mufti','uses'=>'AdminController@update_mufti'));
-	Route::get('del-mufti/{id}',array('as'=>'del-mufti','uses'=>'AdminController@delete_mufti'));
+	// Route::get('creat-mufti',array('as'=>'creat-mufti','uses'=>'AdminController@create_mufti'));
+	// Route::get('view-mufti',array('as'=>'view-mufti','uses'=>'AdminController@view_mufti'));
+	// Route::get('update-mufti/{id}',array('as'=>'update-mufti','uses'=>'AdminController@update_mufti'));
+	// Route::get('del-mufti/{id}',array('as'=>'del-mufti','uses'=>'AdminController@delete_mufti'));
 	//end mufti
 
 	// mufti 
-	Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
-	Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
-	Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
-	Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
+	// Route::get('creat-user',array('as'=>'creat-user','uses'=>'AdminController@create_user'));
+	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
+	// Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
+	// Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
 
 	//end mufti
 
-	Route::match(['get', 'post'],'view-manual-rates',array('as'=>'view-manual-rates','uses'=>'AdminController@view_manual_rates'));
-	Route::match(['get', 'post'],'update-manual-rate/{id}',array('as'=>'update-manual-rate','uses'=>'AdminController@update_manual_rates'));
+	// Route::match(['get', 'post'],'view-manual-rates',array('as'=>'view-manual-rates','uses'=>'AdminController@view_manual_rates'));
+	// Route::match(['get', 'post'],'update-manual-rate/{id}',array('as'=>'update-manual-rate','uses'=>'AdminController@update_manual_rates'));
 
-	Route::match(['get', 'post'],'creat-currency',array('as'=>'creat-currency','uses'=>'AdminController@creat_currency'));
-	Route::match(['get', 'post'],'edit-currency/{id}',array('as'=>'edit-currency','uses'=>'AdminController@edit_currency'));
-	Route::get('view-currency',array('as'=>'view-currency','uses'=>'AdminController@view_currency'));
+	// Route::match(['get', 'post'],'creat-currency',array('as'=>'creat-currency','uses'=>'AdminController@creat_currency'));
+	// Route::match(['get', 'post'],'edit-currency/{id}',array('as'=>'edit-currency','uses'=>'AdminController@edit_currency'));
+	// Route::get('view-currency',array('as'=>'view-currency','uses'=>'AdminController@view_currency'));
 
 	// Route::get('currency-data',array('as'=>'currency-data','uses'=>'AdminController@currency_data'));
 
 	// season 
-	Route::match(['get', 'post'],'creat-season',array('as'=>'creat-season','uses'=>'AdminController@create_season'));
-	Route::get('view-season',array('as'=>'view-season','uses'=>'AdminController@view_season'));
-	Route::match(['get', 'post'],'update-season/{id}',array('as'=>'update-season','uses'=>'AdminController@update_season'));
-	Route::get('del-season/{id}',array('as'=>'del-season','uses'=>'AdminController@delete_season'));
+	// Route::match(['get', 'post'],'creat-season',array('as'=>'creat-season','uses'=>'AdminController@create_season'));
+	// Route::get('view-season',array('as'=>'view-season','uses'=>'AdminController@view_season'));
+	// Route::match(['get', 'post'],'update-season/{id}',array('as'=>'update-season','uses'=>'AdminController@update_season'));
+	// Route::get('del-season/{id}',array('as'=>'del-season','uses'=>'AdminController@delete_season'));
 	//end season
 
 	// Super Visor 
-	Route::match(['get','post'],'create-supervisor',array('as'=>'create-supervisor','uses'=>'AdminController@create_supervisor'));
-	Route::get('view-supervisor',array('as'=>'view-supervisor','uses'=>'AdminController@view_supervisor'));
-	Route::match(['get', 'post'],'update-supervisor/{id}',array('as'=>'update-supervisor','uses'=>'AdminController@update_supervisor'));
-	Route::get('del-supervisor/{id}',array('as'=>'del-supervisor','uses'=>'AdminController@delete_supervisor'));
+	// Route::match(['get','post'],'create-supervisor',array('as'=>'create-supervisor','uses'=>'AdminController@create_supervisor'));
+	// Route::get('view-supervisor',array('as'=>'view-supervisor','uses'=>'AdminController@view_supervisor'));
+	// Route::match(['get', 'post'],'update-supervisor/{id}',array('as'=>'update-supervisor','uses'=>'AdminController@update_supervisor'));
+	// Route::get('del-supervisor/{id}',array('as'=>'del-supervisor','uses'=>'AdminController@delete_supervisor'));
 	//end Super Visor
 
 	// season 
-	Route::match(['get','post'],'create-booking',array('as'=>'create-booking','uses'=>'AdminController@create_booking'));
-	Route::get('view-booking/{id}',array('as'=>'view-booking','uses'=>'AdminController@view_booking'));
-	Route::match(['get','post'],'update-booking/{id}',array('as'=>'update-booking','uses'=>'AdminController@update_booking'));
+	// Route::match(['get','post'],'create-booking',array('as'=>'create-booking','uses'=>'AdminController@create_booking'));
+	// Route::get('view-booking/{id}',array('as'=>'view-booking','uses'=>'AdminController@view_booking'));
+	// Route::match(['get','post'],'update-booking/{id}',array('as'=>'update-booking','uses'=>'AdminController@update_booking'));
 
 	// view quotation in booking
 	Route::get('view-quotation/{id}',array('as'=>'view-quotation','uses'=>'AdminController@view_quotation'));
@@ -199,99 +202,117 @@ Route::group(['middleware' => ['auth']], function(){
 	//////////////////////////////////////////     All Routes related to Post method ////////////////////////
 
 	// Route::post('login_submit',array('before'=>'csrf','as'=>'login_submit','uses'=>'Auth\RegisterController@Register'));
-	Route::post('add-fatwa',array('before'=>'csrf','as'=>'add-fatwa','uses'=>'AdminController@add_fatwa'));
-	Route::post('update-fatwa/{id}',array('before'=>'csrf','as'=>'update-fatwa','uses'=>'AdminController@update_fatwa'));
-	Route::post('get-ref-detail',array('before'=>'csrf','as'=>'get-ref-detail','uses'=>'AdminController@get_ref_detail'));
+	// Route::post('add-fatwa',array('before'=>'csrf','as'=>'add-fatwa','uses'=>'AdminController@add_fatwa'));
+	// Route::post('update-fatwa/{id}',array('before'=>'csrf','as'=>'update-fatwa','uses'=>'AdminController@update_fatwa'));
+	// Route::post('get-ref-detail',array('before'=>'csrf','as'=>'get-ref-detail','uses'=>'AdminController@get_ref_detail'));
 
-	Route::get('refresh-token',array('before'=>'csrf','as'=>'refresh-token','uses'=>'AdminController@refresh_token'));
 
-	// category
-	Route::post('creat-category',array('before'=>'csrf','as'=>'creat-category','uses'=>'AdminController@create_category'));
-	Route::post('update-category/{id}',array('before'=>'csrf','as'=>'update-category','uses'=>'AdminController@update_category'));
-	// replier
-	Route::post('creat-replier',array('before'=>'csrf','as'=>'creat-replier','uses'=>'AdminController@create_replier'));
-	Route::post('update-replier/{id}',array('before'=>'csrf','as'=>'update-replier','uses'=>'AdminController@update_replier'));
-	// book
-	Route::post('creat-book',array('before'=>'csrf','as'=>'creat-book','uses'=>'AdminController@create_book'));
-	Route::post('update-book/{id}',array('before'=>'csrf','as'=>'update-book','uses'=>'AdminController@update_book'));
-	// chapter
-	Route::post('creat-chapter',array('before'=>'csrf','as'=>'creat-chapter','uses'=>'AdminController@create_chapter'));
-	Route::post('update-chapter/{id}',array('before'=>'csrf','as'=>'update-chapter','uses'=>'AdminController@update_chapter'));
-	Route::post('view-chapter',array('as'=>'view-chapter','uses'=>'AdminController@view_chapter'));
-	// mufti
-	Route::post('creat-mufti',array('before'=>'csrf','as'=>'creat-mufti','uses'=>'AdminController@create_mufti'));
-	Route::post('update-mufti/{id}',array('before'=>'csrf','as'=>'update-mufti','uses'=>'AdminController@update_mufti'));
+	// // category
+	// Route::post('creat-category',array('before'=>'csrf','as'=>'creat-category','uses'=>'AdminController@create_category'));
+	// Route::post('update-category/{id}',array('before'=>'csrf','as'=>'update-category','uses'=>'AdminController@update_category'));
+	// // replier
+	// Route::post('creat-replier',array('before'=>'csrf','as'=>'creat-replier','uses'=>'AdminController@create_replier'));
+	// Route::post('update-replier/{id}',array('before'=>'csrf','as'=>'update-replier','uses'=>'AdminController@update_replier'));
+	// // book
+	// Route::post('creat-book',array('before'=>'csrf','as'=>'creat-book','uses'=>'AdminController@create_book'));
+	// Route::post('update-book/{id}',array('before'=>'csrf','as'=>'update-book','uses'=>'AdminController@update_book'));
+	// // chapter
+	// Route::post('creat-chapter',array('before'=>'csrf','as'=>'creat-chapter','uses'=>'AdminController@create_chapter'));
+	// Route::post('update-chapter/{id}',array('before'=>'csrf','as'=>'update-chapter','uses'=>'AdminController@update_chapter'));
+	// Route::post('view-chapter',array('as'=>'view-chapter','uses'=>'AdminController@view_chapter'));
+	// // mufti
+	// Route::post('creat-mufti',array('before'=>'csrf','as'=>'creat-mufti','uses'=>'AdminController@create_mufti'));
+	// Route::post('update-mufti/{id}',array('before'=>'csrf','as'=>'update-mufti','uses'=>'AdminController@update_mufti'));
 
-	// mufti
-	Route::post('creat-user',array('before'=>'csrf','as'=>'creat-user','uses'=>'AdminController@create_user'));
-	Route::post('update-user/{id}',array('before'=>'csrf','as'=>'update-user','uses'=>'AdminController@update_user'));
+	// // mufti
+	// Route::post('creat-user',array('before'=>'csrf','as'=>'creat-user','uses'=>'AdminController@create_user'));
+	// Route::post('update-user/{id}',array('before'=>'csrf','as'=>'update-user','uses'=>'AdminController@update_user'));
 
-	//airline
-	Route::post('creat-airline',array('before'=>'csrf','as'=>'creat-airline','uses'=>'AdminController@create_airline'));
-	Route::get('creat-airline',array('as'=>'creat-airline','uses'=>'AdminController@create_airline'));
-	Route::get('view-airline',array('as'=>'view-airline','uses'=>'AdminController@view_airline'));
-	Route::post('update-airline/{id}',array('before'=>'csrf','as'=>'update-airline','uses'=>'AdminController@update_airline'));
-	Route::get('update-airline/{id}',array('as'=>'update-airline','uses'=>'AdminController@update_airline'));
-	Route::get('del-airline/{id}',array('as'=>'del-airline','uses'=>'AdminController@delete_airline'));
+	// //airline
+	// Route::post('creat-airline',array('before'=>'csrf','as'=>'creat-airline','uses'=>'AdminController@create_airline'));
+	// Route::get('creat-airline',array('as'=>'creat-airline','uses'=>'AdminController@create_airline'));
+	// Route::get('view-airline',array('as'=>'view-airline','uses'=>'AdminController@view_airline'));
+	// Route::post('update-airline/{id}',array('before'=>'csrf','as'=>'update-airline','uses'=>'AdminController@update_airline'));
+	// Route::get('update-airline/{id}',array('as'=>'update-airline','uses'=>'AdminController@update_airline'));
+	// Route::get('del-airline/{id}',array('as'=>'del-airline','uses'=>'AdminController@delete_airline'));
 
 
 	//payment
 
-	Route::post('creat-payment',array('before'=>'csrf','as'=>'creat-payment','uses'=>'AdminController@create_payment'));
-	Route::get('creat-payment',array('as'=>'creat-payment','uses'=>'AdminController@create_payment'));
-	Route::get('view-payment',array('as'=>'view-payment','uses'=>'AdminController@view_payment'));
-	Route::post('update-payment/{id}',array('before'=>'csrf','as'=>'update-payment','uses'=>'AdminController@update_payment'));
-	Route::get('update-payment/{id}',array('as'=>'update-payment','uses'=>'AdminController@update_payment'));
-	Route::get('del-payment/{id}',array('as'=>'del-payment','uses'=>'AdminController@delete_payment'));
+	// Route::post('creat-payment',array('before'=>'csrf','as'=>'creat-payment','uses'=>'AdminController@create_payment'));
+	// Route::get('creat-payment',array('as'=>'creat-payment','uses'=>'AdminController@create_payment'));
+	// Route::get('view-payment',array('as'=>'view-payment','uses'=>'AdminController@view_payment'));
+	// Route::post('update-payment/{id}',array('before'=>'csrf','as'=>'update-payment','uses'=>'AdminController@update_payment'));
+	// Route::get('update-payment/{id}',array('as'=>'update-payment','uses'=>'AdminController@update_payment'));
+	// Route::get('del-payment/{id}',array('as'=>'del-payment','uses'=>'AdminController@delete_payment'));
 	
-	//check reference
-	Route::post('reference/verify',array('before'=>'csrf','as'=>'check.reference','uses'=>'AdminController@checkReference'));
-	//check reference
+	// //check reference
+	// Route::post('reference/verify',array('before'=>'csrf','as'=>'check.reference','uses'=>'AdminController@checkReference'));
+	// //check reference
 	
-	Route::get('quote/{ref_no}/child',array('as'=>'get.child.reference','uses'=>'AdminController@childReference'));
+	// Route::get('quote/{ref_no}/child',array('as'=>'get.child.reference','uses'=>'AdminController@childReference'));
 	
 	
 	
-	Route::group(['prefix' => 'users', 'as' 	 => 'users.' ], function ()
-	{
-		Route::get('index',array('as'=>'index','uses'=>'UserController@index'));
-		Route::get('create',array('as'=>'create','uses'=>'UserController@create'));
-		Route::post('store',array('as'=>'store','uses'=>'UserController@store'));
-		Route::get('edit/{id}',array('as'=>'edit','uses'=>'UserController@edit'));
-		Route::post('update/{id}',array('as'=>'update','uses'=>'UserController@update'));
-		Route::delete('delete/{id}',array('as'=>'delete','uses'=>'UserController@delete'));
-	});
+	// Route::group(['prefix' => 'users', 'as' 	 => 'users.' ], function ()
+	// {
+	// 	Route::get('index',array('as'=>'index','uses'=>'UserController@index'));
+	// 	Route::get('create',array('as'=>'create','uses'=>'UserController@create'));
+	// 	Route::post('store',array('as'=>'store','uses'=>'UserController@store'));
+	// 	Route::get('edit/{id}',array('as'=>'edit','uses'=>'UserController@edit'));
+	// 	Route::post('update/{id}',array('as'=>'update','uses'=>'UserController@update'));
+	// 	Route::delete('delete/{id}',array('as'=>'delete','uses'=>'UserController@delete'));
+	// });
+	
+
+	
+	
+	
+
+	
+	
+
+		
+		
+////////////////////////////..season route start //////////////////////////////////////////
+	Route::resource('seasons', 'SeasonController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+		]]);
+////////////////////////////..season route end //////////////////////////////////////////
+	
+////////////////////////////..users route start //////////////////////////////////////////
+	Route::resource('users', 'RoleController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+	]]);
+	
 	//roles user start
 	Route::resource('roles', 'RoleController',['only' => [
 		'index','create', 'store', 'edit', 'update', 'destroy'
 	]]);
 	//roles user end
+////////////////////////////..users route end //////////////////////////////////////////////
+	
+			
+
+////////////////////////////..supplier route start //////////////////////////////////////////
+	Route::resource('suppliers', 'SupplierController');	
+	
+	//supplier product start
+	Route::resource('products', 'ProductController',['only' => [
+		'index','create', 'store', 'edit', 'update', 'destroy'
+		]]);
+	//supplier product end
 	
 	//supplier categories start
 	Route::resource('categories', 'CategoryController',['only' => [
 		'index','create', 'store', 'edit', 'update', 'destroy'
 	]]);
 	//supplier categories end
-	
-	//supplier route start
-	Route::resource('suppliers', 'SupplierController');
-	//supplier route end
-	
-	//supplier product start
-	Route::resource('products', 'ProductController',['only' => [
-		'index','create', 'store', 'edit', 'update', 'destroy'
-	]]);
-	//supplier product end
+////////////////////////////..supplier route end //////////////////////////////////////////
 	
 	
-	//season controller start
-	Route::resource('seasons', 'SeasonController',['only' => [
-		'index','create', 'store', 'edit', 'update', 'destroy'
-	]]);
-	//season controller end
-	
-	
-	
+////////////////////////////..setting route end //////////////////////////////////////////
+
 	Route::group([ 'prefix' => 'setting', 'as' => 'setting.'],function (){
 		// airlines start
 		Route::resource('airlines', 'SettingControllers\AirlineController',['only' => [
@@ -334,11 +355,15 @@ Route::group(['middleware' => ['auth']], function(){
 			'index', 'edit', 'update'
 		]]);
 		//manual rates
-		
 	});
 	
-	
-	
+////////////////////////////..setting route end //////////////////////////////////////////
+
+///////////////////////////.. route for json start  ////////////////////////////////////////////
+	Route::prefix('json')->group(function () {
+		Route::get('holiday-types',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));	
+	});
+///////////////////////////.. route for json end  //////////////////////////////////////////////
 	
 	
 	
@@ -351,8 +376,8 @@ Route::group(['middleware' => ['auth']], function(){
 	// Route::get('view-user',array('as'=>'view-user','uses'=>'AdminController@view_user'));
 	// Route::get('update-user/{id}',array('as'=>'update-user','uses'=>'AdminController@update_user'));
 	// Route::get('del-user/{id}',array('as'=>'del-user','uses'=>'AdminController@delete_user'));
-	    Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
-    Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
+	//     Route::get('view-supplier-products',array('as'=>'view-supplier-products','uses'=>'AdminController@view_supplier_products'));
+    // Route::get('view-supplier-categories',array('as'=>'view-supplier-categories','uses'=>'AdminController@view_supplier_categories'));
 
 	
 	
@@ -372,37 +397,10 @@ Route::group(['middleware' => ['auth']], function(){
 	});
 	
 	
-	Route::group([
-		'prefix' => 'brand',
-		'as' 	 => 'brand.'
-	],function (){
-		Route::get('index', ['as' => 'index', 'uses' => 'BrandController@index']);
-		Route::get('create', ['as' => 'create', 'uses' => 'BrandController@create']);
-		Route::post('store', ['as' => 'store', 'uses' => 'BrandController@store']);
-		Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'BrandController@detail']);
-		Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'BrandController@destroy']);
-		Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'BrandController@edit']);
-		Route::post('update/{id}', ['as' => 'update', 'uses' => 'BrandController@update']);
-	});
-	
-	Route::group([
-		'prefix' => 'holiday_type',
-		'as' 	 => 'holidaytype.'
-	],function (){
-		Route::get('index', ['as' => 'index', 'uses' => 'HolidayTypeController@index']);
-		Route::get('create', ['as' => 'create', 'uses' => 'HolidayTypeController@create']);
-		Route::post('store', ['as' => 'store', 'uses' => 'HolidayTypeController@store']);
-		Route::get('detail/{id}', ['as' => 'detail', 'uses' => 'HolidayTypeController@detail']);
-		Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'HolidayTypeController@destroy']);
-		Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'HolidayTypeController@edit']);
-		Route::post('update/{id}', ['as' => 'update', 'uses' => 'HolidayTypeController@update']);
-	});
 
-	Route::post('brands/holiday', ['as' => 'brand_with_holiday', 'uses' => 'HolidayTypeController@getBrandWithHoliday']);
+	// Route::post('brands/holiday', ['as' => 'brand_with_holiday', 'uses' => 'HolidayTypeController@getBrandWithHoliday']);
 
-	Route::prefix('json')->group(function () {
-		Route::get('holiday-types',array('as'=>'get-holiday-type','uses'=>'AdminController@get_holiday_type'));	
-	});
+
 });
 
 // Auth::routes();

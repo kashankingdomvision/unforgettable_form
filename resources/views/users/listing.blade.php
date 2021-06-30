@@ -55,7 +55,7 @@
                             <td>{{ $value->getSupervisor->name ?? null }}</td>
                             <td class="inline-flex">
                                 <a href="{{ route('users.edit', encrypt($value->id)) }}" class="btn btn-primary btn-xs " data-title="Edit" data-target="#edit"><span class="fa fa-pencil"></span></a>
-                              <form method="post" action="{{ route('users.delete', encrypt($value->id)) }}">
+                              <form method="post" action="{{ route('users.destroy', encrypt($value->id)) }}">
                                 @csrf
                                 @method('delete')
                                 <button class="btn btn-danger btn-xs ml-5">

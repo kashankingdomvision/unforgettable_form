@@ -16,7 +16,7 @@
             </li>
             @endif
           </div>  
-          <form method="POST" action="{{ route('seasons.create') }}">    
+          <form method="POST" action="{{ route('seasons.store') }}">  @csrf  
             <div class="box-body">
               <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-3">
