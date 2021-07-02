@@ -23,8 +23,10 @@ class BookingDetail extends Model
         return $this->hasOne(Supplier::class,'id','supplier');
     }
     
-    public function getBookingLogs()
+    public function getBookingFinance()
     {
         return $this->hasMany(BookingDetailFinance::class, 'booking_detail_id', 'id');
+        
     }
+    
 }

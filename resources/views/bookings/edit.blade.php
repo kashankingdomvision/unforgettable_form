@@ -150,711 +150,526 @@
                                         <div class="col-sm-5">
                                             <label for="inputEmail3" class="">Quote Reference</label> <span class="badge badge-secondary">default</span>
                                             <div class="input-group">
-                                                <input type="text" name="quotation_no" class="form-control" value="{{ $booking->quote_ref }}" required readonly>
+                                                <input type="text" name="quote_no" class="form-control" value="{{ $booking->quote_ref }}" required readonly>
                                             </div>
                                             <div class="alert-danger" style="text-align:center" id="error_quotation_no"></div>
                                         </div>
                                     </div>
-
-                                <div class="row">
-                                    <div class="col-sm-5 col-sm-offset-1">
-                                        <label for="inputEmail3" class="">Lead Passenger Name</label> <span
-                                            style="color:red">*</span>
-                                        <div class="input-group">
-                                            <input type="text" name="lead_passenger_name" class="form-control" value="{{ $booking->lead_passenger }}">
-                                        </div>
-                                        <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
-                                    </div>
-
-
-                                    <div class="col-sm-5">
-                                        <label class="">Brand Name</label> <span style="color:red">*</span>
-                                        <select class="form-control " name="brand_name">
-                                            <option value="">Select Brand</option>
-                                            @foreach ($brands as $brand)
-                                                <option value="{{$brand->id}}" {{ $booking->getBrand->name == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="row">
-                                    <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
-                                        <label class="">Type Of Holidays</label> <span style="color:red">*</span>
-                                        <select class="form-control" id="type_of_holidays" name="type_of_holidays">
-                                            <option value="">Select Holiday</option>
-                                            @foreach ($holiday_types as $holiday_type)
-                                                <option value="{{ $holiday_type->id }}" {{  $booking->holiday_type_id == $holiday_type->id ? 'selected' : '' }} >{{ $holiday_type->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_type_of_holidays">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-5" style="margin-bottom:15px;">
-                                        <label class="">Sales Person</label> <span style="color:red">*</span>
-                                        <select class="form-control" id="sales_person" name="sale_person">
-                                            <option value="">Select Person</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->email }}" {{ $user->email == $booking->sale_person ? 'selected' : '' }}> {{ $user->email }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-5 col-sm-offset-1">
-                                        <label class="">Booking Season</label>
-                                        <span style="color:red">*</span>
-                                        {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
-                                        <select class="form-control dropdown_value" name="season_id">
-                                            <option value="">Select Season</option>
-                                            @foreach ($seasons as $sess)
-                                                <option value="{{ $sess->id }}"
-                                                    {{ $booking->season_id == $sess->id ? 'selected' : '' }}>
-                                                    {{ $sess->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
-                                    </div>
-
-                                    <div class="col-sm-5" >
-                                        <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red">
-                                            *</span><br>
-                                        <div class="inline-flex">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agency_booking" value="1" {{  ($booking->agency == 1)? 'checked': NULL }} id="ab_yes">
-                                                <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                    <div class="row">
+                                        <div class="col-sm-5 col-sm-offset-1">
+                                            <label for="inputEmail3" class="">Lead Passenger Name</label> <span
+                                                style="color:red">*</span>
+                                            <div class="input-group">
+                                                <input type="text" name="lead_passenger" class="form-control" value="{{ $booking->lead_passenger }}">
                                             </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agency_booking" value="0" {{  ($booking->agency == 0)? 'checked': NULL }} id="ab_no">
-                                                <label class="form-check-label" for="inlineRadio2">No</label>
+                                            <div class="alert-danger" style="text-align:center" id="error_lead_passenger_name"></div>
+                                        </div>
+
+
+                                        <div class="col-sm-5">
+                                            <label class="">Brand Name</label> <span style="color:red">*</span>
+                                            <select class="form-control " name="brand_id">
+                                                <option value="">Select Brand</option>
+                                                @foreach ($brands as $brand)
+                                                    <option value="{{$brand->id}}" {{ $booking->getBrand->name == $brand->id ? 'selected' : '' }} >{{ $brand->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_brand_name"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                                            <label class="">Type Of Holidays</label> <span style="color:red">*</span>
+                                            <select class="form-control" id="type_of_holidays" name="holidaytype_id">
+                                                <option value="">Select Holiday</option>
+                                                @foreach ($holiday_types as $holiday_type)
+                                                    <option value="{{ $holiday_type->id }}" {{  $booking->holiday_type_id == $holiday_type->id ? 'selected' : '' }} >{{ $holiday_type->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_type_of_holidays">
                                             </div>
                                         </div>
-                                        <div class="alert-danger" style="text-align:center"> </div>
+
+                                        <div class="col-sm-5" style="margin-bottom:15px;">
+                                            <label class="">Sales Person</label> <span style="color:red">*</span>
+                                            <select class="form-control" id="sales_person" name="sale_person">
+                                                <option value="">Select Person</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{ $user->email }}" {{ $user->email == $booking->sale_person ? 'selected' : '' }}> {{ $user->email }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_sale_person"> </div>
+                                        </div>
                                     </div>
-                                    <div class="row"
-                                        style="{{ $booking->agency == 1 ? 'display:block' : 'display:none' }}"
-                                        id="agency-detail"> --}}
-                                        <div class="col-sm-2" style="width:175px;">
-                                            <label for="inputEmail3" class="">Agency Name</label> <span style="color:red">
-                                                *</span>
-                                            <input type="text" name="agency_name" value="{{ $booking->agency_name }}"
-                                                class="form-control">
-                                            <div class="alert-danger" style="text-align:center" id="error_agency_name">
+                                    <div class="row">
+                                        <div class="col-sm-5 col-sm-offset-1">
+                                            <label class="">Booking Season</label>
+                                            <span style="color:red">*</span>
+                                            {{-- <input type="text" name="season_id" class="form-control"   readonly> --}}
+                                            <select class="form-control dropdown_value" name="season_id">
+                                                <option value="">Select Season</option>
+                                                @foreach ($seasons as $sess)
+                                                    <option value="{{ $sess->id }}"
+                                                        {{ $booking->season_id == $sess->id ? 'selected' : '' }}>
+                                                        {{ $sess->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_season_id"> </div>
+                                        </div>
+
+                                        <div class="col-sm-5" >
+                                            <label for="inputEmail3" class="">Agency Booking</label> <span style="color:red">
+                                                *</span><br>
+                                            <div class="inline-flex">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="agency" value="1" {{  ($booking->agency == 1)? 'checked': NULL }} id="ab_yes">
+                                                    <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="agency_booking" value="0" {{  ($booking->agency == 0)? 'checked': NULL }} id="ab_no">
+                                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="alert-danger" style="text-align:center"> </div>
+                                        </div>
+                                        <div class="row"
+                                            style="{{ $booking->agency == 1 ? 'display:block' : 'display:none' }}"
+                                            id="agency-detail">
+                                            <div class="col-sm-2" style="width:175px;">
+                                                <label for="inputEmail3" class="">Agency Name</label> <span style="color:red">
+                                                    *</span>
+                                                <input type="text" name="agency_name" value="{{ $booking->agency_name }}"
+                                                    class="form-control">
+                                                <div class="alert-danger" style="text-align:center" id="error_agency_name">
+                                                </div>
+
                                             </div>
 
-                                        </div>
-
-                                         <div class="col-sm-2">
-                                            <label for="inputEmail3" class="">Agency Contact No.</label> <span
-                                                style="color:red"> *</span>
-                                            <input type="text" name="agency_contact_no"
-                                                value="{{ $booking->agency_contact }}" class="form-control">
-                                            <div class="alert-danger" style="text-align:center"
-                                                id="error_agency_contact_no"> </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-5 col-sm-offset-1">
-                                        <label> Dinning Preferences</label> <span style="color:red">*</span>
-                                        <input type="text" name="dinning_preferences" value="{{ $booking->dinning_preference }}" required class="form-control">
-                                        <div class="alert-danger" style="text-align:center" id="error_dinning_preferences">
+                                            <div class="col-sm-2">
+                                                <label for="inputEmail3" class="">Agency Contact No.</label> <span
+                                                    style="color:red"> *</span>
+                                                <input type="text" name="agency_contact"
+                                                    value="{{ $booking->agency_contact }}" class="form-control">
+                                                <div class="alert-danger" style="text-align:center"
+                                                    id="error_agency_contact_no"> </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-5">
-                                        <label>Bedding Preferences</label> <span style="color:red">*</span>
-                                        <input type="text" name="bedding_preference"  value="{{ $booking->bedding_preference }}" required  class="form-control" >
-                                        <div class="alert-danger" style="text-align:center" id="error_bedding_preference"></div>
+                                    <div class="row">
+                                        <div class="col-sm-5 col-sm-offset-1">
+                                            <label> Dinning Preferences</label> <span style="color:red">*</span>
+                                            <input type="text" name="dinning_preference" value="{{ $booking->dinning_preference }}" required class="form-control">
+                                            <div class="alert-danger" style="text-align:center" id="error_dinning_preferences">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Bedding Preferences</label> <span style="color:red">*</span>
+                                            <input type="text" name="bedding_preference"  value="{{ $booking->bedding_preference }}" required  class="form-control" >
+                                            <div class="alert-danger" style="text-align:center" id="error_bedding_preference"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
-                                        <label> Booking Currency</label> <span style="color:red">*</span>
-                                        <select name="currency" class="form-control">
-                                            <option value="">Select Currency</option>
-                                            @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->code }}" {{ $booking->currency_id == $currency->id ? 'selected' : '' }}  data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
-                                            @endforeach
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_currency"></div>
+                                    <div class="row">
+                                        <div class="col-sm-5 col-sm-offset-1" style="margin-bottom:15px;">
+                                            <label> Booking Currency</label> <span style="color:red">*</span>
+                                            <select name="currency_id" class="form-control">
+                                                <option value="">Select Currency</option>
+                                                @foreach ($currencies as $currency)
+                                                    <option value="{{ $currency->code }}" {{ $booking->currency_id == $currency->id ? 'selected' : '' }}  data-image="data:image/png;base64, {{$currency->flag}}"> &nbsp; {{$currency->code}} - {{$currency->name}} </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_currency"></div>
+                                        </div>
+                                        <div class="col-sm-5 ">
+                                            <label class="">Pax No.</label> <span style="color:red">*</span>
+                                            <select class="form-control dropdown_value paxNumber" name="pax_no">
+                                                <option selected disabled value="">Select Pax No.</option>
+                                                @for ($i = 1; $i <= 30; $i++)
+                                                    <option value="{{ $i }}" {{ $booking->pax_no == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                            <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-5 ">
-                                        <label class="">Pax No.</label> <span style="color:red">*</span>
-                                        <select class="form-control dropdown_value paxNumber" name="group_no">
-                                            <option selected disabled value="">Select Pax No.</option>
-                                            @for ($i = 1; $i <= 30; $i++)
-                                                <option value="{{ $i }}" {{ $booking->pax_no == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                        <div class="alert-danger" style="text-align:center" id="error_group_no"></div>
-                                    </div>
-                                </div>
-                            </section> 
+                                </section> 
                             {{-- /// UpperSection --}}
-                            <section id="passenger-section">
-                                <div class="row">
-                                    <div class=" col-md-12 col-sm-offset-1" id="appendPaxName">
-                                        @if($booking->pax_no > 1)
-                                            @foreach ($booking->getBookingPaxDetail as $paxKey => $pax )
-                                            @php
-                                                 $count = $paxKey +1;
-                                            @endphp
-                                            <div class= appendCount" id="appendCount{{$count}}">
-                                                <div class="row" >
-                                                    <div class="col-md-4">
-                                                        <label >Passenger #{{ $count+1 }} Full Name</label> 
-                                                        <input type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                <section id="passenger-section">
+                                    <div class="row">
+                                        <div class=" col-md-12 col-sm-offset-1" id="appendPaxName">
+                                            @if($booking->pax_no > 1)
+                                                @foreach ($booking->getBookingPaxDetail as $paxKey => $pax )
+                                                @php
+                                                    $count = $paxKey +1;
+                                                @endphp
+                                                <div class= appendCount" id="appendCount{{$count}}">
+                                                    <div class="row" >
+                                                        <div class="col-md-4">
+                                                            <label >Passenger #{{ $count+1 }} Full Name</label> 
+                                                            <input type="text" name="pax[{{$paxKey}}][full_name]" value="{{ $pax->full_name }}" class="form-control" placeholder="PASSENGER #2 FULL NAME" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label >Email Address</label> 
+                                                            <input type="email" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label >Contact Number</label> 
+                                                            <input type="number" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label >Email Address</label> 
-                                                        <input type="email" name="pax[{{$paxKey}}][email_address]" value="{{ $pax->email }}" class="form-control" placeholder="EMAIL ADDRESS" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label >Contact Number</label> 
-                                                        <input type="number" name="pax[{{$paxKey}}][contact_number]" value="{{ $pax->contact }}" class="form-control" placeholder="CONTACT NUMBER" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label>Date Of Birth</label> 
+                                                            <input type="date" max="{{  date("Y-m-d") }}" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label>Bedding Preference</label> 
+                                                            <input type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-3">
+                                                            <label>Dinning Preference</label> 
+                                                            <input type="text" name="pax[{{$paxKey}}][dinning_preference]" value="{{ $pax->dinning_preference }}" class="form-control" placeholder="DINNING PREFERENCES" >
+                                                            <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label>Date Of Birth</label> 
-                                                        <input type="date" max="{{  date("Y-m-d") }}" name="pax[{{$paxKey}}][date_of_birth]" value="{{ $pax->date_of_birth }}" class="form-control" placeholder="CONTACT NUMBER" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label>Bedding Preference</label> 
-                                                        <input type="text" name="pax[{{$paxKey}}][bedding_preference]" value="{{ $pax->bedding_preference }}" class="form-control" placeholder="BEDDING PREFERENCES" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                        <label>Dinning Preference</label> 
-                                                        <input type="text" name="pax[{{$paxKey}}][dinning_preference]" value="{{ $pax->dinning_preference }}" class="form-control" placeholder="DINNING PREFERENCES" >
-                                                        <div class="alert-danger errorpax" style="text-align:center" id="error_pax_name_'+validatecount+'"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endforeach
-                                    @endif
+                                                @endforeach
+                                        @endif
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                            <br />
-                            <br />
-                            <div class="parent" id="parent">
-                                @foreach ($booking->getBookingDetail as $key => $booking_detail)
-                                    <div class="qoute">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <button type="button" class="btn  pull-right close"> x </button>
-                                            </div>
-                                        </div>      <br />
-                                        <div class="row">
-                                            <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                <label for="inputEmail3" class="">Date of Service</label>
-                                                <div class="input-group">
-                                                    <input type="text" name="date_of_service[]" autocomplete="off"
-                                                        value="{{ !empty($booking_detail->date_of_service) ? date('d/m/Y', strtotime($booking_detail->date_of_service)) : '' }}"
-                                                        class="form-control datepicker date_of_service"
-                                                        placeholder="Date of Service">
-                                                </div>
-                                                <div class="alert-danger date_of_service" style="text-align:center">
-                                                </div>
-                                            </div>
-
-                                                <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Category</label>
-                                                    <select class="form-control category-select2" name="category[]">
-                                                        <option value="">Select Category</option>
-                                                        @foreach ($categories as $category)
-                                                            <option value="{{ $category->id }}"
-                                                                {{ $booking_detail->category_id == $category->id ? 'selected' : '' }}>
-                                                                {{ $category->name }} </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('category') }} </div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom:15px">
-                                                    <label class="test">Supplier</label>
-                                                    <select class="form-control supplier-select2 supplier-select2"
-                                                        name="supplier[]">
-                                                        <option value="">Select Supplier</option>
-                                                        @if(!empty($booking_detail->getCategory->getSupplier))
-                                                            @foreach ($booking_detail->getCategory->getSupplier as $supplier)
-                                                                <option value="{{ $supplier->id }}" {{ $booking_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                    <div class="alert-danger" style="text-align:center"></div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Product</label>
-                                                    <select class="form-control product-select2" name="product[]">
-                                                        <option value="">Select Product</option>
-                                                        @if(!empty($booking_detail->getSupplier->products))
-                                                            @foreach ($booking_detail->getSupplier->products as $product)
-                                                                <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                    <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Date</label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="booking_date[]"
-                                                            value="{{ !empty($booking_detail->booking_date) ? date('d/m/Y', strtotime($booking_detail->booking_date)) : '' }}"
-                                                            class="form-control datepicker" autocomplete="off"
-                                                            placeholder="Booking Date">
+                                </section>
+                                <br /><br />
+                                <section id="bookingDetails">                            
+                                    <div class="parent" id="parent">
+                                        @foreach ($booking->getBookingDetail as $key => $booking_detail)
+                                            <div class="qoute">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <button type="button" class="btn  pull-right close"> x </button>
                                                     </div>
-                                                    <div class="alert-danger booking_date" style="text-align:center">
-                                                        {{ $errors->first('booking_date') }} </div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Due Date <span
-                                                            style="color:red">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="booking_due_date[]"
-                                                            value="{{ !empty($booking_detail->booking_due_date) ? date('d/m/Y', strtotime($booking_detail->booking_due_date)) : '' }}"
-                                                            class="form-control datepicker" autocomplete="off"
-                                                            placeholder="Booking Date" required>
+                                                </div> <br />
+                                                <div class="row">
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Date of Service</label>
+                                                        <div class="input-group">
+                                                            <input type="text" name="date_of_service[]" autocomplete="off" value="{{ !empty($booking_detail->date_of_service) ? date('d/m/Y', strtotime($booking_detail->date_of_service)) : '' }}" class="form-control datepicker date_of_service" placeholder="Date of Service">
+                                                        </div>
+                                                        <div class="alert-danger date_of_service" style="text-align:center">
+                                                        </div>
                                                     </div>
-                                                    <div class="alert-danger booking_due_date"
-                                                        style="text-align:center; width: 160px;"></div>
-                                                </div>
 
-
-                                            </div>
-
-                                            <div class="row">
-
-                                                <div class="col-sm-2" style="margin-bottom: 35px;">
-                                                    <label for="inputEmail3" class="">Service Details</label>
-                                                    <textarea name="service_details[]" class="form-control" cols="30"
-                                                        rows="1">{{ $booking_detail->service_details }}</textarea>
-                                                    <div class="alert-danger" style="text-align:center"></div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booked By </label>
-                                                    <div class="input-group">
-                                                        <select class="form-control booked-by-select2" name="booked_by[]"
-                                                            class="form-control">
-                                                            <option value="">Select Person</option>
-                                                            @foreach ($users as $user)
-                                                                <option value="{{ $user->id }}"
-                                                                    {{ $booking_detail->booked_by == $user->id ? 'selected' : '' }}>
-                                                                    {{ $user->name }}</option>
+                                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                                        <label class="">Category</label>
+                                                        <select class="form-control category-select2" name="category[]">
+                                                            <option value="">Select Category</option>
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}" {{ $booking_detail->category_id == $category->id ? 'selected' : '' }}> {{ $category->name }} </option>
                                                             @endforeach
                                                         </select>
+                                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
                                                     </div>
-                                                    <div class="alert-danger" style="text-align:center"></div>
+
+                                                    <div class="col-sm-2" style="margin-bottom:15px">
+                                                        <label class="test">Supplier</label>
+                                                        <select class="form-control supplier-select2 supplier-select2"
+                                                            name="supplier[]">
+                                                            <option value="">Select Supplier</option>
+                                                            @if(!empty($booking_detail->getCategory->getSupplier))
+                                                                @foreach ($booking_detail->getCategory->getSupplier as $supplier)
+                                                                    <option value="{{ $supplier->id }}" {{ $booking_detail->supplier == $supplier->id  ? "selected" : "" }}> {{ $supplier->name }} </option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        <div class="alert-danger" style="text-align:center"></div>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                                        <label class="">Product</label>
+                                                        <select class="form-control product-select2" name="product[]">
+                                                            <option value="">Select Product</option>
+                                                            @if(!empty($booking_detail->getSupplier->products))
+                                                                @foreach ($booking_detail->getSupplier->products as $product)
+                                                                    <option value="{{ $product->id }}" {{ $booking_detail->product == $product->id  ? "selected" : "" }}> {{ $product->name }} </option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('category') }} </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Date</label>
+                                                        <div class="input-group">
+                                                            <input type="text" name="booking_date[]"
+                                                                value="{{ !empty($booking_detail->booking_date) ? date('d/m/Y', strtotime($booking_detail->booking_date)) : '' }}"
+                                                                class="form-control datepicker" autocomplete="off"
+                                                                placeholder="Booking Date">
+                                                        </div>
+                                                        <div class="alert-danger booking_date" style="text-align:center">
+                                                            {{ $errors->first('booking_date') }} </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Due Date <span
+                                                                style="color:red">*</span></label>
+                                                        <div class="input-group">
+                                                            <input type="text" name="booking_due_date[]"
+                                                                value="{{ !empty($booking_detail->booking_due_date) ? date('d/m/Y', strtotime($booking_detail->booking_due_date)) : '' }}"
+                                                                class="form-control datepicker" autocomplete="off"
+                                                                placeholder="Booking Date" required>
+                                                        </div>
+                                                        <div class="alert-danger booking_due_date"
+                                                            style="text-align:center; width: 160px;"></div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Method</label>
-                                                    <div class="input-group">
-                                                        <select class="form-control booking-method-select2"
-                                                            name="booking_method[]" class="form-control">
-                                                            <option value="">Select Booking Method</option>
-                                                            @foreach ($booking_methods as $booking_method)
-                                                                <option value="{{ $booking_method->id }}"
-                                                                    {{ $booking_detail->booking_method == $booking_method->id ? 'selected' : ($booking_method->name == 'Supplier Own' ? 'selected' : null) }}>
-                                                                    {{ $booking_method->name }}</option>
+                                                <div class="row">
+
+                                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                                        <label for="inputEmail3" class="">Service Details</label>
+                                                        <textarea name="service_details[]" class="form-control" cols="30"
+                                                            rows="1">{{ $booking_detail->service_details }}</textarea>
+                                                        <div class="alert-danger" style="text-align:center"></div>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booked By </label>
+                                                        <div class="input-group">
+                                                            <select class="form-control booked-by-select2" name="booked_by[]"
+                                                                class="form-control">
+                                                                <option value="">Select Person</option>
+                                                                @foreach ($users as $user)
+                                                                    <option value="{{ $user->id }}" {{ $booking_detail->booked_by == $user->id ? 'selected' : '' }}> {{ $user->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="alert-danger" style="text-align:center"></div>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Method</label>
+                                                        <div class="input-group">
+                                                            <select class="form-control booking-method-select2"
+                                                                name="booking_method[]" class="form-control">
+                                                                <option value="">Select Booking Method</option>
+                                                                @foreach ($booking_methods as $booking_method)
+                                                                    <option value="{{ $booking_method->id }}" {{ $booking_detail->booking_method == $booking_method->id ? 'selected' : ($booking_method->name == 'Supplier Own' ? 'selected' : null) }}> {{ $booking_method->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('booking_method') }} </div>
+                                                    </div>
+
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Reference</label>
+                                                        <div class="input-group">
+                                                            <input type="text" name="booking_refrence[]" value="{{ $booking_detail->booking_refrence }}" class="form-control" placeholder="Booking Refrence">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-2 " style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Type</label>
+                                                        <div class="input-group">
+                                                            <select class="form-control booking-type-select2"
+                                                                name="booking_type[]">
+                                                                <option value="">Select Booking Type</option>
+                                                                <option {{ $booking_detail->booking_type == 'refundable' ? 'selected' : '' }} value="refundable">Refundable</option>
+                                                                <option {{ $booking_detail->booking_type == 'non_refundable' ? 'selected' : '' }} value="non_refundable">Non-Refundable</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="alert-danger" style="text-align:center">{{ $errors->first('booking_type') }} </div>
+                                                    </div>
+
+
+                                                    <div class="col-sm-2" style="margin-bottom: 35px;">
+                                                        <label for="inputEmail3" class="">Comments</label>
+                                                        <textarea name="comments[]" class="form-control" cols="30" rows="1">{{ $booking_detail->comments }}</textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-sm-2" style="margin-bottom:15px;">
+                                                        <label class="">Supplier Currency <span style="color:red">*</span> </label>
+                                                        <select class="form-control supplier-currency"  disabled
+                                                            name="supplier_currency[]" required>
+                                                            <option value="">Select Currency</option>
+                                                            @foreach ($currencies as $currency)
+                                                                <option value="{{ $currency->code }}"
+                                                                    {{ $booking_detail->supplier_currency == $currency->code ? 'selected' : '' }} data-image="data:image/png;base64, {{$currency->flag}}">
+                                                                    &nbsp; {{$currency->code}} - {{$currency->name}}
+                                                                </option>
                                                             @endforeach
                                                         </select>
-                                                    </div>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('booking_method') }} </div>
-                                                </div>
-
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Reference</label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="booking_refrence[]"
-                                                            value="{{ $booking_detail->booking_refrence }}"
-                                                            class="form-control" placeholder="Booking Refrence">
-                                                    </div>
-                                                    <div class="alert-danger" style="text-align:center"> </div>
-                                                </div>
-
-                                                <div class="col-sm-2 " style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Type</label>
-                                                    <div class="input-group">
-                                                        <select class="form-control booking-type-select2"
-                                                            name="booking_type[]">
-                                                            <option value="">Select Booking Type</option>
-                                                            <option
-                                                                {{ $booking_detail->booking_type == 'refundable' ? 'selected' : '' }}
-                                                                value="refundable">Refundable</option>
-                                                            <option
-                                                                {{ $booking_detail->booking_type == 'non_refundable' ? 'selected' : '' }}
-                                                                value="non_refundable">Non-Refundable</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="alert-danger" style="text-align:center">
-                                                        {{ $errors->first('booking_type') }} </div>
-                                                </div>
-
-
-                                                <div class="col-sm-2" style="margin-bottom: 35px;">
-                                                    <label for="inputEmail3" class="">Comments</label>
-                                                    <textarea name="comments[]" class="form-control" cols="30"
-                                                        rows="1">{{ $booking_detail->comments }}</textarea>
-                                                    <div class="alert-danger" style="text-align:center"></div>
-                                                </div>
-
-
-
-                                            </div>
-
-                                            <div class="row">
-
-                                                <div class="col-sm-2" style="margin-bottom:15px;">
-                                                    <label class="">Supplier Currency <span style="color:red">*</span> </label>
-                                                    <select class="form-control supplier-currency"  disabled
-                                                        name="supplier_currency[]" required>
-                                                        <option value="">Select Currency</option>
-                                                        @foreach ($currencies as $currency)
-                                                            <option value="{{ $currency->code }}"
-                                                                {{ $booking_detail->supplier_currency == $currency->code ? 'selected' : '' }} data-image="data:image/png;base64, {{$currency->flag}}">
-                                                                &nbsp; {{$currency->code}} - {{$currency->name}}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <div class="alert-danger" style="text-align:center"></div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Estimated Cost</label> <span
-                                                        style="color:red">*</span>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                        <input type="number" name="cost[]" class="form-control" value="{{ $booking_detail->cost }}" placeholder="Cost" min="0" step="any" readonly>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Actual Cost</label> <span
-                                                        style="color:red">*</span>
-                                                    <div class="input-group">
-                                                        <span
-                                                            class="input-group-addon symbol">{{ $booking_detail->supplier_currency }}</span>
-                                                        <input type="number" data-code="{{ $booking_detail->supplier_currency }}" name="actual_cost[]" class="form-control cost cost{{ $key }} " data-key="cost{{$key}}" value="{{ $booking_detail->actual_cost }}" placeholder="Cost" min="0" step="any" required>
-                                                    </div>
-                                                    <div class="alert-danger error-cost" style="text-align:center"></div>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Booking Currency Conversion</label>
-                                                    <label class="currency"></label>
-                                                    <input type="text" class="base-currency" name="qoute_base_currency[]"
-                                                        value="{{ $booking_detail->actual_cost != 0 ? number_format($booking_detail->qoute_base_currency, 2, '.', '') : '0.00' }}"
-                                                        readonly><br>
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Added in Sage </label>
-                                                    <div class="input-group">
-                                                        <input type="hidden" name="added_in_sage[]"
-                                                            value="{{ $booking_detail->added_in_sage == 1 ? 1 : 0 }}"><input
-                                                            type="checkbox"
-                                                            onclick="this.previousSibling.value=1-this.previousSibling.value"
-                                                            {{ $booking_detail->added_in_sage == 1 ? 'checked' : '' }}>
+                                                        <div class="alert-danger" style="text-align:center"></div>
                                                     </div>
 
-                                                </div>
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Supervisor</label>
-                                                    <div class="input-group">
-                                                        <select name="supervisor[]" class="form-control supervisor-select2">
-                                                            <option value="">Select Supervisor</option>
-                                                            @foreach ($supervisors as $supervisor)
-                                                                <option value="{{ $supervisor->id }}"
-                                                                    {{ $booking_detail->supervisor_id == $supervisor->id ? 'selected' : '' }}>
-                                                                    {{ $supervisor->name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Estimated Cost</label> <span
+                                                            style="color:red">*</span>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                            <input type="number" name="cost[]" class="form-control" value="{{ $booking_detail->cost }}" placeholder="Cost" min="0" step="any" readonly>
+                                                        </div>
                                                     </div>
-                                                    <div class="alert-danger" style="text-align:center"> </div>
-                                                </div>
 
-
-
-                                            </div>
-
-                                            <div class="row">
-
-                                                <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                    <label for="inputEmail3" class="">Upload Invoice</label>
-                                                    <div class="input-group">
-                                                        <input type="hidden" name="qoute_invoice_record[]"
-                                                            value="{{ $booking_detail->qoute_invoice }}">
-                                                        <input type="file" name="qoute_invoice[]" value=""
-                                                            class="form-control">
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Actual Cost</label> <span
+                                                            style="color:red">*</span>
+                                                        <div class="input-group">
+                                                            <span
+                                                                class="input-group-addon symbol">{{ $booking_detail->supplier_currency }}</span>
+                                                            <input type="number" data-code="{{ $booking_detail->supplier_currency }}" name="actual_cost[]" class="form-control cost cost{{ $key }} " data-key="cost{{$key}}" value="{{ $booking_detail->actual_cost }}" placeholder="Cost" min="0" step="any" required>
+                                                        </div>
+                                                        <div class="alert-danger error-cost" style="text-align:center"></div>
                                                     </div>
-                                                    <div class="alert-danger" style="text-align:center"> </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Booking Currency Conversion</label>
+                                                        <label class="currency"></label>
+                                                        <input type="text" class="base-currency" name="qoute_base_currency[]"
+                                                            value="{{ $booking_detail->actual_cost != 0 ? number_format($booking_detail->qoute_base_currency, 2, '.', '') : '0.00' }}"
+                                                            readonly><br>
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Added in Sage </label>
+                                                        <div class="input-group">
+                                                            <input type="hidden" name="added_in_sage[]"
+                                                                value="{{ $booking_detail->added_in_sage == 1 ? 1 : 0 }}"><input
+                                                                type="checkbox"
+                                                                onclick="this.previousSibling.value=1-this.previousSibling.value"
+                                                                {{ $booking_detail->added_in_sage == 1 ? 'checked' : '' }}>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                        <label for="inputEmail3" class="">Supervisor</label>
+                                                        <div class="input-group">
+                                                            <select name="supervisor[]" class="form-control supervisor-select2">
+                                                                <option value="">Select Supervisor</option>
+                                                                @foreach ($supervisors as $supervisor)
+                                                                    <option value="{{ $supervisor->id }}"
+                                                                        {{ $booking_detail->supervisor_id == $supervisor->id ? 'selected' : '' }}>
+                                                                        {{ $supervisor->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="alert-danger" style="text-align:center"> </div>
+                                                    </div>
+
+
+
                                                 </div>
 
-                                                <div class="col-sm-2" style="margin-bottom: 15px; padding-top: 3rem;">
-                                                    <label for="inputEmail3" class="">Uploaded Invoice</label>
-                                                    <div class="input-group">
+                                                <div class="row">
+                                                    <div class="col-sm-2" >
+                                                        <label for="inputEmail3" class="">Upload Invoice</label>
+                                                        <div class="input-group">
+                                                            <input type="hidden" name="qoute_invoice_record[]" value="{{ $booking_detail->qoute_invoice }}">
+                                                            <input type="file" name="qoute_invoice[]" value="" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <label for="inputEmail3" class="">Uploaded Invoice</label>
+                                                        <div class="input-group">
                                                             @if(!empty($booking_detail->qoute_invoice))
                                                                 <a  target="_blank" href="{{ asset("booking/".$booking->qoute_id."/".$booking_detail->qoute_invoice) }}" >  {{$booking_detail->qoute_invoice}}</a>
-
-                                                                @else
-
+                                                            @else
                                                                 N/A
                                                             @endif
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <br>
-
-                                            <div class="row finance-row" hidden>
-                                                <div class="row">
-                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                        <label for="inputEmail3" class="title">Payment {{ $key }}</label>
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                        
-                                                            <input type="number"
-                                                                name="deposit_amount[{{ $key }}][]"
-                                                                class="form-control disable-feild deposit_amount depositeAmount" data-key="{{$key}}"
-                                                                placeholder="Deposit Amount" min="0" step="any">
-                                                        </div>
-                                                        <div class="alert-danger" style="text-align:center"> </div>
-                                                    </div>
-
-                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                        <label for="inputEmail3" class="">Deposit Due Date</label>
-                                                        <div class="input-group">
-                                                            <input type="text"
-                                                                name="deposit_due_date[{{ $key }}][]"
-                                                                class="form-control datepicker disable-feild deposit_due_date"
-                                                                placeholder="Deposit Due Date" autocomplete="off">
-                                                        </div>
-                                                        <div class="alert-danger" style="text-align:center"> </div>
-                                                    </div>
-
-                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                        <label for="inputEmail3" class="">Paid Date</label>
-                                                        <div class="input-group">
-                                                            <input type="text" name="paid_date[{{ $key }}][]"
-                                                                class="form-control datepicker disable-feild"
-                                                                placeholder="Paid Date" autocomplete="off">
-                                                        </div>
-                                                        <div class="alert-danger" style="text-align:center"> </div>
-                                                    </div>
-
-                                                    <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                        <label for="inputEmail3" class="">Payment Method </label>
-                                                        <div class="input-group">
-
-                                                            <select
-                                                                class="form-control booking-method-select2 disable-feild"
-                                                                name="payment_method[{{ $key }}][]"
-                                                                class="form-control">
-                                                                <option value="">Select Payment Method</option>
-                                                                @foreach ($payment_method as $paymentm)
-                                                                    <option value="{{ $paymentm->id }}">
-                                                                        {{ $paymentm->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="alert-danger" style="text-align:center">
-                                                            {{ $errors->first('payment_method') }} </div>
-                                                    </div>
-
-                                                    <div class="col-sm-1" style="margin-bottom: 15px; ">
-                                                        <label for="inputEmail3" class=""> Upload to Calender</label>
-                                                        <div class="input-group">
-                                                            <input type='hidden' class="disable-feild" value='false' name='upload_calender[{{ $key }}][]'>
-                                                            <input class="form-check-input uploadCalender disable-feild"
-                                                                type="checkbox" value="false"
-                                                                name="upload_calender[{{ $key }}][]"
-                                                                style="height: 20px; width:28px;">
-                                                                <label for="inputEmail3" class=""></label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-sm-2">
-                                                        <label for="inputEmail3" class="">No of Days</label>
-                                                        <div class="input-group additional_date">
-                                                            <a href="#" class="input-group-addon minus increment">
-                                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                                            </a>
-
-                                                            <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="0" >
-                                                            
-                                                            <a href="#" class="input-group-addon plus increment">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                        <button type="button" class="btn btn-info remove_finance">-</button>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            @if ($booking_detail->getBookingFinance))
-
-                                                @foreach ($booking_detail->getBookingFinance as $fkey => $finance_booking_detail)
-                                                    <div class="row" data-title="title{{$key}}">
-
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="title{{$key}}">Payment #{{ $fkey + 1}}</label>
-                                                            <div class="input-group">
-                                                            <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                            
-                                                                <input type="number"
-                                                                    name="deposit_amount[{{ $key }}][]" {{ (Auth::user()->role_id != 1  && !empty($finance_booking_detail->deposit_amount))? 'disabled': '' }}
-                                                                    value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
-                                                                    class="form-control deposit_amount depositecost{{$key}}" data-key="{{ $key }}"
-                                                                    placeholder="Deposit Amount" min="0" step="any">
-                                                            </div>
-                                                            <div class="alert-danger" style="text-align:center"> </div>
-                                                        </div>
-
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Deposit Due Date</label>
-                                                            <div class="input-group">
-                                                                <input type="text"
-                                                                    name="deposit_due_date[{{ $key }}][]" 
-                                                                    value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}"
-                                                                    class="form-control deposit_due_date datepicker"
-                                                                    placeholder="Deposit Due Date" autocomplete="off">
-                                                            </div>
-                                                            <div class="alert-danger" style="text-align:center"> </div>
-                                                        </div>
-
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Paid Date</label>
-                                                            <div class="input-group">
-                                                                <input type="text" name="paid_date[{{ $key }}][]"
-                                                                    value="{{ !empty($finance_booking_detail->paid_date) ? date('d/m/Y', strtotime($finance_booking_detail->paid_date)) : '' }}"
-                                                                    class="form-control datepicker" placeholder="Paid Date"
-                                                                    autocomplete="off">
-                                                            </div>
-                                                            <div class="alert-danger" style="text-align:center"> </div>
-                                                        </div>
-
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Payment Method</label>
-                                                            <div class="input-group">
-                                                                <select class="form-control booking-method-select2"
-                                                                    name="payment_method[{{ $key }}][]"
-                                                                    class="form-control">
-                                                                    <option value="">Select Payment Method</option>
-                                                                    @foreach ($payment_method as $paymentm)
-                                                                        <option value="{{ $paymentm->id }}"
-                                                                            {{ $finance_booking_detail->payment_method == $paymentm->id ? 'selected' : '' }}>
-                                                                            {{ $paymentm->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <div class="alert-danger" style="text-align:center">
-                                                                {{ $errors->first('payment_method') }} </div>
-                                                        </div>
-
-                                                        <div class="col-sm-1" style="margin-bottom: 15px; ">
-                                                            <label for="inputEmail3" class="">Upload to Calender</label>
-                                                            <div class="input-group">
-                                                                <input type='hidden' class="disable-feild"
-                                                                    {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'disabled="disabled"' }}
-                                                                    value="false"
-                                                                    name='upload_calender[{{ $key }}][]'>
-                                                                <input class="form-check-input uploadCalender disable-feild"
-                                                                    type="checkbox"
-                                                                    value="{{ $finance_booking_detail->upload_to_calender ?? 'false' }} "
-                                                                    {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'checked' }}
-                                                                    name="upload_calender[{{ $key }}][]"
-                                                                    style="height: 20px; width:28px;">
-
-                                                                        {{-- <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">-</button>
-                                                                        <lable style="margin-top: -13px;"><strong>2</strong></lable>
-                                                                        <button style=" font-size:22px; margin-top: -13px;" class=" btn-dark btn btn-sm form-check-input">+</button> --}}
-                                                                       
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
-                                                            <label for="inputEmail3" class="">No of Days</label>
-                                                            <div class="input-group additional_date">
-                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults disable-feild" size="10" value="{{ !empty($finance_booking_detail->additional_date) ? $finance_booking_detail->additional_date : 0 }} ">
-                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                                            </div>
-                                                        </div>
                                                 
-                                                        {{-- <div class="col-md-2">
-                                                            <label for="inputEmail3" class="">Add Event</label>
-                                                            <div class="form-check">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                                                <div class="input-group-append">
+                                                <section class="Finance{{$key}}">
+                                                    @if ($booking_detail->getBookingFinance)
+                                                        @foreach ($booking_detail->getBookingFinance as $fkey => $finance_booking_detail)
+                                                            <div class="row countFinance" data-title="title{{$key}}">
+                                                                <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                                    <label for="inputEmail3" class="title">Payments #{{ $fkey + 1}}</label>
+                                                                    <div class="input-group">
+                                                                    <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
+                                                                        <input type="number" name="quote[{{ $key }}][finance][{{ $fkey }}][deposite_payment]" {{ (Auth::user()->role_id != 1  && !empty($finance_booking_detail->deposit_amount))? 'disabled': '' }} value="{{ $finance_booking_detail->deposit_amount }}" class="form-control deposit_amount depositecost{{$key}}" data-key="{{ $key }}" placeholder="Deposit Amount" min="0" step="any">
+                                                                    </div>
+                                                                    <div class="alert-danger" style="text-align:center"> </div>
                                                                 </div>
-                                                              </div>
+
+                                                                <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                                    <label for="inputEmail3" class="">Deposit Due Date</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" name="quote[{{ $key }}][finance][{{ $fkey }}][deposit_due_date]"  value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}" class="form-control deposit_due_date datepicker" placeholder="Deposit Due Date" autocomplete="off">
+                                                                    </div>
+                                                                    <div class="alert-danger" style="text-align:center"> </div>
+                                                                </div>
+
+                                                                <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                                    <label for="inputEmail3" class="">Paid Date</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" name="quote[{{ $key }}][finance][{{ $fkey }}][paid_date]" value="{{ !empty($finance_booking_detail->paid_date) ? date('d/m/Y', strtotime($finance_booking_detail->paid_date)) : '' }}" class="form-control datepicker" placeholder="Paid Date" autocomplete="off">
+                                                                    </div>
+                                                                    <div class="alert-danger" style="text-align:center"> </div>
+                                                                </div>
+                                                                <div class="col-sm-2" style="margin-bottom: 15px;">
+                                                                    <label for="inputEmail3" class="">Payment Method</label>
+                                                                    <div class="input-group">
+                                                                        <select class="form-control booking-method-select2"
+                                                                            name="quote[{{ $key }}][finance][{{ $fkey }}][payment_method]"
+                                                                            class="form-control">
+                                                                            <option value="">Select Payment Method</option>
+                                                                            @foreach ($payment_method as $paymentm)
+                                                                                <option value="{{ $paymentm->id }}"
+                                                                                    {{ $finance_booking_detail->payment_method_id == $paymentm->id ? 'selected' : '' }}>
+                                                                                    {{ $paymentm->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="alert-danger" style="text-align:center">
+                                                                        {{ $errors->first('payment_method') }} </div>
+                                                                </div>
+
+                                                                <div class="col-sm-1" style="margin-bottom: 15px; ">
+                                                                    <label for="inputEmail3" class="">Upload to Calender</label>
+                                                                    <div class="input-group">
+                                                                        <input type='hidden' class="disable-feild" {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'disabled="disabled"' }} value="false" name='quote[{{ $key }}][finance][{{ $fkey }}][upload_calender]'>         
+                                                                        <input class="form-check-input uploadCalender disable-feild" type="checkbox" value="{{ $finance_booking_detail->upload_to_calender ?? 'false' }} " {{ $finance_booking_detail->upload_to_calender == 'false' ? '' : 'checked' }} name="quote[{{ $key }}][finance][{{ $fkey }}][upload_calender]" style="height: 20px; width:28px;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                                    <label for="inputEmail3" class="">No of Day</label>
+                                                                    <div class="input-group additional_date">
+                                                                        <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                                                        <input type="text" name="quote[{{ $key }}][finance][{{ $fkey }}][additional_date]" class="form-control adults" size="10" value="{{ $finance_booking_detail->additional_date}} ">
+                                                                        <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                                @if ($fkey == 0)
+                                                                    <div class="col-sm-1" >
+                                                                        <button type="button" data-id="{{$key}}" class="add_finance btn btn-info">+</button>
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                                                        </div> --}}
-
-                                                        @if ($fkey == 0)
-                                                            <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                                <button type="button" class="add_finance btn btn-info">+</button>
-                                                            </div>
-                                                        @endif
-
-
-                                                    </div>
-                                                @endforeach
-
-                                            @else
-                                            @php $count = 1 @endphp
-                                                <div class="row" data-title="title{{$key+1}}">
-                                                    <div class="append">
-                                                        <div class="col-sm-2" style="margin-bottom: 15px;"> 
-                                                            <label for="inputEmail3" class="title{{$key+1}}">Payments #{{ $count  }}</label>
+                                                        @endforeach
+                                                    @else
+                                                    
+                                                    <div class="row countFinance" style="margin-top: 10px;">
+                                                        <div class="col-sm-2" >
+                                                            <label for="inputEmail3" class="title">Payment {{ $key }}</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">{{ $booking_detail->supplier_currency }}</span>
-                                                                <input type="number" 
-                                                                {{-- {{ (!empty($finance_booking_detail->deposit_amount) && ) }} --}}
-                                                                    name="deposit_amount[{{ $key }}][]"
-                                                                    value="{{ !empty($finance_booking_detail->deposit_amount) ? $finance_booking_detail->deposit_amount : '' }}"
-                                                                    class="form-control deposit_amount depositecost{{$key}}" data-key="{{$key}}"
-                                                                    placeholder="Deposit Amount" min="0" step="any">
+                                                                <input type="number" name="quote[{{ $key }}][finance][0][deposite_payment]" class="form-control disable-feild deposit_amount depositeAmount" data-key="{{$key}}" placeholder="Deposit Amount" min="0" step="any">
                                                             </div>
-                                                            <div class="alert-danger" style="text-align:center"> </div>
                                                         </div>
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                                             <label for="inputEmail3" class="">Deposit Due Date</label>
                                                             <div class="input-group">
-                                                                <input type="text"
-                                                                    name="deposit_due_date[{{ $key }}][]"
-                                                                    value="{{ !empty($finance_booking_detail->deposit_due_date) ? date('d/m/Y', strtotime($finance_booking_detail->deposit_due_date)) : '' }}"
-                                                                    class="form-control deposit_due_date datepicker"
-                                                                    placeholder="Deposit Due Date" autocomplete="off">
+                                                                <input type="text" name="quote[{{ $key }}][finance][0][deposit_due_date]" class="form-control datepicker disable-feild deposit_due_date" placeholder="Deposit Due Date" autocomplete="off">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
                                                         </div>
@@ -862,67 +677,67 @@
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
                                                             <label for="inputEmail3" class="">Paid Date</label>
                                                             <div class="input-group">
-                                                                <input type="text" name="paid_date[{{ $key }}][]"
-                                                                    class="form-control datepicker" placeholder="Paid Date"
-                                                                    autocomplete="off">
+                                                                <input type="text" name="quote[{{ $key }}][finance][0][paid_date]" class="form-control datepicker disable-feild" placeholder="Paid Date" autocomplete="off">
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center"> </div>
                                                         </div>
 
                                                         <div class="col-sm-2" style="margin-bottom: 15px;">
-                                                            <label for="inputEmail3" class="">Payment Method</label>
+                                                            <label for="inputEmail3" class="">Payment Method </label>
                                                             <div class="input-group">
-                                                                <select class="form-control booking-method-select2"
-                                                                    name="payment_method[{{ $key }}][]"
-                                                                    class="form-control">
+                                                                <select class="form-control booking-method-select2 disable-feild" name="quote[{{ $key }}][finance][0][payment_method]">
                                                                     <option value="">Select Payment Method</option>
                                                                     @foreach ($payment_method as $paymentm)
-                                                                        <option value="{{ $paymentm->id }}"
-                                                                            {{ $booking_detail->payment_method == $paymentm->id ? 'selected' : '' }}>
-                                                                            {{ $paymentm->name }}</option>
+                                                                        <option value="{{ $paymentm->id }}">{{ $paymentm->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
                                                             <div class="alert-danger" style="text-align:center">
                                                                 {{ $errors->first('payment_method') }} </div>
                                                         </div>
-
 
                                                         <div class="col-sm-1" style="margin-bottom: 15px; ">
                                                             <label for="inputEmail3" class=""> Upload to Calender</label>
                                                             <div class="input-group">
-                                                                <input type='hidden' value='false'
-                                                                    name='upload_calender[{{ $key }}][]'>
-                                                                <input class="form-check-input uploadCalender"
+                                                                <input type='hidden' class="disable-feild" value='false' name='quote[{{ $key }}][finance][0][upload_calender]'>
+                                                                <input class="form-check-input uploadCalender disable-feild"
                                                                     type="checkbox" value="false"
-                                                                    name="upload_calender[{{ $key }}][]"
+                                                                    name="quote[{{ $key }}][finance][0][upload_calender]"
                                                                     style="height: 20px; width:28px;">
-                                                             
+                                                                    <label for="inputEmail3" class=""></label>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-sm-2" style="margin-bottom: 15px; ">
+                                                        <div class="col-sm-2">
                                                             <label for="inputEmail3" class="">No of Days</label>
                                                             <div class="input-group additional_date">
-                                                                <a href="#" class="input-group-addon minus increment"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                                                                <input type="text" name="additional_date[{{ $key }}][]" class="form-control adults" size="10" value="0">
-                                                                <a href="#" class="input-group-addon plus increment"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                                <a href="#" class="input-group-addon minus increment">
+                                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                                                </a>
+                                                                <input type="text" name="quote[{{ $key }}][finance][0][additional_date]" class="form-control adults disable-feild" size="10" value="0" >
+                                                                <a href="#" class="input-group-addon plus increment">
+                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                </a>
                                                             </div>
                                                         </div>
-
+                                                        @if(!$booking_detail->getBookingFinance)
+                                                            <div class="col-sm-1" >
+                                                                <button type="button" data-id="{{$key}}" class="add_finance btn btn-info">+</button>
+                                                            </div>
+                                                        @else
+                                                            <div class="col-sm-1" >
+                                                                <button type="button" class="btn btn-info remove_finance">-</button>
+                                                            </div>
+                                                        @endif
+                                                            
                                                     </div>
-
-                                                    <div class="col-sm-1" style="margin-bottom: 15px; margin-top: 2.5rem;">
-                                                        <button type="button" class="add_finance btn btn-info">+</button>
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                                <br><br>
+                                                    @endif
+                                                </section>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </section>
+                            
                             @if($booking->getBookingData)
                                 <div>
                                     <h2 class="col-sm-offset-1">Transfer Info</h2>
@@ -1043,7 +858,7 @@
                            
                                     </div>
                                 </div>
-                                @endif
+                            @endif
 
                                 {{-- <div>
                                     <h2 class="col-sm-offset-1">Itinerary Finalised</h2>
@@ -1410,7 +1225,7 @@
                                 <div class="box-footer">
                                     {!! Form::submit('Submit', ['class' => 'btn btn-info pull-right']) !!}
                                 </div> --}}
-                            </form>
+                        </form>
 
                             <div class="col-sm-10 col-sm-offset-1">
                                 <h1 style="text-align: center;">Finance Detail</h1>
@@ -2778,27 +2593,43 @@ $(document).ready(function() {
                 }
             });
             $(document).on('click', '.add_finance', function() {
-
-
+                var counts = $('.countFinance').length + 1;
+                var cloning = $('.Finance'+$(this).data('id')).children('div').eq(0).clone().find('.title:last').text('Payments #'+counts).end()
+                            .find("input").val("") .each(function(){
+                                this.name = this.name.replace(/]\[(\d+)]/g, function(str,p1){                        
+                                    return ']['+$('.countFinance').length+']';
+                                });
+                            }).end()
+                    .find("select").val("").each(function(){
+                        this.name = this.name.replace(/]\[(\d+)]/g, function(str,p1){
+                            return ']['+$('.countFinance').length+']';
+                        });
+                    }).end().show()
+                    .insertAfter('.countFinance:last');
+                    // $('.title:last').addClass('title'+$('.countFinance').length);
+                // $('.title').addClass('.title'+$('.countFinance').length);
+                // $('.title'+$('.countFinance').length).text('Payments #'+$('.countFinance').length);
+                // console.log('.'+$(this).data('id'), cloning);
+                // $('.'+$(this).data('id')+':last').append(cloning);
                 // $(".disable-feild").attr( "disabled", "disabled" );
                 // $(".disable-feild").prop("disabled", false);
-                var getClass = $(this).closest('.row').data('title');
-                var classs = $(this).closest('.row').find('.deposit_amount').data('key');
-                console.log(classs);
-                $('input[name="deposit_amount['+classs+'][]"]').addClass('depositecost'+classs);
-                // $('.finance-row').find('.row').find('.deposit_amount').addClass('depositecost'+classs);
-                var count = $('.'+getClass).length + 1;
-                var $v_text = 'Payment #'+count;
-                console.log($v_text);
-                $('.finance-row').find('.row').attr("data-title", getClass);
-                $('.finance-row').find('.title').text($v_text);
-                var title =  $('.finance-row').find('.title').addClass(getClass);
-                let $selector = $(this);
-                let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();
+                // var getClass = $(this).closest('.row').data('title');
+                // var classs = $(this).closest('.row').find('.deposit_amount').data('key');
+                // console.log(classs);
+                // $('input[name="deposit_amount['+classs+'][]"]').addClass('depositecost'+classs);
+                // // $('.finance-row').find('.row').find('.deposit_amount').addClass('depositecost'+classs);
+                // var count = $('.'+getClass).length + 1;
+                // var $v_text = 'Payment #'+count;
+                // console.log($v_text);
+                // $('.finance-row').find('.row').attr("data-title", getClass);
+                // $('.finance-row').find('.title').text($v_text);
+                // var title =  $('.finance-row').find('.title').addClass(getClass);
+                // let $selector = $(this);
+                // let html = $selector.closest(".qoute").find('[class*="finance-row"]').html();
 
-                $selector.closest(".qoute").append(html);
-                $('.finance-row').find('.row').removeAttr("data-title");
-                $('.finance-row').find('.row').find('.title').removeClass(getClass);
+                // $selector.closest(".qoute").append(html);
+                // $('.finance-row').find('.row').removeAttr("data-title");
+                // $('.finance-row').find('.row').find('.title').removeClass(getClass);
                 
                 // $(".datepicker").datepicker({
                 //     autoclose: true,
