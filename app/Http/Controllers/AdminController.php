@@ -17,7 +17,7 @@ use App\CurrencyConversions;
 use App\FinanceBookingDetail;
 use App\FinanceBookingDetailLog;
 use App\old_booking;
-use App\payment;
+use App\PaymentMethod;
 use App\Product;
 use App\Qoute;
 use App\QouteDetail;
@@ -6383,7 +6383,7 @@ class AdminController extends Controller
                 'get_refs' => $get_ref,
                 'get_user_branches' => $get_user_branches,
                 'booking_email' => $booking_email,
-                'payment' => payment::all(),
+                'payment' => PaymentMethod::all(),
                 'airline' => airline::all(),
             ]);
         }
@@ -8881,7 +8881,7 @@ class AdminController extends Controller
             'supervisors' => User::where('role_id', 5)->orderBy('name', 'ASC')->get(),
             'suppliers' => Supplier::all()->sortBy('name'),
             'booking_methods' => BookingMethod::all()->sortBy('id'),
-            'payment_method' => payment::all()->sortBy('name'),
+            'payment_method' => PaymentMethod::all()->sortBy('name'),
             'currencies' => Currency::all()->sortBy('name'),
             'qoute_logs' => QouteLog::where('qoute_id', $id)->get(),
         ]);
@@ -9788,7 +9788,7 @@ class AdminController extends Controller
         // return view('code.create-code')->with(['get_holiday_type' => $get_holiday_type, 'seasons' => season::all(), 'persons' => user::all(), 'get_refs' => $get_ref, 'get_user_branches' => $get_user_branches, 'booking_email' => $booking_email, 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(),'suppliers' => Supplier::all()]);
         $booking_email = booking_email::where('booking_id', '=', 1)->get();
 
-        return view('code.edit-code')->with([ 'code' => $code, 'get_user_branches' => $get_user_branches, 'get_holiday_type' => $get_holiday_type, 'get_user_branches' => $get_user_branches, 'codes' => $code, 'seasons' => season::all(), 'persons' => user::all(), 'payment' => payment::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(), 'suppliers' => Supplier::all(), 'booking_email' => $booking_email]);
+        return view('code.edit-code')->with([ 'code' => $code, 'get_user_branches' => $get_user_branches, 'get_holiday_type' => $get_holiday_type, 'get_user_branches' => $get_user_branches, 'codes' => $code, 'seasons' => season::all(), 'persons' => user::all(), 'payment' => PaymentMethod::all(), 'airline' => airline::all(), 'categories' => Category::all(), 'products' => Product::all(), 'suppliers' => Supplier::all(), 'booking_email' => $booking_email]);
     }
 
     // public function get_supplier(Request $request)

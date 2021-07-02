@@ -183,19 +183,14 @@ Route::group(['middleware' => ['auth']], function(){
 	//end Super Visor
 
 	// season 
-	// Route::match(['get','post'],'create-booking',array('as'=>'create-booking','uses'=>'AdminController@create_booking'));
-	// Route::get('view-booking/{id}',array('as'=>'view-booking','uses'=>'AdminController@view_booking'));
-	// Route::match(['get','post'],'update-booking/{id}',array('as'=>'update-booking','uses'=>'AdminController@update_booking'));
+	Route::match(['get','post'],'create-booking',array('as'=>'create-booking','uses'=>'AdminController@create_booking'));
 
 	// view quotation in booking
 	Route::get('view-quotation/{id}',array('as'=>'view-quotation','uses'=>'AdminController@view_quotation'));
-	Route::get('view-booking-version/{booking_id}/{log_no}',array('as'=>'view-booking-version','uses'=>'AdminController@view_booking_version'));
-	Route::get('view-quotation-version/{quote_id}/{log_no}',array('as'=>'view-quotation-version','uses'=>'AdminController@view_quotation_version'));
 
 	Route::get('del-booking/{season_id}/{booking_id}',array('as'=>'del-booking','uses'=>'AdminController@delete_booking'));
 	Route::post('del-multi-booking/{id}',array('as'=>'del-multi-booking','uses'=>'AdminController@delete_multi_booking'));
 
-	Route::get('view-booking-season',array('as'=>'view-booking-season','uses'=>'AdminController@view_booking_season'));
 	Route::get('del-booking-season/{id}',array('as'=>'del-booking-season','uses'=>'AdminController@delete_booking_season'));
 	//end season
 
@@ -365,8 +360,25 @@ Route::group(['middleware' => ['auth']], function(){
 	});
 ///////////////////////////.. route for json end  //////////////////////////////////////////////
 	
+	// Route::resource('bookings', 'BookingController',['only' => [
+	// 	'index','edit', 'update', 'data'
+	// ]]);
+	Route::get('booking/{id}/update', array('as' => 'bookings.update', 'uses' => 'BookingController@update'));
 	
-	
+	Route::get('booking/{id}/destroy', array('as' => 'bookings.destroy', 'uses' => 'BookingController@destroy'));
+	Route::get('booking/{id}/edit', array('as' => 'bookings.edit', 'uses' => 'BookingController@edit'));
+	Route::get('booking/season/{id}', array('as' => 'bookings.index', 'uses' => 'BookingController@index'));
+	Route::get('booking/season', array('as' => 'bookings.season', 'uses' => 'BookingController@season_Index'));
+
+	Route::get('booking/log/{id}', array('as' => 'bookings.logs', 'uses' => 'BookingController@booking_logs'));
+	Route::get('quote/log/{id}', array('as' => 'quote.logs', 'uses' => 'QuoteController@quote_logs'));
+
+
+// Route::get('view-booking-season',array('as'=>'view-booking-season','uses'=>'AdminController@view_booking_season'));
+// Route::get('view-booking/{id}',array('as'=>'view-booking','uses'=>'AdminController@view_booking'));
+// Route::match(['get','post'],'update-booking/{id}',array('as'=>'update-booking','uses'=>'AdminController@update_booking'));
+// Route::get('view-booking-version/{booking_id}/{log_no}',array('as'=>'view-booking-version','uses'=>'AdminController@view_booking_version'));
+// Route::get('view-quotation-version/{quote_id}/{log_no}',array('as'=>'view-quotation-version','uses'=>'AdminController@view_quotation_version'));
 	
 	
 	

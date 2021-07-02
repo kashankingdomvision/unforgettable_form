@@ -12,7 +12,7 @@ class Season extends Model
        'end_date',
        'default',
     ];
-    public function booking()
+    public function getBooking()
     {
         return $this->hasMany('App\booking');
     }
